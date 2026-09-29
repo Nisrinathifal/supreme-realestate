@@ -85,7 +85,7 @@ export const nl: Copy = {
     counter: (i, n) => `${i} / ${n}`,
     scrollerLabel: draft("Beelden van materiaal, licht en ruimte"),
   },
-  companySection: { label: draft("05 — Bedrijf"), title: "Bedrijfsgegevens" },
+  companySection: { label: draft("04 — Bedrijf"), title: "Bedrijfsgegevens" },
   companyKeys: {
     legalName: "Statutaire naam",
     tradeName: "Handelsnaam",
@@ -102,7 +102,7 @@ export const nl: Copy = {
   },
   companyLegalLine: "Voor juridische of compliance-vragen",
   contactSection: {
-    label: draft("06 — Contact"),
+    label: draft("05 — Contact"),
     title: "Neem contact op",
     body: "Voor samenwerking, pers of andere vragen: we reageren persoonlijk.",
     cta: "Neem contact op",

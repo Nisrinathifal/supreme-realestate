@@ -83,7 +83,7 @@ export const en: Copy = {
     counter: (i, n) => `${i} / ${n}`,
     scrollerLabel: draft("Images of material, light and space"),
   },
-  companySection: { label: draft("05 — Company"), title: "Company details" },
+  companySection: { label: draft("04 — Company"), title: "Company details" },
   companyKeys: {
     legalName: draft("Legal name"),
     tradeName: draft("Trade name"),
@@ -100,7 +100,7 @@ export const en: Copy = {
   },
   companyLegalLine: "For legal or compliance questions",
   contactSection: {
-    label: draft("06 — Contact"),
+    label: draft("05 — Contact"),
     title: "Get in touch",
     body: "For partnerships, press or other questions: we reply personally.",
     cta: "Get in touch",

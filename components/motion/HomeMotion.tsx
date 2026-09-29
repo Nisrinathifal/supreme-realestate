@@ -167,13 +167,6 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
             .to({}, { duration: 0.15 }, 0.85);
         }
 
-        /* ---------- 5.5 Map: background settles during the expand ---------- */
-        const map = q("[data-map]")[0];
-        const mapBand = q("[data-map-band]")[0];
-        if (map && mapBand) {
-          gsap.fromTo(map, { scale: 1.08 }, { scale: 1, ease: "none", scrollTrigger: { trigger: mapBand, start: "top bottom", end: "top 20%", scrub: true } });
-        }
-
         /* ---------- Rise groups (Bedrijfsgegevens) ---------- */
         q("[data-rise]").forEach((group) => {
           const items = group.matches("[data-rise-item]") ? [group] : Array.from(group.querySelectorAll("[data-rise-item]"));
