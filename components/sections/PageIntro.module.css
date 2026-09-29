@@ -1,0 +1,4 @@
+.intro { padding-top: calc(var(--header-h) + var(--s-9)); padding-bottom: var(--s-8); }
+.label { margin-bottom: var(--s-5); }
+.title { max-width: 14ch; }
+.lead { margin-top: var(--s-6); color: var(--muted); }

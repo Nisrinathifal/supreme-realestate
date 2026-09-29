@@ -1,0 +1,8 @@
+.wrap { overflow: hidden; }
+.word {
+  display: flex;
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: var(--fs-wordmark); line-height: 0.86; letter-spacing: 0.06em;
+  padding-top: 0.06em; margin-right: -0.06em;
+}
+.letter { display: inline-block; }

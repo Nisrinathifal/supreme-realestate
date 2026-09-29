@@ -1,0 +1,3 @@
+.row { display: flex; gap: var(--s-2); height: 24px; overflow: hidden; }
+.bar { flex: 1 1 0; background: var(--line); border-radius: 1px; }
+.bar:nth-child(3n) { flex-basis: 0.6; }

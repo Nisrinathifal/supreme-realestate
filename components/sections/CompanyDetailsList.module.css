@@ -1,0 +1,17 @@
+.wrap { display: flex; flex-direction: column; gap: var(--s-5); }
+.list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.row {
+  display: grid; grid-template-columns: minmax(140px, 1fr) 2fr; gap: var(--s-4);
+  padding-block: var(--s-4); border-bottom: 1px solid var(--line);
+}
+.row dt { align-self: baseline; padding-top: 3px; }
+.value { color: var(--ink); user-select: text; display: flex; flex-direction: column; gap: 2px; }
+.value a { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.value a:hover { text-decoration-thickness: 2px; }
+.line { display: block; }
+.legalLine { color: var(--muted); }
+.legalLine strong { color: var(--ink); font-weight: 500; }
+.legalLine a { text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 560px) {
+  .row { grid-template-columns: 1fr; gap: var(--s-1); }
+}

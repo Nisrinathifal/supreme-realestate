@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+media/src/
+test-results/
+playwright-report/
+lighthouse/
+*.log
+.DS_Store

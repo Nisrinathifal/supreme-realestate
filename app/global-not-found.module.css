@@ -1,0 +1,7 @@
+.bar { position: absolute; inset: 0 0 auto 0; z-index: 10; }
+.inner { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.langs { display: inline-flex; align-items: center; gap: var(--s-2); }
+.langs a { min-height: 44px; display: inline-flex; align-items: center; padding-inline: var(--s-1); border-radius: var(--s-1); }
+.sep { width: 1px; height: 14px; background: currentColor; opacity: 0.35; }
+.main { padding-bottom: var(--s-9); }
+.divider { height: 1px; background: var(--line); margin-inline: var(--gutter); }

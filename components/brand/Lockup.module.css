@@ -1,0 +1,10 @@
+.lockup { display: inline-flex; align-items: center; gap: var(--s-3); color: inherit; }
+.text { display: flex; flex-direction: column; gap: var(--s-1); }
+.wordmark {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: 17px; line-height: 1; letter-spacing: 0.32em; text-indent: 0; padding-left: 0.02em;
+}
+.descriptor {
+  font-family: var(--font-text); font-weight: 500; font-size: 11px; line-height: 1;
+  letter-spacing: 0.5em; color: var(--muted);
+}

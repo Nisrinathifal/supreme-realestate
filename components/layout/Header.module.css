@@ -1,0 +1,46 @@
+.header {
+  position: fixed; inset: 0 0 auto 0; z-index: 100;
+  padding-top: env(safe-area-inset-top);
+  color: var(--ink);
+  transition: background-color 300ms var(--ease), color 300ms var(--ease), box-shadow 300ms var(--ease);
+}
+:global(body:has([data-hero-film])) .header[data-home="true"] { color: var(--on-media); --ink: var(--on-media); --muted: rgba(250,250,247,.72); --focus: var(--inv-focus); --win: var(--accent); }
+.header[data-scrolled="true"] {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2); backdrop-filter: blur(var(--blur)) saturate(1.2);
+  box-shadow: inset 0 -1px 0 var(--glass-line);
+}
+.bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s-5); height: var(--header-h); }
+.lockup { min-height: 44px; }
+.nav { margin-left: auto; }
+.list { display: flex; gap: var(--s-6); }
+.link {
+  position: relative; display: inline-flex; align-items: center; min-height: 44px;
+  font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em;
+  border-radius: var(--s-1);
+}
+.dot { position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%); }
+.right { display: flex; align-items: center; gap: var(--s-5); }
+.menuBtn { display: none; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-2); border-radius: var(--s-1); }
+
+/* Menu sheet (≤980px) */
+.sheet {
+  position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--ink);
+  --ink: #1A201D; --muted: #5B625D; --focus: #1A201D; --win: transparent;
+}
+.sheet::backdrop { background: transparent; }
+.sheetInner { display: flex; flex-direction: column; min-height: 100dvh; padding-block: var(--s-3) var(--s-6); gap: var(--s-8); }
+.sheetTop { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.sheetList { display: flex; flex-direction: column; gap: var(--s-4); }
+.sheetLink { display: flex; align-items: baseline; gap: var(--s-4); padding-block: var(--s-2); border-radius: var(--s-1); }
+.sheetLabel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 40px; line-height: 1; letter-spacing: var(--display-tracking); }
+.sheetBottom { margin-top: auto; display: flex; flex-direction: column; gap: var(--s-5); }
+.sheetContact { display: flex; flex-direction: column; gap: var(--s-2); }
+.sheetContact a { text-decoration: underline; text-underline-offset: 4px; }
+
+@media (max-width: 980px) {
+  .nav { display: none; }
+  .right :global(nav) { display: none; }
+  .menuBtn { display: inline-flex; }
+}

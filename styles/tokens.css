@@ -1,0 +1,98 @@
+/* Design tokens — DESIGN-opsi1.md §3. Single source of truth. Do not hard-code values in components. */
+:root {
+  /* base: light */
+  --bg:            #FAFAF7; /* Paper */
+  --surface:       #FFFFFF;
+  --alt:           #EEEEE9; /* Stone: secondary panels */
+  --line:          #E2E3DC;
+  --ink:           #1A201D; /* Canal ink */
+  --muted:         #5B625D; /* Graphite */
+  --tint:          #EEF6DA; /* Lime mist: icon tiles, rare highlight panel */
+  --accent:        #CFEA7C; /* Supreme lime: signal only, never text on light */
+  --on-accent:     #1A201D;
+  --btn-bg:        #1A201D;
+  --btn-fg:        #FAFAF7;
+  --focus:         #1A201D;
+  --reveal-from:   #858C87;
+  --grid-line:     rgba(26,32,29,.07);
+
+  /* over film */
+  --on-media:      #FAFAF7;
+  --media-scrim:   linear-gradient(0deg, rgba(26,32,29,.62) 0%, rgba(26,32,29,.18) 45%, rgba(26,32,29,0) 70%);
+  --glass:         rgba(250,250,247,.74);
+  --glass-fg:      #1A201D;
+  --glass-line:    rgba(255,255,255,.6);
+
+  /* inverse band: Canal ink */
+  --inv-bg:        #1A201D;
+  --inv-surface:   #2C3833;
+  --inv-ink:       #FAFAF7;
+  --inv-muted:     #A7B4A2; /* Sage */
+  --inv-line:      rgba(250,250,247,.14);
+  --inv-grid-line: rgba(250,250,247,.06);
+  --inv-btn-bg:    #FAFAF7;
+  --inv-btn-fg:    #1A201D;
+  --inv-focus:     #CFEA7C;
+
+  /* semantic (DESIGN §3.2) */
+  --error:         #B3261E;
+
+  /* typography (DESIGN §3.3). Font families are injected by next/font as --font-display-src / --font-text-src. */
+  --font-display: var(--font-display-src), 'Helvetica Neue', Arial, sans-serif;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --font-text: var(--font-text-src), 'Helvetica Neue', Arial, sans-serif;
+
+  /* type scale (DESIGN §4) */
+  --fs-display: clamp(48px, 8vw, 128px);
+  --fs-h2: clamp(40px, 5.2vw, 80px);
+  --fs-statement: clamp(30px, 3.8vw, 56px);
+  --fs-h3: clamp(24px, 2.2vw, 32px);
+  --fs-lead: 19px;
+  --fs-body: 17px;
+  --fs-ui: 15px;
+  --fs-micro: 12px;
+  --fs-legal: 15px;
+  --fs-wordmark: clamp(56px, 13vw, 200px);
+
+  /* shape, depth, spacing (DESIGN §3.4) */
+  --r-xl: 32px;
+  --r-lg: 24px;
+  --r-md: 18px;
+  --r-sm: 12px;
+  --r-pill: 999px;
+
+  --shadow: 0 30px 60px -30px rgba(10,20,20,.45);
+  --blur: 18px;
+
+  --frame: 12px;
+  --gutter: clamp(20px, 4vw, 64px);
+  --maxw: 1360px;
+  --section-y: clamp(96px, 12vw, 176px);
+
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --ease-precise: cubic-bezier(.65,0,.35,1);
+
+  /* spacing scale, 4-pt base */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px;
+  --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px; --s-11: 176px;
+
+  /* layout */
+  --header-h: 64px;
+  --grid-gap: 24px;
+  --daylight: radial-gradient(60% 50% at 20% 0%, rgba(255,255,255,.7), transparent);
+  --glass-highlight: linear-gradient(180deg, rgba(255,255,255,.18), transparent 40%);
+}
+
+/* Inverse band: remaps tokens; components never check which band they are in. */
+.inverse {
+  --bg: var(--inv-bg);   --surface: var(--inv-surface); --ink: var(--inv-ink);
+  --muted: var(--inv-muted); --line: var(--inv-line);   --grid-line: var(--inv-grid-line);
+  --btn-bg: var(--inv-btn-bg); --btn-fg: var(--inv-btn-fg); --focus: var(--inv-focus);
+  --win: var(--accent);
+  background: var(--bg); color: var(--ink);
+}
+
+@media (max-width: 560px) {
+  :root { --grid-gap: 16px; }
+}

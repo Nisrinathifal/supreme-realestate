@@ -1,0 +1,28 @@
+{
+  "_comment": "PRD §7. Values must match the KvK registration exactly. Empty string = not verified yet; the UI hides the row.",
+  "legalName": "Supreme Real Estate B.V.",
+  "tradeName": "",
+  "kvk": "",
+  "vat": "",
+  "visitingAddress": {
+    "street": "",
+    "postalCode": "",
+    "city": "",
+    "country": "NL"
+  },
+  "postalAddress": {
+    "street": "",
+    "postalCode": "",
+    "city": "",
+    "country": "NL"
+  },
+  "email": "",
+  "emailLegal": "",
+  "phone": "",
+  "availability": { "nl": "", "en": "" },
+  "management": [],
+  "linkedin": "",
+  "description": { "nl": "", "en": "" },
+  "story": { "nl": "", "en": "" },
+  "credits": { "photography": "", "film": "" }
+}
