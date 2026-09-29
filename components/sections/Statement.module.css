@@ -1,0 +1,6 @@
+.section { padding-bottom: calc(var(--section-y) * 0.6); }
+.label { margin-bottom: var(--s-6); }
+.text { color: var(--ink); }
+.w { color: inherit; transition: color 350ms var(--ease); }
+[data-ready] .w { color: var(--reveal-from); }
+[data-ready] .w:global(.is-on) { color: var(--ink); }

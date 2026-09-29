@@ -4,7 +4,7 @@ import styles from "./MediaFrame.module.css";
 
 type Props = {
   image: ImageAsset | null;
-  ratio: Ratio;
+  ratio: Ratio | "fill";
   lang: Lang;
   radius?: "lg" | "xl" | "none";
   priority?: boolean;
@@ -14,7 +14,7 @@ type Props = {
   decorative?: boolean;
 };
 
-const ratioClass: Record<Ratio, string> = { "16/9": styles.r169, "4/5": styles.r45, "1/1": styles.r11, "21/9": styles.r219 };
+const ratioClass: Record<Ratio | "fill", string> = { "16/9": styles.r169, "4/5": styles.r45, "1/1": styles.r11, "21/9": styles.r219, fill: styles.fill };
 
 /**
  * Media frame (DESIGN §9.3). Renders pipeline output (AVIF + WebP + JPEG fallback) with explicit
@@ -25,12 +25,16 @@ export function MediaFrame({ image, ratio, lang, radius = "lg", priority = false
     .filter(Boolean)
     .join(" ");
   if (!image) {
-    return <div className={`${cls} ${styles.empty}`} data-media-placeholder aria-hidden="true" />;
+    return (
+      <div className={cls} data-media-placeholder aria-hidden="true">
+        <div className={`${styles.inner} ${styles.empty}`} data-media-inner />
+      </div>
+    );
   }
   const base = `/media/${image.src}`;
   return (
     <div className={cls} data-media-frame>
-      <picture>
+      <picture className={styles.inner} data-media-inner>
         <source type="image/avif" srcSet={`${base}-640.avif 640w, ${base}-1280.avif 1280w, ${base}-1920.avif 1920w`} sizes={sizes} />
         <source type="image/webp" srcSet={`${base}-640.webp 640w, ${base}-1280.webp 1280w, ${base}-1920.webp 1920w`} sizes={sizes} />
         <img

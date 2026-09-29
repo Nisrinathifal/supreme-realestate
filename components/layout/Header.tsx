@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
 import { Dakvenster } from "@/components/brand/Dakvenster";
 import { LangToggle } from "./LangToggle";
 import { pathFor, type Lang, type PageKey } from "@/content/routes";
+import { usePublicPathname } from "@/lib/usePublicPathname";
 import styles from "./Header.module.css";
 
 export type HeaderStrings = {
@@ -38,7 +38,7 @@ const navPages: { key: PageKey; label: keyof Pick<HeaderStrings, "about" | "cont
  * Over the hero film it uses --on-media. Without JS it sits absolutely at the top (see layout <noscript>).
  */
 export function Header({ lang, strings }: Props) {
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   // Over-media colours apply only while a hero film is on the page (CSS: body:has([data-hero-film])).
   const isHome = pathname === pathFor("home", lang);
   const [scrolled, setScrolled] = useState(false);

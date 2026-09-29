@@ -19,6 +19,7 @@
   /* over film */
   --on-media:      #FAFAF7;
   --media-scrim:   linear-gradient(0deg, rgba(26,32,29,.62) 0%, rgba(26,32,29,.18) 45%, rgba(26,32,29,0) 70%);
+  --media-scrim-top: linear-gradient(180deg, rgba(26,32,29,.28) 0%, rgba(26,32,29,0) 28%); /* keeps header text ≥ 4.5:1 over a high-key film (DESIGN §13) */
   --glass:         rgba(250,250,247,.74);
   --glass-fg:      #1A201D;
   --glass-line:    rgba(255,255,255,.6);
@@ -79,6 +80,7 @@
 
   /* layout */
   --header-h: 64px;
+  --hero-h: clamp(620px, 92vh, 980px);
   --grid-gap: 24px;
   --daylight: radial-gradient(60% 50% at 20% 0%, rgba(255,255,255,.7), transparent);
   --glass-highlight: linear-gradient(180deg, rgba(255,255,255,.18), transparent 40%);

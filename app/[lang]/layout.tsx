@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Funnel_Display, Inter_Tight } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { LangProvider } from "@/components/layout/LangProvider";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { Footer } from "@/components/layout/Footer";
 import { company, has, telHref } from "@/content/company";
 import { getCopy } from "@/content/copy";
@@ -51,6 +52,7 @@ export default async function LangLayout({ children, params }: { children: React
     <html lang={htmlLang(lang)} className={`${display.variable} ${text.variable}`}>
       <body>
         <LangProvider lang={lang}>
+        <SmoothScroll />
         <noscript>
           <style>{`[data-header]{position:absolute !important}`}</style>
         </noscript>

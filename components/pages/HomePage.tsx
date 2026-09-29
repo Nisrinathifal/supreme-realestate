@@ -1,23 +1,24 @@
-import { PageIntro } from "@/components/sections/PageIntro";
-import { CompanyDetailsList } from "@/components/sections/CompanyDetailsList";
-import { Placeholder } from "@/components/ui/Placeholder";
-import { getCopy } from "@/content/copy";
+import { HomeMotion } from "@/components/motion/HomeMotion";
+import { Bedrijfsgegevens } from "@/components/sections/Bedrijfsgegevens";
+import { ContactCta } from "@/components/sections/ContactCta";
+import { Details } from "@/components/sections/Details";
+import { Hero } from "@/components/sections/Hero";
+import { Impressies } from "@/components/sections/Impressies";
+import { Principes } from "@/components/sections/Principes";
+import { Statement } from "@/components/sections/Statement";
 import type { Lang } from "@/content/routes";
 
-/** M1 shell. Full sections (DESIGN §10.1) land in M2. */
+/** Homepage in DESIGN §10.1 order. Footer comes from the layout. */
 export function HomePage({ lang }: { lang: Lang }) {
-  const c = getCopy(lang);
   return (
-    <>
-      <PageIntro title={c.hero.display} lead={c.hero.lead}>
-        <Placeholder note={c.placeholders.film} />
-      </PageIntro>
-      <section className="section" id="bedrijf">
-        <div className="container stack">
-          <h2 className="t-h3">{c.companySection.title}</h2>
-          <CompanyDetailsList lang={lang} />
-        </div>
-      </section>
-    </>
+    <HomeMotion>
+      <Hero lang={lang} />
+      <Statement lang={lang} />
+      <Principes lang={lang} />
+      <Details lang={lang} />
+      <Impressies lang={lang} />
+      <Bedrijfsgegevens lang={lang} />
+      <ContactCta lang={lang} />
+    </HomeMotion>
   );
 }

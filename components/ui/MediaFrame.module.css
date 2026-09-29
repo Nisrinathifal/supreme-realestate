@@ -5,9 +5,12 @@
 .r45 { aspect-ratio: 4 / 5; }
 .r11 { aspect-ratio: 1 / 1; }
 .r219 { aspect-ratio: 21 / 9; }
+.fill { position: absolute; inset: 0; aspect-ratio: auto; }
+.inner { position: absolute; inset: 0; display: block; transform-origin: center; }
 .img { width: 100%; height: 100%; object-fit: cover; }
 .empty {
   background: var(--alt);
+  width: 100%; height: 100%;
   background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 8.333% 100%, 8.333% 100%;
 }

@@ -17,33 +17,41 @@ const pages: { key: string; nl: string; en: string }[] = [
   { key: "404", nl: "/bestaat-niet", en: "/en/does-not-exist" },
 ];
 const widths = [390, 1440] as const;
-const motions = ["no-preference", "reduce"] as const;
+const motions = ["no-preference", "reduce", "nojs"] as const;
 const dir = "test-results/screenshots";
 mkdirSync(dir, { recursive: true });
 
 async function settle(page: Page) {
   await page.waitForLoadState("networkidle");
   await page.evaluate(() => document.fonts.ready);
-  // Scroll through so lazy content and scroll-triggered motion reach final state, then return to top.
-  await page.evaluate(async () => {
-    const h = document.documentElement.scrollHeight;
-    for (let y = 0; y < h; y += 400) {
-      window.scrollTo(0, y);
-      await new Promise((r) => setTimeout(r, 40));
-    }
-    window.scrollTo(0, 0);
-    await new Promise((r) => setTimeout(r, 400));
-  });
+  // Real wheel events (Lenis intercepts wheel) down to the bottom and back, so once-only motion reaches
+  // its final state and scrubbed motion returns to its top state.
+  const h = await page.evaluate(() => document.documentElement.scrollHeight);
+  await page.mouse.move(100, 300);
+  const steps = Math.ceil(h / 300) + 2;
+  for (let i = 0; i < steps; i++) {
+    await page.mouse.wheel(0, 300);
+    await page.waitForTimeout(60);
+  }
+  await page.waitForTimeout(800);
+  for (let i = 0; i < steps; i++) {
+    await page.mouse.wheel(0, -300);
+    await page.waitForTimeout(30);
+  }
+  await page.waitForTimeout(800);
 }
 
 for (const p of pages) {
   for (const lang of ["nl", "en"] as const) {
     for (const width of widths) {
       for (const motion of motions) {
+        // The no-JS variant only runs for the homepage (the page with motion) to keep the suite short.
+        if (motion === "nojs" && p.key !== "home") continue;
         test(`${p.key} ${lang} ${width} ${motion}`, async ({ browser }) => {
           const context = await browser.newContext({
             viewport: { width, height: width < 768 ? 844 : 900 },
-            reducedMotion: motion,
+            reducedMotion: motion === "nojs" ? "no-preference" : motion,
+            javaScriptEnabled: motion !== "nojs",
             deviceScaleFactor: 1,
           });
           const page = await context.newPage();

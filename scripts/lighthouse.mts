@@ -30,6 +30,12 @@ try {
   console.log(line);
   const audits = result.lhr.audits;
   console.log(`LCP ${audits["largest-contentful-paint"].displayValue} · CLS ${audits["cumulative-layout-shift"].displayValue} · TBT ${audits["total-blocking-time"].displayValue}`);
+  const lcpEl = audits["largest-contentful-paint-element"]?.details as { items?: { items?: { node?: { snippet?: string }; phase?: string; timing?: number }[] }[] } | undefined;
+  const lcpItems = lcpEl?.items ?? [];
+  const node = lcpItems[0]?.items?.[0]?.node?.snippet;
+  if (node) console.log(`LCP element: ${node.slice(0, 120)}`);
+  for (const ph of lcpItems[1]?.items ?? []) console.log(`  ${ph.phase}: ${Math.round(ph.timing ?? 0)} ms`);
+  writeFileSync("lighthouse/home-mobile.json", JSON.stringify(result.lhr, null, 1));
   const failing = Object.values(audits).filter((a) => a.score !== null && a.score < 0.9 && a.scoreDisplayMode === "binary");
   for (const a of failing) console.log(`  ! ${a.id}: ${a.title}`);
 } finally {

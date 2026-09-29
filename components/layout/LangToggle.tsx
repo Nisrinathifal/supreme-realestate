@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { langs, pageForPath, pathFor, type Lang } from "@/content/routes";
+import { usePublicPathname } from "@/lib/usePublicPathname";
 import styles from "./LangToggle.module.css";
 
 type Props = { lang: Lang; labels: { switch: string; nl: string; en: string } };
 
 /** NL / EN text links with a hairline between (DESIGN §9.9). Keeps the visitor on the equivalent page. */
 export function LangToggle({ lang, labels }: Props) {
-  const pathname = usePathname();
-  const current = pageForPath(pathname ?? "/");
+  const pathname = usePublicPathname();
+  const current = pageForPath(pathname);
   return (
     <nav aria-label={labels.switch} className={styles.toggle}>
       {langs.map((l, i) => {
