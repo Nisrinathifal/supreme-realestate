@@ -12,6 +12,8 @@ export function Lockup({ href, ariaLabel, className, height = 36 }: Props) {
   // 1337×398 source: keep the aspect ratio for width/height attributes (no layout shift)
   const width = Math.round((height * 1337) / 398);
   // inline height: the global `img { height: auto }` reset would otherwise override the attribute
+  // Plain <img>: small fixed-size logo, explicit dimensions, no optimisation needed.
+  // eslint-disable-next-line @next/next/no-img-element
   const img = <img src="/brand/logo-lockup.png" alt="" width={width} height={height} style={{ height, width }} className={styles.img} decoding="async" />;
   const cls = [styles.lockup, className].filter(Boolean).join(" ");
   return href ? (

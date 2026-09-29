@@ -29,23 +29,6 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
         const isDesktop = window.matchMedia(MQ.desktop).matches;
         const q = gsap.utils.selector(root);
 
-        /* ---------- 5.1 Hero: load sequence + scroll parallax ---------- */
-        const heroSubject = q("[data-hero-subject]")[0];
-        const heroCopy = q("[data-hero-copy] > *");
-        const hero = q("[data-hero]")[0];
-        if (heroSubject) gsap.fromTo(heroSubject, { yPercent: 12, scale: 0.92 }, { yPercent: 0, scale: 1, duration: 1.4, ease: ease.out, delay: 0.15 });
-        // Headline rises without an opacity fade so it stays the LCP candidate; lead and CTA fade up (P1).
-        if (heroCopy.length) {
-          gsap.fromTo(heroCopy[0], { y: 40 }, { y: 0, duration: 0.9, ease: ease.out, delay: 0.3 });
-          gsap.fromTo(heroCopy.slice(1), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: ease.out, stagger: 0.08, delay: 0.38 });
-        }
-        if (hero) {
-          const st = { trigger: hero, start: "top top", end: "bottom top", scrub: true } as const;
-          const copy = q("[data-hero-copy]")[0];
-          if (copy) gsap.to(copy, { yPercent: -20, ease: "none", scrollTrigger: st });
-          if (heroSubject) gsap.to(heroSubject, { yPercent: -8, ease: "none", scrollTrigger: st });
-        }
-
         /* ---------- 5.2 Statement: word reveal, capsules P1 + scale ---------- */
         q("[data-statement]").forEach((el) => {
           const words = Array.from(el.querySelectorAll<HTMLElement>("[data-w]"));

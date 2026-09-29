@@ -30,14 +30,17 @@ export const en: Copy = {
   nav: { about: "About", contact: "Contact", menu: "Menu", closeMenu: "Close menu" },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
   hero: {
-    display: "From old to valuable.",
-    lead: draft("Supreme Real Estate renews existing homes in Amsterdam with care and craftsmanship, built to last for generations."),
-    primary: "Get in touch",
-    secondary: "About Supreme",
-    coordinates: "52.37° N · 4.90° E — Amsterdam",
+    sequence: [
+      { at: 0, text: draft("Forgotten.") },
+      { at: 1.5, text: draft("Old.") },
+      { at: 3, text: draft("Run-down.") },
+      { at: 5, text: draft("Valuable.") },
+      { at: 6.8, text: draft("Worth living in.") },
+    ],
+    headline: "From old to valuable.",
+    keyMessage: draft("Supreme Real Estate is a property developer and asset manager, creating quality homes in Amsterdam."),
     pause: "Pause video",
     play: "Play video",
-    filmCaption: "Amsterdam",
   },
   statement: {
     label: draft("01 — Supreme"),

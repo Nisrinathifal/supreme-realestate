@@ -30,16 +30,19 @@ export const nl: Copy = {
   nav: { about: "Over ons", contact: "Contact", menu: "Menu", closeMenu: "Sluit menu" },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
   hero: {
-    // Headline: the brand promise (APPROVED, DESIGN §1). Body: one supporting sentence with what, where and how,
-    // ≤ 20 words, brand name included for the brand-name search goal (PRD §9.3). No figures, no superlatives.
-    display: "Van oud naar waardevol.",
-    lead: draft("Supreme Real Estate vernieuwt bestaande woningen in Amsterdam met zorg en vakmanschap, gebouwd om generaties mee te gaan."),
-    primary: "Neem contact op",
-    secondary: "Over Supreme",
-    coordinates: "52.37° N · 4.90° E — Amsterdam",
+    // Synced to the hero film: shell (0-4.5 s), renewal (~5 s), finished (6 s+). From forgotten, old and
+    // run-down to valuable and worth living in. Owner-requested key message at the end (draft, 2026-09-29).
+    sequence: [
+      { at: 0, text: draft("Vergeten.") },
+      { at: 1.5, text: draft("Oud.") },
+      { at: 3, text: draft("Vervallen.") },
+      { at: 5, text: draft("Waardevol.") },
+      { at: 6.8, text: draft("Waard om in te wonen.") },
+    ],
+    headline: "Van oud naar waardevol.",
+    keyMessage: draft("Supreme Real Estate is vastgoedontwikkelaar en assetmanager, en realiseert kwalitatieve woningen in Amsterdam."),
     pause: "Pauzeer video",
     play: "Speel video af",
-    filmCaption: "Amsterdam",
   },
   statement: {
     label: "01 — Supreme",
