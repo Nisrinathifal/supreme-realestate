@@ -26,10 +26,9 @@ export type VideoAsset = {
 export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
 /**
- * Hero film: two supplied clips (2026-09-29) joined with a hard cut by scripts/film-join.swift
- * (16.1 s: house renewed from shell to finished, then the sign is placed), re-encoded without metadata by
- * scripts/film-export.swift. WebM pending (no ffmpeg on the build machine).
- * Note: generated renders; DESIGN §12 asks for real film before launch.
+ * Hero film: combined clip supplied 2026-09-29 (10 s, house renewed from shell to finished),
+ * re-encoded without metadata by scripts/film-export.swift. WebM pending (no ffmpeg on the build machine).
+ * Note: generated render; DESIGN §12 asks for real film before launch.
  */
 export const heroFilm: VideoAsset = {
   webm: null,
