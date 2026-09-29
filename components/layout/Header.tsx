@@ -69,7 +69,7 @@ export function Header({ lang, strings }: Props) {
   return (
     <header className={styles.header} data-scrolled={scrolled ? "true" : "false"} data-header>
       <div className={`container ${styles.bar}`}>
-        <Lockup href={pathFor("home", lang)} wordmark={strings.wordmark} ariaLabel={strings.home} className={styles.lockup} />
+        <Lockup href={pathFor("home", lang)} ariaLabel={strings.home} className={styles.lockup} height={40} />
         <div className={styles.right}>
           <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
           <button
@@ -100,7 +100,7 @@ export function Header({ lang, strings }: Props) {
         <div className={`container ${styles.sheetInner}`}>
           <div className={styles.sheetTop}>
             <span onClick={closeOnNavigate}>
-              <Lockup href={pathFor("home", lang)} wordmark={strings.wordmark} ariaLabel={strings.home} />
+              <Lockup href={pathFor("home", lang)} ariaLabel={strings.home} height={40} />
             </span>
             <button type="button" className={`${styles.pill} ${styles.pillLight}`} onClick={close} autoFocus>
               <span>{strings.closeMenu}</span>

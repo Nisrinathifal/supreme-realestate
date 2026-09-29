@@ -21,7 +21,6 @@ const nl = getCopy("nl");
 export const metadata: Metadata = {
   title: { absolute: `${nl.meta.notFoundTitle} · ${nl.siteName}` },
   robots: { index: false, follow: true },
-  icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml" }] },
 };
 
 export const viewport: Viewport = { themeColor: "#1A201D", width: "device-width", initialScale: 1 };
@@ -35,7 +34,7 @@ export default function GlobalNotFound() {
         </a>
         <header className={styles.bar}>
           <div className={`container ${styles.inner}`}>
-            <Lockup href={pathFor("home", "nl")} wordmark={nl.brand.wordmark} ariaLabel={nl.a11y.home} />
+            <Lockup href={pathFor("home", "nl")} ariaLabel={nl.a11y.home} height={40} />
             <nav aria-label={nl.a11y.languageSwitch} className={styles.langs}>
               <a href={pathFor("home", "nl")} hrefLang="nl" lang="nl" className="t-ui">
                 NL

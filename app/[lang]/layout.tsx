@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     applicationName: c.siteName,
     robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
     formatDetection: { telephone: false, email: false, address: false },
-    icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml" }] },
   };
 }
 

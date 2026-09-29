@@ -31,7 +31,7 @@ const securityHeaders = [
 ];
 
 /** Paths that must never be rewritten into the /nl tree. */
-const passthrough = "en(?:/|$)|nl(?:/|$)|api/|_next/|media/|fonts/|favicon\\.ico$|icon|apple-icon|robots\\.txt$|sitemap\\.xml$|opengraph-image|manifest";
+const passthrough = "en(?:/|$)|nl(?:/|$)|api/|_next/|media/|brand/|fonts/|favicon\\.ico$|icon|apple-icon|robots\\.txt$|sitemap\\.xml$|opengraph-image|manifest";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

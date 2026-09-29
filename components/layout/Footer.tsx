@@ -30,7 +30,7 @@ export function Footer({ lang }: { lang: Lang }) {
         </div>
         <div className={styles.bar} data-footer-bar>
           <div className={styles.row}>
-            <Lockup wordmark={c.brand.wordmark} descriptor={c.brand.descriptor} ariaLabel={c.siteName} />
+            <Lockup ariaLabel={c.siteName} height={52} />
             <address className={`t-legal ${styles.contact}`}>
               {has(company.email) ? <a href={`mailto:${company.email}`}>{company.email}</a> : null}
               {has(company.phone) ? <a href={telHref(company.phone)}>{company.phone}</a> : null}
