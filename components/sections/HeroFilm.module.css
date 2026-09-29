@@ -18,3 +18,7 @@
 @media (max-width: 980px) {
   .control { right: var(--gutter); bottom: var(--s-5); }
 }
+
+/* Pause control hidden from sight, revealed on keyboard focus only */
+.controlHidden { opacity: 0; pointer-events: none; }
+.controlHidden:focus-visible { opacity: 1; pointer-events: auto; }

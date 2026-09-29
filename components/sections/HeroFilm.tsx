@@ -35,7 +35,10 @@ export function HeroFilm({ film, lang, labels }: Props) {
       v.src = chosen;
       v.load();
     }
-    if (prefersReducedMotion() || saveData()) return;
+    if (prefersReducedMotion() || saveData()) {
+      v.pause();
+      return;
+    }
     wantPlaying.current = true;
     // Autoplay can be refused by policy; the poster then stays and the control offers Play.
     // The outcome is kept on the element for diagnostics, never shown.
@@ -77,6 +80,7 @@ export function HeroFilm({ film, lang, labels }: Props) {
             ref={videoRef}
             className={styles.video}
             data-revealed={revealed ? "true" : "false"}
+            autoPlay
             muted
             loop={film.loop}
             playsInline
@@ -101,7 +105,8 @@ export function HeroFilm({ film, lang, labels }: Props) {
         ) : null}
       </div>
       {hasFilm ? (
-        <button type="button" className={styles.control} onClick={toggle} aria-pressed={playing}>
+        // Visually hidden until keyboard focus: keeps the WCAG 2.2.2 pause mechanism without a visible pill.
+        <button type="button" className={`${styles.control} ${styles.controlHidden}`} onClick={toggle} aria-pressed={playing}>
           {playing ? <Pause size={18} weight="light" aria-hidden="true" /> : <Play size={18} weight="light" aria-hidden="true" />}
           <span>{playing ? labels.pause : labels.play}</span>
         </button>
