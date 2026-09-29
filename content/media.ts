@@ -26,9 +26,10 @@ export type VideoAsset = {
 export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
 /**
- * Hero film: supplied 2026-09-29 (10 s, house renewed from shell to finished, Amsterdam skyline).
- * Re-encoded without metadata by scripts/film-export.swift; WebM pending (no ffmpeg on the build machine).
- * Note: this is a generated render; DESIGN §12 asks for real film before launch.
+ * Hero film: two supplied clips (2026-09-29) joined with a 0.5 s cross-dissolve by scripts/film-join.swift
+ * (15.6 s: house renewed from shell to finished, then the sign is placed), re-encoded without metadata by
+ * scripts/film-export.swift. WebM pending (no ffmpeg on the build machine).
+ * Note: generated renders; DESIGN §12 asks for real film before launch.
  */
 export const heroFilm: VideoAsset = {
   webm: null,

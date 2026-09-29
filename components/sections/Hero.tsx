@@ -1,9 +1,8 @@
-import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { heroFilm, heroSubject } from "@/content/media";
 import { getCopy } from "@/content/copy";
-import { pathFor, type Lang } from "@/content/routes";
+import type { Lang } from "@/content/routes";
 import { HeroFilm } from "./HeroFilm";
 import styles from "./Hero.module.css";
 
@@ -31,11 +30,7 @@ export function Hero({ lang }: { lang: Lang }) {
             <h1 id="hero-title" className={`t-display ${styles.title}`}>
               {c.hero.display}
             </h1>
-            <div className={styles.actions}>
-              <Button href={pathFor("contact", lang)} variant="primary">
-                {c.hero.primary}
-              </Button>
-            </div>
+            <p className={`t-lead ${styles.lead}`}>{c.hero.lead}</p>
           </div>
         </div>
         <MicroLabel className={styles.coords}>{c.hero.coordinates}</MicroLabel>
