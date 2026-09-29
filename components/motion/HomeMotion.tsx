@@ -30,11 +30,9 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
         const q = gsap.utils.selector(root);
 
         /* ---------- 5.1 Hero: load sequence + scroll parallax ---------- */
-        const heroBg = q("[data-hero-bg]")[0];
         const heroSubject = q("[data-hero-subject]")[0];
         const heroCopy = q("[data-hero-copy] > *");
         const hero = q("[data-hero]")[0];
-        if (heroBg) gsap.fromTo(heroBg, { scale: 1.08 }, { scale: 1, duration: 1.6, ease: "power2.out" });
         if (heroSubject) gsap.fromTo(heroSubject, { yPercent: 12, scale: 0.92 }, { yPercent: 0, scale: 1, duration: 1.4, ease: ease.out, delay: 0.15 });
         // Headline rises without an opacity fade so it stays the LCP candidate; lead and CTA fade up (P1).
         if (heroCopy.length) {
@@ -46,7 +44,6 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
           const copy = q("[data-hero-copy]")[0];
           if (copy) gsap.to(copy, { yPercent: -20, ease: "none", scrollTrigger: st });
           if (heroSubject) gsap.to(heroSubject, { yPercent: -8, ease: "none", scrollTrigger: st });
-          if (heroBg) gsap.to(heroBg, { yPercent: 4, ease: "none", scrollTrigger: st });
         }
 
         /* ---------- 5.2 Statement: word reveal, capsules P1 + scale ---------- */

@@ -1,25 +1,29 @@
-.hero { padding: var(--frame); padding-top: var(--frame); }
+.hero { padding: 0; }
 /* Sky band with the headline on top, the film below it at its full 16:9 frame (never cropped) */
 .panel {
   position: relative; overflow: hidden;
-  border-radius: var(--r-xl);
+  border-radius: 0;
   background: var(--hero-sky-seam);
   display: flex; flex-direction: column;
   isolation: isolate;
 }
 /* The band carries the sky gradient itself so its bottom edge is exactly the seam colour of the film */
 .content { order: -1; position: relative; z-index: 3; background: linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-seam)); padding: calc(var(--header-h) + var(--s-6)) var(--gutter) var(--s-7); display: flex; justify-content: center; }
-.copy { max-width: 900px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--s-6); color: var(--ink); }
+.copy { position: relative; z-index: 1; max-width: 900px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--s-6); color: var(--ink); }
 .title { font-size: clamp(44px, 6.4vw, 96px); line-height: 0.96; max-width: 14ch; }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); }
 .bg { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; transform-origin: center bottom; }
-/* Seam: the top edge of the film dissolves into the band above */
+/* Junction overlay only: the top of the film fades up into the band, the band fades down into the film.
+   The rest of the footage is untouched. */
 .bg::before {
-  content: ""; position: absolute; inset: 0 0 auto 0; height: 20%; z-index: 2; pointer-events: none;
-  background: linear-gradient(180deg, var(--hero-sky-seam), transparent);
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 26%; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, var(--hero-sky-seam) 0%, var(--hero-tint) 55%, transparent 100%);
 }
-/* Colour overlay over the whole panel that ties footage and sky together */
-.tint { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: var(--hero-tint); }
+.content::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 30%; pointer-events: none; z-index: 0;
+  background: linear-gradient(180deg, transparent, var(--hero-sky-seam));
+}
+.tint { display: none; }
 .clouds {
   position: absolute; inset: -6% -4% auto -4%; height: 38%; pointer-events: none; z-index: 2;
   background:
