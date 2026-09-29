@@ -2,7 +2,11 @@ import styles from "./Mark.module.css";
 
 type Props = { size?: number; className?: string; decorative?: boolean; title?: string };
 
-/** Dak-S mark (DESIGN §6). Stroke follows currentColor; the window uses --win (lime only on dark). */
+/**
+ * Hexagon S mark (client logo, 2026-09-29), redrawn as vector geometry and recoloured to the brand:
+ * the primary stroke follows currentColor (Canal ink on light, Paper on dark), the second band uses
+ * --mark-2 (Graphite on light, Sage in inverse bands). No gradients: matte, flat, precise.
+ */
 export function Mark({ size = 32, className, decorative = false, title = "Supreme" }: Props) {
   return (
     <svg
@@ -15,8 +19,12 @@ export function Mark({ size = 32, className, decorative = false, title = "Suprem
       aria-hidden={decorative ? true : undefined}
       focusable="false"
     >
-      <path d="M82,50 V40 L50,12 L18,40 V60 H82 V92 H18 V80" fill="none" stroke="currentColor" strokeWidth="11" strokeLinejoin="round" />
-      <rect x="45" y="33" width="10" height="10" rx="1.5" fill="var(--win, currentColor)" />
+      <g fill="none" strokeWidth="13" strokeLinejoin="miter" strokeMiterlimit="8">
+        {/* upper part of the S: left shoulder, roof, right flank, bar into the centre */}
+        <path d="M13.5,50 V29.5 L50,8.5 L86.5,29.5 V42.5 H43" stroke="currentColor" />
+        {/* lower part of the S: right flank, floor, left flank, bar into the centre */}
+        <path d="M86.5,50 V70.5 L50,91.5 L13.5,70.5 V57.5 H57" stroke="var(--mark-2, currentColor)" />
+      </g>
     </svg>
   );
 }

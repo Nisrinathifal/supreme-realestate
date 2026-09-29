@@ -1,1 +1,2 @@
-.mark { flex: none; color: currentColor; }
+.mark { flex: none; color: currentColor; --mark-2: var(--muted); }
+:global(.inverse) .mark { --mark-2: var(--inv-muted); }
