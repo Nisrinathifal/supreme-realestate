@@ -30,10 +30,10 @@ export const nl: Copy = {
   nav: { about: "Over ons", contact: "Contact", menu: "Menu", closeMenu: "Sluit menu" },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
   hero: {
-    // PRD §6.1: what the public site may say, in one sentence (APPROVED lead sentence used as H1).
-    display: "Supreme Real Estate is een vastgoedonderneming in Amsterdam, gericht op bestaande woningen en de lange termijn.",
-    // Body built from the three principles (DESIGN §10.1 §3) and the brand promise; no figures, no superlatives.
-    lead: draft("Wij kiezen bestaande woningen met aandacht en vernieuwen ze met vakmanschap, om generaties mee te gaan. Wij denken in decennia, niet in transacties. Van oud naar waardevol."),
+    // Headline: the brand promise (APPROVED, DESIGN §1). Body: one supporting sentence with what, where and how,
+    // ≤ 20 words, brand name included for the brand-name search goal (PRD §9.3). No figures, no superlatives.
+    display: "Van oud naar waardevol.",
+    lead: draft("Supreme Real Estate vernieuwt bestaande woningen in Amsterdam met zorg en vakmanschap, gebouwd om generaties mee te gaan."),
     primary: "Neem contact op",
     secondary: "Over Supreme",
     coordinates: "52.37° N · 4.90° E — Amsterdam",
