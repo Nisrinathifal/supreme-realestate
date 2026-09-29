@@ -104,7 +104,6 @@ export function HeroStory({ film, lang, headline, keyMessage, labels }: Props) {
       </div>
 
       <div className={styles.copy}>
-        <div className={styles.clouds} aria-hidden="true" />
         <div className={styles.final}>
           <h1 id="hero-title" className={styles.title}>
             {headline}
