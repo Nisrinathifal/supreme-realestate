@@ -75,7 +75,6 @@ export default async function LangLayout({ children, params }: { children: React
             email: has(company.email) ? company.email : "",
             phone: has(company.phone) ? company.phone : "",
             phoneHref: has(company.phone) ? telHref(company.phone) : "",
-            primary: c.hero.primary,
           }}
         />
         <main id="main" tabIndex={-1}>

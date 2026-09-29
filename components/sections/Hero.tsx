@@ -27,10 +27,10 @@ export function Hero({ lang }: { lang: Lang }) {
         <div className={styles.clouds} aria-hidden="true" />
         <div className={`${styles.content}`}>
           <div className={styles.copy} data-hero-copy>
-            <h1 id="hero-title" className={`t-display ${styles.title}`}>
+            <h1 id="hero-title" className={styles.title}>
               {c.hero.display}
             </h1>
-            <p className={`t-lead ${styles.lead}`}>{c.hero.lead}</p>
+            <p className={styles.lead}>{c.hero.lead}</p>
           </div>
         </div>
         <MicroLabel className={styles.coords}>{c.hero.coordinates}</MicroLabel>

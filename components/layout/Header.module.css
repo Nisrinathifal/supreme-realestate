@@ -18,7 +18,6 @@
   font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em; white-space: nowrap;
   transition: background-color 250ms var(--ease), color 250ms var(--ease);
 }
-.pillPrimary { background: var(--btn-bg); color: var(--btn-fg); }
 .pillLight { background: var(--surface); color: var(--ink); border-color: var(--line); }
 
 /* Menu sheet: all breakpoints */
@@ -37,6 +36,5 @@
 .sheetContact a { text-decoration: underline; text-underline-offset: 4px; }
 
 @media (max-width: 560px) {
-  .pillPrimary { display: none; }
   .right :global(nav) { display: none; }
 }

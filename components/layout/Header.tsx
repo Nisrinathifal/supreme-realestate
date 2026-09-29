@@ -24,7 +24,6 @@ export type HeaderStrings = {
   email: string;
   phone: string;
   phoneHref: string;
-  primary: string;
 };
 
 type Props = { lang: Lang; strings: HeaderStrings };
@@ -73,9 +72,6 @@ export function Header({ lang, strings }: Props) {
         <Lockup href={pathFor("home", lang)} wordmark={strings.wordmark} ariaLabel={strings.home} className={styles.lockup} />
         <div className={styles.right}>
           <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
-          <Link href={pathFor("contact", lang)} className={`${styles.pill} ${styles.pillPrimary}`}>
-            {strings.primary}
-          </Link>
           <button
             ref={buttonRef}
             type="button"
