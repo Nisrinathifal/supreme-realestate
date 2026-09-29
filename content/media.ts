@@ -16,12 +16,32 @@ export type ImageAsset = {
 export type VideoAsset = {
   webm: string | null;
   mp4: string | null;
+  /** ≤980px source (720p), optional. */
+  mp4Mobile: string | null;
   poster: ImageAsset | null;
+  /** Play once and hold the last frame (a story film), or loop. */
+  loop: boolean;
 };
 
 export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
-export const heroFilm: VideoAsset = { webm: null, mp4: null, poster: null };
+/**
+ * Hero film: supplied 2026-09-29 (10 s, house renewed from shell to finished, Amsterdam skyline).
+ * Re-encoded without metadata by scripts/film-export.swift; WebM pending (no ffmpeg on the build machine).
+ * Note: this is a generated render; DESIGN §12 asks for real film before launch.
+ */
+export const heroFilm: VideoAsset = {
+  webm: null,
+  mp4: "/media/hero-film-01.mp4",
+  mp4Mobile: "/media/hero-film-01-720.mp4",
+  poster: {
+    src: "hero-poster-01",
+    width: 1920,
+    height: 1080,
+    alt: { nl: "Woning in vernieuwing met daglicht, op de achtergrond de stad", en: "A home being renewed in daylight, the city in the background" },
+  },
+  loop: false,
+};
 
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };

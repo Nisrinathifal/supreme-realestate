@@ -12,7 +12,7 @@
   position: absolute; right: 6%; bottom: 0; width: min(46%, 640px); z-index: 1;
   transform-origin: bottom center;
 }
-.scrim { position: absolute; inset: 0; background: var(--media-scrim); opacity: .35; z-index: 1; pointer-events: none; }
+.scrim { position: absolute; inset: 0; background: var(--media-scrim-light); z-index: 1; pointer-events: none; }
 .content { position: relative; z-index: 2; padding: calc(var(--header-h) + var(--s-8)) var(--gutter) var(--s-9); }
 .copy { max-width: 720px; display: flex; flex-direction: column; gap: var(--s-6); color: var(--ink); }
 .title { font-size: clamp(44px, 6.4vw, 96px); line-height: 0.96; max-width: 12ch; }

@@ -20,22 +20,52 @@ export function HeroFilm({ film, lang, labels }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [ended, setEnded] = useState(false);
+
+  const wantPlaying = useRef(false);
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v || !hasFilm) return;
+    // One source, chosen once. <source media> would make the browser reload the element (and reset
+    // playback) every time the viewport crosses the breakpoint.
+    const mobile = window.matchMedia("(max-width: 980px)").matches;
+    const chosen = (mobile && film.mp4Mobile) || film.mp4 || film.webm;
+    if (chosen && !v.currentSrc.endsWith(chosen)) {
+      v.src = chosen;
+      v.load();
+    }
     if (prefersReducedMotion() || saveData()) return;
-    const start = () => v.play().catch(() => undefined);
+    wantPlaying.current = true;
+    // Autoplay can be refused by policy; the poster then stays and the control offers Play.
+    // The outcome is kept on the element for diagnostics, never shown.
+    const start = () => {
+      if (!wantPlaying.current || !v.paused) return;
+      v.play().then(
+        () => v.setAttribute("data-autoplay", "ok"),
+        (e: unknown) => v.setAttribute("data-autoplay", e instanceof Error ? e.name : "refused"),
+      );
+    };
     if (v.readyState >= 3) start();
-    else v.addEventListener("canplay", start, { once: true });
-    return () => v.removeEventListener("canplay", start);
-  }, [hasFilm]);
+    v.addEventListener("canplay", start);
+    v.addEventListener("loadedmetadata", start);
+    return () => {
+      v.removeEventListener("canplay", start);
+      v.removeEventListener("loadedmetadata", start);
+    };
+  }, [hasFilm, film.mp4, film.mp4Mobile, film.webm]);
 
   const toggle = () => {
     const v = videoRef.current;
     if (!v) return;
-    if (v.paused) v.play().catch(() => undefined);
-    else v.pause();
+    if (v.paused) {
+      if (ended) v.currentTime = 0;
+      wantPlaying.current = true;
+      v.play().catch(() => undefined);
+    } else {
+      wantPlaying.current = false;
+      v.pause();
+    }
   };
 
   return (
@@ -48,7 +78,7 @@ export function HeroFilm({ film, lang, labels }: Props) {
             className={styles.video}
             data-revealed={revealed ? "true" : "false"}
             muted
-            loop
+            loop={film.loop}
             playsInline
             preload="metadata"
             poster={film.poster ? `/media/${film.poster.src}-1280.jpg` : undefined}
@@ -59,6 +89,11 @@ export function HeroFilm({ film, lang, labels }: Props) {
               setRevealed(true);
             }}
             onPause={() => setPlaying(false)}
+            onEnded={() => {
+              setPlaying(false);
+              setEnded(true);
+            }}
+            onPlay={() => setEnded(false)}
           >
             {film.webm ? <source src={film.webm} type="video/webm" /> : null}
             {film.mp4 ? <source src={film.mp4} type="video/mp4" /> : null}
