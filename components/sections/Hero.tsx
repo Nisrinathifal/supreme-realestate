@@ -16,6 +16,7 @@ export function Hero({ lang }: { lang: Lang }) {
   return (
     <section className={styles.hero} data-hero data-hero-film aria-labelledby="hero-title">
       <div className={styles.panel} data-hero-media>
+        <div className={styles.sky} aria-hidden="true" />
         <div className={styles.bg} data-hero-bg>
           <HeroFilm film={heroFilm} lang={lang} labels={{ pause: c.hero.pause, play: c.hero.play }} />
         </div>
@@ -24,13 +25,12 @@ export function Hero({ lang }: { lang: Lang }) {
             <MediaFrame image={heroSubject.image} ratio="4/5" lang={lang} radius="none" decorative priority sizes="(max-width: 980px) 70vw, 40vw" />
           </div>
         ) : null}
-        <div className={styles.scrim} aria-hidden="true" />
+        <div className={styles.clouds} aria-hidden="true" />
         <div className={`${styles.content}`}>
           <div className={styles.copy} data-hero-copy>
             <h1 id="hero-title" className={`t-display ${styles.title}`}>
               {c.hero.display}
             </h1>
-            <p className={`t-lead ${styles.lead}`}>{c.hero.lead}</p>
             <div className={styles.actions}>
               <Button href={pathFor("contact", lang)} variant="primary">
                 {c.hero.primary}

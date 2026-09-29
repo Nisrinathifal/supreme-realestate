@@ -34,7 +34,7 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
         const heroSubject = q("[data-hero-subject]")[0];
         const heroCopy = q("[data-hero-copy] > *");
         const hero = q("[data-hero]")[0];
-        if (heroBg) gsap.fromTo(heroBg, { scale: 1.12 }, { scale: 1, duration: 1.6, ease: "power2.out" });
+        if (heroBg) gsap.fromTo(heroBg, { scale: 1.08 }, { scale: 1, duration: 1.6, ease: "power2.out" });
         if (heroSubject) gsap.fromTo(heroSubject, { yPercent: 12, scale: 0.92 }, { yPercent: 0, scale: 1, duration: 1.4, ease: ease.out, delay: 0.15 });
         // Headline rises without an opacity fade so it stays the LCP candidate; lead and CTA fade up (P1).
         if (heroCopy.length) {
