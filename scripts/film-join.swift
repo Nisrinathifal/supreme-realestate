@@ -1,4 +1,4 @@
-// Joins two clips with a cross-dissolve (AVFoundation), no audio, no metadata.
+// Joins two clips back to back (AVFoundation), optional cross-dissolve (0 = hard cut), no audio, no metadata.
 // Usage: xcrun swift scripts/film-join.swift <a.mp4> <b.mp4> <out.mov> <dissolveSeconds> [aEnd] [bStart]
 import AVFoundation
 import Foundation
@@ -25,7 +25,7 @@ let l2a = AVMutableVideoCompositionLayerInstruction(assetTrack: t1); l2a.setOpac
 let l2b = AVMutableVideoCompositionLayerInstruction(assetTrack: t2); i2.layerInstructions = [l2a, l2b]
 let i3 = AVMutableVideoCompositionInstruction(); i3.timeRange = CMTimeRange(start: aEnd, end: bAt + bRange.duration)
 let l3 = AVMutableVideoCompositionLayerInstruction(assetTrack: t2); i3.layerInstructions = [l3]
-let vc = AVMutableVideoComposition(); vc.instructions = [i1, i2, i3]; vc.renderSize = size
+let vc = AVMutableVideoComposition(); vc.instructions = dissolve > 0 ? [i1, i2, i3] : [i1, i3]; vc.renderSize = size
 vc.frameDuration = CMTime(value: 1, timescale: 30)
 try? FileManager.default.removeItem(at: out)
 let session = AVAssetExportSession(asset: comp, presetName: AVAssetExportPresetHighestQuality)!
