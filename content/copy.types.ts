@@ -15,9 +15,8 @@ export type Copy = {
   a11y: { skip: string; languageSwitch: string; nl: string; en: string; mainNav: string; footerNav: string; legalNav: string; home: string };
   nav: { about: string; contact: string; menu: string; closeMenu: string };
   brand: { wordmark: string; descriptor: string; tagline: string };
-  /** Hero story: `sequence` words replace each other as the header in sync with the film (start in seconds); when the
-   *  film ends the header settles on `headline` (H1) with `keyMessage` as body text. */
-  hero: { sequence: { at: number; text: string }[]; headline: string; keyMessage: string; pause: string; play: string };
+  /** Hero: `headline` (H1) with `keyMessage` as body text, above the film. */
+  hero: { headline: string; keyMessage: string; pause: string; play: string };
   statement: { label: string; text: string; aside: string };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };
   carousel: { label: string; title: string; sub: string; items: { title: string; body: string }[] };

@@ -8,35 +8,28 @@ import { MediaFrame } from "@/components/ui/MediaFrame";
 import { prefersReducedMotion, saveData } from "@/lib/motion";
 import styles from "./Hero.module.css";
 
-type Cue = { at: number; text: string };
 type Props = {
   film: VideoAsset;
   lang: Lang;
-  sequence: Cue[];
   headline: string;
   keyMessage: string;
   labels: { pause: string; play: string };
 };
 
-/** "static": key message only (server render, no JS, reduced motion, autoplay refused). */
-type Phase = { kind: "static" } | { kind: "sequence"; index: number } | { kind: "done" };
-
 /**
- * Hero story (sky band above the uncropped film): the film plays once; words appear one at a time in sync with it (forgotten, old, run-down,
- * valuable, worth living in); when the film ends the header settles on the headline (H1) with the key message as
- * body text. H1 and body are always in the DOM for screen readers; the sequence words are decorative (aria-hidden).
- * Without JS, and under reduced motion, headline and body show with the final frame of the film.
+ * Hero: headline and key message in the sky band, the film below it at its full frame. The film autoplays once
+ * (muted) and holds its last frame. Reduced motion / Save-Data: no playback, the finished last frame is shown.
  */
-export function HeroStory({ film, lang, sequence, headline, keyMessage, labels }: Props) {
+export function HeroStory({ film, lang, headline, keyMessage, labels }: Props) {
   const hasFilm = Boolean(film.mp4 || film.webm);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [phase, setPhase] = useState<Phase>({ kind: "static" });
   const [playing, setPlaying] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v || !hasFilm) return;
+    // One source, chosen once (a <source media> pair makes the browser reload and reset on breakpoint changes)
     const mobile = window.matchMedia("(max-width: 980px)").matches;
     const chosen = (mobile && film.mp4Mobile) || film.mp4 || film.webm;
     if (chosen && !v.currentSrc.endsWith(chosen)) {
@@ -44,21 +37,6 @@ export function HeroStory({ film, lang, sequence, headline, keyMessage, labels }
       v.load();
     }
 
-    const cueIndex = (t: number) => {
-      let i = 0;
-      for (let k = 0; k < sequence.length; k++) if (t >= sequence[k].at) i = k;
-      return i;
-    };
-    const onTime = () => {
-      if (v.ended) return;
-      setPhase((p) => {
-        const index = cueIndex(v.currentTime);
-        return p.kind === "sequence" && p.index === index ? p : { kind: "sequence", index };
-      });
-    };
-    const onEnded = () => setPhase({ kind: "done" });
-
-    // Reduced motion / Save-Data: no playback; show the finished frame with the key message.
     if (prefersReducedMotion() || saveData()) {
       v.pause();
       const toEnd = () => {
@@ -74,41 +52,27 @@ export function HeroStory({ film, lang, sequence, headline, keyMessage, labels }
       };
     }
 
-    v.addEventListener("timeupdate", onTime);
-    v.addEventListener("ended", onEnded);
     const start = () => {
       if (!v.paused || v.ended) return;
       v.play().then(
         () => v.setAttribute("data-autoplay", "ok"),
-        () => {
-          // Autoplay refused: keep the key message, the hidden control can still start the film.
-          v.setAttribute("data-autoplay", "refused");
-          setPhase({ kind: "static" });
-        },
+        () => v.setAttribute("data-autoplay", "refused"),
       );
     };
     if (v.readyState >= 3) start();
     v.addEventListener("canplay", start, { once: true });
-    return () => {
-      v.removeEventListener("timeupdate", onTime);
-      v.removeEventListener("ended", onEnded);
-      v.removeEventListener("canplay", start);
-    };
-  }, [hasFilm, film.mp4, film.mp4Mobile, film.webm, sequence]);
+    return () => v.removeEventListener("canplay", start);
+  }, [hasFilm, film.mp4, film.mp4Mobile, film.webm]);
 
   const toggle = () => {
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) {
-      if (v.ended) {
-        v.currentTime = 0;
-        setPhase({ kind: "sequence", index: 0 });
-      }
+      if (v.ended) v.currentTime = 0;
       v.play().catch(() => undefined);
     } else v.pause();
   };
 
-  const showKey = phase.kind !== "sequence";
   return (
     <>
       <div className={styles.media} data-hero-media>
@@ -129,13 +93,6 @@ export function HeroStory({ film, lang, sequence, headline, keyMessage, labels }
               setPlaying(true);
               setRevealed(true);
             }}
-            onPlay={(e) => {
-              // Sequence mode starts the moment playback starts (autoplay or replay)
-              const t = e.currentTarget.currentTime;
-              let index = 0;
-              for (let k = 0; k < sequence.length; k++) if (t >= sequence[k].at) index = k;
-              if (!prefersReducedMotion()) setPhase({ kind: "sequence", index });
-            }}
             onPause={() => setPlaying(false)}
           >
             {film.webm ? <source src={film.webm} type="video/webm" /> : null}
@@ -148,20 +105,11 @@ export function HeroStory({ film, lang, sequence, headline, keyMessage, labels }
 
       <div className={styles.copy}>
         <div className={styles.clouds} aria-hidden="true" />
-        <div className={styles.stack}>
-          <p className={styles.sequence} aria-hidden="true">
-            {sequence.map((cue, i) => (
-              <span key={cue.at} className={styles.word} data-on={phase.kind === "sequence" && phase.index === i ? "true" : "false"}>
-                {cue.text}
-              </span>
-            ))}
-          </p>
-          <div className={styles.final} data-on={showKey ? "true" : "false"}>
-            <h1 id="hero-title" className={styles.title}>
-              {headline}
-            </h1>
-            <p className={styles.lead}>{keyMessage}</p>
-          </div>
+        <div className={styles.final}>
+          <h1 id="hero-title" className={styles.title}>
+            {headline}
+          </h1>
+          <p className={styles.lead}>{keyMessage}</p>
         </div>
       </div>
 
