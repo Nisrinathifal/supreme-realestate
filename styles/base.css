@@ -103,7 +103,13 @@ input, select, textarea { font: inherit; color: inherit; }
   font-size: var(--fs-legal);
 }
 
+/* Marquee (REFERENCE 5.6): doubled track, linear, paused with reduced motion */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes pulse-ring { from { transform: scale(1); opacity: .6; } to { transform: scale(1.8); opacity: 0; } }
+
 @media (prefers-reduced-motion: reduce) {
+  [data-marquee-track] { animation: none !important; }
+  [data-pulse] { animation: none !important; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }

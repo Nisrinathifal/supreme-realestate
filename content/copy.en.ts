@@ -42,15 +42,40 @@ export const en: Copy = {
   statement: {
     label: draft("01 — Supreme"),
     text: "We see what a home can become, and give it a new future with care. Carefully chosen, renewed with craft, for the long term.",
+    aside: draft("No quick transactions. We work with a horizon of decades, in the city we call home."),
   },
   principles: {
     label: draft("02 — Principles"),
     title: "What we stand for",
+    sub: draft("Three principles behind every decision."),
     items: [
       { index: "01", title: "Careful", body: "We choose with attention and work with people who deliver craftsmanship." },
       { index: "02", title: "Lasting", body: "What we renew should last for generations." },
       { index: "03", title: "Long term", body: "We think in decades, not in transactions." },
     ],
+  },
+  carousel: {
+    label: draft("03 — Details"),
+    title: "Material, light and space",
+    sub: draft("What lasts begins with what you touch and see."),
+    items: [
+      { title: draft("Material"), body: draft("Lime, stone, oak and brass. Materials that grow more beautiful with time.") },
+      { title: draft("Light"), body: draft("Daylight as a building material: high, soft and present all day.") },
+      { title: draft("Space"), body: draft("Space that gives calm, with measure and proportion that feel right.") },
+    ],
+  },
+  map: {
+    label: draft("04 — Amsterdam"),
+    title: draft("At home in Amsterdam"),
+    sub: draft("We work in the city we call home, with respect for what already stands."),
+    cta: "About Supreme",
+    dot: "Amsterdam",
+  },
+  closing: {
+    title: draft("Made to last"),
+    body: "For partnerships, press or other questions: we reply personally.",
+    cta: "Get in touch",
+    marquee: "From old to valuable",
   },
   details: {
     label: draft("03 — Details"),
@@ -58,7 +83,7 @@ export const en: Copy = {
     counter: (i, n) => `${i} / ${n}`,
     scrollerLabel: draft("Images of material, light and space"),
   },
-  companySection: { label: draft("04 — Company"), title: "Company details" },
+  companySection: { label: draft("05 — Company"), title: "Company details" },
   companyKeys: {
     legalName: draft("Legal name"),
     tradeName: draft("Trade name"),
@@ -75,7 +100,7 @@ export const en: Copy = {
   },
   companyLegalLine: "For legal or compliance questions",
   contactSection: {
-    label: draft("05 — Contact"),
+    label: draft("06 — Contact"),
     title: "Get in touch",
     body: "For partnerships, press or other questions: we reply personally.",
     cta: "Get in touch",

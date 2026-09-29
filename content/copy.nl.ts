@@ -42,15 +42,40 @@ export const nl: Copy = {
   statement: {
     label: "01 — Supreme",
     text: "Wij zien wat een woning kan worden, en geven haar met zorg een nieuwe toekomst. Zorgvuldig gekozen, met vakmanschap vernieuwd, voor de lange termijn.",
+    aside: draft("Geen snelle transacties. Wij werken met een horizon van decennia, in de stad waar we thuis zijn."),
   },
   principles: {
     label: "02 — Principes",
     title: "Waar wij voor staan",
+    sub: draft("Drie principes achter elke keuze."),
     items: [
       { index: "01", title: "Zorgvuldig", body: "Wij kiezen met aandacht en werken met mensen die vakmanschap leveren." },
       { index: "02", title: "Blijvend", body: "Wat wij vernieuwen, moet generaties meegaan." },
       { index: "03", title: "Lange termijn", body: "Wij denken in decennia, niet in transacties." },
     ],
+  },
+  carousel: {
+    label: "03 — Details",
+    title: "Materiaal, licht en ruimte",
+    sub: draft("Wat blijft, begint bij wat je aanraakt en ziet."),
+    items: [
+      { title: draft("Materiaal"), body: draft("Kalk, steen, eik en messing. Materialen die mooier worden met de tijd.") },
+      { title: draft("Licht"), body: draft("Daglicht als bouwmateriaal: hoog, zacht en de hele dag aanwezig.") },
+      { title: draft("Ruimte"), body: draft("Ruimte die rust geeft, met maat en proportie die kloppen.") },
+    ],
+  },
+  map: {
+    label: draft("04 — Amsterdam"),
+    title: draft("Thuis in Amsterdam"),
+    sub: draft("Wij werken in de stad waar we thuis zijn, met respect voor wat er al staat."),
+    cta: "Over Supreme",
+    dot: "Amsterdam",
+  },
+  closing: {
+    title: draft("Gemaakt om te blijven"),
+    body: "Voor samenwerking, pers of andere vragen: we reageren persoonlijk.",
+    cta: "Neem contact op",
+    marquee: "Van oud naar waardevol",
   },
   details: {
     label: "03 — Details",
@@ -58,7 +83,7 @@ export const nl: Copy = {
     counter: (i, n) => `${i} / ${n}`,
     scrollerLabel: draft("Beelden van materiaal, licht en ruimte"),
   },
-  companySection: { label: "04 — Bedrijf", title: "Bedrijfsgegevens" },
+  companySection: { label: draft("05 — Bedrijf"), title: "Bedrijfsgegevens" },
   companyKeys: {
     legalName: "Statutaire naam",
     tradeName: "Handelsnaam",
@@ -75,7 +100,7 @@ export const nl: Copy = {
   },
   companyLegalLine: "Voor juridische of compliance-vragen",
   contactSection: {
-    label: "05 — Contact",
+    label: draft("06 — Contact"),
     title: "Neem contact op",
     body: "Voor samenwerking, pers of andere vragen: we reageren persoonlijk.",
     cta: "Neem contact op",

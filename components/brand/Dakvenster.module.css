@@ -6,4 +6,4 @@
   border-radius: 1px;
 }
 /* Inside inverse bands / over media the window is lime without outline */
-:global(.inverse) .win, :global(body:has([data-hero-film])) :global([data-home="true"]) .win { outline-color: transparent; background: var(--accent); }
+:global(.inverse) .win { outline-color: transparent; background: var(--accent); }

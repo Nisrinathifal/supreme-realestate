@@ -6,7 +6,7 @@ type Props = {
   image: ImageAsset | null;
   ratio: Ratio | "fill";
   lang: Lang;
-  radius?: "lg" | "xl" | "none";
+  radius?: "lg" | "xl" | "pill" | "none";
   priority?: boolean;
   sizes?: string;
   className?: string;
@@ -21,7 +21,7 @@ const ratioClass: Record<Ratio | "fill", string> = { "16/9": styles.r169, "4/5":
  * dimensions, or a neutral placeholder surface while the asset is missing. No captions.
  */
 export function MediaFrame({ image, ratio, lang, radius = "lg", priority = false, sizes = "100vw", className, decorative = false }: Props) {
-  const cls = [styles.frame, ratioClass[ratio], radius === "xl" ? styles.rxl : radius === "none" ? styles.rnone : "", className]
+  const cls = [styles.frame, ratioClass[ratio], radius === "xl" ? styles.rxl : radius === "pill" ? styles.rpill : radius === "none" ? styles.rnone : "", className]
     .filter(Boolean)
     .join(" ");
   if (!image) {

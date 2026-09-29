@@ -1,9 +1,14 @@
+import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
+import { statementCapsules } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import styles from "./Statement.module.css";
 
-/** Statement (DESIGN §10.1 §2): words pre-split on the server; colour reveal on scroll (§11). */
+/**
+ * Statement after the reference (REFERENCE 5.2): large paragraph in a ~70% column with the word reveal,
+ * below it two capsule images and a short text column on the right. No chips.
+ */
 export function Statement({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const words = c.statement.text.split(" ");
@@ -23,6 +28,18 @@ export function Statement({ lang }: { lang: Lang }) {
             </span>
           ))}
         </p>
+        <div className={styles.row}>
+          <div className={styles.capsules}>
+            {statementCapsules.map((slot) => (
+              <div key={slot.id} className={styles.capsule} data-capsule>
+                <MediaFrame image={slot.image} ratio="16/9" lang={lang} radius="pill" decorative sizes="(max-width: 980px) 45vw, 22vw" />
+              </div>
+            ))}
+          </div>
+          <p className={`t-body ${styles.aside}`} data-fade-up>
+            {c.statement.aside}
+          </p>
+        </div>
       </div>
     </section>
   );

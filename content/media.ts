@@ -23,6 +23,30 @@ export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
 export const heroFilm: VideoAsset = { webm: null, mp4: null, poster: null };
 
+/** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
+export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };
+
+/** Two capsule images under the statement. */
+export const statementCapsules: MediaSlot[] = [
+  { id: "capsule-01", ratio: "16/9", image: null },
+  { id: "capsule-02", ratio: "16/9", image: null },
+];
+
+/** Pinned principles section: a tall vertical image (stair, wall, window) and one small thumbnail. */
+export const principlesTall: MediaSlot = { id: "principles-tall", ratio: "4/5", image: null };
+export const principlesThumb: MediaSlot = { id: "principles-thumb", ratio: "1/1", image: null };
+
+/** Carousel photo cards, one per pair (Materiaal · Licht · Ruimte). */
+export const carouselImages: MediaSlot[] = [
+  { id: "pair-01", ratio: "4/5", image: null },
+  { id: "pair-02", ratio: "4/5", image: null },
+  { id: "pair-03", ratio: "4/5", image: null },
+];
+
+/** Closing: the capsule that grows into the wide footer image, and the small capsule at the end of the wordmark. */
+export const closingCapsule: MediaSlot = { id: "closing-01", ratio: "21/9", image: null };
+export const wordmarkCapsule: MediaSlot = { id: "closing-02", ratio: "16/9", image: null };
+
 export const principlesMedia: MediaSlot = { id: "principles", ratio: "21/9", image: null };
 
 export const detailSequence: MediaSlot[] = [

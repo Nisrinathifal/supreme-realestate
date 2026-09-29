@@ -1,26 +1,18 @@
-.footer {
-  margin-inline: var(--frame);
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  overflow: hidden;
-  padding-block: var(--s-8) calc(var(--s-6) + env(safe-area-inset-bottom));
-}
-.inner { display: flex; flex-direction: column; gap: var(--s-8); }
-.row1 { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-6); flex-wrap: wrap; }
-.contact { font-style: normal; display: flex; flex-direction: column; gap: var(--s-2); text-align: right; }
+.footer { background: var(--bg); color: var(--ink); padding-bottom: calc(var(--s-6) + env(safe-area-inset-bottom)); }
+.inner { display: flex; flex-direction: column; gap: var(--s-6); }
+.wordmarkRow { padding-top: var(--s-8); }
+:global(body:has([data-closing])) .wordmarkRow { display: none; }
+.bar { display: flex; flex-direction: column; gap: var(--s-5); padding-top: var(--s-5); border-top: 1px solid var(--line); }
+.row { display: flex; justify-content: space-between; align-items: center; gap: var(--s-5); flex-wrap: wrap; }
+.contact { font-style: normal; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
 .contact a { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .contact a:hover { text-decoration-thickness: 2px; }
-.address { display: flex; flex-direction: column; color: var(--muted); }
-.row2 { margin-inline: calc(var(--gutter) * -0.15); }
-.row3 {
-  display: flex; justify-content: space-between; align-items: center; gap: var(--s-5); flex-wrap: wrap;
-  padding-top: var(--s-5); border-top: 1px solid var(--line);
-}
+.address { display: flex; gap: var(--s-2); color: var(--muted); }
 .legal { color: var(--muted); user-select: text; }
 .links { display: flex; align-items: center; gap: var(--s-5); flex-wrap: wrap; }
 .link { color: var(--ink); min-height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .link:hover { text-decoration-thickness: 2px; }
 .icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--r-pill); }
 @media (max-width: 560px) {
-  .contact { text-align: left; }
-  .row1 { flex-direction: column; }
+  .contact, .address { flex-direction: column; }
 }

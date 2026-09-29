@@ -7,7 +7,11 @@ import { getCopy } from "@/content/copy";
 import { pathFor, type Lang } from "@/content/routes";
 import styles from "./Footer.module.css";
 
-/** Footer (DESIGN §9.12): inverse band, three rows, plain-text legal line. */
+/**
+ * Footer after the reference (REFERENCE 5.7): light, giant wordmark, then a bar with lockup, contact,
+ * legal line and legal links. On the homepage the wordmark is rendered by the Closing section
+ * (it rises after the capsule expands), so the footer's own wordmark row hides there via :has().
+ */
 export function Footer({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const year = new Date().getFullYear();
@@ -19,51 +23,51 @@ export function Footer({ lang }: { lang: Lang }) {
   ].filter(Boolean);
 
   return (
-    <footer className={`inverse ${styles.footer}`} data-footer>
+    <footer className={styles.footer} data-footer>
       <div className={`container ${styles.inner}`}>
-        <div className={styles.row1}>
-          <Lockup wordmark={c.brand.wordmark} descriptor={c.brand.descriptor} ariaLabel={c.siteName} />
-          <address className={`t-legal ${styles.contact}`}>
-            {has(company.email) ? <a href={`mailto:${company.email}`}>{company.email}</a> : null}
-            {has(company.phone) ? <a href={telHref(company.phone)}>{company.phone}</a> : null}
-            {hasAddress(company.visitingAddress) ? (
-              <span className={styles.address}>
-                {formatAddressLines(company.visitingAddress).map((l, i) => (
-                  <span key={i}>{l}</span>
-                ))}
-              </span>
-            ) : null}
-          </address>
-        </div>
-
-        <div className={styles.row2}>
+        <div className={styles.wordmarkRow} data-footer-wordmark>
           <Wordmark text={c.brand.wordmark} />
         </div>
-
-        <div className={styles.row3}>
-          <p className={`t-legal ${styles.legal}`}>
-            <span>{legalParts.join(" · ")}</span>
-            <span aria-hidden="true"> · </span>
-            <span>{c.footer.copyright(year)}</span>
-          </p>
-          <nav aria-label={c.a11y.legalNav}>
-            <ul className={styles.links}>
-              {c.footer.links.map((l) => (
-                <li key={l.key}>
-                  <Link href={pathFor(l.key, lang)} className={`t-legal ${styles.link}`}>
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-              {has(company.linkedin) ? (
-                <li>
-                  <a href={company.linkedin} rel="noopener noreferrer" target="_blank" className={styles.icon} aria-label={c.footer.linkedin}>
-                    <LinkedinLogo size={20} weight="light" aria-hidden="true" />
-                  </a>
-                </li>
+        <div className={styles.bar} data-footer-bar>
+          <div className={styles.row}>
+            <Lockup wordmark={c.brand.wordmark} descriptor={c.brand.descriptor} ariaLabel={c.siteName} />
+            <address className={`t-legal ${styles.contact}`}>
+              {has(company.email) ? <a href={`mailto:${company.email}`}>{company.email}</a> : null}
+              {has(company.phone) ? <a href={telHref(company.phone)}>{company.phone}</a> : null}
+              {hasAddress(company.visitingAddress) ? (
+                <span className={styles.address}>
+                  {formatAddressLines(company.visitingAddress).map((l, i) => (
+                    <span key={i}>{l}</span>
+                  ))}
+                </span>
               ) : null}
-            </ul>
-          </nav>
+            </address>
+          </div>
+          <div className={styles.row}>
+            <p className={`t-legal ${styles.legal}`}>
+              <span>{legalParts.join(" · ")}</span>
+              <span aria-hidden="true"> · </span>
+              <span>{c.footer.copyright(year)}</span>
+            </p>
+            <nav aria-label={c.a11y.legalNav}>
+              <ul className={styles.links}>
+                {c.footer.links.map((l) => (
+                  <li key={l.key}>
+                    <Link href={pathFor(l.key, lang)} className={`t-legal ${styles.link}`}>
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+                {has(company.linkedin) ? (
+                  <li>
+                    <a href={company.linkedin} rel="noopener noreferrer" target="_blank" className={styles.icon} aria-label={c.footer.linkedin}>
+                      <LinkedinLogo size={20} weight="light" aria-hidden="true" />
+                    </a>
+                  </li>
+                ) : null}
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </footer>

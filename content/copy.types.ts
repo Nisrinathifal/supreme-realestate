@@ -16,8 +16,11 @@ export type Copy = {
   nav: { about: string; contact: string; menu: string; closeMenu: string };
   brand: { wordmark: string; descriptor: string; tagline: string };
   hero: { display: string; lead: string; primary: string; secondary: string; coordinates: string; pause: string; play: string; filmCaption: string };
-  statement: { label: string; text: string };
-  principles: { label: string; title: string; items: { index: string; title: string; body: string }[] };
+  statement: { label: string; text: string; aside: string };
+  principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };
+  carousel: { label: string; title: string; sub: string; items: { title: string; body: string }[] };
+  map: { label: string; title: string; sub: string; cta: string; dot: string };
+  closing: { title: string; body: string; cta: string; marquee: string };
   details: { label: string; title: string; counter: (i: number, n: number) => string; scrollerLabel: string };
   companySection: { label: string; title: string };
   companyKeys: { legalName: string; tradeName: string; kvk: string; visitingAddress: string; postalAddress: string; vat: string; email: string; emailLegal: string; phone: string; availability: string; management: string; linkedin: string };

@@ -1,24 +1,24 @@
 import { HomeMotion } from "@/components/motion/HomeMotion";
 import { Bedrijfsgegevens } from "@/components/sections/Bedrijfsgegevens";
-import { ContactCta } from "@/components/sections/ContactCta";
-import { Details } from "@/components/sections/Details";
+import { Carousel } from "@/components/sections/Carousel";
+import { Closing } from "@/components/sections/Closing";
 import { Hero } from "@/components/sections/Hero";
-import { Impressies } from "@/components/sections/Impressies";
-import { Principes } from "@/components/sections/Principes";
+import { MapBand } from "@/components/sections/MapBand";
+import { PrinciplesPinned } from "@/components/sections/PrinciplesPinned";
 import { Statement } from "@/components/sections/Statement";
 import type { Lang } from "@/content/routes";
 
-/** Homepage in DESIGN §10.1 order. Footer comes from the layout. */
+/** Homepage after the reference recording (REFERENCE §5 order) with Supreme content and PRD §6 disclosure. */
 export function HomePage({ lang }: { lang: Lang }) {
   return (
     <HomeMotion>
       <Hero lang={lang} />
       <Statement lang={lang} />
-      <Principes lang={lang} />
-      <Details lang={lang} />
-      <Impressies lang={lang} />
+      <PrinciplesPinned lang={lang} />
+      <Carousel lang={lang} />
+      <MapBand lang={lang} />
       <Bedrijfsgegevens lang={lang} />
-      <ContactCta lang={lang} />
+      <Closing lang={lang} />
     </HomeMotion>
   );
 }
