@@ -4,17 +4,17 @@ import styles from "./Lockup.module.css";
 type Props = { href?: string; wordmark?: string; descriptor?: string; ariaLabel: string; className?: string; height?: number };
 
 /**
- * Logo lockup: the client-supplied artwork (public/brand/logo-lockup.png, background made transparent,
- * otherwise untouched). Mark + "SUPREME REAL ESTATE" are part of the image; the text props are kept
- * for the accessible name only. Never boxed, never recoloured.
+ * Logo lockup: the horizontal roof-S lockup supplied 2026-09-30 (public/brand/logo-lockup.svg, ink mono).
+ * Roof mark + "SUPREME" + "REAL ESTATE" are part of the artwork; the text props are kept for the
+ * accessible name only. Never boxed, never recoloured.
  */
 export function Lockup({ href, ariaLabel, className, height = 36 }: Props) {
-  // 1337×398 source: keep the aspect ratio for width/height attributes (no layout shift)
-  const width = Math.round((height * 1337) / 398);
+  // 543.05×141.39 viewBox: keep the aspect ratio for width/height attributes (no layout shift)
+  const width = Math.round((height * 543.05) / 141.39);
   // inline height: the global `img { height: auto }` reset would otherwise override the attribute
-  // Plain <img>: small fixed-size logo, explicit dimensions, no optimisation needed.
+  // Plain <img>: small fixed-size vector logo, explicit dimensions, no optimisation needed.
   // eslint-disable-next-line @next/next/no-img-element
-  const img = <img src="/brand/logo-lockup.png" alt="" width={width} height={height} style={{ height, width }} className={styles.img} decoding="async" />;
+  const img = <img src="/brand/logo-lockup.svg" alt="" width={width} height={height} style={{ height, width }} className={styles.img} decoding="async" />;
   const cls = [styles.lockup, className].filter(Boolean).join(" ");
   return href ? (
     <Link href={href} className={cls} aria-label={ariaLabel}>
