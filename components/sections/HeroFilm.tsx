@@ -31,6 +31,7 @@ export function HeroFilm({ film, labels }: Props) {
       v.src = chosen;
       v.load();
     }
+    v.playbackRate = film.rate ?? 1;
     // Show the first frame (the house as a shell) as soon as it is decoded: the intro grows this frame
     const reveal = () => setRevealed(true);
     if (v.readyState >= 2) reveal();
@@ -51,7 +52,7 @@ export function HeroFilm({ film, labels }: Props) {
       v.removeEventListener("canplay", start);
       v.removeEventListener("loadeddata", reveal);
     };
-  }, [film.mp4, film.mp4Mobile, film.webm]);
+  }, [film.mp4, film.mp4Mobile, film.webm, film.rate]);
 
   const toggle = () => {
     const v = videoRef.current;

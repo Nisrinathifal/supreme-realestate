@@ -21,6 +21,8 @@ export type VideoAsset = {
   poster: ImageAsset | null;
   /** Play once and hold the last frame (a story film), or loop. */
   loop: boolean;
+  /** Playback speed (1 = as encoded). */
+  rate?: number;
 };
 
 export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
@@ -71,6 +73,7 @@ export const heroFilm: VideoAsset = {
   mp4Mobile: "/media/hero-film-02-720.mp4",
   poster: heroStill,
   loop: false,
+  rate: 1.5, // owner asked for a slightly faster renewal (2026-09-30)
 };
 
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
