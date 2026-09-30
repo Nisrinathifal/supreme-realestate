@@ -7,7 +7,7 @@ import { INTRO_DONE } from "@/components/sections/HeroFilm";
 import { introSequence } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
-import { ease, gsap, MQ, prefersReducedMotion, saveData, setupGsap } from "@/lib/motion";
+import { cssPx, ease, gsap, prefersReducedMotion, saveData, setupGsap } from "@/lib/motion";
 import styles from "./Preloader.module.css";
 
 const KEY = "preloaderShown";
@@ -67,29 +67,42 @@ export function Preloader({ lang }: { lang: Lang }) {
       const text = q("[data-pre-text]");
       const content = q("[data-pre-content]");
       const strip = q("[data-pre-strip]");
-      const mobile = !window.matchMedia(MQ.desktop).matches;
-      const vw = window.innerWidth / 100;
+      const W = window.innerWidth;
+      const H = window.innerHeight;
       const n = items.length;
       const mid = (n - 1) / 2;
 
-      // Geometry (svw units in px). Mobile keeps only the six centre thumbnails visible in the final line.
-      const rowGap = (mobile ? 6.25 : 2.6) * vw;
-      const startGap = (mobile ? 4 : 3) * vw;
-      const lineGap = (mobile ? 12.5 : 4.4) * vw;
-      const visible = mobile ? 6 : 10;
+      // Geometry follows the thumbnail size from the tokens (--intro-thumb), so every viewport gets the same
+      // proportions: a tidy two-row brick pattern first, then one line of as many thumbnails as fit.
+      const thumb = cssPx(overlay, "--intro-thumb", 64);
+      const lineGap = thumb * 1.1; // thumbnail + a hairline of Paper between neighbours
+      // As many rows as needed for the pattern to fit 90% of the viewport width: 2 on desktop, 4 on a phone
+      const perRow = Math.max(4, Math.min(Math.ceil(n / 2), Math.floor((W * 0.9) / (thumb * 1.5))));
+      const brickGap = Math.min(thumb * 1.5, (W * 0.9) / perRow); // spacing inside a row of the brick pattern
+      const rows = Math.ceil(n / perRow);
+      const rowStep = rows > 2 ? thumb * 1.3 : thumb * 1.5; // vertical distance between rows
+      const visible = Math.min(n, Math.max(4, Math.floor((W * 0.86) / lineGap) - (Math.floor((W * 0.86) / lineGap) % 2)));
       // The hero frame starts at exactly one thumbnail's size, so the stacked thumbnails hand over to it seamlessly
-      const small = lineGap;
-      const midW = (mobile ? 60 : 42) * vw;
-      const midH = (mobile ? 45 : 28) * vw;
+      const small = thumb;
+      const portrait = H > W;
+      const midW = (portrait ? 0.6 : 0.42) * W;
+      const midH = portrait ? 0.45 * H : 0.28 * W;
       const paper = getComputedStyle(html).getPropertyValue("--bg").trim() || "#FAFAF7";
-      const rnd = gsap.utils.random;
       const video = frame.querySelector<HTMLVideoElement>("video");
       const media = video ? [still, video] : [still];
 
       /* ---------- start states (JS only; the overlay's own parts start hidden in its CSS) ---------- */
       html.setAttribute("data-preloading", "");
-      // Scattered around the centre: two loose rows with a little jitter, so they read as a random cluster
-      items.forEach((el, i) => gsap.set(el, { x: (i - mid) * startGap + rnd(-0.8, 0.8) * vw, y: (i % 2 === 0 ? -1 : 1) * rowGap * rnd(0.6, 1.3), scale: 0.9 }));
+      // Brick pattern: items fill the rows in turn, odd rows shifted by half a step, the whole block centred
+      items.forEach((el, i) => {
+        const row = i % rows;
+        const k = Math.floor(i / rows);
+        const inRow = Math.ceil((n - row) / rows);
+        const x = (k - (inRow - 1) / 2) * brickGap + (row % 2 ? brickGap / 4 : -brickGap / 4);
+        // A tall block (phones) sits a little above the centre so it keeps clear of the copy below
+        const y = (row - (rows - 1) / 2) * rowStep - (rows > 2 ? rowStep * 0.7 : 0);
+        gsap.set(el, { x, y, scale: 0.92 });
+      });
       gsap.set([head, text], { opacity: 0, y: 12 });
       gsap.set(frame, { width: small, height: small });
       gsap.set(media, { scale: 1.2 });
