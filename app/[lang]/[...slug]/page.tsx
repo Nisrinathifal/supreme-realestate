@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Footer } from "@/components/layout/Footer";
 import { AboutPage } from "@/components/pages/AboutPage";
 import { ContactPage } from "@/components/pages/ContactPage";
 import { LegalPage } from "@/components/pages/LegalPage";
@@ -40,8 +41,20 @@ export default async function Page({ params }: Params) {
   const m = await match(params);
   if (!m) notFound();
   const { lang, page } = m;
-  if (page === "about") return <AboutPage lang={lang} />;
-  if (page === "contact") return <ContactPage lang={lang} />;
-  if (legalPages.includes(page)) return <LegalPage lang={lang} page={page as "privacy" | "cookies" | "disclaimer" | "colophon"} />;
-  notFound();
+  // The footer belongs to the secondary pages only while the homepage is rebuilt section by section.
+  const body =
+    page === "about" ? (
+      <AboutPage lang={lang} />
+    ) : page === "contact" ? (
+      <ContactPage lang={lang} />
+    ) : legalPages.includes(page) ? (
+      <LegalPage lang={lang} page={page as "privacy" | "cookies" | "disclaimer" | "colophon"} />
+    ) : null;
+  if (!body) notFound();
+  return (
+    <>
+      {body}
+      <Footer lang={lang} />
+    </>
+  );
 }

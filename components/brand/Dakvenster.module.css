@@ -1,9 +1,0 @@
-.win {
-  display: inline-block; flex: none;
-  background: var(--win, transparent);
-  outline: 1px solid var(--ink);
-  outline-offset: -1px;
-  border-radius: 1px;
-}
-/* Inside inverse bands / over media the window is lime without outline */
-:global(.inverse) .win { outline-color: transparent; background: var(--accent); }

@@ -3,8 +3,6 @@ import { Funnel_Display, Inter_Tight } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { LangProvider } from "@/components/layout/LangProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
-import { Footer } from "@/components/layout/Footer";
-import { company, has, telHref } from "@/content/company";
 import { getCopy } from "@/content/copy";
 import { langs } from "@/content/routes";
 import { htmlLang, resolveLang } from "@/lib/i18n";
@@ -65,23 +63,11 @@ export default async function LangLayout({ children, params }: { children: React
           strings={{
             home: c.a11y.home,
             wordmark: c.brand.wordmark,
-            about: c.nav.about,
-            contact: c.nav.contact,
-            menu: c.nav.menu,
-            closeMenu: c.nav.closeMenu,
-            mainNav: c.a11y.mainNav,
-            langSwitch: c.a11y.languageSwitch,
-            nl: c.a11y.nl,
-            en: c.a11y.en,
-            email: has(company.email) ? company.email : "",
-            phone: has(company.phone) ? company.phone : "",
-            phoneHref: has(company.phone) ? telHref(company.phone) : "",
           }}
         />
         <main id="main" tabIndex={-1}>
           {children}
         </main>
-        <Footer lang={lang} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </LangProvider>
       </body>

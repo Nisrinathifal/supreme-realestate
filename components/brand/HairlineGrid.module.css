@@ -1,5 +1,0 @@
-.grid {
-  position: absolute; inset: 0; margin-inline: auto;
-  display: flex; justify-content: space-between; pointer-events: none;
-}
-.line { width: 1px; height: 100%; background: var(--grid-line); transform-origin: top; }

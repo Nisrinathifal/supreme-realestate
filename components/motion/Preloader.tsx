@@ -140,7 +140,7 @@ export function Preloader({ lang }: { lang: Lang }) {
       </noscript>
       <div className={styles.content} data-pre-content>
         <div className={styles.head}>
-          <Lockup ariaLabel={c.a11y.home} height={40} />
+          <Lockup ariaLabel={c.a11y.home} height={44} />
         </div>
         <div className={styles.text} data-pre-text>
           <p className={styles.title}>{c.hero.headline}</p>

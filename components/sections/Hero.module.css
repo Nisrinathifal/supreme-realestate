@@ -10,16 +10,17 @@
 .still img { transform-origin: center; }
 .scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: var(--media-scrim); }
 
+/* Copy per the concept: two-line headline and one line under it, centred, close to the bottom edge */
 .copy {
   position: absolute; inset: auto 0 0 0; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: var(--s-4);
-  padding: 0 var(--gutter) var(--s-8); text-align: center; color: var(--on-media);
+  display: flex; flex-direction: column; align-items: center; gap: var(--s-3);
+  padding: 0 var(--gutter) var(--s-7); text-align: center; color: var(--on-media);
 }
 .title {
-  margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.04;
+  margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02;
   font-size: var(--fs-h2); white-space: pre-line; text-wrap: balance; max-width: 16ch;
 }
-.lead { margin: 0; font-family: var(--font-text); font-size: var(--fs-lead); line-height: 1.5; max-width: 46ch; }
+.lead { margin: 0; font-family: var(--font-text); font-size: var(--fs-body); line-height: 1.5; max-width: 46ch; }
 
 @media (max-width: 980px) {
   .hero { min-height: 0; }

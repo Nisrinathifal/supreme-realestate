@@ -1,24 +1,13 @@
-import { HomeMotion } from "@/components/motion/HomeMotion";
 import { Preloader } from "@/components/motion/Preloader";
-import { Bedrijfsgegevens } from "@/components/sections/Bedrijfsgegevens";
-import { Carousel } from "@/components/sections/Carousel";
-import { Closing } from "@/components/sections/Closing";
 import { Hero } from "@/components/sections/Hero";
-import { PrinciplesPinned } from "@/components/sections/PrinciplesPinned";
-import { Statement } from "@/components/sections/Statement";
 import type { Lang } from "@/content/routes";
 
-/** Homepage after the reference recording (REFERENCE §5 order) with Supreme content and PRD §6 disclosure. */
+/** Homepage, rebuilt section by section from the 2026-09-30 concept: intro (preloader) and hero so far. */
 export function HomePage({ lang }: { lang: Lang }) {
   return (
-    <HomeMotion>
+    <>
       <Preloader lang={lang} />
       <Hero lang={lang} />
-      <Statement lang={lang} />
-      <PrinciplesPinned lang={lang} />
-      <Carousel lang={lang} />
-      <Bedrijfsgegevens lang={lang} />
-      <Closing lang={lang} />
-    </HomeMotion>
+    </>
   );
 }
