@@ -61,8 +61,7 @@ export function Preloader({ lang }: { lang: Lang }) {
 
       const q = gsap.utils.selector(overlay);
       const items = q<HTMLElement>("[data-pre-item]");
-      const rowA = items.filter((_, i) => i % 2 === 0);
-      const rowB = items.filter((_, i) => i % 2 === 1);
+      const head = q("[data-pre-head]");
       const text = q("[data-pre-text]");
       const content = q("[data-pre-content]");
       const strip = q("[data-pre-strip]");
@@ -72,56 +71,71 @@ export function Preloader({ lang }: { lang: Lang }) {
       const mid = (n - 1) / 2;
 
       // Geometry (svw units in px). Mobile keeps only the six centre thumbnails visible in the final line.
-      const rowGap = (mobile ? 6.25 : 2.2) * vw;
-      const startGap = (mobile ? 3.4 : 2.2) * vw;
+      const rowGap = (mobile ? 6.25 : 2.6) * vw;
+      const startGap = (mobile ? 4 : 3) * vw;
       const lineGap = (mobile ? 12.5 : 4.4) * vw;
       const visible = mobile ? 6 : 10;
       const small = (mobile ? 12 : 4) * vw;
       const midW = (mobile ? 60 : 42) * vw;
       const midH = (mobile ? 45 : 28) * vw;
       const paper = getComputedStyle(html).getPropertyValue("--bg").trim() || "#FAFAF7";
+      const rnd = gsap.utils.random;
 
-      /* ---------- start states (JS only) ---------- */
+      /* ---------- start states (JS only; the overlay's own parts start hidden in its CSS) ---------- */
       html.setAttribute("data-preloading", "");
-      items.forEach((el, i) => gsap.set(el, { x: (i - mid) * startGap, y: i % 2 === 0 ? -rowGap : rowGap }));
+      // Scattered around the centre: two loose rows with a little jitter, so they read as a random cluster
+      items.forEach((el, i) => gsap.set(el, { x: (i - mid) * startGap + rnd(-0.8, 0.8) * vw, y: (i % 2 === 0 ? -1 : 1) * rowGap * rnd(0.6, 1.3), scale: 0.9 }));
+      gsap.set([head, text], { opacity: 0, y: 12 });
       gsap.set(frame, { width: small, height: small });
       gsap.set(still, { scale: 1.2 });
       gsap.set(copy, { opacity: 0, y: "3%" });
       if (header) gsap.set(header, { opacity: 0 });
       gsap.set(overlay, { backgroundColor: paper });
 
+      /* ---------- 1 logo and copy · 2 images appear · 3 images join into a line · 4 copy leaves · 5 hero ---------- */
       const tl = gsap.timeline({ paused: true, onComplete: () => finish(true) });
-      tl.to(rowA, { y: 0, duration: 0.76, ease: ease.precise }, 0)
-        .to(rowB, { y: 0, duration: 0.76, ease: ease.precise }, 0.07);
+      tl.to(head, { opacity: 1, y: 0, duration: 0.8, ease: ease.brand }, 0.2)
+        .to(text, { opacity: 1, y: 0, duration: 0.8, ease: ease.brand }, 0.35);
+      const order = gsap.utils.shuffle(items.map((_, i) => i));
+      order.forEach((i, k) => {
+        tl.to(items[i], { opacity: 1, scale: 1, duration: 0.5, ease: ease.out }, 1.2 + k * 0.06);
+      });
       items.forEach((el, i) => {
         const outer = Math.abs(i - mid) > visible / 2;
-        tl.to(el, { x: (i - mid) * lineGap, opacity: outer ? 0 : 1, duration: 0.65, ease: ease.brand }, 1.05 + Math.abs(i - mid) * 0.02);
+        tl.to(el, { x: (i - mid) * lineGap, y: 0, opacity: outer ? 0 : 1, duration: 0.8, ease: ease.precise }, 2.5 + Math.abs(i - mid) * 0.02);
       });
-      tl.to(text, { opacity: 0, y: "5%", duration: 0.7, ease: ease.brand }, 1.53)
-        .to(overlay, { backgroundColor: "transparent", duration: 0.5, ease: ease.brand }, 1.9)
-        .to(strip, { opacity: 0, duration: 0.25, ease: ease.brand }, 1.9)
-        .to(frame, { width: midW, height: midH, duration: 0.77, ease: ease.precise }, 1.9)
-        .to(still, { scale: 1, duration: 1.55, ease: ease.out }, 1.99)
-        .to(frame, { width: frame.parentElement!.clientWidth, height: frame.parentElement!.clientHeight, duration: 0.76, ease: ease.brand }, 2.68)
-        .to(copy, { opacity: 1, y: "0%", duration: 0.45, ease: ease.brand }, 2.76)
-        .to(content, { opacity: 0, duration: 0.25, ease: ease.brand }, 2.78)
+      tl.to(text, { opacity: 0, y: -12, duration: 0.6, ease: ease.brand }, 3.3)
+        .add("hero", 3.8)
+        .to(overlay, { backgroundColor: "transparent", duration: 0.5, ease: ease.brand }, "hero")
+        .to(strip, { opacity: 0, duration: 0.25, ease: ease.brand }, "hero")
+        .to(frame, { width: midW, height: midH, duration: 0.77, ease: ease.precise }, "hero")
+        .to(still, { scale: 1, duration: 1.55, ease: ease.out }, "hero+=0.09")
+        .to(frame, { width: frame.parentElement!.clientWidth, height: frame.parentElement!.clientHeight, duration: 0.76, ease: ease.brand }, "hero+=0.78")
+        .to(copy, { opacity: 1, y: "0%", duration: 0.45, ease: ease.brand }, "hero+=0.86")
+        .to(content, { opacity: 0, duration: 0.25, ease: ease.brand }, "hero+=0.88")
         .set(frame, { clearProps: "width,height" })
         .set(still, { clearProps: "transform" });
-      if (header) tl.to(header, { opacity: 1, duration: 0.6, ease: ease.brand, clearProps: "opacity" }, 2.76);
+      if (header) tl.to(header, { opacity: 1, duration: 0.6, ease: ease.brand, clearProps: "opacity" }, "hero+=0.86");
 
-      // Start once the hero still is decoded (the intro exists to cover that wait), at the latest after 4 s.
-      let started = false;
-      const start = () => {
-        if (started) return;
-        started = true;
-        tl.play(0);
-      };
-      const ready = still.complete ? still.decode().catch(() => undefined) : new Promise<void>((r) => still.addEventListener("load", () => r(), { once: true }));
-      const safety = window.setTimeout(start, 4000);
-      ready.then(() => {
-        window.clearTimeout(safety);
-        window.setTimeout(start, 600);
+      // The first phases run at once; the hero phase waits for the still to be decoded (at most 4 s more).
+      let ready = false;
+      let waiting = false;
+      const decoded = still.complete ? still.decode().catch(() => undefined) : new Promise<void>((r) => still.addEventListener("load", () => r(), { once: true }));
+      const safety = window.setTimeout(() => {
+        ready = true;
+        if (waiting) tl.play();
+      }, 8000);
+      decoded.then(() => {
+        ready = true;
+        if (waiting) tl.play();
       });
+      tl.add(() => {
+        if (!ready) {
+          waiting = true;
+          tl.pause();
+        }
+      }, "hero-=0.01");
+      tl.play(0);
 
       return () => {
         window.clearTimeout(safety);
@@ -140,7 +154,7 @@ export function Preloader({ lang }: { lang: Lang }) {
         <style>{`[data-preloader]{display:none !important}`}</style>
       </noscript>
       <div className={styles.content} data-pre-content>
-        <div className={styles.head}>
+        <div className={styles.head} data-pre-head>
           <Lockup ariaLabel={c.a11y.home} height={44} />
         </div>
         <div className={styles.text} data-pre-text>
