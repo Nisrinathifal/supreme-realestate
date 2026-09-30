@@ -31,6 +31,10 @@ export function HeroFilm({ film, labels }: Props) {
       v.src = chosen;
       v.load();
     }
+    // Show the first frame (the house as a shell) as soon as it is decoded: the intro grows this frame
+    const reveal = () => setRevealed(true);
+    if (v.readyState >= 2) reveal();
+    else v.addEventListener("loadeddata", reveal, { once: true });
     const start = () => {
       if (!v.paused || v.ended) return;
       v.play().catch(() => undefined);
@@ -45,6 +49,7 @@ export function HeroFilm({ film, labels }: Props) {
     return () => {
       document.removeEventListener(INTRO_DONE, whenReady);
       v.removeEventListener("canplay", start);
+      v.removeEventListener("loadeddata", reveal);
     };
   }, [film.mp4, film.mp4Mobile, film.webm]);
 

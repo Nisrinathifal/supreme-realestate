@@ -77,11 +77,14 @@ export function Preloader({ lang }: { lang: Lang }) {
       const startGap = (mobile ? 4 : 3) * vw;
       const lineGap = (mobile ? 12.5 : 4.4) * vw;
       const visible = mobile ? 6 : 10;
-      const small = (mobile ? 12 : 4) * vw;
+      // The hero frame starts at exactly one thumbnail's size, so the stacked thumbnails hand over to it seamlessly
+      const small = lineGap;
       const midW = (mobile ? 60 : 42) * vw;
       const midH = (mobile ? 45 : 28) * vw;
       const paper = getComputedStyle(html).getPropertyValue("--bg").trim() || "#FAFAF7";
       const rnd = gsap.utils.random;
+      const video = frame.querySelector<HTMLVideoElement>("video");
+      const media = video ? [still, video] : [still];
 
       /* ---------- start states (JS only; the overlay's own parts start hidden in its CSS) ---------- */
       html.setAttribute("data-preloading", "");
@@ -89,12 +92,14 @@ export function Preloader({ lang }: { lang: Lang }) {
       items.forEach((el, i) => gsap.set(el, { x: (i - mid) * startGap + rnd(-0.8, 0.8) * vw, y: (i % 2 === 0 ? -1 : 1) * rowGap * rnd(0.6, 1.3), scale: 0.9 }));
       gsap.set([head, text], { opacity: 0, y: 12 });
       gsap.set(frame, { width: small, height: small });
-      gsap.set(still, { scale: 1.2 });
+      gsap.set(media, { scale: 1.2 });
       gsap.set(copy, { opacity: 0, y: "3%" });
       if (header) gsap.set(header, { opacity: 0 });
       gsap.set(overlay, { backgroundColor: paper });
 
-      /* ---------- 1 logo and copy · 2 images appear · 3 images join into a line · 4 copy leaves · 5 hero ---------- */
+      /* ---------- 1 logo and copy · 2 images appear · 3 images join into a line · 4 copy leaves ·
+                   5 the line stacks into one square in the centre, which is the film's first frame ·
+                   6 that square grows to the full viewport · 7 the film plays (HeroFilm, on intro-done) ---------- */
       const tl = gsap.timeline({ paused: true, onComplete: () => finish(true) });
       tl.to(head, { opacity: 1, y: 0, duration: 0.8, ease: ease.brand }, 0.2)
         .to(text, { opacity: 1, y: 0, duration: 0.8, ease: ease.brand }, 0.35);
@@ -106,28 +111,35 @@ export function Preloader({ lang }: { lang: Lang }) {
         const outer = Math.abs(i - mid) > visible / 2;
         tl.to(el, { x: (i - mid) * lineGap, y: 0, opacity: outer ? 0 : 1, duration: 0.8, ease: ease.precise }, 2.5 + Math.abs(i - mid) * 0.02);
       });
-      tl.to(text, { opacity: 0, y: -12, duration: 0.6, ease: ease.brand }, 3.3)
-        .add("hero", 3.8)
-        .to(overlay, { backgroundColor: "transparent", duration: 0.5, ease: ease.brand }, "hero")
-        .to(strip, { opacity: 0, duration: 0.25, ease: ease.brand }, "hero")
-        .to(frame, { width: midW, height: midH, duration: 0.77, ease: ease.precise }, "hero")
-        .to(still, { scale: 1, duration: 1.55, ease: ease.out }, "hero+=0.09")
-        .to(frame, { width: frame.parentElement!.clientWidth, height: frame.parentElement!.clientHeight, duration: 0.76, ease: ease.brand }, "hero+=0.78")
-        .to(copy, { opacity: 1, y: "0%", duration: 0.45, ease: ease.brand }, "hero+=0.86")
-        .to(content, { opacity: 0, duration: 0.25, ease: ease.brand }, "hero+=0.88")
+      tl.to(text, { opacity: 0, y: -12, duration: 0.6, ease: ease.brand }, 3.3);
+      // Stack: the outer thumbnails slide in first, the centre ones last, all onto the centre square
+      items.forEach((el, i) => {
+        tl.to(el, { x: 0, duration: 0.7, ease: ease.precise }, 3.6 + (mid - Math.abs(i - mid)) * 0.03);
+      });
+      tl.add("hero", 4.4)
+        .to(overlay, { backgroundColor: "transparent", duration: 0.35, ease: ease.brand }, "hero")
+        .to(strip, { opacity: 0, duration: 0.3, ease: ease.brand }, "hero")
+        .to(frame, { width: midW, height: midH, duration: 0.9, ease: ease.precise }, "hero+=0.2")
+        .to(media, { scale: 1, duration: 1.7, ease: ease.out }, "hero+=0.3")
+        .to(frame, { width: frame.parentElement!.clientWidth, height: frame.parentElement!.clientHeight, duration: 0.8, ease: ease.brand }, "hero+=1.1")
+        .to(copy, { opacity: 1, y: "0%", duration: 0.45, ease: ease.brand }, "hero+=1.3")
+        .to(content, { opacity: 0, duration: 0.25, ease: ease.brand }, "hero+=1.3")
         .set(frame, { clearProps: "width,height" })
-        .set(still, { clearProps: "transform" });
-      if (header) tl.to(header, { opacity: 1, duration: 0.6, ease: ease.brand, clearProps: "opacity" }, "hero+=0.86");
+        .set(media, { clearProps: "transform" });
+      if (header) tl.to(header, { opacity: 1, duration: 0.6, ease: ease.brand, clearProps: "opacity" }, "hero+=1.3");
 
-      // The first phases run at once; the hero phase waits for the still to be decoded (at most 4 s more).
+      // The first phases run at once; the hero phase waits for the still (and the film's first frame) to be
+      // ready, at most 8 s.
       let ready = false;
       let waiting = false;
       const decoded = still.complete ? still.decode().catch(() => undefined) : new Promise<void>((r) => still.addEventListener("load", () => r(), { once: true }));
+      const firstFrame =
+        video && video.readyState < 2 ? new Promise<void>((r) => video.addEventListener("loadeddata", () => r(), { once: true })) : Promise.resolve();
       const safety = window.setTimeout(() => {
         ready = true;
         if (waiting) tl.play();
       }, 8000);
-      decoded.then(() => {
+      Promise.all([decoded, firstFrame]).then(() => {
         ready = true;
         if (waiting) tl.play();
       });
