@@ -29,24 +29,22 @@ export function Shelf({ lang }: { lang: Lang }) {
     <section className={styles.shelf} data-shelf aria-labelledby="shelf-title">
       <ShelfMotion>
         <div className={`container ${styles.inner}`}>
-          <p id="shelf-title" className={styles.statement} data-shelf-statement>
-            {c.shelf.parts.map((part, i) => {
-              if (typeof part === "string") return <span key={i}>{part} </span>;
-              order.push(part.icon);
-              const icon = shelfIcons[part.icon];
-              return (
-                <span key={i} className={styles.slot} data-shelf-icon={part.icon}>
-                  <Alpha src={icon.src} alt={icon.alt[lang]} size={64} className={styles.icon} />
-                </span>
-              );
-            })}
-          </p>
+          <div className={styles.stage}>
+            <p id="shelf-title" className={styles.statement} data-shelf-statement>
+              {c.shelf.parts.map((part, i) => {
+                if (typeof part === "string") return <span key={i}>{part} </span>;
+                order.push(part.icon);
+                const icon = shelfIcons[part.icon];
+                return (
+                  <span key={i} className={styles.slot} data-shelf-icon={part.icon}>
+                    <Alpha src={icon.src} alt={icon.alt[lang]} size={64} className={styles.icon} />
+                  </span>
+                );
+              })}
+            </p>
+          </div>
 
-          <div
-            className={styles.rack}
-            data-shelf-rack
-            style={{ aspectRatio: `${shelfImage.width} / ${shelfImage.height}`, ["--shelf-ratio" as string]: shelfImage.width / shelfImage.height }}
-          >
+          <div className={styles.rack} data-shelf-rack style={{ aspectRatio: `${shelfImage.width} / ${shelfImage.height}` }}>
             <Alpha src={shelfImage.src} alt={shelfImage.alt[lang]} size={960} className={styles.rackImage} />
             {order.map((key) => {
               const icon = shelfIcons[key];
