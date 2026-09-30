@@ -62,5 +62,9 @@
   "intro-wood-01": {
     "width": 2160,
     "height": 1440
+  },
+  "hero-still-02": {
+    "width": 1920,
+    "height": 1176
   }
 }

@@ -44,13 +44,14 @@ export const heroFilm: VideoAsset = {
 };
 
 /**
- * Hero still (concept supplied 2026-09-30): a white house in daylight, the city skyline behind it.
+ * Hero still (concept supplied 2026-09-30, clean render without logo or copy): a white house in daylight,
+ * the city skyline behind it. hero-still-01 is the flattened design mock-up, kept for reference.
  * Note: generated render; DESIGN §12 asks for real photography before launch.
  */
 export const heroStill: ImageAsset = {
-  src: "hero-still-01",
-  width: 1574,
-  height: 836,
+  src: "hero-still-02",
+  width: 1920,
+  height: 1176,
   alt: { nl: "Witte woning in daglicht, op de achtergrond de stad", en: "A white house in daylight, the city skyline behind it" },
 };
 
