@@ -16,7 +16,7 @@
 .icon { display: block; width: 100%; height: 100%; }
 .icon img { width: 100%; height: 100%; object-fit: contain; }
 
-.rack { position: relative; width: min(100%, 1200px); margin-top: var(--s-6); }
+.rack { position: relative; width: min(80%, 960px); margin-top: var(--s-6); }
 .rackImage { display: block; width: 100%; height: auto; }
 .rackImage img { width: 100%; height: auto; }
 /* Compartment targets: percentages of the shelf image (centre point + width) */
