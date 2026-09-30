@@ -1,4 +1,5 @@
 import { HomeMotion } from "@/components/motion/HomeMotion";
+import { Preloader } from "@/components/motion/Preloader";
 import { Bedrijfsgegevens } from "@/components/sections/Bedrijfsgegevens";
 import { Carousel } from "@/components/sections/Carousel";
 import { Closing } from "@/components/sections/Closing";
@@ -11,6 +12,7 @@ import type { Lang } from "@/content/routes";
 export function HomePage({ lang }: { lang: Lang }) {
   return (
     <HomeMotion>
+      <Preloader lang={lang} />
       <Hero lang={lang} />
       <Statement lang={lang} />
       <PrinciplesPinned lang={lang} />

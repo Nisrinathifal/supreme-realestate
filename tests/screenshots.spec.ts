@@ -57,6 +57,8 @@ for (const p of pages) {
           const page = await context.newPage();
           const res = await page.goto(p[lang]);
           expect(res?.status()).toBe(p.key === "404" ? 404 : 200);
+          // Homepage intro (preloader) ends by flagging <html data-preloader-skip>; reduced motion flags it at once.
+          if (p.key === "home" && motion !== "nojs") await page.waitForFunction(() => document.documentElement.hasAttribute("data-preloader-skip"), null, { timeout: 20000 });
           await settle(page);
 
           const htmlLang = await page.getAttribute("html", "lang");

@@ -48,8 +48,10 @@ export default async function LangLayout({ children, params }: { children: React
   const c = getCopy(lang);
   const jsonLd = organizationJsonLd(lang);
   return (
-    <html lang={htmlLang(lang)} className={`${display.variable} ${text.variable}`}>
+    <html lang={htmlLang(lang)} className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
       <body>
+        {/* Repeat visit in this tab: flag the intro as shown before first paint so the preloader never flashes */}
+        <script dangerouslySetInnerHTML={{ __html: `try{if(sessionStorage.getItem("preloaderShown")==="1")document.documentElement.setAttribute("data-preloader-skip","")}catch(e){}` }} />
         <LangProvider lang={lang}>
         <SmoothScroll />
         <noscript>

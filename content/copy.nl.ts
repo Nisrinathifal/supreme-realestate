@@ -30,9 +30,10 @@ export const nl: Copy = {
   nav: { about: "Over ons", contact: "Contact", menu: "Menu", closeMenu: "Sluit menu" },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
   hero: {
-    // Headline: brand promise (APPROVED). Body: owner-requested key message (draft, 2026-09-29).
-    headline: "Van oud naar waardevol.",
-    keyMessage: draft("Supreme Real Estate is vastgoedontwikkelaar en assetmanager, en realiseert kwalitatieve woningen in Amsterdam."),
+    // Hero concept 2026-09-30 (owner-supplied English copy, NL draft). The approved brand promise
+    // "Van oud naar waardevol." stays in the docs; restore it here if the concept copy is not approved.
+    headline: draft("Meer dan ruimte\nom te wonen"),
+    keyMessage: draft("Waarde creëren door vastgoed en visie."),
     pause: "Pauzeer video",
     play: "Speel video af",
   },

@@ -86,6 +86,7 @@
   /* layout */
   --header-h: 64px;
   --hero-h: clamp(620px, 92vh, 980px);
+  --intro-thumb: 4.4vw; /* homepage preloader: one thumbnail of the intro line */
   --grid-gap: 24px;
   --daylight: radial-gradient(60% 50% at 20% 0%, rgba(255,255,255,.7), transparent);
   --glass-highlight: linear-gradient(180deg, rgba(255,255,255,.18), transparent 40%);
@@ -100,6 +101,9 @@
   background: var(--bg); color: var(--ink);
 }
 
+@media (max-width: 767px) {
+  :root { --intro-thumb: 12.5vw; }
+}
 @media (max-width: 560px) {
   :root { --grid-gap: 16px; }
 }

@@ -3,8 +3,9 @@
  * public/media/<name>-{640,1280,1920}.{avif,webp,jpg}. sharp drops EXIF/GPS/ICC unless withMetadata()
  * is called, so nothing is kept. Writes a manifest with the intrinsic size for width/height attributes.
  * Names must be neutral; `npm run check:filenames` runs before every build.
+ * `npm run media -- name-01 name-02` rebuilds only those sources (manifest entries are merged).
  */
-import { mkdirSync, readdirSync, writeFileSync, existsSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import sharp from "sharp";
 
@@ -13,8 +14,13 @@ const outDir = "public/media";
 const widths = [640, 1280, 1920];
 mkdirSync(outDir, { recursive: true });
 
-const manifest: Record<string, { width: number; height: number }> = {};
-const files = existsSync(srcDir) ? readdirSync(srcDir).filter((f) => /\.(png|jpe?g|webp|tiff?)$/i.test(f)) : [];
+const manifestPath = join(outDir, "manifest.json");
+const only = new Set(process.argv.slice(2));
+const manifest: Record<string, { width: number; height: number }> =
+  only.size && existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : {};
+const files = (existsSync(srcDir) ? readdirSync(srcDir).filter((f) => /\.(png|jpe?g|webp|tiff?)$/i.test(f)) : []).filter(
+  (f) => !only.size || only.has(basename(f, extname(f))),
+);
 for (const file of files) {
   const name = basename(file, extname(file));
   const input = sharp(join(srcDir, file), { failOn: "none" }).rotate();
@@ -31,5 +37,5 @@ for (const file of files) {
   }
   console.log(`${name}: ${w}×${h} → ${widths.length * 3} files`);
 }
-writeFileSync(join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2));
+writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 console.log(`media: ${files.length} source image(s), manifest written`);

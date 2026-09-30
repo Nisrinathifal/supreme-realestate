@@ -2,5 +2,65 @@
   "hero-poster-01": {
     "width": 1920,
     "height": 1080
+  },
+  "hero-still-01": {
+    "width": 1574,
+    "height": 836
+  },
+  "intro-attic-01": {
+    "width": 4032,
+    "height": 3024
+  },
+  "intro-attic-02": {
+    "width": 2160,
+    "height": 1440
+  },
+  "intro-basin-01": {
+    "width": 1440,
+    "height": 2160
+  },
+  "intro-corridor-01": {
+    "width": 3000,
+    "height": 2000
+  },
+  "intro-doors-01": {
+    "width": 2160,
+    "height": 1440
+  },
+  "intro-entrance-01": {
+    "width": 2153,
+    "height": 1440
+  },
+  "intro-room-01": {
+    "width": 4032,
+    "height": 3024
+  },
+  "intro-room-02": {
+    "width": 2160,
+    "height": 1440
+  },
+  "intro-stair-01": {
+    "width": 2160,
+    "height": 1440
+  },
+  "intro-stone-01": {
+    "width": 1440,
+    "height": 2160
+  },
+  "intro-stone-02": {
+    "width": 2160,
+    "height": 1440
+  },
+  "intro-tap-01": {
+    "width": 1333,
+    "height": 2000
+  },
+  "intro-tap-02": {
+    "width": 1440,
+    "height": 2160
+  },
+  "intro-wood-01": {
+    "width": 2160,
+    "height": 1440
   }
 }

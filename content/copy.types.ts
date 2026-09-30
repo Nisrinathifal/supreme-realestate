@@ -15,7 +15,7 @@ export type Copy = {
   a11y: { skip: string; languageSwitch: string; nl: string; en: string; mainNav: string; footerNav: string; legalNav: string; home: string };
   nav: { about: string; contact: string; menu: string; closeMenu: string };
   brand: { wordmark: string; descriptor: string; tagline: string };
-  /** Hero: `headline` (H1) with `keyMessage` as body text, above the film. */
+  /** Hero: `headline` (H1, `\n` = line break) with `keyMessage` under it, over the full-bleed still. */
   hero: { headline: string; keyMessage: string; pause: string; play: string };
   statement: { label: string; text: string; aside: string };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };

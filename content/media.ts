@@ -43,6 +43,39 @@ export const heroFilm: VideoAsset = {
   loop: false,
 };
 
+/**
+ * Hero still (concept supplied 2026-09-30): a white house in daylight, the city skyline behind it.
+ * Note: generated render; DESIGN §12 asks for real photography before launch.
+ */
+export const heroStill: ImageAsset = {
+  src: "hero-still-01",
+  width: 1574,
+  height: 836,
+  alt: { nl: "Witte woning in daglicht, op de achtergrond de stad", en: "A white house in daylight, the city skyline behind it" },
+};
+
+/**
+ * Intro sequence (homepage preloader): 14 small interior details that converge into one line before the hero
+ * still grows to full screen. Details, materials and light only, nothing traceable to an address (PRD §6.2).
+ */
+const intro = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
+export const introSequence: ImageAsset[] = [
+  intro("intro-attic-01", 2160, 1440, "Zolder in vernieuwing", "An attic being renewed"),
+  intro("intro-tap-01", 1333, 2000, "Kraan en ronde spiegel", "A tap and a round mirror"),
+  intro("intro-doors-01", 2160, 1440, "Witte deuren in een gang", "White doors in a corridor"),
+  intro("intro-tap-02", 1440, 2160, "Kraan boven een stenen blad", "A tap above a stone worktop"),
+  intro("intro-basin-01", 1440, 2160, "Licht op een wastafel", "Light on a basin"),
+  intro("intro-room-01", 4032, 3024, "Lege vernieuwde kamer", "An empty renewed room"),
+  intro("intro-stone-01", 1440, 2160, "Natuursteen in een douche", "Natural stone in a shower"),
+  intro("intro-stone-02", 2160, 1440, "Stenen wastafel en spiegel", "A stone basin and mirror"),
+  intro("intro-wood-01", 2160, 1440, "Houten lamellen naast een wand", "Wooden slats beside a wall"),
+  intro("intro-attic-02", 2160, 1440, "Nok van een zolder", "The ridge of an attic"),
+  intro("intro-corridor-01", 3000, 2000, "Gang met daglicht", "A corridor in daylight"),
+  intro("intro-entrance-01", 2153, 1440, "Entree met houten lamellen", "An entrance with wooden slats"),
+  intro("intro-room-02", 2160, 1440, "Lichte kamer met houten vloer", "A light room with a wooden floor"),
+  intro("intro-stair-01", 2160, 1440, "Trap in daglicht", "A stair in daylight"),
+];
+
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };
 

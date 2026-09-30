@@ -30,8 +30,9 @@ export const en: Copy = {
   nav: { about: "About", contact: "Contact", menu: "Menu", closeMenu: "Close menu" },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
   hero: {
-    headline: "From old to valuable.",
-    keyMessage: draft("Supreme Real Estate is a property developer and asset manager, creating quality homes in Amsterdam."),
+    // Hero concept 2026-09-30 (owner-supplied). Approved brand promise "From old to valuable." stays in the docs.
+    headline: draft("Beyond\nSpaces for Living"),
+    keyMessage: draft("Creating value through property and perspective."),
     pause: "Pause video",
     play: "Play video",
   },
