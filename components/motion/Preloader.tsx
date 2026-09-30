@@ -18,7 +18,8 @@ const KEY = "preloaderShown";
  * header fade in. Choreography after stanzza.design, timing per DESIGN §11 (calm, precise eases).
  *
  * Never blocks the content: hidden by CSS without JavaScript, under prefers-reduced-motion / Save-Data, and
- * on repeat visits (inline script in the layout flags <html data-preloader-skip> before first paint).
+ * on repeat visits (inline script in the layout flags <html data-preloader-skip> before first paint; in
+ * development that script is left out so the intro plays on every load).
  * The overlay is aria-hidden; the real hero underneath stays in the accessibility tree from the start.
  */
 export function Preloader({ lang }: { lang: Lang }) {
