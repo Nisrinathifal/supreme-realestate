@@ -1,0 +1,32 @@
+/* Sky band (continues the hero's sky tokens), statement at the top, shelf at the bottom edge */
+.shelf {
+  position: relative; min-height: 100svh; overflow: hidden;
+  background: linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-seam));
+  color: var(--ink);
+}
+/* Everything fits one viewport (the section is pinned while the icons travel): statement in the upper part,
+   shelf capped to about half the height at the bottom */
+.inner {
+  min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding-top: calc(var(--header-h) + var(--s-6)); padding-bottom: var(--s-5);
+}
+.statement {
+  font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.3;
+  font-size: clamp(26px, 3.1vw, 44px); text-align: center; text-wrap: balance; max-width: 30em;
+}
+/* Inline icon: sits on the text line at roughly the cap height; the flying copy is this same element */
+.slot { display: inline-block; vertical-align: -0.28em; width: 1.15em; height: 1.15em; margin: 0 0.1em; position: relative; }
+.icon { display: block; width: 100%; height: 100%; }
+.icon img { width: 100%; height: 100%; object-fit: contain; }
+
+.rack { position: relative; width: min(100%, 960px, calc(46svh * var(--shelf-ratio))); margin-top: var(--s-6); }
+.rackImage { display: block; width: 100%; height: auto; }
+.rackImage img { width: 100%; height: auto; }
+/* Compartment targets: percentages of the shelf image (centre point + width) */
+.target { position: absolute; transform: translate(-50%, -50%); aspect-ratio: 1; }
+
+@media (max-width: 980px) {
+  .inner { padding-top: calc(var(--header-h) + var(--s-6)); }
+  .statement { font-size: clamp(24px, 5.6vw, 34px); max-width: 26ch; }
+  .rack { margin-top: var(--s-6); }
+}

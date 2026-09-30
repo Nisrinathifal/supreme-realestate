@@ -66,5 +66,25 @@
   "hero-still-02": {
     "width": 1920,
     "height": 1176
+  },
+  "icon-bulb-01": {
+    "width": 90,
+    "height": 90
+  },
+  "icon-chart-01": {
+    "width": 90,
+    "height": 90
+  },
+  "icon-clipboard-01": {
+    "width": 90,
+    "height": 90
+  },
+  "icon-hammer-01": {
+    "width": 90,
+    "height": 90
+  },
+  "shelf-01": {
+    "width": 968,
+    "height": 695
   }
 }

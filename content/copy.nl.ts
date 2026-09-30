@@ -37,6 +37,10 @@ export const nl: Copy = {
     pause: "Pauzeer video",
     play: "Speel video af",
   },
+  // Shelf statement: owner concept 2026-09-30, NL draft until approved.
+  shelf: {
+    parts: [draft("Wij zien de mogelijkheden van bestaande"), { icon: "bulb" }, draft("panden, vernieuwen"), { icon: "hammer" }, draft("ze tot zorgvuldig ontworpen woningen en blijven"), { icon: "clipboard" }, draft("hun waarde beheren, jaar na jaar"), { icon: "chart" }],
+  },
   statement: {
     label: "01 — Supreme",
     text: "Wij zien wat een woning kan worden, en geven haar met zorg een nieuwe toekomst. Zorgvuldig gekozen, met vakmanschap vernieuwd, voor de lange termijn.",

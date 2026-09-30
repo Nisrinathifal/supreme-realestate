@@ -36,6 +36,10 @@ export const en: Copy = {
     pause: "Pause video",
     play: "Play video",
   },
+  // Shelf statement: owner concept 2026-09-30 (draft until approved).
+  shelf: {
+    parts: [draft("We unlock the potential of existing"), { icon: "bulb" }, draft("properties, transforming"), { icon: "hammer" }, draft("them into thoughtfully designed homes and continuing to manage"), { icon: "clipboard" }, draft("their value over time"), { icon: "chart" }],
+  },
   statement: {
     label: draft("01 — Supreme"),
     text: "We see what a home can become, and give it a new future with care. Carefully chosen, renewed with craft, for the long term.",

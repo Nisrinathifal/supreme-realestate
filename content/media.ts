@@ -76,6 +76,20 @@ export const heroFilm: VideoAsset = {
   rate: 1.5, // owner asked for a slightly faster renewal (2026-09-30)
 };
 
+/**
+ * Shelf section (concept 2026-09-30). The shelf is a transparent cut-out; each icon has its compartment as a
+ * centre point and width in % of the shelf image. Icons supplied at 90 px are placeholders until the final
+ * assets arrive (they will need ≥ 512 px).
+ */
+export type ShelfIconAsset = ImageAsset & { slot: { x: number; y: number; w: number } };
+export const shelfImage: ImageAsset = { src: "shelf-01", width: 968, height: 695, alt: { nl: "Open kast met boeken en objecten", en: "An open shelf with books and objects" } };
+export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", ShelfIconAsset> = {
+  bulb: { src: "icon-bulb-01", width: 90, height: 90, alt: { nl: "Idee: lamp met een huis", en: "Idea: a bulb with a house" }, slot: { x: 10.2, y: 63.5, w: 11 } },
+  hammer: { src: "icon-hammer-01", width: 90, height: 90, alt: { nl: "Vernieuwen: hamer en bouwstenen", en: "Renewing: a hammer and building blocks" }, slot: { x: 62, y: 79, w: 12 } },
+  clipboard: { src: "icon-clipboard-01", width: 90, height: 90, alt: { nl: "Beheren: checklist met een huis", en: "Managing: a checklist with a house" }, slot: { x: 28, y: 81.5, w: 13.5 } },
+  chart: { src: "icon-chart-01", width: 90, height: 90, alt: { nl: "Waarde: stijgende grafiek", en: "Value: a rising chart" }, slot: { x: 85.4, y: 82, w: 13.5 } },
+};
+
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };
 

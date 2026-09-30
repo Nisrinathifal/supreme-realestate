@@ -28,14 +28,17 @@ for (const file of files) {
   const w = meta.width ?? 0;
   const h = meta.height ?? 0;
   manifest[name] = { width: w, height: h };
+  // Transparent sources (cut-outs, icons) keep their alpha: PNG fallback instead of JPEG.
+  const alpha = Boolean(meta.hasAlpha);
   for (const width of widths) {
     const target = Math.min(width, w);
     const base = sharp(join(srcDir, file)).rotate().resize({ width: target, withoutEnlargement: true });
     await base.clone().avif({ quality: 55, effort: 4 }).toFile(join(outDir, `${name}-${width}.avif`));
     await base.clone().webp({ quality: 78 }).toFile(join(outDir, `${name}-${width}.webp`));
-    await base.clone().jpeg({ quality: 80, mozjpeg: true, progressive: true }).toFile(join(outDir, `${name}-${width}.jpg`));
+    if (alpha) await base.clone().png({ compressionLevel: 9, palette: false }).toFile(join(outDir, `${name}-${width}.png`));
+    else await base.clone().jpeg({ quality: 80, mozjpeg: true, progressive: true }).toFile(join(outDir, `${name}-${width}.jpg`));
   }
-  console.log(`${name}: ${w}×${h} → ${widths.length * 3} files`);
+  console.log(`${name}: ${w}×${h}${alpha ? " (alpha)" : ""} → ${widths.length * 3} files`);
 }
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 console.log(`media: ${files.length} source image(s), manifest written`);

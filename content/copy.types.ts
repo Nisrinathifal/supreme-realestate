@@ -3,6 +3,8 @@
  * Strings wrapped in draft() are NOT in DESIGN-opsi1.md / PRD.md verbatim and need approval
  * (scripts/check-placeholders.ts fails a launch build while any remain).
  */
+export type ShelfIcon = "bulb" | "hammer" | "clipboard" | "chart";
+
 export type Copy = {
   siteName: string;
   meta: {
@@ -18,6 +20,8 @@ export type Copy = {
   /** Hero: `headline` (H1, `\n` = line break) with `keyMessage` under it, over the full-bleed still. */
   hero: { headline: string; keyMessage: string; pause: string; play: string };
   statement: { label: string; text: string; aside: string };
+  /** Shelf section: one statement whose inline icons fly into the shelf. `parts` alternate text and icon keys. */
+  shelf: { parts: (string | { icon: ShelfIcon })[] };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };
   carousel: { label: string; title: string; sub: string; items: { title: string; body: string }[] };
   map: { label: string; title: string; sub: string; cta: string; dot: string };
