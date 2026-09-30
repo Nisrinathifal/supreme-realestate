@@ -25,23 +25,6 @@ export type VideoAsset = {
 
 export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
-/**
- * Hero film: combined clip supplied 2026-09-29 (10 s, house renewed from shell to finished),
- * re-encoded without metadata by scripts/film-export.swift. WebM pending (no ffmpeg on the build machine).
- * Note: generated render; DESIGN §12 asks for real film before launch.
- */
-export const heroFilm: VideoAsset = {
-  webm: null,
-  mp4: "/media/hero-film-01.mp4",
-  mp4Mobile: "/media/hero-film-01-720.mp4",
-  poster: {
-    src: "hero-poster-01",
-    width: 1920,
-    height: 1080,
-    alt: { nl: "Woning in vernieuwing met daglicht, op de achtergrond de stad", en: "A home being renewed in daylight, the city in the background" },
-  },
-  loop: false,
-};
 
 /**
  * Hero still (concept supplied 2026-09-30, clean render without logo or copy): a white house in daylight,
@@ -76,6 +59,19 @@ export const introSequence: ImageAsset[] = [
   intro("intro-room-02", 2160, 1440, "Lichte kamer met houten vloer", "A light room with a wooden floor"),
   intro("intro-stair-01", 2160, 1440, "Trap in daglicht", "A stair in daylight"),
 ];
+
+/**
+ * Hero film (supplied 2026-09-29, re-supplied 2026-09-30 for the concept): 10 s, the house renewed from shell
+ * to finished, same composition as the still. Re-encoded without metadata by scripts/film-export.swift.
+ * WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
+ */
+export const heroFilm: VideoAsset = {
+  webm: null,
+  mp4: "/media/hero-film-02.mp4",
+  mp4Mobile: "/media/hero-film-02-720.mp4",
+  poster: heroStill,
+  loop: false,
+};
 
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };

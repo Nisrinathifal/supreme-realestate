@@ -3,6 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
 import { Lockup } from "@/components/brand/Lockup";
+import { INTRO_DONE } from "@/components/sections/HeroFilm";
 import { introSequence } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
@@ -42,6 +43,7 @@ export function Preloader({ lang }: { lang: Lang }) {
         html.removeAttribute("data-preloading");
         html.setAttribute("data-preloader-skip", "");
         setDone(true);
+        document.dispatchEvent(new CustomEvent(INTRO_DONE));
       };
 
       if (html.hasAttribute("data-preloader-skip") || prefersReducedMotion() || saveData()) {
