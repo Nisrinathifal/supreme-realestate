@@ -34,8 +34,9 @@ type Props = { lang: Lang; strings: HeaderStrings };
 /**
  * Header (concept 2026-10-01): menu pill left that opens a glass panel (DESIGN §9.4) with the homepage
  * sections, the contact page, the language switch on small screens and the verified contact details;
- * the lockup on the centre line; NL/EN and the one `primary` button ("Contact us") right. Fixed over the
- * hero; without JavaScript it sits absolutely at the top and the panel stays closed.
+ * the lockup on the centre line; NL/EN with flags and the outline "Contact us" button right. Fixed over the
+ * hero; without JavaScript it sits absolutely at the top and the panel stays closed. The contact button is
+ * `outline` so the hero keeps its one primary for later.
  */
 export function Header({ lang, strings }: Props) {
   const pathname = usePublicPathname();
@@ -147,7 +148,7 @@ export function Header({ lang, strings }: Props) {
           <div className={styles.barLang}>
             <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
           </div>
-          <Button href={pathFor("contact", lang)} variant="primary" className={styles.cta}>
+          <Button href={pathFor("contact", lang)} variant="outline" className={styles.cta}>
             <span className={styles.ctaLong}>{strings.contactUs}</span>
             <span className={styles.ctaShort}>{strings.contact}</span>
           </Button>
