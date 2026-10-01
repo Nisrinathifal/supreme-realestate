@@ -36,7 +36,7 @@ type Props = { lang: Lang; strings: HeaderStrings };
  * Header (concept 2026-10-01): "Navigate to" pill left that opens a glass panel (DESIGN §9.4) on hover (mouse)
  * or click/keyboard (touch, keyboard) with the homepage sections, the contact page, the language switch on
  * small screens and the company address and phone; the lockup on the centre line; plain NL | EN and the
- * outline "Contact us" button right. A soft Paper gradient behind the bar keeps it legible over every band.
+ * outline "Contact us" button right. A soft Paper veil behind the bar keeps it legible over every band.
  * Fixed over the hero; without JavaScript it sits absolutely at the top and the panel stays closed.
  */
 export function Header({ lang, strings }: Props) {
@@ -164,7 +164,7 @@ export function Header({ lang, strings }: Props) {
           </div>
         </div>
 
-        <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={44} tone="light" />
+        <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={44} />
 
         <div className={styles.right}>
           <div className={styles.barLang}>

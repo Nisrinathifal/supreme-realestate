@@ -1,9 +1,9 @@
 .header {
   position: fixed; inset: 0 0 auto 0; z-index: 100;
   padding-top: env(safe-area-inset-top);
-  color: var(--on-media);
+  color: var(--ink);
 }
-/* Dark veil behind the bar, fading out below it; pointer-events off so the page stays clickable */
+/* Light veil behind the bar, fading out below it; pointer-events off so the page stays clickable */
 .header::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: calc((var(--header-h) + var(--s-5)) * 1.9); z-index: -1;
   background: var(--header-scrim); pointer-events: none;
