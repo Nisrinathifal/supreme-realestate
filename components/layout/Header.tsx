@@ -5,7 +5,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import { DotsSixVertical } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
 import { Button } from "@/components/ui/Button";
-import { Placeholder } from "@/components/ui/Placeholder";
 import { LangToggle } from "./LangToggle";
 import { pathFor, type Lang } from "@/content/routes";
 import { usePublicPathname } from "@/lib/usePublicPathname";
@@ -135,20 +134,20 @@ export function Header({ lang, strings }: Props) {
               <div className={styles.panelLang}>
                 <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
               </div>
-              {/* Address and phone from company.json (PRD §7). While a value is not verified yet a development
-                  placeholder marks the slot; the launch build refuses placeholders. */}
+              {/* Address and phone: verified values from company.json (PRD §7), or the fictional stand-ins from the
+                  copy until then (the layout decides; a stand-in phone has no tel: link). */}
               <dl className={styles.details}>
                 <div className={styles.row}>
                   <dt className="t-micro">{strings.keys.address}</dt>
                   <dd className={styles.value}>
-                    {strings.addressLines.length ? strings.addressLines.map((l) => <span key={l}>{l}</span>) : <Placeholder note={strings.keys.address} className={styles.placeholder} />}
+                    {strings.addressLines.map((l) => (
+                      <span key={l}>{l}</span>
+                    ))}
                   </dd>
                 </div>
                 <div className={styles.row}>
                   <dt className="t-micro">{strings.keys.phone}</dt>
-                  <dd className={styles.value}>
-                    {strings.phone ? <a href={strings.phoneHref}>{strings.phone}</a> : <Placeholder note={strings.keys.phone} className={styles.placeholder} />}
-                  </dd>
+                  <dd className={styles.value}>{strings.phoneHref ? <a href={strings.phoneHref}>{strings.phone}</a> : <span>{strings.phone}</span>}</dd>
                 </div>
                 {strings.email ? (
                   <div className={styles.row}>

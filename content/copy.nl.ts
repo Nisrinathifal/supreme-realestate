@@ -181,5 +181,8 @@ export const nl: Copy = {
     media: "Placeholder: gelicentieerde fotografie volgt.",
     film: "Placeholder: herofilm en poster volgen van de filmmaker.",
     credits: "Placeholder: foto- en filmcredits volgen van Supreme.",
+    // Fictional stand-ins for the header menu (owner's request 2026-10-01); replaced by company.json once verified.
+    address: [draft("Voorbeeldstraat 12"), draft("1000 AA Amsterdam")],
+    phone: draft("+31 20 000 00 00"),
   },
 };

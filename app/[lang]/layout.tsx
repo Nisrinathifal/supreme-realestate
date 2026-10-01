@@ -3,7 +3,7 @@ import { Funnel_Display, Inter_Tight } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { LangProvider } from "@/components/layout/LangProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
-import { company, formatAddressLines, has, telHref } from "@/content/company";
+import { company, formatAddressLines, has, hasAddress, telHref } from "@/content/company";
 import { getCopy } from "@/content/copy";
 import { langs } from "@/content/routes";
 import { htmlLang, resolveLang } from "@/lib/i18n";
@@ -77,8 +77,9 @@ export default async function LangLayout({ children, params }: { children: React
             contact: c.nav.contact,
             sections: c.nav.sections,
             keys: { address: c.companyKeys.visitingAddress, phone: c.companyKeys.phone, email: c.companyKeys.email },
-            addressLines: formatAddressLines(company.visitingAddress),
-            phone: has(company.phone) ? company.phone : "",
+            // Verified values from company.json; until then the fictional stand-ins from the copy (draft, blocks launch)
+            addressLines: hasAddress(company.visitingAddress) ? formatAddressLines(company.visitingAddress) : c.placeholders.address,
+            phone: has(company.phone) ? company.phone : c.placeholders.phone,
             phoneHref: has(company.phone) ? telHref(company.phone) : "",
             email: has(company.email) ? company.email : "",
           }}

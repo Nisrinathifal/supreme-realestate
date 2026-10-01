@@ -181,5 +181,8 @@ export const en: Copy = {
     media: "Placeholder: licensed photography to follow.",
     film: "Placeholder: hero film and poster to follow from the film maker.",
     credits: "Placeholder: photo and film credits to follow from Supreme.",
+    // Fictional stand-ins for the header menu (owner's request 2026-10-01); replaced by company.json once verified.
+    address: [draft("Example street 12"), draft("1000 AA Amsterdam")],
+    phone: draft("+31 20 000 00 00"),
   },
 };
