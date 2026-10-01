@@ -61,5 +61,5 @@ export type Copy = {
   };
   notFound: { title: string; home: string };
   /** `address` / `phone`: fictional stand-ins shown in the header menu until company.json is verified. */
-  placeholders: { description: string; story: string; media: string; film: string; credits: string; address: string[]; phone: string };
+  placeholders: { description: string; story: string; media: string; film: string; credits: string; address: string[]; phone: string; social: string[] };
 };

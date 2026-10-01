@@ -7,7 +7,6 @@ import { company, has, telHref } from "@/content/company";
 import { footerSketches } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { pathFor, type Lang } from "@/content/routes";
-import { LangToggle } from "./LangToggle";
 import styles from "./Footer.module.css";
 
 /** Contact band at the end of every page (DESIGN §10.1 Contact): label, H2, one sentence, the primary button. */
@@ -31,7 +30,7 @@ export function ContactBand({ lang }: { lang: Lang }) {
 
 /**
  * Footer after the reference: revealed from under the page (sticky). Top row: section links · lockup with the
- * legal line · language switch and LinkedIn. Bottom row: phone · back to top · legal pages. Two ink line
+ * legal line · social links (placeholders until verified). Bottom row: phone · back to top · legal pages. Two ink line
  * drawings sit along the bottom edge. Company values come from company.json and hide while unverified;
  * the phone shows the fictional stand-in from the copy until then (no tel: link).
  */
@@ -71,14 +70,24 @@ export function Footer({ lang }: { lang: Lang }) {
             </p>
           </div>
 
-          <div className={styles.aside}>
-            <LangToggle lang={lang} labels={{ switch: c.a11y.languageSwitch, nl: c.a11y.nl, en: c.a11y.en }} />
+          {/* Social links: the verified LinkedIn from company.json, otherwise the placeholder list from the copy */}
+          <ul className={styles.aside}>
             {has(company.linkedin) ? (
-              <a href={company.linkedin} rel="noopener noreferrer" target="_blank" className={styles.link}>
-                {c.footer.linkedin}
-              </a>
-            ) : null}
-          </div>
+              <li>
+                <a href={company.linkedin} rel="noopener noreferrer" target="_blank" className={styles.link}>
+                  {c.footer.linkedin}
+                </a>
+              </li>
+            ) : (
+              c.placeholders.social.map((name) => (
+                <li key={name}>
+                  <a href="#" className={styles.link} aria-disabled="true" onClick={undefined}>
+                    {name}
+                  </a>
+                </li>
+              ))
+            )}
+          </ul>
         </div>
 
         <div className={styles.bottom}>

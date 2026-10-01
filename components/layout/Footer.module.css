@@ -20,6 +20,7 @@
 .brand { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); text-align: center; }
 .legal { color: var(--muted); user-select: text; }
 .aside { justify-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-1); }
+.aside .link[aria-disabled="true"] { cursor: default; }
 
 /* Bottom row: phone · back to top · legal pages */
 .bottom {

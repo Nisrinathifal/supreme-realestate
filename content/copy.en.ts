@@ -217,5 +217,6 @@ export const en: Copy = {
     // Fictional stand-ins for the header menu (owner's request 2026-10-01); replaced by company.json once verified.
     address: [draft("Example street 12"), draft("1000 AA Amsterdam")],
     phone: draft("+31 20 000 00 00"),
+    social: [draft("LinkedIn"), draft("Instagram"), draft("Facebook")],
   },
 };

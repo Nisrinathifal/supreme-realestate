@@ -2,7 +2,10 @@
   position: fixed; inset: 0 0 auto 0; z-index: 100;
   padding-top: env(safe-area-inset-top);
   color: var(--ink);
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
 }
+/* Gone while the footer is on screen */
+.header[data-hidden="true"] { opacity: 0; transform: translateY(-12px); pointer-events: none; }
 /* Over an inverse band (sections with data-header-theme="dark") the bar turns to Paper on the dark veil */
 .header[data-theme="dark"] { color: var(--on-media); }
 .header[data-theme="dark"]::before { background: var(--header-scrim-dark); }

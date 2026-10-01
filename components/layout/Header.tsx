@@ -49,6 +49,23 @@ export function Header({ lang, strings }: Props) {
   const home = pathFor("home", lang);
   const onHome = pathname === home;
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [hidden, setHidden] = useState(false);
+
+  // The bar leaves once the page has scrolled away over the footer (the sticky footer itself cannot be
+  // measured, so the trigger is the end of <main>: from the moment its bottom passes 60% of the viewport)
+  useEffect(() => {
+    setupGsap();
+    const main = document.getElementById("main");
+    if (!main || !document.querySelector("[data-footer]")) return;
+    const t = ScrollTrigger.create({
+      trigger: main,
+      start: "bottom 60%",
+      end: "+=100000",
+      refreshPriority: -1,
+      onToggle: (self) => setHidden(self.isActive),
+    });
+    return () => t.kill();
+  }, [pathname]);
 
   // Bands marked data-header-theme="dark" switch the bar to Paper on a dark veil while they sit under it
   useEffect(() => {
@@ -132,7 +149,7 @@ export function Header({ lang, strings }: Props) {
   const sectionHref = (id: string) => (onHome ? `#${id}` : `${home === "/" ? "" : home}/#${id}`);
 
   return (
-    <header className={styles.header} data-header data-theme={theme}>
+    <header className={styles.header} data-header data-theme={theme} data-hidden={hidden ? "true" : "false"}>
       <div className={`container ${styles.bar}`}>
         <div className={styles.left} onPointerEnter={onEnter} onPointerLeave={onLeave}>
           <button ref={buttonRef} type="button" className={styles.pill} aria-expanded={open} aria-controls={panelId} aria-label={open ? strings.closeMenu : undefined} onClick={toggle}>
