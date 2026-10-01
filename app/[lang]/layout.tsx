@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Funnel_Display, Inter_Tight } from "next/font/google";
+import { ContactBand, Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { LangProvider } from "@/components/layout/LangProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
@@ -86,7 +87,9 @@ export default async function LangLayout({ children, params }: { children: React
         />
         <main id="main" tabIndex={-1}>
           {children}
+          <ContactBand lang={lang} />
         </main>
+        <Footer lang={lang} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </LangProvider>
       </body>

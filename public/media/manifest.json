@@ -98,5 +98,13 @@
   "sky-gables-01": {
     "width": 1672,
     "height": 941
+  },
+  "sketch-block-ink-01": {
+    "width": 500,
+    "height": 500
+  },
+  "sketch-house-ink-01": {
+    "width": 470,
+    "height": 470
   }
 }

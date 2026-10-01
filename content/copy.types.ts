@@ -48,7 +48,17 @@ export type Copy = {
   };
   about: { title: string; promiseLabel: string; promise: string; managementTitle: string };
   legal: { lastUpdated: string; placeholderNote: string };
-  footer: { links: { key: "privacy" | "cookies" | "disclaimer" | "colophon"; label: string }[]; copyright: (year: number) => string; kvk: string; vat: string; linkedin: string };
+  /** Footer after the reference: a contact band first (label, title, body, button), then the revealed footer. */
+  footer: {
+    links: { key: "privacy" | "cookies" | "disclaimer" | "colophon"; label: string }[];
+    copyright: (year: number) => string;
+    kvk: string;
+    vat: string;
+    linkedin: string;
+    cta: { label: string; title: string; body: string; button: string };
+    callUs: string;
+    backToTop: string;
+  };
   notFound: { title: string; home: string };
   /** `address` / `phone`: fictional stand-ins shown in the header menu until company.json is verified. */
   placeholders: { description: string; story: string; media: string; film: string; credits: string; address: string[]; phone: string };

@@ -1,18 +1,52 @@
-.footer { background: var(--bg); color: var(--ink); padding-bottom: calc(var(--s-6) + env(safe-area-inset-bottom)); }
-.inner { display: flex; flex-direction: column; gap: var(--s-6); }
-.wordmarkRow { padding-top: var(--s-8); }
-:global(body:has([data-closing])) .wordmarkRow { display: none; }
-.bar { display: flex; flex-direction: column; gap: var(--s-5); padding-top: var(--s-5); border-top: 1px solid var(--line); }
-.row { display: flex; justify-content: space-between; align-items: center; gap: var(--s-5); flex-wrap: wrap; }
-.contact { font-style: normal; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
-.contact a { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-.contact a:hover { text-decoration-thickness: 2px; }
-.address { display: flex; gap: var(--s-2); color: var(--muted); }
+/* Contact band: the last block of the page, on Paper, centred */
+.band { background: var(--bg); color: var(--ink); padding: var(--section-y) 0; }
+.bandInner { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
+.bandTitle { margin: var(--s-2) 0 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); text-wrap: balance; }
+.bandBody { margin: 0 0 var(--s-3); font-size: var(--fs-body); line-height: 1.6; color: var(--muted); max-width: 44ch; }
+
+/* Footer waits underneath the page and is revealed as the page scrolls away (main sits above it, rounded) */
+.footer {
+  position: sticky; bottom: 0; z-index: 0;
+  background: var(--alt); color: var(--ink);
+  padding: var(--s-9) 0 0; overflow: hidden;
+}
+.inner { position: relative; z-index: 1; display: flex; flex-direction: column; gap: var(--s-7); }
+
+/* Top row: links · brand on the centre line · language + social */
+.top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: var(--s-6); }
+.list { display: flex; flex-direction: column; gap: var(--s-1); }
+.link { display: inline-flex; align-items: center; min-height: 32px; font-size: var(--fs-ui); color: var(--ink); }
+.link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.brand { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); text-align: center; }
 .legal { color: var(--muted); user-select: text; }
-.links { display: flex; align-items: center; gap: var(--s-5); flex-wrap: wrap; }
-.link { color: var(--ink); min-height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-.link:hover { text-decoration-thickness: 2px; }
-.icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--r-pill); }
-@media (max-width: 560px) {
-  .contact, .address { flex-direction: column; }
+.aside { justify-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-1); }
+
+/* Bottom row: phone · back to top · legal pages */
+.bottom {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--s-6);
+  padding-top: var(--s-5); border-top: 1px solid var(--line);
+}
+.call { margin: 0; }
+.call a { text-decoration: underline; text-underline-offset: 4px; }
+.muted { color: var(--muted); }
+.toTop { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
+.legalLinks { justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s-4); }
+.legalLink { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.legalLink:hover { text-decoration-thickness: 2px; }
+
+/* The two ink drawings along the bottom edge, faint */
+.sketches { position: relative; height: clamp(200px, 26vw, 380px); margin-top: var(--s-6); pointer-events: none; }
+.sketchLeft, .sketchRight { position: absolute; bottom: calc(var(--s-7) * -1); width: clamp(240px, 30vw, 440px); opacity: 0.55; }
+.sketchLeft { left: var(--gutter); }
+.sketchRight { right: var(--gutter); }
+
+@media (max-width: 767px) {
+  .band { padding: var(--s-10) 0; }
+  .top, .bottom { grid-template-columns: 1fr; }
+  .brand { align-items: flex-start; text-align: left; }
+  .aside { justify-self: start; align-items: flex-start; }
+  .legalLinks { justify-self: start; justify-content: flex-start; }
+  .sketches { height: clamp(160px, 44vw, 240px); }
+  .sketchLeft { display: none; }
+  .sketchRight { width: min(70vw, 300px); }
 }

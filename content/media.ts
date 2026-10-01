@@ -107,6 +107,12 @@ export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
 /** Sky band background (owner concept 2026-10-01): canal-house gables against a morning sky. Generated render. */
 export const skyImage: ImageAsset = { src: "sky-gables-01", width: 1672, height: 941, alt: { nl: "Gevels tegen een ochtendlucht", en: "Gables against a morning sky" } };
 
+/** Footer: the same two line drawings in ink, for the Stone footer band. */
+export const footerSketches: { left: ImageAsset; right: ImageAsset } = {
+  left: { src: "sketch-house-ink-01", width: 470, height: 470, alpha: true, alt: { nl: "Lijntekening van een grachtenpand", en: "Line drawing of a canal house" } },
+  right: { src: "sketch-block-ink-01", width: 500, height: 500, alpha: true, alt: { nl: "Lijntekening van een modern woongebouw", en: "Line drawing of a modern apartment building" } },
+};
+
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };
 

@@ -1,73 +1,114 @@
 import Link from "next/link";
-import { LinkedinLogo } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
-import { Wordmark } from "@/components/brand/Wordmark";
-import { company, formatAddressLines, has, hasAddress, telHref } from "@/content/company";
+import { Button } from "@/components/ui/Button";
+import { MediaFrame } from "@/components/ui/MediaFrame";
+import { MicroLabel } from "@/components/ui/MicroLabel";
+import { company, has, telHref } from "@/content/company";
+import { footerSketches } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { pathFor, type Lang } from "@/content/routes";
+import { LangToggle } from "./LangToggle";
 import styles from "./Footer.module.css";
 
+/** Contact band at the end of every page (DESIGN §10.1 Contact): label, H2, one sentence, the primary button. */
+export function ContactBand({ lang }: { lang: Lang }) {
+  const c = getCopy(lang);
+  return (
+    <section className={styles.band} data-contact-band aria-labelledby="contact-band-title">
+      <div className={`container ${styles.bandInner}`}>
+        <MicroLabel>{c.footer.cta.label}</MicroLabel>
+        <h2 id="contact-band-title" className={styles.bandTitle}>
+          {c.footer.cta.title}
+        </h2>
+        <p className={styles.bandBody}>{c.footer.cta.body}</p>
+        <Button href={pathFor("contact", lang)} variant="primary" arrow>
+          {c.footer.cta.button}
+        </Button>
+      </div>
+    </section>
+  );
+}
+
 /**
- * Footer after the reference (REFERENCE 5.7): light, giant wordmark, then a bar with lockup, contact,
- * legal line and legal links. On the homepage the wordmark is rendered by the Closing section
- * (it rises after the capsule expands), so the footer's own wordmark row hides there via :has().
+ * Footer after the reference: revealed from under the page (sticky). Top row: section links · lockup with the
+ * legal line · language switch and LinkedIn. Bottom row: phone · back to top · legal pages. Two ink line
+ * drawings sit along the bottom edge. Company values come from company.json and hide while unverified;
+ * the phone shows the fictional stand-in from the copy until then (no tel: link).
  */
 export function Footer({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const year = new Date().getFullYear();
-  const legalParts = [
-    company.legalName,
-    has(company.kvk) ? `${c.footer.kvk} ${company.kvk}` : null,
-    has(company.vat) ? `${c.footer.vat} ${company.vat}` : null,
-    has(company.visitingAddress.city) ? company.visitingAddress.city : null,
-  ].filter(Boolean);
+  const home = pathFor("home", lang);
+  const phone = has(company.phone) ? company.phone : c.placeholders.phone;
+  const phoneHref = has(company.phone) ? telHref(company.phone) : "";
+  const legalParts = [company.legalName, has(company.kvk) ? `${c.footer.kvk} ${company.kvk}` : null].filter(Boolean);
 
   return (
     <footer className={styles.footer} data-footer>
       <div className={`container ${styles.inner}`}>
-        <div className={styles.wordmarkRow} data-footer-wordmark>
-          <Wordmark text={c.brand.wordmark} />
-        </div>
-        <div className={styles.bar} data-footer-bar>
-          <div className={styles.row}>
-            <Lockup ariaLabel={c.siteName} height={52} />
-            <address className={`t-legal ${styles.contact}`}>
-              {has(company.email) ? <a href={`mailto:${company.email}`}>{company.email}</a> : null}
-              {has(company.phone) ? <a href={telHref(company.phone)}>{company.phone}</a> : null}
-              {hasAddress(company.visitingAddress) ? (
-                <span className={styles.address}>
-                  {formatAddressLines(company.visitingAddress).map((l, i) => (
-                    <span key={i}>{l}</span>
-                  ))}
-                </span>
-              ) : null}
-            </address>
-          </div>
-          <div className={styles.row}>
+        <div className={styles.top}>
+          <nav aria-label={c.a11y.footerNav}>
+            <ul className={styles.list}>
+              {c.nav.sections.map((s) => (
+                <li key={s.id}>
+                  <a href={`${home === "/" ? "" : home}/#${s.id}`} className={styles.link}>
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <Link href={pathFor("contact", lang)} className={styles.link}>
+                  {c.nav.contact}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <div className={styles.brand}>
+            <Lockup ariaLabel={c.siteName} height={40} />
             <p className={`t-legal ${styles.legal}`}>
-              <span>{legalParts.join(" · ")}</span>
-              <span aria-hidden="true"> · </span>
-              <span>{c.footer.copyright(year)}</span>
+              {c.footer.copyright(year)} {legalParts.join(" · ")}
             </p>
-            <nav aria-label={c.a11y.legalNav}>
-              <ul className={styles.links}>
-                {c.footer.links.map((l) => (
-                  <li key={l.key}>
-                    <Link href={pathFor(l.key, lang)} className={`t-legal ${styles.link}`}>
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-                {has(company.linkedin) ? (
-                  <li>
-                    <a href={company.linkedin} rel="noopener noreferrer" target="_blank" className={styles.icon} aria-label={c.footer.linkedin}>
-                      <LinkedinLogo size={20} weight="light" aria-hidden="true" />
-                    </a>
-                  </li>
-                ) : null}
-              </ul>
-            </nav>
           </div>
+
+          <div className={styles.aside}>
+            <LangToggle lang={lang} labels={{ switch: c.a11y.languageSwitch, nl: c.a11y.nl, en: c.a11y.en }} />
+            {has(company.linkedin) ? (
+              <a href={company.linkedin} rel="noopener noreferrer" target="_blank" className={styles.link}>
+                {c.footer.linkedin}
+              </a>
+            ) : null}
+          </div>
+        </div>
+
+        <div className={styles.bottom}>
+          <p className={`t-legal ${styles.call}`}>
+            <span className={styles.muted}>{c.footer.callUs}</span>{" "}
+            {phoneHref ? <a href={phoneHref}>{phone}</a> : <span>{phone}</span>}
+          </p>
+          <a href="#main" className={`t-micro ${styles.toTop}`}>
+            {c.footer.backToTop}
+          </a>
+          <nav aria-label={c.a11y.legalNav}>
+            <ul className={styles.legalLinks}>
+              {c.footer.links.map((l) => (
+                <li key={l.key}>
+                  <Link href={pathFor(l.key, lang)} className={`t-legal ${styles.legalLink}`}>
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div className={styles.sketches} aria-hidden="true">
+        <div className={styles.sketchLeft}>
+          <MediaFrame image={footerSketches.left} ratio="1/1" lang={lang} radius="none" decorative sizes="420px" />
+        </div>
+        <div className={styles.sketchRight}>
+          <MediaFrame image={footerSketches.right} ratio="1/1" lang={lang} radius="none" decorative sizes="460px" />
         </div>
       </div>
     </footer>

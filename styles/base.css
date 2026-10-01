@@ -26,7 +26,8 @@ body {
   overflow-x: clip;
 }
 
-main { display: block; }
+/* The page scrolls away over the footer, which waits underneath (sticky reveal, see Footer.module.css) */
+main { display: block; position: relative; z-index: 1; background: var(--bg); border-radius: 0 0 var(--r-xl) var(--r-xl); }
 
 img, video, svg { display: block; max-width: 100%; }
 img, video { height: auto; }
