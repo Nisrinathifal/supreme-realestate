@@ -148,7 +148,8 @@ export function Header({ lang, strings }: Props) {
             <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
           </div>
           <Button href={pathFor("contact", lang)} variant="primary" className={styles.cta}>
-            {strings.contactUs}
+            <span className={styles.ctaLong}>{strings.contactUs}</span>
+            <span className={styles.ctaShort}>{strings.contact}</span>
           </Button>
         </div>
       </div>
