@@ -68,6 +68,7 @@ export function Preloader({ lang }: { lang: Lang }) {
       const text = q("[data-pre-text]");
       const content = q("[data-pre-content]");
       const strip = q("[data-pre-strip]");
+      const columns = q("[data-pre-columns]");
       const W = window.innerWidth;
       const H = window.innerHeight;
       const n = items.length;
@@ -132,6 +133,7 @@ export function Preloader({ lang }: { lang: Lang }) {
       });
       tl.add("hero", 4.4)
         .to(overlay, { backgroundColor: "transparent", duration: 0.35, ease: ease.brand }, "hero")
+        .to(columns, { opacity: 0, duration: 0.35, ease: ease.brand }, "hero") // the columns leave with the Paper, never over the hero
         .to(strip, { opacity: 0, duration: 0.3, ease: ease.brand }, "hero")
         .to(frame, { width: midW, height: midH, duration: 0.9, ease: ease.precise }, "hero+=0.2")
         .to(media, { scale: 1, duration: 1.7, ease: ease.out }, "hero+=0.3")
@@ -181,7 +183,7 @@ export function Preloader({ lang }: { lang: Lang }) {
       <noscript>
         <style>{`[data-preloader]{display:none !important}`}</style>
       </noscript>
-      <Columns tone="paper" />
+      <Columns tone="paper" data-pre-columns="" />
       <div className={styles.content} data-pre-content>
         <div className={styles.head} data-pre-head>
           <Lockup ariaLabel={c.a11y.home} height={44} />
