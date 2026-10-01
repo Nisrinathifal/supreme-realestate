@@ -1,9 +1,5 @@
-/* Sky band (continues the hero's sky tokens), statement at the top, shelf at the bottom edge */
-.shelf {
-  position: relative; min-height: 100svh; overflow: hidden;
-  background: linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-seam));
-  color: var(--ink);
-}
+/* Paper band (DESIGN §3): statement centred in the first viewport, the shelf below it */
+.shelf { position: relative; min-height: 100svh; overflow: hidden; background: var(--bg); color: var(--ink); }
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */
 .inner { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s-9); }
 .stage { min-height: 100svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; }

@@ -27,7 +27,17 @@ export const nl: Copy = {
     legalNav: draft("Juridische pagina's"),
     home: draft("Supreme Real Estate, naar de homepage"),
   },
-  nav: { about: "Over ons", contact: "Contact", menu: "Menu", closeMenu: "Sluit menu" },
+  nav: {
+    about: "Over ons",
+    contact: "Contact",
+    menu: "Menu",
+    closeMenu: "Sluit menu",
+    contactUs: "Neem contact op",
+    sections: [
+      { id: "home", label: draft("Home") },
+      { id: "about", label: "Over ons" },
+    ],
+  },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
   hero: {
     // Hero concept 2026-09-30 (owner-supplied English copy, NL draft). The approved brand promise

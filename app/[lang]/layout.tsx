@@ -3,6 +3,7 @@ import { Funnel_Display, Inter_Tight } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { LangProvider } from "@/components/layout/LangProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { company, formatAddressLines, has, telHref } from "@/content/company";
 import { getCopy } from "@/content/copy";
 import { langs } from "@/content/routes";
 import { htmlLang, resolveLang } from "@/lib/i18n";
@@ -66,6 +67,20 @@ export default async function LangLayout({ children, params }: { children: React
           strings={{
             home: c.a11y.home,
             wordmark: c.brand.wordmark,
+            menu: c.nav.menu,
+            closeMenu: c.nav.closeMenu,
+            mainNav: c.a11y.mainNav,
+            langSwitch: c.a11y.languageSwitch,
+            nl: c.a11y.nl,
+            en: c.a11y.en,
+            contactUs: c.nav.contactUs,
+            contact: c.nav.contact,
+            sections: c.nav.sections,
+            keys: { address: c.companyKeys.visitingAddress, phone: c.companyKeys.phone, email: c.companyKeys.email },
+            addressLines: formatAddressLines(company.visitingAddress),
+            phone: has(company.phone) ? company.phone : "",
+            phoneHref: has(company.phone) ? telHref(company.phone) : "",
+            email: has(company.email) ? company.email : "",
           }}
         />
         <main id="main" tabIndex={-1}>

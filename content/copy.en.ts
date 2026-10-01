@@ -27,7 +27,18 @@ export const en: Copy = {
     legalNav: draft("Legal pages"),
     home: draft("Supreme Real Estate, to the homepage"),
   },
-  nav: { about: "About", contact: "Contact", menu: "Menu", closeMenu: "Close menu" },
+  nav: {
+    about: "About",
+    contact: "Contact",
+    menu: "Menu",
+    closeMenu: "Close menu",
+    contactUs: draft("Contact us"),
+    // Section by section (owner's note 2026-10-01); grows with the homepage
+    sections: [
+      { id: "home", label: draft("Home") },
+      { id: "about", label: "About" },
+    ],
+  },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
   hero: {
     // Hero concept 2026-09-30 (owner-supplied). Approved brand promise "From old to valuable." stays in the docs.
