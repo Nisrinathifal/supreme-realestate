@@ -3,6 +3,11 @@
   padding-top: env(safe-area-inset-top);
   color: var(--ink);
 }
+/* Soft Paper gradient behind the bar, fading out below it; pointer-events off so the page stays clickable */
+.header::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: calc((var(--header-h) + var(--s-5)) * 2.2); z-index: -1;
+  background: var(--header-scrim); pointer-events: none;
+}
 /* Three columns: menu left, lockup on the centre line, language + contact right */
 .bar {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--s-4);
@@ -25,8 +30,14 @@
 .ctaShort { display: none; }
 
 /* Panel under the pill: glass panel per DESIGN §9.4. The wrapper holds the gap so hover carries over. */
-.panelWrap { position: absolute; left: 0; top: 100%; z-index: 1; padding-top: var(--s-2); }
-.panelWrap[hidden] { display: none; }
+.panelWrap {
+  position: absolute; left: 0; top: 100%; z-index: 1; padding-top: var(--s-2);
+  transition: opacity 260ms var(--ease), transform 260ms var(--ease), visibility 0s linear 0s;
+}
+.panelWrap[data-open="false"] {
+  opacity: 0; visibility: hidden; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 220ms var(--ease), transform 220ms var(--ease), visibility 0s linear 220ms;
+}
 .panel {
   width: min(380px, calc(100vw - 2 * var(--gutter)));
   padding: var(--s-5) var(--s-6); border-radius: var(--r-md);

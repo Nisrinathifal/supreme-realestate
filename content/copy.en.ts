@@ -30,7 +30,7 @@ export const en: Copy = {
   nav: {
     about: "About",
     contact: "Contact",
-    menu: "Menu",
+    menu: draft("Navigate to"),
     closeMenu: "Close menu",
     contactUs: draft("Contact us"),
     // Section by section (owner's note 2026-10-01); grows with the homepage

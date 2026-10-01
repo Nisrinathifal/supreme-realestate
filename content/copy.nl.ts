@@ -30,7 +30,7 @@ export const nl: Copy = {
   nav: {
     about: "Over ons",
     contact: "Contact",
-    menu: "Menu",
+    menu: draft("Navigeer naar"),
     closeMenu: "Sluit menu",
     contactUs: "Neem contact op",
     sections: [

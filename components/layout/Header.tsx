@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import { DotsSixVertical, X } from "@phosphor-icons/react/dist/ssr";
+import { DotsSixVertical } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
 import { Button } from "@/components/ui/Button";
 import { Placeholder } from "@/components/ui/Placeholder";
@@ -33,11 +33,11 @@ export type HeaderStrings = {
 type Props = { lang: Lang; strings: HeaderStrings };
 
 /**
- * Header (concept 2026-10-01): menu pill left that opens a glass panel (DESIGN §9.4) on hover (mouse) or
- * click/keyboard (touch, keyboard) with the homepage sections, the contact page, the language switch on
- * small screens and the company address and phone; the lockup on the centre line; NL/EN pill and the
- * outline "Contact us" button right. Fixed over the hero; without JavaScript it sits absolutely at the top
- * and the panel stays closed.
+ * Header (concept 2026-10-01): "Navigate to" pill left that opens a glass panel (DESIGN §9.4) on hover (mouse)
+ * or click/keyboard (touch, keyboard) with the homepage sections, the contact page, the language switch on
+ * small screens and the company address and phone; the lockup on the centre line; plain NL | EN and the
+ * outline "Contact us" button right. A soft Paper gradient behind the bar keeps it legible over every band.
+ * Fixed over the hero; without JavaScript it sits absolutely at the top and the panel stays closed.
  */
 export function Header({ lang, strings }: Props) {
   const pathname = usePublicPathname();
@@ -106,13 +106,14 @@ export function Header({ lang, strings }: Props) {
     <header className={styles.header} data-header>
       <div className={`container ${styles.bar}`}>
         <div className={styles.left} onPointerEnter={onEnter} onPointerLeave={onLeave}>
-          <button ref={buttonRef} type="button" className={styles.pill} aria-expanded={open} aria-controls={panelId} onClick={toggle}>
-            <span>{open ? strings.closeMenu : strings.menu}</span>
-            {open ? <X size={16} weight="light" aria-hidden="true" /> : <DotsSixVertical size={16} weight="bold" aria-hidden="true" />}
+          <button ref={buttonRef} type="button" className={styles.pill} aria-expanded={open} aria-controls={panelId} aria-label={open ? strings.closeMenu : undefined} onClick={toggle}>
+            <span>{strings.menu}</span>
+            <DotsSixVertical size={16} weight="bold" aria-hidden="true" />
           </button>
 
-          {/* The wrapper carries the gap below the pill so the pointer can travel into the panel without closing it */}
-          <div className={styles.panelWrap} hidden={!open}>
+          {/* The wrapper carries the gap below the pill so the pointer can travel into the panel without closing it.
+              Closed: faded out and visibility hidden (after the fade), so nothing inside is focusable. */}
+          <div className={styles.panelWrap} data-open={open ? "true" : "false"}>
             <div id={panelId} ref={panelRef} className={styles.panel}>
               <nav aria-label={strings.mainNav}>
                 <ul className={styles.list}>
