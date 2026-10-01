@@ -2,17 +2,18 @@ import styles from "./Columns.module.css";
 
 type Props = { tone?: "paper" | "stone"; className?: string };
 
-/** Eight pillars, mirrored around the centre: narrow shaft, a wider base from 60% down, soft shoulders. */
-const half = [
-  { cx: 90, top: 70, base: 124 },
-  { cx: 270, top: 56, base: 100 },
-  { cx: 450, top: 84, base: 136 },
-  { cx: 630, top: 48, base: 92 },
-];
-const pillars = [...half, ...half.map((p) => ({ ...p, cx: 1440 - p.cx }))];
+/**
+ * Two registers of vertical bands on one period, as in the reference: the upper register of narrow bands,
+ * and from about 46% down a second register offset by half a period, a little wider, with rounded tops.
+ * The period divides the width, so the pattern is symmetrical.
+ */
+const PERIOD = 180;
+const BREAK = 414; // of 900
+const upper = Array.from({ length: 8 }, (_, k) => 90 + k * PERIOD);
+const lower = Array.from({ length: 9 }, (_, k) => k * PERIOD);
 
 /**
- * Background treatment: faint vertical architectural columns behind a band (after the owner's reference).
+ * Background treatment: faint architectural columns behind a band (after the owner's reference).
  * One tone darker than the surface it sits on (Paper → Stone, Stone → line), very low contrast, no gradient.
  * Decorative, behind all content, scales with the band.
  */
@@ -25,11 +26,11 @@ export function Columns({ tone = "paper", className }: Props) {
       aria-hidden="true"
       focusable="false"
     >
-      {pillars.map((p) => (
-        <g key={p.cx}>
-          <rect x={p.cx - p.top / 2} y={0} width={p.top} height={560} />
-          <rect x={p.cx - p.base / 2} y={536} width={p.base} height={364} rx={18} />
-        </g>
+      {upper.map((cx) => (
+        <rect key={`u${cx}`} x={cx - 40} y={0} width={80} height={BREAK + 6} />
+      ))}
+      {lower.map((cx) => (
+        <rect key={`l${cx}`} x={cx - 52} y={BREAK} width={104} height={900 - BREAK} rx={14} />
       ))}
     </svg>
   );
