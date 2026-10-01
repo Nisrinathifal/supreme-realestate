@@ -112,8 +112,9 @@ export function Header({ lang, strings }: Props) {
           </button>
 
           {/* The wrapper carries the gap below the pill so the pointer can travel into the panel without closing it.
-              Closed: faded out and visibility hidden (after the fade), so nothing inside is focusable. */}
+              Closed: collapsed to zero height (grid rows) and visibility hidden after the move, so nothing inside is focusable. */}
           <div className={styles.panelWrap} data-open={open ? "true" : "false"}>
+            <div className={styles.panelClip}>
             <div id={panelId} ref={panelRef} className={styles.panel}>
               <nav aria-label={strings.mainNav}>
                 <ul className={styles.list}>
@@ -159,10 +160,11 @@ export function Header({ lang, strings }: Props) {
                 ) : null}
               </dl>
             </div>
+            </div>
           </div>
         </div>
 
-        <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={44} />
+        <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={44} tone="light" />
 
         <div className={styles.right}>
           <div className={styles.barLang}>

@@ -4,6 +4,6 @@
 .link {
   font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.04em;
   padding: var(--s-3) var(--s-1); min-height: 44px; display: inline-flex; align-items: center;
-  color: var(--muted); border-radius: var(--s-1);
+  color: inherit; opacity: 0.62; border-radius: var(--s-1);
 }
-.active { color: var(--ink); }
+.active { opacity: 1; }
