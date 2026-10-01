@@ -9,40 +9,46 @@
 /* Light scrim keeps ink copy ≥ 4.5:1 over the brighter clouds (DESIGN §13) */
 .sky::after { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--media-scrim-light); pointer-events: none; opacity: 0.6; }
 
+/* Composition after the reference: copy in the upper middle, carousel across the lower middle */
 .inner {
   position: relative; z-index: 1; min-height: 100svh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-9);
-  padding-top: calc(var(--header-h) + var(--s-8)); padding-bottom: var(--s-9);
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: var(--s-9);
+  padding-top: calc(var(--header-h) + 9svh); padding-bottom: var(--s-9);
 }
 .copy { display: flex; flex-direction: column; align-items: center; gap: var(--s-5); text-align: center; max-width: 760px; }
 .title { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; font-size: var(--fs-h2); text-wrap: balance; }
 .lead { margin: 0; font-size: var(--fs-lead); line-height: 1.5; max-width: 46ch; }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); }
 
-/* Fan: seven captioned cards on a shallow arc. --i runs from -3 to 3; the outer ones turn away and sit lower */
-.fan {
-  --card-w: clamp(112px, 11.6vw, 190px);
+/* Curved carousel: seven cards of one height; width scales with --s; --r (deg) turns the card away on the
+   Y axis along a curved path, with only a whisper of Z tilt; the outer cards sit a little lower */
+.carousel {
+  --card-w: clamp(120px, 12.8vw, 186px);
+  --card-h: calc(var(--card-w) * 1.28);
   display: flex; justify-content: center; align-items: flex-start; gap: var(--s-3);
   perspective: 1600px; width: 100%;
 }
 .card {
-  width: var(--card-w); flex: none; overflow: hidden;
-  transform: rotateY(calc(var(--i) * -12deg)) translateY(calc(var(--i) * var(--i) * 12px));
-  transform-style: preserve-3d; box-shadow: var(--shadow);
-  border-radius: var(--r-md); background: var(--surface); color: var(--ink);
+  flex: none; width: calc(var(--card-w) * var(--s)); height: var(--card-h);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: translateY(calc((1 - var(--s)) * 90px)) rotateY(calc(var(--r) * -1.6deg)) rotateZ(calc(var(--r) * 0.18deg));
+  transform-origin: 50% 50%; transform-style: preserve-3d;
+  border-radius: var(--r-sm); border: 1px solid var(--line); box-shadow: var(--shadow-soft);
+  background: var(--surface); color: var(--ink);
 }
-.cardImage { aspect-ratio: 4 / 3.4; }
-.cardText { display: flex; flex-direction: column; gap: var(--s-1); padding: var(--s-3) var(--s-4) var(--s-4); }
-.cardTitle { color: var(--ink); }
-.cardBody { margin: 0; font-size: var(--fs-ui); font-weight: 400; line-height: 1.4; color: var(--muted); }
+/* Image and text areas keep the same proportions on every card; text never changes the height */
+.cardImage { position: relative; height: 62%; flex: none; }
+.cardText { height: 38%; display: flex; flex-direction: column; gap: var(--s-1); padding: var(--s-3); overflow: hidden; }
+.cardTitle { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cardBody { margin: 0; font-size: var(--fs-ui); font-weight: 400; line-height: 1.3; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 @media (max-width: 980px) {
-  .inner { gap: var(--s-8); }
+  .inner { gap: var(--s-8); padding-top: calc(var(--header-h) + 6svh); }
   .title { font-size: clamp(34px, 8vw, 56px); }
   .lead { font-size: var(--fs-body); }
-  .fan { --card-w: clamp(104px, 27vw, 150px); gap: var(--s-2); }
+  .carousel { --card-w: clamp(120px, 30vw, 160px); gap: var(--s-2); }
   /* three cards on phones: the two outer pairs are hidden */
   .card:nth-child(1), .card:nth-child(2), .card:nth-child(6), .card:nth-child(7) { display: none; }
   .cardBody { display: none; }
-  .cardTitle { white-space: normal; overflow-wrap: anywhere; letter-spacing: 0.12em; }
+  .cardTitle { letter-spacing: 0.06em; }
 }

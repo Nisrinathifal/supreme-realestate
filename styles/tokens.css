@@ -72,6 +72,7 @@
   --r-pill: 999px;
 
   --shadow: 0 30px 60px -30px rgba(10,20,20,.45);
+  --shadow-soft: 0 10px 30px -18px rgba(10,20,20,.35); /* presentation cards: barely there */
   --blur: 18px;
 
   --frame: 12px;

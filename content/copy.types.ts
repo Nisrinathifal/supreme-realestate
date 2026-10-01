@@ -26,7 +26,7 @@ export type Copy = {
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   /** Sky band: brand promise, lead and the two buttons (DESIGN §10.1 hero copy), over the sky photograph. */
-  sky: { label: string; title: string; lead: string; cta: string; cards: { title: string; body: string }[] };
+  sky: { label: string; title: string; lead: string; ctaPrimary: string; ctaSecondary: string; cards: { title: string; body: string }[] };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };
   carousel: { label: string; title: string; sub: string; items: { title: string; body: string }[] };
   map: { label: string; title: string; sub: string; cta: string; dot: string };

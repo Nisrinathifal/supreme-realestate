@@ -67,15 +67,17 @@ export const en: Copy = {
     label: draft("From"),
     title: draft("Potential to Turnkey"),
     lead: draft("We transform existing properties into thoughtfully designed, ready-to-live spaces."),
-    cta: draft("See projects"),
+    ctaPrimary: draft("Explore our approach"),
+    ctaSecondary: draft("View projects"),
+    // Seven cards, far left to far right (owner's order); the outer two are the property as found and as finished
     cards: [
-      { title: draft("Potential"), body: draft("Identifying opportunities") },
+      { title: draft("Property"), body: draft("Existing") },
       { title: draft("Acquire"), body: draft("Existing properties with potential") },
       { title: draft("Reimagined"), body: draft("A new vision for valuable spaces") },
       { title: draft("Transformed"), body: draft("Thoughtful development and high-quality design") },
       { title: draft("Refined"), body: draft("Modern living with timeless details") },
       { title: draft("Turnkey"), body: draft("Ready-to-live homes, completed to a high standard") },
-      { title: draft("Lasting"), body: draft("Value that holds over time") },
+      { title: draft("Property"), body: draft("Completed") },
     ],
   },
   statement: {
