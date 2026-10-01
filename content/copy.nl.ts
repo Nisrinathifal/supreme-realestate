@@ -62,12 +62,21 @@ export const nl: Copy = {
       { index: "03", title: draft("Opleveren"), body: draft("Elke woning turnkey opleveren als een plek om te wonen.") },
     ],
   },
-  // Sky band: letterlijk DESIGN §10.1 (merkbelofte, lead, knoppen).
+  // Sky band: owner concept 2026-10-01, NL draft until approved.
   sky: {
-    title: "Van oud naar waardevol",
-    lead: "Supreme Real Estate is een vastgoedonderneming in Amsterdam, gericht op bestaande woningen en de lange termijn.",
-    primary: "Neem contact op",
-    secondary: "Over Supreme",
+    label: draft("Van"),
+    title: draft("Potentieel naar turnkey"),
+    lead: draft("Wij transformeren bestaande panden tot zorgvuldig ontworpen, instapklare woningen."),
+    cta: draft("Bekijk projecten"),
+    cards: [
+      { title: draft("Potentieel"), body: draft("Kansen herkennen") },
+      { title: draft("Verwerven"), body: draft("Bestaande panden met potentieel") },
+      { title: draft("Herzien"), body: draft("Een nieuwe visie op waardevolle ruimte") },
+      { title: draft("Getransformeerd"), body: draft("Zorgvuldige ontwikkeling en hoogwaardig ontwerp") },
+      { title: draft("Verfijnd"), body: draft("Modern wonen met tijdloze details") },
+      { title: draft("Turnkey"), body: draft("Instapklare woningen, afgewerkt op hoog niveau") },
+      { title: draft("Blijvend"), body: draft("Waarde die standhoudt") },
+    ],
   },
   statement: {
     label: "01 — Supreme",
