@@ -32,13 +32,14 @@ export function MediaFrame({ image, ratio, lang, radius = "lg", priority = false
     );
   }
   const base = `/media/${image.src}`;
+  const fallback = image.alpha ? "png" : "jpg";
   return (
-    <div className={cls} data-media-frame>
+    <div className={[cls, image.alpha ? styles.alpha : ""].filter(Boolean).join(" ")} data-media-frame>
       <picture className={styles.inner} data-media-inner>
         <source type="image/avif" srcSet={`${base}-640.avif 640w, ${base}-1280.avif 1280w, ${base}-1920.avif 1920w`} sizes={sizes} />
         <source type="image/webp" srcSet={`${base}-640.webp 640w, ${base}-1280.webp 1280w, ${base}-1920.webp 1920w`} sizes={sizes} />
         <img
-          src={`${base}-1280.jpg`}
+          src={`${base}-1280.${fallback}`}
           width={image.width}
           height={image.height}
           alt={decorative ? "" : image.alt[lang]}

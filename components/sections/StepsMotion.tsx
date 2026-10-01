@@ -39,7 +39,7 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
           scrollTrigger: { trigger: section, start: "top top", end: "+=480%", pin: true, scrub: 1.2, anticipatePin: 1, invalidateOnRefresh: true },
         });
         tl.to(lines, { yPercent: 0, duration: 0.12, ease: ease.out, stagger: 0.03 }, 0)
-          .to(sketches, { opacity: 0.55, y: 0, duration: 0.12, ease: ease.out }, 0.02)
+          .to(sketches, { opacity: 0.9, y: 0, duration: 0.12, ease: ease.out }, 0.02)
           .to({}, { duration: 0.08 })
           .to(strip, { opacity: 1, duration: 0.05, ease: "none" }, 0.2)
           .to(strip, { scale: 1, xPercent: 0, yPercent: 0, duration: 0.3, ease: ease.precise }, 0.2)

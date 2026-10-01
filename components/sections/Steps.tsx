@@ -20,7 +20,7 @@ export function Steps({ lang }: { lang: Lang }) {
       <StepsMotion>
         <div className={styles.stage} data-steps-stage>
           <div className={styles.sketch} data-steps-sketch="left" aria-hidden="true">
-            <MediaFrame image={stepsSketches.left.image} ratio="4/5" lang={lang} radius="none" decorative />
+            <MediaFrame image={stepsSketches.left.image} ratio="1/1" lang={lang} radius="none" decorative sizes="340px" />
           </div>
           <div className={styles.head}>
             <MicroLabel>{c.steps.label}</MicroLabel>
@@ -35,7 +35,7 @@ export function Steps({ lang }: { lang: Lang }) {
             </h2>
           </div>
           <div className={styles.sketch} data-steps-sketch="right" aria-hidden="true">
-            <MediaFrame image={stepsSketches.right.image} ratio="4/5" lang={lang} radius="none" decorative />
+            <MediaFrame image={stepsSketches.right.image} ratio="1/1" lang={lang} radius="none" decorative sizes="340px" />
           </div>
         </div>
 

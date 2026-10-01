@@ -11,6 +11,8 @@ export type ImageAsset = {
   width: number;
   height: number;
   alt: { nl: string; en: string };
+  /** Transparent source: the pipeline wrote a PNG fallback instead of JPEG. */
+  alpha?: boolean;
 };
 
 export type VideoAsset = {
@@ -96,9 +98,10 @@ export const stepsMedia: MediaSlot[] = [
   { id: "step-02", ratio: "16/9", image: null },
   { id: "step-03", ratio: "16/9", image: null },
 ];
+/** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */
 export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
-  left: { id: "sketch-01", ratio: "4/5", image: null },
-  right: { id: "sketch-02", ratio: "4/5", image: null },
+  left: { id: "sketch-01", ratio: "1/1", image: { src: "sketch-house-01", width: 470, height: 470, alpha: true, alt: { nl: "Lijntekening van een grachtenpand", en: "Line drawing of a canal house" } } },
+  right: { id: "sketch-02", ratio: "1/1", image: { src: "sketch-block-01", width: 500, height: 500, alpha: true, alt: { nl: "Lijntekening van een modern woongebouw", en: "Line drawing of a modern apartment building" } } },
 };
 
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */

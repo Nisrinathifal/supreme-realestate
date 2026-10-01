@@ -2,6 +2,9 @@
 .rxl { border-radius: var(--r-xl); }
 .rnone { border-radius: 0; }
 .rpill { border-radius: var(--r-pill); }
+/* transparent artwork: no Stone surface behind it, the band shows through */
+.alpha { background: transparent; }
+.alpha .img { object-fit: contain; }
 .r169 { aspect-ratio: 16 / 9; }
 .r45 { aspect-ratio: 4 / 5; }
 .r11 { aspect-ratio: 1 / 1; }

@@ -54,8 +54,8 @@ export const nl: Copy = {
   },
   // Steps: owner concept 2026-10-01, NL draft until approved.
   steps: {
-    label: draft("Werkwijze"),
-    lines: [draft("Zien wat een pand kan worden."), draft("Ruimte verdelen met zorg."), draft("Woningen turnkey opleveren.")],
+    label: draft("Waarde opnieuw bekeken"),
+    lines: [draft("Potentieel ontsluiten."), draft("Panden transformeren."), draft("Blijvende waarde creëren.")],
     items: [
       { index: "01", title: draft("Herzien"), body: draft("Begrijpen wat een bestaand pand is en kan worden.") },
       { index: "02", title: draft("Verdelen"), body: draft("Grotere ruimtes omvormen tot zelfstandige woningen.") },

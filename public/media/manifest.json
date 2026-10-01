@@ -86,5 +86,13 @@
   "shelf-01": {
     "width": 968,
     "height": 695
+  },
+  "sketch-block-01": {
+    "width": 500,
+    "height": 500
+  },
+  "sketch-house-01": {
+    "width": 470,
+    "height": 470
   }
 }

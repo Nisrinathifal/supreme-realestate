@@ -54,8 +54,8 @@ export const en: Copy = {
   },
   // Steps: owner concept 2026-10-01 (three steps verbatim from the owner's mock-up; headline lines draft).
   steps: {
-    label: draft("How we work"),
-    lines: [draft("Seeing what a property can become."), draft("Dividing space with care."), draft("Delivering homes, turnkey.")],
+    label: draft("Reimagining value"),
+    lines: [draft("Unlocking potential."), draft("Transforming properties."), draft("Creating lasting value.")],
     items: [
       { index: "01", title: draft("Reimagine"), body: draft("Understanding the existing property and its potential.") },
       { index: "02", title: draft("Divide"), body: draft("Transforming larger spaces into independent homes.") },
