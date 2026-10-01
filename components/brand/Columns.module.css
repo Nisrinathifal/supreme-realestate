@@ -1,0 +1,5 @@
+.columns { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+/* one step darker than the surface, then faded so the band still reads as plain at a glance */
+.paper rect { fill: var(--alt); }
+.stone rect { fill: var(--line); }
+.columns rect { opacity: 0.42; }

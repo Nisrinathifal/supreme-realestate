@@ -1,3 +1,4 @@
+import { Columns } from "@/components/brand/Columns";
 import { shelfIcons, shelfImage } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { ShelfIcon } from "@/content/copy.types";
@@ -27,6 +28,7 @@ export function Shelf({ lang }: { lang: Lang }) {
   const order: ShelfIcon[] = [];
   return (
     <section id="about" className={styles.shelf} data-shelf aria-labelledby="shelf-title">
+      <Columns tone="stone" />
       <ShelfMotion>
         <div className={`container ${styles.inner}`}>
           <div className={styles.stage}>

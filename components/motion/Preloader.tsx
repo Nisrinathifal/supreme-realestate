@@ -2,6 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
+import { Columns } from "@/components/brand/Columns";
 import { Lockup } from "@/components/brand/Lockup";
 import { INTRO_DONE } from "@/components/sections/HeroFilm";
 import { introSequence } from "@/content/media";
@@ -180,6 +181,7 @@ export function Preloader({ lang }: { lang: Lang }) {
       <noscript>
         <style>{`[data-preloader]{display:none !important}`}</style>
       </noscript>
+      <Columns tone="paper" />
       <div className={styles.content} data-pre-content>
         <div className={styles.head} data-pre-head>
           <Lockup ariaLabel={c.a11y.home} height={44} />

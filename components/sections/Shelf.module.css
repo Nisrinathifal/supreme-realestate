@@ -5,6 +5,7 @@
 }
 .shelf::before { content: ""; position: absolute; inset: 0; background: var(--daylight); pointer-events: none; }
 .shelf > * { position: relative; }
+.shelf > svg { position: absolute; }
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */
 .inner { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s-9); }
 .stage { min-height: 100svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; }
