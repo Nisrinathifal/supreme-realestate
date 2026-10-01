@@ -12,7 +12,7 @@
 
 .primary { background: var(--btn-bg); color: var(--btn-fg); }
 .secondary { background: var(--surface); color: var(--ink); border-color: var(--line); }
-.outline { background: transparent; color: var(--ink); border-color: currentColor; }
+.outline { background: transparent; color: inherit; border-color: currentColor; }
 .outline:hover { background: var(--glass-soft); }
 .glass {
   background: var(--glass); color: var(--glass-fg); border-color: var(--glass-line);

@@ -90,6 +90,17 @@ export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", Shelf
   chart: { src: "icon-chart-01", width: 90, height: 90, alt: { nl: "Waarde: stijgende grafiek", en: "Value: a rising chart" }, slot: { x: 85.4, y: 82, w: 13.5 } },
 };
 
+/** Steps section: one illustration per step (4:3) and two line drawings beside the headline. Assets to follow. */
+export const stepsMedia: MediaSlot[] = [
+  { id: "step-01", ratio: "16/9", image: null },
+  { id: "step-02", ratio: "16/9", image: null },
+  { id: "step-03", ratio: "16/9", image: null },
+];
+export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
+  left: { id: "sketch-01", ratio: "4/5", image: null },
+  right: { id: "sketch-02", ratio: "4/5", image: null },
+};
+
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };
 

@@ -3,6 +3,10 @@
   padding-top: env(safe-area-inset-top);
   color: var(--ink);
 }
+/* Over an inverse band (sections with data-header-theme="dark") the bar turns to Paper on the dark veil */
+.header[data-theme="dark"] { color: var(--on-media); }
+.header[data-theme="dark"]::before { background: var(--header-scrim-dark); }
+.header::before { transition: opacity 300ms var(--ease); }
 /* Light veil behind the bar, fading out below it; pointer-events off so the page stays clickable */
 .header::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: calc((var(--header-h) + var(--s-5)) * 1.9); z-index: -1;

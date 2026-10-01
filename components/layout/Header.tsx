@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { LangToggle } from "./LangToggle";
 import { pathFor, type Lang } from "@/content/routes";
 import { usePublicPathname } from "@/lib/usePublicPathname";
+import { ScrollTrigger, setupGsap } from "@/lib/motion";
 import styles from "./Header.module.css";
 
 export type HeaderStrings = {
@@ -47,6 +48,33 @@ export function Header({ lang, strings }: Props) {
   const leaveTimer = useRef<number | null>(null);
   const home = pathFor("home", lang);
   const onHome = pathname === home;
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  // Bands marked data-header-theme="dark" switch the bar to Paper on a dark veil while they sit under it
+  useEffect(() => {
+    setupGsap();
+    const bands = Array.from(document.querySelectorAll<HTMLElement>('[data-header-theme="dark"]'));
+    if (!bands.length) return;
+    // A band may be pinned by its own motion: then its scroll range is the pin's range plus the band's height.
+    // Evaluated after the pins refresh (priority -1), so the pin's start/end are final.
+    const pinOf = (band: HTMLElement) => ScrollTrigger.getAll().find((t) => t.pin === band);
+    const triggers = bands.map((band) =>
+      ScrollTrigger.create({
+        trigger: band,
+        start: () => {
+          const pin = pinOf(band);
+          return (pin ? pin.start : band.getBoundingClientRect().top + window.scrollY) - 48;
+        },
+        end: () => {
+          const pin = pinOf(band);
+          return (pin ? pin.end + band.offsetHeight : band.getBoundingClientRect().bottom + window.scrollY) - 48;
+        },
+        refreshPriority: -1,
+        onToggle: (self) => setTheme(self.isActive ? "dark" : "light"),
+      }),
+    );
+    return () => triggers.forEach((t) => t.kill());
+  }, [pathname]);
 
   // Close on Escape and on a click outside; return focus to the pill when closed via keyboard
   useEffect(() => {
@@ -102,7 +130,7 @@ export function Header({ lang, strings }: Props) {
   const sectionHref = (id: string) => (onHome ? `#${id}` : `${home === "/" ? "" : home}/#${id}`);
 
   return (
-    <header className={styles.header} data-header>
+    <header className={styles.header} data-header data-theme={theme}>
       <div className={`container ${styles.bar}`}>
         <div className={styles.left} onPointerEnter={onEnter} onPointerLeave={onLeave}>
           <button ref={buttonRef} type="button" className={styles.pill} aria-expanded={open} aria-controls={panelId} aria-label={open ? strings.closeMenu : undefined} onClick={toggle}>
@@ -163,7 +191,7 @@ export function Header({ lang, strings }: Props) {
           </div>
         </div>
 
-        <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={44} />
+        <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={44} tone={theme === "dark" ? "light" : "ink"} />
 
         <div className={styles.right}>
           <div className={styles.barLang}>

@@ -1,0 +1,56 @@
+/* Inverse band (Canal ink). Static layout: headline stage, then the panels stacked. StepsMotion turns the
+   desktop version into a pinned stage with the strip laid out sideways. */
+.steps { position: relative; overflow: hidden; color: var(--ink); }
+
+.stage {
+  position: relative; min-height: 100svh; display: grid; grid-template-columns: 1fr minmax(0, 3.2fr) 1fr; align-items: center;
+  gap: var(--s-6); padding: calc(var(--header-h) + var(--s-7)) var(--gutter) var(--s-8);
+}
+.sketch { width: min(100%, 220px); opacity: 0.55; }
+.sketch:last-of-type { justify-self: end; }
+.head { display: flex; flex-direction: column; align-items: center; gap: var(--s-5); text-align: center; }
+.title {
+  margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12;
+  font-size: clamp(26px, 2.7vw, 42px); text-wrap: balance;
+}
+.line { display: block; overflow: hidden; }
+@media (min-width: 768px) {
+  .line { white-space: nowrap; }
+}
+.lineInner { display: block; }
+
+/* Panels: static = stacked with the band's frame; desktop motion = one row, each panel a full viewport tall */
+.strip { display: flex; flex-direction: column; gap: var(--s-4); padding: 0 var(--frame) var(--frame); }
+/* Panels 01 and 03 carry the global `light` class (Paper surface inside the inverse band); 02 stays inverse */
+.panel {
+  position: relative; display: flex; flex-direction: column; gap: var(--s-6);
+  padding: var(--s-7) var(--s-7) var(--s-6); border-radius: var(--r-xl);
+  background: var(--bg); color: var(--ink);
+}
+.panelHead { display: flex; flex-direction: column; gap: var(--s-3); }
+.panelTitle { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); }
+.panelMedia { flex: 1 1 auto; display: flex; align-items: center; }
+.panelMedia > * { width: 100%; }
+.panelBody { margin: 0; font-size: var(--fs-body); line-height: 1.6; max-width: 36ch; color: var(--muted); }
+
+@media (min-width: 768px) {
+  /* Desktop geometry used by StepsMotion: panels side by side, each one viewport tall, 72vw wide */
+  .strip[data-row] {
+    flex-direction: row; align-items: stretch; padding: 0;
+    position: absolute; inset: 0; height: 100svh; width: max-content;
+  }
+  .strip[data-row] .panel { width: 72vw; height: 100svh; border-radius: 0; padding: calc(var(--header-h) + var(--s-6)) var(--s-9) var(--s-8); }
+  .strip[data-row] .panelMedia { max-height: 52svh; }
+}
+
+@media (max-width: 980px) {
+  .stage { grid-template-columns: 1fr; padding-top: calc(var(--header-h) + var(--s-6)); }
+  .sketch { display: none; }
+}
+@media (max-width: 767px) {
+  /* static reading order on phones: a compact headline block, then the stacked panels */
+  .stage { min-height: 0; padding-bottom: var(--s-7); }
+  .title { font-size: clamp(26px, 6vw, 40px); }
+  .panel { padding: var(--s-6) var(--s-5) var(--s-5); border-radius: var(--r-lg); }
+  .panelTitle { font-size: clamp(32px, 8vw, 48px); }
+}

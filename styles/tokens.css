@@ -28,6 +28,7 @@
   --glass:         rgba(250,250,247,.74);
   --glass-soft:    rgba(250,250,247,.38); /* header pill and menu panel: more see-through than a glass panel */
   --header-scrim:  linear-gradient(180deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,.55) 45%, rgba(250,250,247,0) 100%); /* light veil behind the fixed header, keeps it legible over any band */
+  --header-scrim-dark: linear-gradient(180deg, rgba(26,32,29,.78) 0%, rgba(26,32,29,.4) 45%, rgba(26,32,29,0) 100%); /* same veil over an inverse band (header switches to Paper there) */
   --glass-fg:      #1A201D;
   --glass-line:    rgba(255,255,255,.6);
 
@@ -100,6 +101,13 @@
   --muted: var(--inv-muted); --line: var(--inv-line);   --grid-line: var(--inv-grid-line);
   --btn-bg: var(--inv-btn-bg); --btn-fg: var(--inv-btn-fg); --focus: var(--inv-focus);
   --win: var(--accent);
+  background: var(--bg); color: var(--ink);
+}
+
+/* Light surface inside an inverse band (a Paper panel on Canal ink): restores the base tokens. */
+.light {
+  --bg: #FAFAF7; --surface: #FFFFFF; --alt: #EEEEE9; --line: #E2E3DC; --ink: #1A201D; --muted: #5B625D;
+  --grid-line: rgba(26,32,29,.07); --btn-bg: #1A201D; --btn-fg: #FAFAF7; --focus: #1A201D;
   background: var(--bg); color: var(--ink);
 }
 

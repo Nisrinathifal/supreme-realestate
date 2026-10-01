@@ -37,6 +37,7 @@ export const en: Copy = {
     sections: [
       { id: "home", label: draft("Home") },
       { id: "about", label: "About" },
+      { id: "approach", label: draft("How we work") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
@@ -50,6 +51,16 @@ export const en: Copy = {
   // Shelf statement: owner concept 2026-09-30 (draft until approved).
   shelf: {
     parts: [draft("We unlock the potential of existing"), { icon: "bulb" }, draft("properties, transforming"), { icon: "hammer" }, draft("them into thoughtfully designed homes and continuing to manage"), { icon: "clipboard" }, draft("their value over time"), { icon: "chart" }],
+  },
+  // Steps: owner concept 2026-10-01 (three steps verbatim from the owner's mock-up; headline lines draft).
+  steps: {
+    label: draft("How we work"),
+    lines: [draft("Seeing what a property can become."), draft("Dividing space with care."), draft("Delivering homes, turnkey.")],
+    items: [
+      { index: "01", title: draft("Reimagine"), body: draft("Understanding the existing property and its potential.") },
+      { index: "02", title: draft("Divide"), body: draft("Transforming larger spaces into independent homes.") },
+      { index: "03", title: draft("Deliver"), body: draft("Completing each apartment as a turnkey living experience.") },
+    ],
   },
   statement: {
     label: draft("01 — Supreme"),

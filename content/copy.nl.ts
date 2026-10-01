@@ -36,6 +36,7 @@ export const nl: Copy = {
     sections: [
       { id: "home", label: draft("Home") },
       { id: "about", label: "Over ons" },
+      { id: "approach", label: draft("Werkwijze") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
@@ -50,6 +51,16 @@ export const nl: Copy = {
   // Shelf statement: owner concept 2026-09-30, NL draft until approved.
   shelf: {
     parts: [draft("Wij zien de mogelijkheden van bestaande"), { icon: "bulb" }, draft("panden, vernieuwen"), { icon: "hammer" }, draft("ze tot zorgvuldig ontworpen woningen en blijven"), { icon: "clipboard" }, draft("hun waarde beheren, jaar na jaar"), { icon: "chart" }],
+  },
+  // Steps: owner concept 2026-10-01, NL draft until approved.
+  steps: {
+    label: draft("Werkwijze"),
+    lines: [draft("Zien wat een pand kan worden."), draft("Ruimte verdelen met zorg."), draft("Woningen turnkey opleveren.")],
+    items: [
+      { index: "01", title: draft("Herzien"), body: draft("Begrijpen wat een bestaand pand is en kan worden.") },
+      { index: "02", title: draft("Verdelen"), body: draft("Grotere ruimtes omvormen tot zelfstandige woningen.") },
+      { index: "03", title: draft("Opleveren"), body: draft("Elke woning turnkey opleveren als een plek om te wonen.") },
+    ],
   },
   statement: {
     label: "01 — Supreme",

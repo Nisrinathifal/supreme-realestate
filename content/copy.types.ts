@@ -23,6 +23,8 @@ export type Copy = {
   statement: { label: string; text: string; aside: string };
   /** Shelf section: one statement whose inline icons fly into the shelf. `parts` alternate text and icon keys. */
   shelf: { parts: (string | { icon: ShelfIcon })[] };
+  /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
+  steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };
   carousel: { label: string; title: string; sub: string; items: { title: string; body: string }[] };
   map: { label: string; title: string; sub: string; cta: string; dot: string };
