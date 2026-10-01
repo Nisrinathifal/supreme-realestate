@@ -1,12 +1,15 @@
-.toggle { display: inline-flex; align-items: center; }
+/* Same see-through pill as the menu button (header), NL | EN inside it */
+.toggle {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--s-3);
+  border-radius: var(--r-pill); border: 1px solid var(--glass-line);
+  background: var(--glass-soft); color: var(--glass-fg);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2); backdrop-filter: blur(var(--blur)) saturate(1.2);
+}
 .item { display: inline-flex; align-items: center; }
 .sep { width: 1px; height: 14px; background: currentColor; opacity: 0.35; margin-inline: var(--s-2); }
 .link {
   font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.04em;
-  padding: var(--s-3) var(--s-1); min-height: 44px; display: inline-flex; align-items: center; gap: var(--s-2);
+  padding: var(--s-3) var(--s-1); min-height: 42px; display: inline-flex; align-items: center;
   color: var(--muted); border-radius: var(--s-1);
 }
 .active { color: var(--ink); }
-/* Flag colours are the flags' own, not brand tokens; the inactive one is dimmed with the text */
-.flag { display: block; border-radius: 2px; flex: none; opacity: 0.55; }
-.active .flag { opacity: 1; }

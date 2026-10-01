@@ -1,5 +1,10 @@
-/* Paper band (DESIGN §3): statement centred in the first viewport, the shelf below it */
-.shelf { position: relative; min-height: 100svh; overflow: hidden; background: var(--bg); color: var(--ink); }
+/* A wall: Stone (--alt) lit from the top left (--daylight), slightly darker towards the floor */
+.shelf {
+  position: relative; min-height: 100svh; overflow: hidden; color: var(--ink);
+  background: linear-gradient(180deg, var(--alt) 0%, var(--alt) 70%, var(--line) 100%);
+}
+.shelf::before { content: ""; position: absolute; inset: 0; background: var(--daylight); pointer-events: none; }
+.shelf > * { position: relative; }
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */
 .inner { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s-9); }
 .stage { min-height: 100svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; }

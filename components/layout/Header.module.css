@@ -12,7 +12,7 @@
 .lockup { min-height: 44px; }
 .right { justify-self: end; display: flex; align-items: center; gap: var(--s-3); }
 
-/* Glass pill (DESIGN §9.1 glass, over media) */
+/* See-through pill (--glass-soft), shared look with the language pill */
 .pill {
   display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-4);
   border-radius: var(--r-pill); border: 1px solid var(--glass-line);
@@ -24,16 +24,16 @@
 .cta { min-height: 44px; }
 .ctaShort { display: none; }
 
-/* Panel under the pill: glass panel per DESIGN §9.4 */
+/* Panel under the pill: glass panel per DESIGN §9.4. The wrapper holds the gap so hover carries over. */
+.panelWrap { position: absolute; left: 0; top: 100%; z-index: 1; padding-top: var(--s-2); }
+.panelWrap[hidden] { display: none; }
 .panel {
-  position: absolute; left: 0; top: calc(100% + var(--s-2)); z-index: 1;
-  width: min(360px, calc(100vw - 2 * var(--gutter)));
+  width: min(380px, calc(100vw - 2 * var(--gutter)));
   padding: var(--s-5) var(--s-6); border-radius: var(--r-md);
   background: var(--glass); color: var(--glass-fg); border: 1px solid var(--glass-line);
   background-image: var(--glass-highlight); box-shadow: var(--shadow);
   -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2); backdrop-filter: blur(var(--blur)) saturate(1.2);
 }
-.panel[hidden] { display: none; }
 .list { display: flex; flex-direction: column; }
 .link {
   display: block; padding: var(--s-2) 0; border-radius: var(--s-1);
@@ -45,6 +45,7 @@
 .row { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--s-3); align-items: baseline; }
 .value { display: flex; flex-direction: column; font-size: var(--fs-ui); line-height: 1.4; }
 .value a { text-decoration: underline; text-underline-offset: 4px; }
+.placeholder { padding: var(--s-1) var(--s-2); font-size: var(--fs-micro); }
 
 @media (max-width: 560px) {
   .bar { height: var(--header-h); gap: var(--s-2); }

@@ -31,7 +31,7 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
 
         const tl = gsap.timeline({
           defaults: { ease: ease.inOut },
-          scrollTrigger: { trigger: rack, start: "top 95%", end: "top 30%", scrub: 1, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: rack, start: "top 100%", end: "top 15%", scrub: 1.6, invalidateOnRefresh: true },
         });
         icons.forEach((icon, i) => {
           const target = targetFor(icon);
@@ -48,10 +48,11 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
             return b.top - a.top;
           };
           const scale = () => target.getBoundingClientRect().width / icon.getBoundingClientRect().width;
-          const at = i * 0.12;
-          tl.to(icon, { x: dx, y: dy, scale, duration: 0.55 }, at)
-            .set(target, { opacity: 1 }, at + 0.55)
-            .set(icon, { opacity: 0 }, at + 0.55);
+          // Each icon grows while it travels (scale runs with the move); the moves overlap for one calm flow
+          const at = i * 0.1;
+          tl.to(icon, { x: dx, y: dy, scale, duration: 0.7, ease: "power2.inOut" }, at)
+            .set(target, { opacity: 1 }, at + 0.7)
+            .set(icon, { opacity: 0 }, at + 0.7);
         });
 
         return () => {

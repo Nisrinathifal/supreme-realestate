@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { DotsSixVertical, X } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
 import { Button } from "@/components/ui/Button";
+import { Placeholder } from "@/components/ui/Placeholder";
 import { LangToggle } from "./LangToggle";
 import { pathFor, type Lang } from "@/content/routes";
 import { usePublicPathname } from "@/lib/usePublicPathname";
@@ -32,11 +33,11 @@ export type HeaderStrings = {
 type Props = { lang: Lang; strings: HeaderStrings };
 
 /**
- * Header (concept 2026-10-01): menu pill left that opens a glass panel (DESIGN §9.4) with the homepage
- * sections, the contact page, the language switch on small screens and the verified contact details;
- * the lockup on the centre line; NL/EN with flags and the outline "Contact us" button right. Fixed over the
- * hero; without JavaScript it sits absolutely at the top and the panel stays closed. The contact button is
- * `outline` so the hero keeps its one primary for later.
+ * Header (concept 2026-10-01): menu pill left that opens a glass panel (DESIGN §9.4) on hover (mouse) or
+ * click/keyboard (touch, keyboard) with the homepage sections, the contact page, the language switch on
+ * small screens and the company address and phone; the lockup on the centre line; NL/EN pill and the
+ * outline "Contact us" button right. Fixed over the hero; without JavaScript it sits absolutely at the top
+ * and the panel stays closed.
  */
 export function Header({ lang, strings }: Props) {
   const pathname = usePublicPathname();
@@ -44,10 +45,11 @@ export function Header({ lang, strings }: Props) {
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const leaveTimer = useRef<number | null>(null);
   const home = pathFor("home", lang);
   const onHome = pathname === home;
 
-  // Close on Escape, on a click outside and on navigation; return focus to the pill when closed via keyboard
+  // Close on Escape and on a click outside; return focus to the pill when closed via keyboard
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -61,74 +63,91 @@ export function Header({ lang, strings }: Props) {
       if (panelRef.current?.contains(t) || buttonRef.current?.contains(t)) return;
       setOpen(false);
     };
+    const onScroll = () => setOpen(false);
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onDown);
-    panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [open]);
 
+  const cancelLeave = () => {
+    if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
+    leaveTimer.current = null;
+  };
+  const onEnter = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    cancelLeave();
+    setOpen(true);
+  };
+  const onLeave = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    cancelLeave();
+    leaveTimer.current = window.setTimeout(() => setOpen(false), 180);
+  };
+  const toggle = () => {
+    cancelLeave();
+    setOpen((v) => {
+      if (!v) window.setTimeout(() => panelRef.current?.querySelector<HTMLElement>("a, button")?.focus(), 0);
+      return !v;
+    });
+  };
+  const close = () => {
+    cancelLeave();
+    setOpen(false);
+  };
+
   const sectionHref = (id: string) => (onHome ? `#${id}` : `${home === "/" ? "" : home}/#${id}`);
-  const hasContact = strings.addressLines.length > 0 || strings.phone || strings.email;
 
   return (
     <header className={styles.header} data-header>
       <div className={`container ${styles.bar}`}>
-        <div className={styles.left}>
-          <button
-            ref={buttonRef}
-            type="button"
-            className={styles.pill}
-            aria-expanded={open}
-            aria-controls={panelId}
-            onClick={() => setOpen((v) => !v)}
-          >
+        <div className={styles.left} onPointerEnter={onEnter} onPointerLeave={onLeave}>
+          <button ref={buttonRef} type="button" className={styles.pill} aria-expanded={open} aria-controls={panelId} onClick={toggle}>
             <span>{open ? strings.closeMenu : strings.menu}</span>
             {open ? <X size={16} weight="light" aria-hidden="true" /> : <DotsSixVertical size={16} weight="bold" aria-hidden="true" />}
           </button>
 
-          <div id={panelId} ref={panelRef} className={styles.panel} hidden={!open}>
-            <nav aria-label={strings.mainNav}>
-              <ul className={styles.list}>
-                {strings.sections.map((s) => (
-                  <li key={s.id}>
-                    <a href={sectionHref(s.id)} className={styles.link} onClick={() => setOpen(false)}>
-                      {s.label}
-                    </a>
+          {/* The wrapper carries the gap below the pill so the pointer can travel into the panel without closing it */}
+          <div className={styles.panelWrap} hidden={!open}>
+            <div id={panelId} ref={panelRef} className={styles.panel}>
+              <nav aria-label={strings.mainNav}>
+                <ul className={styles.list}>
+                  {strings.sections.map((s) => (
+                    <li key={s.id}>
+                      <a href={sectionHref(s.id)} className={styles.link} onClick={close}>
+                        {s.label}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <Link href={pathFor("contact", lang)} className={styles.link} aria-current={pathname === pathFor("contact", lang) ? "page" : undefined} onClick={close}>
+                      {strings.contact}
+                    </Link>
                   </li>
-                ))}
-                <li>
-                  <Link href={pathFor("contact", lang)} className={styles.link} aria-current={pathname === pathFor("contact", lang) ? "page" : undefined} onClick={() => setOpen(false)}>
-                    {strings.contact}
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-            <div className={styles.panelLang}>
-              <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
-            </div>
-            {hasContact ? (
+                </ul>
+              </nav>
+              <div className={styles.panelLang}>
+                <LangToggle lang={lang} labels={{ switch: strings.langSwitch, nl: strings.nl, en: strings.en }} />
+              </div>
+              {/* Address and phone from company.json (PRD §7). While a value is not verified yet a development
+                  placeholder marks the slot; the launch build refuses placeholders. */}
               <dl className={styles.details}>
-                {strings.addressLines.length ? (
-                  <div className={styles.row}>
-                    <dt className="t-micro">{strings.keys.address}</dt>
-                    <dd className={styles.value}>
-                      {strings.addressLines.map((l) => (
-                        <span key={l}>{l}</span>
-                      ))}
-                    </dd>
-                  </div>
-                ) : null}
-                {strings.phone ? (
-                  <div className={styles.row}>
-                    <dt className="t-micro">{strings.keys.phone}</dt>
-                    <dd className={styles.value}>
-                      <a href={strings.phoneHref}>{strings.phone}</a>
-                    </dd>
-                  </div>
-                ) : null}
+                <div className={styles.row}>
+                  <dt className="t-micro">{strings.keys.address}</dt>
+                  <dd className={styles.value}>
+                    {strings.addressLines.length ? strings.addressLines.map((l) => <span key={l}>{l}</span>) : <Placeholder note={strings.keys.address} className={styles.placeholder} />}
+                  </dd>
+                </div>
+                <div className={styles.row}>
+                  <dt className="t-micro">{strings.keys.phone}</dt>
+                  <dd className={styles.value}>
+                    {strings.phone ? <a href={strings.phoneHref}>{strings.phone}</a> : <Placeholder note={strings.keys.phone} className={styles.placeholder} />}
+                  </dd>
+                </div>
                 {strings.email ? (
                   <div className={styles.row}>
                     <dt className="t-micro">{strings.keys.email}</dt>
@@ -138,7 +157,7 @@ export function Header({ lang, strings }: Props) {
                   </div>
                 ) : null}
               </dl>
-            ) : null}
+            </div>
           </div>
         </div>
 
