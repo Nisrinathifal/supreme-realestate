@@ -62,6 +62,13 @@ export const nl: Copy = {
       { index: "03", title: draft("Opleveren"), body: draft("Elke woning turnkey opleveren als een plek om te wonen.") },
     ],
   },
+  // Sky band: letterlijk DESIGN §10.1 (merkbelofte, lead, knoppen).
+  sky: {
+    title: "Van oud naar waardevol",
+    lead: "Supreme Real Estate is een vastgoedonderneming in Amsterdam, gericht op bestaande woningen en de lange termijn.",
+    primary: "Neem contact op",
+    secondary: "Over Supreme",
+  },
   statement: {
     label: "01 — Supreme",
     text: "Wij zien wat een woning kan worden, en geven haar met zorg een nieuwe toekomst. Zorgvuldig gekozen, met vakmanschap vernieuwd, voor de lange termijn.",

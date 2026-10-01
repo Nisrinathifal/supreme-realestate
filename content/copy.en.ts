@@ -62,6 +62,13 @@ export const en: Copy = {
       { index: "03", title: draft("Deliver"), body: draft("Completing each apartment as a turnkey living experience.") },
     ],
   },
+  // Sky band: verbatim DESIGN §10.1 (brand promise, lead, buttons).
+  sky: {
+    title: "From old to valuable",
+    lead: "Supreme Real Estate is a real-estate company in Amsterdam, focused on existing homes and the long term.",
+    primary: "Get in touch",
+    secondary: "About Supreme",
+  },
   statement: {
     label: draft("01 — Supreme"),
     text: "We see what a home can become, and give it a new future with care. Carefully chosen, renewed with craft, for the long term.",

@@ -67,7 +67,9 @@ export function Header({ lang, strings }: Props) {
         },
         end: () => {
           const pin = pinOf(band);
-          return (pin ? pin.end + band.offsetHeight : band.getBoundingClientRect().bottom + window.scrollY) - 48;
+          // A following band marked data-overlap slides up over the held band one viewport early
+          const overlap = band.nextElementSibling?.hasAttribute("data-overlap") ? window.innerHeight : 0;
+          return (pin ? pin.end + band.offsetHeight - overlap : band.getBoundingClientRect().bottom + window.scrollY) - 48;
         },
         refreshPriority: -1,
         onToggle: (self) => setTheme(self.isActive ? "dark" : "light"),

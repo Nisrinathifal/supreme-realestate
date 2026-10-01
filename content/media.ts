@@ -104,6 +104,9 @@ export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
   right: { id: "sketch-02", ratio: "1/1", image: { src: "sketch-block-01", width: 500, height: 500, alpha: true, alt: { nl: "Lijntekening van een modern woongebouw", en: "Line drawing of a modern apartment building" } } },
 };
 
+/** Sky band background (owner concept 2026-10-01): canal-house gables against a morning sky. Generated render. */
+export const skyImage: ImageAsset = { src: "sky-gables-01", width: 1672, height: 941, alt: { nl: "Gevels tegen een ochtendlucht", en: "Gables against a morning sky" } };
+
 /** Optional cut-out subject layer over the hero (transparent PNG/WebP, e.g. a renewed volume or window). */
 export const heroSubject: MediaSlot = { id: "hero-subject", ratio: "4/5", image: null };
 

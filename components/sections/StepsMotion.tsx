@@ -29,6 +29,9 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
 
         strip.setAttribute("data-row", "");
         const travel = () => Math.max(0, strip.scrollWidth - window.innerWidth);
+        // The band after this one slides up over the held strip (reference): pull it up one viewport while pinned
+        const next = section.nextElementSibling as HTMLElement | null;
+        if (next?.hasAttribute("data-overlap")) gsap.set(next, { marginTop: () => -window.innerHeight, zIndex: 2, position: "relative" });
 
         gsap.set(lines, { yPercent: 110 });
         gsap.set(sketches, { opacity: 0, y: 24 });
@@ -36,7 +39,7 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
 
         const tl = gsap.timeline({
           defaults: { ease: ease.inOut },
-          scrollTrigger: { trigger: section, start: "top top", end: "+=480%", pin: true, scrub: 1.2, anticipatePin: 1, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: section, start: "top top", end: "+=580%", pin: true, scrub: 1.2, anticipatePin: 1, invalidateOnRefresh: true },
         });
         tl.to(lines, { yPercent: 0, duration: 0.12, ease: ease.out, stagger: 0.03 }, 0)
           .to(sketches, { opacity: 0.9, y: 0, duration: 0.12, ease: ease.out }, 0.02)
@@ -44,12 +47,13 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
           .to(strip, { opacity: 1, duration: 0.05, ease: "none" }, 0.2)
           .to(strip, { scale: 1, xPercent: 0, yPercent: 0, duration: 0.3, ease: ease.precise }, 0.2)
           .to(stage, { opacity: 0, duration: 0.14 }, 0.3)
-          .to(strip, { x: () => -travel(), duration: 0.42, ease: "none" }, 0.52)
-          .to({}, { duration: 0.06 });
+          .to(strip, { x: () => -travel(), duration: 0.34, ease: "none" }, 0.52)
+          .to({}, { duration: 0.14 }); // held while the next band covers it
 
         return () => {
           strip.removeAttribute("data-row");
           gsap.set([lines, sketches, strip, stage], { clearProps: "all" });
+          if (next) gsap.set(next, { clearProps: "marginTop,zIndex,position" });
           ScrollTrigger.refresh();
         };
       });
