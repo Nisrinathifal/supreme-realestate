@@ -1,47 +1,32 @@
-/* Work section: Canal ink band. Intro on the band, then the four sticky cards. */
-.work { position: relative; background: var(--bg); color: var(--ink); }
-.intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); padding: calc(var(--header-h) + var(--s-9)) var(--gutter) var(--s-8); max-width: none; }
+/* Work section on Paper: the intro, then one row per case between hairlines */
+.work { position: relative; background: var(--bg); color: var(--ink); padding-top: var(--section-y); }
+.intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); padding-bottom: var(--s-9); max-width: none; }
 .title { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); max-width: 18ch; text-wrap: balance; }
 .lead { margin: 0; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); max-width: 44ch; }
 
-/* The cases share one containing block: each sticks at the top and the next one slides over it; the gap below a
-   case is the time its card holds before the next arrives (--dwell). At the end they all leave together. */
-.cases { --dwell: 40svh; list-style: none; margin: 0; padding: 0; position: relative; }
-.case { position: sticky; top: 0; height: 100svh; margin-bottom: var(--dwell); }
-.case:last-child { margin-bottom: 0; }
-.card {
-  position: relative; height: 100%; overflow: hidden; isolation: isolate;
-  border-radius: var(--r-xl) var(--r-xl) 0 0; background: var(--surface); color: var(--on-media);
-}
-/* The cover is taller than the card so the parallax has room to move */
-.cover { position: absolute; inset: -12% 0; z-index: 0; }
-.coverFrame { background: var(--surface); }
-.scrim { position: absolute; inset: 0; z-index: 1; background: var(--media-scrim); }
-.content {
-  position: absolute; inset: auto 0 0 0; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s-6);
-  padding-bottom: var(--s-8); max-width: none;
-}
-.copy { display: flex; flex-direction: column; gap: var(--s-3); max-width: 36ch; }
-.copy :global(.t-micro) { color: var(--on-media); opacity: 0.85; }
-.caseTitle { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); text-wrap: balance; }
-.body { margin: 0; font-size: var(--fs-body); line-height: 1.6; opacity: 0.9; }
-.open { margin-top: var(--s-2); color: var(--on-media); text-decoration: underline; text-underline-offset: 4px; }
-/* The card's link covers the card; focus shows as an inset ring, hover eases the cover */
-.hit { position: absolute; inset: 0; z-index: 3; border-radius: inherit; }
-.hit:focus-visible { outline: 2px solid var(--on-media); outline-offset: -6px; }
-.cover :global([data-media-inner]) { transition: transform 700ms var(--ease); }
-.card:has(.hit:hover) .cover :global([data-media-inner]) { transform: scale(1.03); }
-/* Two detail photographs, like the reference's small slider: side by side, the second one a step lower */
-.details { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: var(--s-3); flex: 0 0 auto; }
-.detail { width: clamp(120px, 14vw, 200px); box-shadow: var(--shadow); }
-.detail:first-child { margin-bottom: var(--s-6); }
+.rows { list-style: none; margin: 0; padding: 0; }
+.row { border-top: 1px solid var(--line); }
+.row:last-child { border-bottom: 1px solid var(--line); }
+/* Left the copy, right the photographs; the row breathes */
+.rowInner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--s-9); align-items: stretch; padding-block: var(--s-9); max-width: none; }
+.info { display: flex; flex-direction: column; gap: var(--s-6); }
+.index { margin: 0; color: var(--muted); }
+.caseTitle { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; font-size: var(--fs-h2); max-width: 12ch; text-wrap: balance; }
+.titleLink { color: inherit; }
+.titleLink:hover { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+.titleLink:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+.facts { margin: 0; display: flex; flex-direction: column; gap: var(--s-4); }
+.fact { display: flex; flex-direction: column; gap: var(--s-1); }
+.fact dt { color: var(--muted); }
+.factValue { margin: 0; font-size: var(--fs-lead); line-height: 1.3; }
+.open { align-self: flex-start; margin-top: auto; }
 
+@media (max-width: 980px) {
+  .rowInner { grid-template-columns: 1fr; gap: var(--s-7); padding-block: var(--s-8); }
+  .open { margin-top: 0; }
+}
 @media (max-width: 767px) {
-  .intro { padding: calc(var(--header-h) + var(--s-8)) var(--gutter) var(--s-7); }
-  .cases { --dwell: 30svh; }
-  .card { border-radius: var(--r-lg) var(--r-lg) 0 0; }
-  .content { flex-direction: column; align-items: flex-start; gap: var(--s-5); padding-bottom: var(--s-7); }
-  .details { align-self: flex-start; }
-  .detail { width: 30vw; }
-  .detail:first-child { margin-bottom: var(--s-4); }
+  .intro { padding-bottom: var(--s-7); }
+  .rowInner { padding-block: var(--s-7); }
+  .caseTitle { font-size: clamp(32px, 9vw, 48px); }
 }

@@ -28,10 +28,19 @@ export type Copy = {
   /** Work section: four anonymised cases (PRD §6: no names, addresses or figures), each a cover photo with two details. */
   work: {
     label: string; title: string; lead: string; of: string;
-    /** Card link text, the way back to the overview, the link to the next case. */
-    open: string; back: string; next: string;
-    /** Per case: card title and line, plus three short notes on the detail page (one per step). */
-    items: { index: string; title: string; body: string; notes: { title: string; body: string }[] }[];
+    /** Card link text, the way back to the overview, the link to the next case, the closing list. */
+    open: string; back: string; next: string; more: string; continueLabel: string;
+    /** Labels of the four facts shown per case (Supreme-safe: no city, area, days or year). */
+    facts: { home: string; scope: string; delivery: string; status: string };
+    /** Slider controls. */
+    slider: { label: string; previous: string; nextSlide: string };
+    /** Per case: title and line; four facts; three notes along the steps; chapters with a keyword and a statement. */
+    items: {
+      index: string; title: string; body: string;
+      facts: { home: string; scope: string; delivery: string; status: string };
+      notes: { title: string; body: string }[];
+      chapters: { key: string; statement: string }[];
+    }[];
   };
   /** Sky band: brand promise, lead and the two buttons (DESIGN §10.1 hero copy), over the sky photograph. */
   sky: { label: string; title: string; lead: string; ctaPrimary: string; ctaSecondary: string; cards: { title: string; body: string }[] };

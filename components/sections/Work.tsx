@@ -1,24 +1,23 @@
 import Link from "next/link";
-import { MediaFrame } from "@/components/ui/MediaFrame";
+import { Button } from "@/components/ui/Button";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { workCases } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { workPathFor, type Lang } from "@/content/routes";
-import { WorkMotion } from "./WorkMotion";
+import { WorkSlider } from "./WorkSlider";
 import styles from "./Work.module.css";
 
 /**
- * Work section (concept 2026-10-02, after the reference's project slides): an intro, then four cases as full-height
- * cards that stick under the bar while the next one slides over them. Each card: a cover photograph with a scrim,
- * the index, a title and one line, and two detail photographs. Cases are anonymous (PRD §6): no names, addresses or
- * figures; interiors only. Motion (WorkMotion) adds a slow parallax on the covers and a rise-in of the copy; the
- * stacking itself is CSS, so phones, reduced motion and no-JS read the same. Each card links to its detail page.
+ * Work section (2026-10-02, after the reference's project rows): an intro, then one plain row per case on Paper,
+ * a hairline between them. Left: the index, the title, three facts (home, work, delivery: no city, area, days or
+ * year, PRD §6) and the link to the case; right: a sideways row of photographs with a progress line and arrows.
+ * Cases are anonymous; copy is draft until the owner replaces it.
  */
 export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const total = String(c.work.items.length).padStart(2, "0");
   return (
-    <section id="work" className={`inverse ${styles.work}`} data-work data-header-theme="dark" aria-labelledby="work-title">
+    <section id="work" className={styles.work} data-work aria-labelledby="work-title">
       <div className={`container ${styles.intro}`}>
         <MicroLabel>{c.work.label}</MicroLabel>
         <h2 id="work-title" className={styles.title}>
@@ -27,47 +26,42 @@ export function Work({ lang }: { lang: Lang }) {
         <p className={styles.lead}>{c.work.lead}</p>
       </div>
 
-      <WorkMotion>
-        <ol className={styles.cases} data-work-cases>
-          {c.work.items.map((item, i) => {
-            const media = workCases[i];
-            if (!media) return null;
-            return (
-              <li key={item.index} className={styles.case} data-work-case>
-                <article className={styles.card} aria-labelledby={`work-${media.id}-title`}>
-                  <div className={styles.cover} data-work-cover>
-                    <MediaFrame image={media.cover} ratio="fill" lang={lang} radius="none" sizes="100vw" className={styles.coverFrame} />
-                  </div>
-                  <div className={styles.scrim} aria-hidden="true" />
-                  <div className={`container ${styles.content}`}>
-                    <div className={styles.copy} data-work-copy>
-                      <MicroLabel>
-                        {item.index} {c.work.of} {total}
-                      </MicroLabel>
-                      <h3 id={`work-${media.id}-title`} className={styles.caseTitle}>
-                        {item.title}
-                      </h3>
-                      <p className={styles.body}>{item.body}</p>
-                      <span className={`t-micro ${styles.open}`} aria-hidden="true">
-                        {c.work.open}
-                      </span>
-                    </div>
-                    <ul className={styles.details} data-work-details>
-                      {media.details.map((d) => (
-                        <li key={d.src} className={styles.detail}>
-                          <MediaFrame image={d} ratio="4/5" lang={lang} radius="lg" sizes="(max-width: 767px) 38vw, 200px" />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {/* One link per card, over everything, named by the title (the visible "View project" is decoration) */}
-                  <Link href={workPathFor(i, lang)} className={styles.hit} aria-label={`${c.work.open}: ${item.title}`} />
-                </article>
-              </li>
-            );
-          })}
-        </ol>
-      </WorkMotion>
+      <ol className={styles.rows}>
+        {c.work.items.map((item, i) => {
+          const media = workCases[i];
+          if (!media) return null;
+          const slides = [media.details[0], media.gallery[0], media.details[1], media.gallery[1]].filter(Boolean);
+          const href = workPathFor(i, lang);
+          return (
+            <li key={item.index} className={styles.row} data-work-row>
+              <article className={`container ${styles.rowInner}`} aria-labelledby={`work-${media.id}-title`}>
+                <div className={styles.info}>
+                  <p className={`t-micro ${styles.index}`}>
+                    {item.index} {c.work.of} {total}
+                  </p>
+                  <h3 id={`work-${media.id}-title`} className={styles.caseTitle}>
+                    <Link href={href} className={styles.titleLink}>
+                      {item.title}
+                    </Link>
+                  </h3>
+                  <dl className={styles.facts}>
+                    {(["home", "scope", "delivery"] as const).map((k) => (
+                      <div key={k} className={styles.fact}>
+                        <dt className="t-micro">{c.work.facts[k]}</dt>
+                        <dd className={styles.factValue}>{item.facts[k]}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <Button href={href} variant="secondary" className={styles.open}>
+                    {c.work.open}
+                  </Button>
+                </div>
+                <WorkSlider images={slides} lang={lang} labels={c.work.slider} />
+              </article>
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }

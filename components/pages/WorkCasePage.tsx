@@ -1,15 +1,17 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
-import { MicroLabel } from "@/components/ui/MicroLabel";
 import { workCases } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { pathFor, workCount, workPathFor, type Lang } from "@/content/routes";
+import { WorkCaseMotion } from "./WorkCaseMotion";
 import styles from "./WorkCasePage.module.css";
 
 /**
- * Work case detail (concept 2026-10-02): the cover full-bleed under the bar with the index and the title, one line
- * and three notes along the three steps, the photographs in a two-column grid, then the way back and the next case.
- * Anonymous by design (PRD §6): no name, address, year or figures; copy is draft until the owner replaces it.
+ * Work case detail (2026-10-02, after the reference's project page): the way back, the title with the index, four
+ * facts, three labelled paragraphs along the steps and the link to the next case; the cover; then chapters, each a
+ * keyword, a large statement that reveals as it scrolls and two photographs; finally the other cases. Anonymous
+ * by design (PRD §6): no name, address, area, days or year; copy is draft until the owner replaces it.
  */
 export function WorkCasePage({ lang, index }: { lang: Lang; index: number }) {
   const c = getCopy(lang);
@@ -17,65 +19,106 @@ export function WorkCasePage({ lang, index }: { lang: Lang; index: number }) {
   const media = workCases[index];
   const total = String(c.work.items.length).padStart(2, "0");
   const nextIndex = (index + 1) % workCount;
-  const next = c.work.items[nextIndex];
-  const nextMedia = workCases[nextIndex];
-  const photos = [...media.details, ...media.gallery];
   const home = pathFor("home", lang);
+  const overview = `${home === "/" ? "" : home}/#work`;
+  const photos = [media.details[0], media.gallery[0], media.gallery[1], media.gallery[2], media.details[1], media.gallery[3]];
+  const others = c.work.items.map((it, i) => ({ it, i })).filter(({ i }) => i !== index);
 
   return (
     <article className={styles.page}>
-      <header className={styles.hero} data-header-theme="dark">
-        <div className={styles.heroMedia}>
-          <MediaFrame image={media.cover} ratio="fill" lang={lang} radius="none" priority sizes="100vw" />
-        </div>
-        <div className={styles.heroScrim} aria-hidden="true" />
-        <div className={`container ${styles.heroCopy}`}>
-          <MicroLabel className={styles.heroLabel}>
-            {item.index} {c.work.of} {total}
-          </MicroLabel>
-          <h1 className={styles.title}>{item.title}</h1>
-        </div>
-      </header>
-
-      <section className={`section ${styles.intro}`} aria-label={item.title}>
-        <div className={`container ${styles.introInner}`}>
-          <p className={`t-lead ${styles.lead}`}>{item.body}</p>
-          <ol className={styles.notes}>
-            {item.notes.map((n, i) => (
-              <li key={n.title} className={styles.note}>
-                <MicroLabel>{String(i + 1).padStart(2, "0")}</MicroLabel>
-                <h2 className={styles.noteTitle}>{n.title}</h2>
+      <WorkCaseMotion>
+        <header className={`container ${styles.head}`}>
+          <Link href={overview} className={`t-micro ${styles.back}`}>
+            <span aria-hidden="true">← </span>
+            {c.work.back}
+          </Link>
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>{item.title}</h1>
+            <p className={styles.index}>
+              <span className="t-micro">{c.work.label}</span>
+              <span className={styles.indexNumber}>
+                {item.index}
+                <span className={styles.indexOf}>/{total}</span>
+              </span>
+            </p>
+          </div>
+          <dl className={styles.facts}>
+            {(["home", "scope", "delivery", "status"] as const).map((k) => (
+              <div key={k} className={styles.fact}>
+                <dt className="t-micro">{c.work.facts[k]}</dt>
+                <dd className={styles.factValue}>{item.facts[k]}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className={styles.notes}>
+            {item.notes.map((n) => (
+              <div key={n.title} className={styles.note}>
+                <p className={`t-micro ${styles.noteKey}`}>{n.title}</p>
                 <p className={styles.noteBody}>{n.body}</p>
+              </div>
+            ))}
+          </div>
+          <Button href={workPathFor(nextIndex, lang)} variant="outline" className={styles.nextButton}>
+            {c.work.next}
+          </Button>
+        </header>
+
+        <div className={`container ${styles.cover}`}>
+          <MediaFrame image={media.cover} ratio="16/9" lang={lang} radius="lg" priority sizes="(max-width: 980px) 100vw, 1200px" />
+        </div>
+
+        <div className={styles.chapters}>
+          {item.chapters.map((ch, i) => {
+            const pair = [photos[i * 2], photos[i * 2 + 1]].filter(Boolean);
+            return (
+              <section key={ch.key} className={`container ${styles.chapter}`} aria-label={ch.key}>
+                <p className={`t-micro ${styles.chapterKey}`}>{ch.key}:</p>
+                <p className={styles.statement} data-work-statement>
+                  {ch.statement.split(" ").map((w, j) => (
+                    <span key={j} className={styles.word}>
+                      {w}{" "}
+                    </span>
+                  ))}
+                </p>
+                <ul className={`${styles.photos} ${i % 2 ? styles.photosAlt : ""}`}>
+                  {pair.map((p) => (
+                    <li key={p.src} className={p.height > p.width ? styles.tall : styles.wide}>
+                      <MediaFrame image={p} ratio={p.height > p.width ? "4/5" : "16/9"} lang={lang} radius="lg" sizes="(max-width: 767px) 100vw, 60vw" />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+
+        <nav className={`container ${styles.more}`} aria-label={c.work.more}>
+          <div className={styles.moreHead}>
+            <p className="t-micro">{c.work.continueLabel}</p>
+            <h2 className={styles.moreTitle}>{c.work.more}</h2>
+          </div>
+          <ul className={styles.moreList}>
+            {others.map(({ it, i }) => (
+              <li key={it.index} className={styles.moreItem}>
+                <Link href={workPathFor(i, lang)} className={styles.moreLink}>
+                  <span className={styles.moreThumb}>
+                    <MediaFrame image={workCases[i].cover} ratio="16/9" lang={lang} radius="lg" decorative sizes="200px" />
+                  </span>
+                  <span className={styles.moreCopy}>
+                    <span className={`t-micro ${styles.moreIndex}`}>
+                      {it.index} {c.work.of} {total}
+                    </span>
+                    <span className={styles.moreName}>{it.title}</span>
+                  </span>
+                  <span className={`t-micro ${styles.moreOpen}`} aria-hidden="true">
+                    {c.work.open}
+                  </span>
+                </Link>
               </li>
             ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className={styles.gallery} aria-label={c.work.label}>
-        <ul className={`container ${styles.grid}`}>
-          {photos.map((p) => (
-            <li key={p.src} className={p.height > p.width ? styles.tall : styles.wide}>
-              <MediaFrame image={p} ratio={p.height > p.width ? "4/5" : "16/9"} lang={lang} radius="lg" sizes="(max-width: 767px) 100vw, 50vw" />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <nav className={`container ${styles.nav}`} aria-label={c.work.next}>
-        <Link href={`${home === "/" ? "" : home}/#work`} className={`t-micro ${styles.back}`}>
-          {c.work.back}
-        </Link>
-        <Link href={workPathFor(nextIndex, lang)} className={styles.nextCard}>
-          <span className={styles.nextThumb}>
-            <MediaFrame image={nextMedia.cover} ratio="16/9" lang={lang} radius="lg" decorative sizes="240px" />
-          </span>
-          <span className={styles.nextCopy}>
-            <span className="t-micro">{c.work.next}</span>
-            <span className={styles.nextTitle}>{next.title}</span>
-          </span>
-        </Link>
-      </nav>
+          </ul>
+        </nav>
+      </WorkCaseMotion>
     </article>
   );
 }
