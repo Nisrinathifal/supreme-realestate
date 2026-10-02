@@ -38,6 +38,7 @@ export const en: Copy = {
       { id: "home", label: draft("Home") },
       { id: "about", label: "About" },
       { id: "approach", label: draft("How we work") },
+      { id: "work", label: draft("Work") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
@@ -60,6 +61,19 @@ export const en: Copy = {
       { index: "01", title: draft("Reimagine"), body: draft("Understanding the existing property and its potential.") },
       { index: "02", title: draft("Divide"), body: draft("Transforming larger spaces into independent homes.") },
       { index: "03", title: draft("Deliver"), body: draft("Completing each apartment as a turnkey living experience.") },
+    ],
+  },
+  // Work section (2026-10-02): four cases from the owner's archive, shown anonymously until PRD §6 says otherwise.
+  work: {
+    label: draft("Selected work"),
+    title: draft("Four homes, from old to valuable."),
+    lead: draft("A selection of completed renovations. Interiors only: we do not publish addresses."),
+    of: draft("of"),
+    items: [
+      { index: "01", title: draft("Light from two sides"), body: draft("An existing home, re-planned around a bright kitchen and living space.") },
+      { index: "02", title: draft("Dark wood, warm light"), body: draft("A compact plan with a tall kitchen wall and a calm bathroom.") },
+      { index: "03", title: draft("Stone and brass"), body: draft("Natural stone, brass taps and a bedroom under the roof.") },
+      { index: "04", title: draft("Room to breathe"), body: draft("Generous rooms, a quiet bathroom and a bedroom with a view.") },
     ],
   },
   // Sky band: owner concept 2026-10-01 (drafts until approved). The seventh card completes the arc.

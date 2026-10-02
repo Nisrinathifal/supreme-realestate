@@ -1,0 +1,41 @@
+/* Work section: Canal ink band. Intro on the band, then the four sticky cards. */
+.work { position: relative; background: var(--bg); color: var(--ink); }
+.intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); padding: calc(var(--header-h) + var(--s-9)) var(--gutter) var(--s-8); max-width: none; }
+.title { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); max-width: 18ch; text-wrap: balance; }
+.lead { margin: 0; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); max-width: 44ch; }
+
+/* The cases share one containing block: each sticks at the top and the next one slides over it; the gap below a
+   case is the time its card holds before the next arrives (--dwell). At the end they all leave together. */
+.cases { --dwell: 40svh; list-style: none; margin: 0; padding: 0; position: relative; }
+.case { position: sticky; top: 0; height: 100svh; margin-bottom: var(--dwell); }
+.case:last-child { margin-bottom: 0; }
+.card {
+  position: relative; height: 100%; overflow: hidden; isolation: isolate;
+  border-radius: var(--r-xl) var(--r-xl) 0 0; background: var(--surface); color: var(--on-media);
+}
+/* The cover is taller than the card so the parallax has room to move */
+.cover { position: absolute; inset: -12% 0; z-index: 0; }
+.coverFrame { background: var(--surface); }
+.scrim { position: absolute; inset: 0; z-index: 1; background: var(--media-scrim); }
+.content {
+  position: absolute; inset: auto 0 0 0; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s-6);
+  padding-bottom: var(--s-8); max-width: none;
+}
+.copy { display: flex; flex-direction: column; gap: var(--s-3); max-width: 36ch; }
+.copy :global(.t-micro) { color: var(--on-media); opacity: 0.85; }
+.caseTitle { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); text-wrap: balance; }
+.body { margin: 0; font-size: var(--fs-body); line-height: 1.6; opacity: 0.9; }
+/* Two detail photographs, like the reference's small slider: side by side, the second one a step lower */
+.details { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: var(--s-3); flex: 0 0 auto; }
+.detail { width: clamp(120px, 14vw, 200px); box-shadow: var(--shadow); }
+.detail:first-child { margin-bottom: var(--s-6); }
+
+@media (max-width: 767px) {
+  .intro { padding: calc(var(--header-h) + var(--s-8)) var(--gutter) var(--s-7); }
+  .cases { --dwell: 30svh; }
+  .card { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .content { flex-direction: column; align-items: flex-start; gap: var(--s-5); padding-bottom: var(--s-7); }
+  .details { align-self: flex-start; }
+  .detail { width: 30vw; }
+  .detail:first-child { margin-bottom: var(--s-4); }
+}

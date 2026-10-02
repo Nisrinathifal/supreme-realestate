@@ -37,6 +37,7 @@ export const nl: Copy = {
       { id: "home", label: draft("Home") },
       { id: "about", label: "Over ons" },
       { id: "approach", label: draft("Werkwijze") },
+      { id: "work", label: draft("Werk") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
@@ -60,6 +61,19 @@ export const nl: Copy = {
       { index: "01", title: draft("Herzien"), body: draft("Begrijpen wat een bestaand pand is en kan worden.") },
       { index: "02", title: draft("Verdelen"), body: draft("Grotere ruimtes omvormen tot zelfstandige woningen.") },
       { index: "03", title: draft("Opleveren"), body: draft("Elke woning turnkey opleveren als een plek om te wonen.") },
+    ],
+  },
+  // Work section (2026-10-02): vier cases uit het archief van de eigenaar, anoniem zolang PRD §6 dat vraagt.
+  work: {
+    label: draft("Geselecteerd werk"),
+    title: draft("Vier woningen, van oud naar waardevol."),
+    lead: draft("Een selectie van afgeronde renovaties. Alleen interieurs: adressen publiceren we niet."),
+    of: draft("van"),
+    items: [
+      { index: "01", title: draft("Licht van twee kanten"), body: draft("Een bestaande woning, opnieuw ingedeeld rond een lichte woonkeuken.") },
+      { index: "02", title: draft("Donker hout, warm licht"), body: draft("Een compacte plattegrond met een hoge keukenwand en een rustige badkamer.") },
+      { index: "03", title: draft("Steen en messing"), body: draft("Natuursteen, messing kranen en een slaapkamer onder het dak.") },
+      { index: "04", title: draft("Ruimte om te ademen"), body: draft("Royale kamers, een rustige badkamer en een slaapkamer met uitzicht.") },
     ],
   },
   // Sky band: owner concept 2026-10-01, NL draft until approved.
