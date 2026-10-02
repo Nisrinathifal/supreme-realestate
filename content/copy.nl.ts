@@ -69,11 +69,42 @@ export const nl: Copy = {
     title: draft("Vier woningen, van oud naar waardevol."),
     lead: draft("Een selectie van afgeronde renovaties. Alleen interieurs: adressen publiceren we niet."),
     of: draft("van"),
+    open: draft("Bekijk project"),
+    back: draft("Al het werk"),
+    next: draft("Volgend project"),
     items: [
-      { index: "01", title: draft("Licht van twee kanten"), body: draft("Een bestaande woning, opnieuw ingedeeld rond een lichte woonkeuken.") },
-      { index: "02", title: draft("Donker hout, warm licht"), body: draft("Een compacte plattegrond met een hoge keukenwand en een rustige badkamer.") },
-      { index: "03", title: draft("Steen en messing"), body: draft("Natuursteen, messing kranen en een slaapkamer onder het dak.") },
-      { index: "04", title: draft("Ruimte om te ademen"), body: draft("Royale kamers, een rustige badkamer en een slaapkamer met uitzicht.") },
+      {
+        index: "01", title: draft("Licht van twee kanten"), body: draft("Een bestaande woning, opnieuw ingedeeld rond een lichte woonkeuken."),
+        notes: [
+          { title: draft("Herzien"), body: draft("Een gesloten plattegrond met kleine kamers, en daglicht van twee kanten dat de oude indeling nooit gebruikte.") },
+          { title: draft("Verdelen"), body: draft("Eén open woonkeuken, met de slaapkamers en de badkamer apart gehouden.") },
+          { title: draft("Opleveren"), body: draft("Tot in detail afgewerkt: keuken, badkamer en vloeren, klaar om in te wonen.") },
+        ],
+      },
+      {
+        index: "02", title: draft("Donker hout, warm licht"), body: draft("Een compacte plattegrond met een hoge keukenwand en een rustige badkamer."),
+        notes: [
+          { title: draft("Herzien"), body: draft("Een compacte plattegrond waar elke vierkante meter moet werken.") },
+          { title: draft("Verdelen"), body: draft("Eén hoge keukenwand draagt koken, bergen en zitten; de badkamer blijft rustig en apart.") },
+          { title: draft("Opleveren"), body: draft("Donker hout, steen en messing, opgeleverd als één rustig geheel.") },
+        ],
+      },
+      {
+        index: "03", title: draft("Steen en messing"), body: draft("Natuursteen, messing kranen en een slaapkamer onder het dak."),
+        notes: [
+          { title: draft("Herzien"), body: draft("Een dak dat meer kon dragen dan berging.") },
+          { title: draft("Verdelen"), body: draft("De zolder opengemaakt voor een slaapkamer; keuken en badkamer beneden vernieuwd rond een stenen werkblad.") },
+          { title: draft("Opleveren"), body: draft("Natuursteen, messing en zachte kleur, turnkey afgewerkt.") },
+        ],
+      },
+      {
+        index: "04", title: draft("Ruimte om te ademen"), body: draft("Royale kamers, een rustige badkamer en een slaapkamer met uitzicht."),
+        notes: [
+          { title: draft("Herzien"), body: draft("Royale kamers die alleen een duidelijker orde nodig hadden.") },
+          { title: draft("Verdelen"), body: draft("Wonen en eten in één open ruimte, badkamer en slaapkamers naar achteren.") },
+          { title: draft("Opleveren"), body: draft("Lichte afwerking, een rustige badkamer en een slaapkamer die haar uitzicht houdt.") },
+        ],
+      },
     ],
   },
   // Sky band: owner concept 2026-10-01, NL draft until approved.

@@ -26,7 +26,13 @@ export type Copy = {
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   /** Work section: four anonymised cases (PRD §6: no names, addresses or figures), each a cover photo with two details. */
-  work: { label: string; title: string; lead: string; of: string; items: { index: string; title: string; body: string }[] };
+  work: {
+    label: string; title: string; lead: string; of: string;
+    /** Card link text, the way back to the overview, the link to the next case. */
+    open: string; back: string; next: string;
+    /** Per case: card title and line, plus three short notes on the detail page (one per step). */
+    items: { index: string; title: string; body: string; notes: { title: string; body: string }[] }[];
+  };
   /** Sky band: brand promise, lead and the two buttons (DESIGN §10.1 hero copy), over the sky photograph. */
   sky: { label: string; title: string; lead: string; ctaPrimary: string; ctaSecondary: string; cards: { title: string; body: string }[] };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };

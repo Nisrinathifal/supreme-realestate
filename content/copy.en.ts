@@ -69,11 +69,42 @@ export const en: Copy = {
     title: draft("Four homes, from old to valuable."),
     lead: draft("A selection of completed renovations. Interiors only: we do not publish addresses."),
     of: draft("of"),
+    open: draft("View project"),
+    back: draft("All work"),
+    next: draft("Next project"),
     items: [
-      { index: "01", title: draft("Light from two sides"), body: draft("An existing home, re-planned around a bright kitchen and living space.") },
-      { index: "02", title: draft("Dark wood, warm light"), body: draft("A compact plan with a tall kitchen wall and a calm bathroom.") },
-      { index: "03", title: draft("Stone and brass"), body: draft("Natural stone, brass taps and a bedroom under the roof.") },
-      { index: "04", title: draft("Room to breathe"), body: draft("Generous rooms, a quiet bathroom and a bedroom with a view.") },
+      {
+        index: "01", title: draft("Light from two sides"), body: draft("An existing home, re-planned around a bright kitchen and living space."),
+        notes: [
+          { title: draft("Reimagine"), body: draft("A closed plan with small rooms, and daylight on two sides that the old layout never used.") },
+          { title: draft("Divide"), body: draft("One open kitchen and living space, with the bedrooms and the bathroom set apart.") },
+          { title: draft("Deliver"), body: draft("Finished to the last detail: kitchen, bathroom and floors, ready to move in.") },
+        ],
+      },
+      {
+        index: "02", title: draft("Dark wood, warm light"), body: draft("A compact plan with a tall kitchen wall and a calm bathroom."),
+        notes: [
+          { title: draft("Reimagine"), body: draft("A compact floor plan where every square metre has to work.") },
+          { title: draft("Divide"), body: draft("A single tall kitchen wall carries cooking, storage and seating; the bathroom stays quiet and separate.") },
+          { title: draft("Deliver"), body: draft("Dark wood, stone and brass, delivered as one calm whole.") },
+        ],
+      },
+      {
+        index: "03", title: draft("Stone and brass"), body: draft("Natural stone, brass taps and a bedroom under the roof."),
+        notes: [
+          { title: draft("Reimagine"), body: draft("A roof that could hold more than storage.") },
+          { title: draft("Divide"), body: draft("The attic opened up for a bedroom; the kitchen and the bathroom below renewed around a stone worktop.") },
+          { title: draft("Deliver"), body: draft("Natural stone, brass and soft colour, finished turnkey.") },
+        ],
+      },
+      {
+        index: "04", title: draft("Room to breathe"), body: draft("Generous rooms, a quiet bathroom and a bedroom with a view."),
+        notes: [
+          { title: draft("Reimagine"), body: draft("Generous rooms that only needed a clearer order.") },
+          { title: draft("Divide"), body: draft("Living and dining in one open space, bathroom and bedrooms set back.") },
+          { title: draft("Deliver"), body: draft("Light finishes, a quiet bathroom and a bedroom that keeps its view.") },
+        ],
+      },
     ],
   },
   // Sky band: owner concept 2026-10-01 (drafts until approved). The seventh card completes the arc.

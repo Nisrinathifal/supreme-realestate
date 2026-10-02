@@ -25,6 +25,12 @@
 .copy :global(.t-micro) { color: var(--on-media); opacity: 0.85; }
 .caseTitle { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); text-wrap: balance; }
 .body { margin: 0; font-size: var(--fs-body); line-height: 1.6; opacity: 0.9; }
+.open { margin-top: var(--s-2); color: var(--on-media); text-decoration: underline; text-underline-offset: 4px; }
+/* The card's link covers the card; focus shows as an inset ring, hover eases the cover */
+.hit { position: absolute; inset: 0; z-index: 3; border-radius: inherit; }
+.hit:focus-visible { outline: 2px solid var(--on-media); outline-offset: -6px; }
+.cover :global([data-media-inner]) { transition: transform 700ms var(--ease); }
+.card:has(.hit:hover) .cover :global([data-media-inner]) { transform: scale(1.03); }
 /* Two detail photographs, like the reference's small slider: side by side, the second one a step lower */
 .details { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: var(--s-3); flex: 0 0 auto; }
 .detail { width: clamp(120px, 14vw, 200px); box-shadow: var(--shadow); }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { langs, pageForPath, pathFor, type Lang } from "@/content/routes";
+import { langs, pageForPath, pathFor, workForPath, workPathFor, type Lang } from "@/content/routes";
 import { usePublicPathname } from "@/lib/usePublicPathname";
 import styles from "./LangToggle.module.css";
 
@@ -11,10 +11,11 @@ type Props = { lang: Lang; labels: { switch: string; nl: string; en: string } };
 export function LangToggle({ lang, labels }: Props) {
   const pathname = usePublicPathname();
   const current = pageForPath(pathname);
+  const work = current ? null : workForPath(pathname);
   return (
     <nav aria-label={labels.switch} className={styles.toggle}>
       {langs.map((l, i) => {
-        const href = current ? pathFor(current.page, l) : pathFor("home", l);
+        const href = current ? pathFor(current.page, l) : work ? workPathFor(work.index, l) : pathFor("home", l);
         const active = l === lang;
         return (
           <span key={l} className={styles.item}>

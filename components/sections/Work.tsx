@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { workCases } from "@/content/media";
 import { getCopy } from "@/content/copy";
-import type { Lang } from "@/content/routes";
+import { workPathFor, type Lang } from "@/content/routes";
 import { WorkMotion } from "./WorkMotion";
 import styles from "./Work.module.css";
 
@@ -11,7 +12,7 @@ import styles from "./Work.module.css";
  * cards that stick under the bar while the next one slides over them. Each card: a cover photograph with a scrim,
  * the index, a title and one line, and two detail photographs. Cases are anonymous (PRD §6): no names, addresses or
  * figures; interiors only. Motion (WorkMotion) adds a slow parallax on the covers and a rise-in of the copy; the
- * stacking itself is CSS, so phones, reduced motion and no-JS read the same.
+ * stacking itself is CSS, so phones, reduced motion and no-JS read the same. Each card links to its detail page.
  */
 export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
@@ -47,6 +48,9 @@ export function Work({ lang }: { lang: Lang }) {
                         {item.title}
                       </h3>
                       <p className={styles.body}>{item.body}</p>
+                      <span className={`t-micro ${styles.open}`} aria-hidden="true">
+                        {c.work.open}
+                      </span>
                     </div>
                     <ul className={styles.details} data-work-details>
                       {media.details.map((d) => (
@@ -56,6 +60,8 @@ export function Work({ lang }: { lang: Lang }) {
                       ))}
                     </ul>
                   </div>
+                  {/* One link per card, over everything, named by the title (the visible "View project" is decoration) */}
+                  <Link href={workPathFor(i, lang)} className={styles.hit} aria-label={`${c.work.open}: ${item.title}`} />
                 </article>
               </li>
             );
