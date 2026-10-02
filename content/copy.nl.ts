@@ -65,7 +65,8 @@ export const nl: Copy = {
   },
   // Projects: concept 2026-10-02, anonymised cases, all NL draft until approved.
   work: {
-    intro: draft("Bekijk ons werk"),
+    intro: draft("Bekijk wat wij hebben getransformeerd."),
+    introLead: draft("Een nadere blik op de panden die wij opnieuw hebben bedacht, ontwikkeld en tot leven gebracht."),
     label: draft("Wat wij opleveren."),
     title: draft("Een selectie, van oud naar waardevol."),
     cta: draft("Vraag de documentatie aan"),

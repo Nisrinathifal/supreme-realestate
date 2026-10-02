@@ -4,13 +4,18 @@ import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
-const REVOLUTION = 90; // seconds for one turn of the ring: slow (REFERENCE §9)
+const RX = 0.39; // ring radii as a share of the stage, same as the CSS placement
+const RY = 0.37;
+const DRIFT = 26; // degrees every mascot travels along the ring over the pinned scroll
+const PIN = 1.6; // viewports the band stays pinned
 
 /**
- * The ring turns: every mascot moves along the ellipse the CSS placed it on (one ticker, positions from the stage
- * size, so the ring follows a resize). Each mascot breathes a little, and on a fine pointer tilts towards the cursor
- * (a perspective transform on its own layer) and settles back. The line and the mascots arrive once when the band
- * comes into view. Start states live here; reduced motion keeps the still ring from the CSS.
+ * One scrubbed timeline over a pinned band, all transforms. Progress 0 is the still ring from the CSS. As the page
+ * scrolls, every mascot drifts the same way along the ring: the ones in front move outward and grow until they leave
+ * the viewport, the ones behind the headline come forward from a smaller, dimmer start (they reveal themselves). The
+ * headline holds, then rises and fades. The projects band is pulled up one viewport so it slides over the pinned band
+ * during the last stretch: one continuous move from the dark band into the cards. On a fine pointer a mascot tilts
+ * towards the cursor. Reduced motion: no pin, no scrub, the still ring.
  */
 export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -26,53 +31,52 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         const stage = q<HTMLElement>("[data-orbit]")[0];
         const items = q<HTMLElement>("[data-orbit-item]");
         const inners = q<HTMLElement>("[data-orbit-inner]");
-        const words = q<HTMLElement>("[data-orbit-word]");
-        if (!section || !stage || !items.length) return;
+        const text = q<HTMLElement>("[data-orbit-text]")[0];
+        if (!section || !stage || !items.length || !text) return;
 
-        gsap.set(inners, { scale: 0 });
-        gsap.set(words, { yPercent: 110 });
+        // The projects band slides up over this one while it is pinned (same device as the steps → intro hand-over)
+        const next = section.nextElementSibling as HTMLElement | null;
+        if (next?.hasAttribute("data-overlap")) gsap.set(next, { marginTop: () => -window.innerHeight, zIndex: 3, position: "relative" });
 
-        // Arrival, once
-        const arrive = ScrollTrigger.create({
-          trigger: section,
-          start: "top 70%",
-          once: true,
-          onEnter: () => {
-            gsap.to(words, { yPercent: 0, duration: 0.9, ease: ease.out, stagger: 0.08 });
-            gsap.to(inners, { scale: 1, duration: 1.1, ease: ease.out, stagger: { each: 0.07, from: "random" }, delay: 0.1 });
+        const front = (el: HTMLElement) => Number(el.dataset.front) === 1;
+        const base = items.map((el) => ({ a: (Number(el.dataset.angle) * Math.PI) / 180, k: Number(el.dataset.k) || 1, front: front(el) }));
+        // Where a mascot ends: further along the ring; in front also further out, behind a touch closer in
+        const endX = (i: number) => {
+          const { a, k, front } = base[i];
+          const r = k * (front ? 1.45 : 1.02);
+          const a1 = a + (DRIFT * Math.PI) / 180;
+          return (Math.cos(a1) * r - Math.cos(a) * k) * stage.clientWidth * RX;
+        };
+        const endY = (i: number) => {
+          const { a, k, front } = base[i];
+          const r = k * (front ? 1.45 : 1.02);
+          const a1 = a + (DRIFT * Math.PI) / 180;
+          return (Math.sin(a1) * r - Math.sin(a) * k) * stage.clientHeight * RY;
+        };
+
+        // Start states: the ones behind the headline begin small and dim
+        items.forEach((el, i) => {
+          if (!base[i].front) gsap.set(inners[i], { scale: 0.72, opacity: 0.35 });
+        });
+
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${window.innerHeight * PIN}`,
+            pin: true,
+            scrub: 0.8,
+            invalidateOnRefresh: true,
           },
         });
-
-        // Breathing: a slow vertical drift per mascot, out of phase
-        const breathe = inners.map((el, i) =>
-          gsap.to(el, { y: 10, duration: 3.4 + (i % 3) * 0.7, ease: "sine.inOut", yoyo: true, repeat: -1, delay: -i * 0.9 }),
-        );
-
-        // The ring turns: positions from the angle in the markup and the stage size
-        const base = items.map((el) => ({ a: (Number(el.dataset.angle) * Math.PI) / 180, k: Number(el.dataset.k) || 1 }));
-        let t = 0;
-        let rx = stage.clientWidth * 0.39;
-        let ry = stage.clientHeight * 0.37;
-        const measure = () => {
-          rx = stage.clientWidth * 0.39;
-          ry = stage.clientHeight * 0.37;
-        };
-        const tick = (_time: number, dt: number) => {
-          t += dt / 1000;
-          const turn = (t / REVOLUTION) * Math.PI * 2;
-          items.forEach((el, i) => {
-            const { a, k } = base[i];
-            gsap.set(el, { x: (Math.cos(a + turn) - Math.cos(a)) * rx * k, y: (Math.sin(a + turn) - Math.sin(a)) * ry * k });
-          });
-        };
-        const visible = ScrollTrigger.create({
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          onToggle: (self) => (self.isActive ? gsap.ticker.add(tick) : gsap.ticker.remove(tick)),
-          onRefresh: measure,
+        items.forEach((el, i) => {
+          tl.to(el, { x: () => endX(i), y: () => endY(i), duration: 1 }, 0);
+          if (base[i].front) tl.to(inners[i], { scale: 1.18, rotation: 5, duration: 1, ease: ease.inOut }, 0);
+          else tl.to(inners[i], { scale: 1, opacity: 1, rotation: -3, duration: 0.55, ease: ease.inOut }, 0);
         });
-        if (visible.isActive) gsap.ticker.add(tick);
+        // The headline holds for the first third, then rises and fades while the next band comes up
+        tl.to(text, { yPercent: -28, opacity: 0, duration: 0.3, ease: ease.inOut }, 0.4);
 
         // Hover: the mascot leans towards the pointer, on devices with a fine pointer only
         const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -85,10 +89,8 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
             const sc = gsap.quickTo(el, "scale", { duration: 0.6, ease: ease.out });
             const move = (e: PointerEvent) => {
               const r = el.getBoundingClientRect();
-              const px = (e.clientX - r.left) / r.width - 0.5;
-              const py = (e.clientY - r.top) / r.height - 0.5;
-              rx(-py * 22);
-              ry(px * 22);
+              rx(-((e.clientY - r.top) / r.height - 0.5) * 22);
+              ry(((e.clientX - r.left) / r.width - 0.5) * 22);
               sc(1.08);
             };
             const leave = () => {
@@ -106,12 +108,13 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         }
 
         return () => {
-          gsap.ticker.remove(tick);
-          visible.kill();
-          arrive.kill();
-          breathe.forEach((tw) => tw.kill());
+          tl.scrollTrigger?.kill();
+          tl.kill();
           offs.forEach((off) => off());
-          gsap.set([items, inners, words, q("[data-orbit-tilt]")], { clearProps: "transform" }); // never "all": the items carry React inline positions
+          if (next) gsap.set(next, { clearProps: "marginTop,zIndex,position" });
+          // never clearProps "all": the items carry React inline positions
+          gsap.set([items, inners, text, q("[data-orbit-tilt]")], { clearProps: "transform,opacity" });
+          ScrollTrigger.refresh();
         };
       });
       return () => mm.revert();

@@ -5,11 +5,13 @@ import { useRef } from "react";
 import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Desktop deck after the reference: the deck is pinned one viewport tall; the cards still to come wait as strips
- * below the active card (each one a little narrower), and as the page scrolls each next card rises to the top and
- * grows to full width over the current one, scrubbed. Also, on a fine pointer, the link's pill follows the pointer
- * over the photographs and returns to the middle when it leaves. Start states live here; without this the CSS stacks
- * the cards (phones) or lists them (reduced motion, no JS).
+ * Arrival: as the band slides up over the pinned intro, the heading, the first card and its photographs come up and
+ * settle, scrubbed by the same scroll (the move that starts in the intro ends here). Desktop deck after the reference:
+ * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
+ * little narrower), and each next card rises to the top and grows to full width over the current one while its
+ * photographs slide in from the right and its note settles, scrubbed. On a fine pointer the link's pill follows the
+ * pointer over the photographs and returns to the middle when it leaves. Start states live here; without this the
+ * CSS stacks the cards (phones) or lists them (reduced motion, no JS).
  */
 export function WorkMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -19,6 +21,30 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       setupGsap();
       const root = scope.current!;
       const mm = gsap.matchMedia();
+
+      mm.add(MQ.full, () => {
+        const section = root.closest("[data-work]") as HTMLElement | null;
+        const q = gsap.utils.selector(root);
+        const heading = section?.querySelector<HTMLElement>("[data-work-heading]");
+        const first = q<HTMLElement>("[data-work-card]")[0];
+        if (!section || !heading || !first) return;
+        const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
+        gsap.set(heading, { y: 56, opacity: 0 });
+        gsap.set(first, { y: 96, scale: 0.94 });
+        if (firstPhotos) gsap.set(firstPhotos, { xPercent: 10 });
+        const tl = gsap.timeline({
+          defaults: { ease: ease.inOut },
+          scrollTrigger: { trigger: section, start: "top 95%", end: "top 12%", scrub: 0.8, invalidateOnRefresh: true },
+        });
+        tl.to(heading, { y: 0, opacity: 1, duration: 0.6 }, 0)
+          .to(first, { y: 0, scale: 1, duration: 0.8 }, 0.15)
+          .to(firstPhotos, { xPercent: 0, duration: 0.7 }, 0.3);
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+          gsap.set([heading, first, firstPhotos], { clearProps: "transform,opacity" });
+        };
+      });
 
       mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
         const q = gsap.utils.selector(root);
@@ -37,6 +63,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         cards.forEach((card, i) => {
           if (i === 0) return;
           gsap.set(card, { y: () => restY(i), scale: () => restScale(i) });
+          gsap.set(card.querySelector("[data-work-photos]"), { xPercent: 12 });
+          gsap.set(card.querySelector("[data-work-note]"), { y: 24, opacity: 0 });
         });
 
         const tl = gsap.timeline({
@@ -52,7 +80,9 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         });
         cards.forEach((card, i) => {
           if (i === 0) return;
-          tl.to(card, { y: 0, scale: 1, duration: 1 }, i - 1);
+          tl.to(card, { y: 0, scale: 1, duration: 1 }, i - 1)
+            .to(card.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i - 1 + 0.4)
+            .to(card.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, i - 1 + 0.5);
         });
 
         return () => {
@@ -60,6 +90,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           tl.kill();
           deck.removeAttribute("data-deck");
           gsap.set(cards, { clearProps: "transform" }); // not "all": the cards carry inline custom properties
+          gsap.set(q("[data-work-photos], [data-work-note]"), { clearProps: "transform,opacity" });
           ScrollTrigger.refresh();
         };
       });

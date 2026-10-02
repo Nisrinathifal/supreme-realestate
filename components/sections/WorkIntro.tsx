@@ -21,9 +21,11 @@ const RY = 37; // % of the stage height
 
 /**
  * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a Canal-ink viewport with the
- * invitation in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion turns the
- * ring slowly, lets each mascot breathe and tilts it towards the pointer on hover. Reduced motion and no-JS: the
- * still ring. Slides up over the held steps strip (`data-overlap`).
+ * headline and its line in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion
+ * pins the band and drives everything from the scroll: the ring drifts and opens, the mascots behind the headline
+ * reveal themselves, the headline fades out, and the projects band slides up over it (one continuous move). Hover
+ * tilts a mascot towards the pointer. Reduced motion and no-JS: the still ring, then the projects. Slides up over
+ * the held steps strip itself (`data-overlap`).
  */
 export function WorkIntro({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
@@ -40,7 +42,7 @@ export function WorkIntro({ lang }: { lang: Lang }) {
               "--s": p.s,
             } as CSSProperties;
             return (
-              <div key={m.src} className={p.front ? `${styles.item} ${styles.front}` : styles.item} style={style} data-orbit-item data-angle={p.a} data-k={p.k}>
+              <div key={m.src} className={p.front ? `${styles.item} ${styles.front}` : styles.item} style={style} data-orbit-item data-angle={p.a} data-k={p.k} data-front={p.front ? 1 : 0}>
                 <div className={styles.inner} data-orbit-inner>
                   <div className={styles.tilt} data-orbit-tilt>
                     <AlphaImage image={m} lang={lang} size={200} className={styles.image} decorative />
@@ -50,15 +52,12 @@ export function WorkIntro({ lang }: { lang: Lang }) {
             );
           })}
         </div>
-        <h2 id="work-intro-title" className={styles.title}>
-          {c.work.intro.split(" ").map((word, i) => (
-            <span key={i} className={styles.word}>
-              <span className={styles.wordInner} data-orbit-word>
-                {word}
-              </span>
-            </span>
-          ))}
-        </h2>
+        <div className={styles.text} data-orbit-text>
+          <h2 id="work-intro-title" className={styles.title}>
+            {c.work.intro}
+          </h2>
+          <p className={styles.lead}>{c.work.introLead}</p>
+        </div>
       </WorkIntroMotion>
     </section>
   );

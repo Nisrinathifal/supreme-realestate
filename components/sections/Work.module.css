@@ -1,5 +1,5 @@
 /* Paper band after the intro: a centred two-line heading, then the deck of cards */
-.work { --peek: var(--s-7); --stack-top: calc(var(--header-h) + var(--s-5)); padding-bottom: var(--section-y); }
+.work { --peek: var(--s-7); --stack-top: calc(var(--header-h) + var(--s-5)); padding-top: var(--s-9); padding-bottom: var(--section-y); background: var(--bg); } /* its own Paper: it slides over the pinned intro */
 .heading {
   margin: 0 auto var(--s-8); display: flex; flex-direction: column; align-items: center; text-align: center;
   font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.05;
