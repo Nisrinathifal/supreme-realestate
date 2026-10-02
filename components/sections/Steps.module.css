@@ -60,4 +60,14 @@
   .title { font-size: clamp(26px, 6vw, 40px); }
   .panel { padding: var(--s-6) var(--s-5) var(--s-5); border-radius: var(--r-lg); }
   .panelTitle { font-size: clamp(32px, 8vw, 48px); }
+  /* Card stack: each panel sticks under the bar; the next one slides over it and leaves only its number row
+     (padding + label = --peek) showing. Pure CSS, so it reads the same with reduced motion. */
+  .steps { overflow: visible; } /* the band's clip (for the sideways strip) would stop the panels sticking */
+  .strip { --peek: calc(var(--s-6) + var(--s-5)); --stack-top: calc(var(--header-h) + var(--s-3)); }
+  .panel { position: sticky; top: calc(var(--stack-top) + var(--peek) * var(--i, 0)); min-height: calc(100svh - var(--stack-top) - var(--peek) * var(--i, 0) - var(--frame)); }
+  .panel:nth-child(2) { --i: 1; }
+  .panel:nth-child(3) { --i: 2; }
+  /* in the stack the clip follows the title (so a covered card still shows its house); the body sits at the foot */
+  .panelMedia { flex: 0 0 auto; }
+  .panelBody { margin-top: auto; }
 }
