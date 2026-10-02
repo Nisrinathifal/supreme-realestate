@@ -74,6 +74,7 @@ export const en: Copy = {
     next: draft("Next project"),
     more: draft("More work."),
     continueLabel: draft("Continue"),
+    close: draft("Close"),
     facts: { home: draft("Home"), scope: draft("Work"), delivery: draft("Delivery"), status: draft("Status") },
     slider: { label: draft("Photographs"), previous: draft("Previous photograph"), nextSlide: draft("Next photograph") },
     compare: { before: draft("Before"), after: draft("After"), label: draft("Compare before and after") },

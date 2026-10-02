@@ -74,6 +74,7 @@ export const nl: Copy = {
     next: draft("Volgend project"),
     more: draft("Meer werk."),
     continueLabel: draft("Verder"),
+    close: draft("Sluiten"),
     facts: { home: draft("Woning"), scope: draft("Werk"), delivery: draft("Oplevering"), status: draft("Status") },
     slider: { label: draft("Foto's"), previous: draft("Vorige foto"), nextSlide: draft("Volgende foto") },
     compare: { before: draft("Voor"), after: draft("Na"), label: draft("Vergelijk voor en na") },

@@ -30,6 +30,8 @@ export type Copy = {
     label: string; title: string; lead: string; of: string;
     /** Card link text, the way back to the overview, the link to the next case, the closing list. */
     open: string; back: string; next: string; more: string; continueLabel: string;
+    /** Card deck: closing an opened card. */
+    close: string;
     /** Labels of the four facts shown per case (Supreme-safe: no city, area, days or year). */
     facts: { home: string; scope: string; delivery: string; status: string };
     /** Slider controls. */

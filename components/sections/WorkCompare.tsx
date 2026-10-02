@@ -22,7 +22,7 @@ export function WorkCompare({ before, after, lang, labels }: Props) {
   const [pos, setPos] = useState(50);
   const dragging = useRef(false);
 
-  // Entrance: from fully "before" to the middle, once, when at least half the card is visible
+  // Entrance: from fully "before" to the middle, once, when a quarter of the card is visible
   useEffect(() => {
     const el = root.current;
     if (!el || prefersReducedMotion()) return;
@@ -40,7 +40,7 @@ export function WorkCompare({ before, after, lang, labels }: Props) {
         };
         raf.current = requestAnimationFrame(tick);
       },
-      { threshold: 0.5 },
+      { threshold: 0.25 },
     );
     io.observe(el);
     return () => { io.disconnect(); cancelAnimationFrame(raf.current); };

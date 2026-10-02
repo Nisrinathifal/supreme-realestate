@@ -1,0 +1,57 @@
+/* The stage holds the deck; cards are stacked with their strips showing, the last one in front */
+.stage { --peek: 68px; --cards: 4; position: relative; height: clamp(560px, 82svh, 920px); margin-inline: var(--frame); }
+.card {
+  position: absolute; left: 0; right: 0;
+  top: calc(var(--peek) * var(--i, 0)); height: calc(100% - var(--peek) * (var(--cards) - 1));
+  z-index: calc(var(--i, 0) + 1);
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--r-xl); background: var(--surface); box-shadow: var(--shadow-soft);
+  transition: transform 420ms var(--ease), top 520ms var(--ease-precise), height 520ms var(--ease-precise), opacity 320ms var(--ease);
+}
+/* Hover lifts a resting card */
+.stage[data-open="false"] .card:hover { transform: translateY(-14px); }
+.stage[data-open="false"] .card:has(.head:focus-visible) { transform: translateY(-14px); }
+/* The open card fills the stage; the others wait below it */
+.card[data-state="open"] { top: 0; height: 100%; z-index: 20; transform: none; }
+.card[data-state="behind"] { transform: translateY(110%); opacity: 0; pointer-events: none; }
+
+/* Title strip: the whole strip is the button that opens or closes the card */
+.head {
+  display: flex; align-items: baseline; gap: var(--s-5); width: 100%; height: var(--peek); padding: 0 var(--s-6);
+  background: var(--bg); color: var(--ink); border: 0; border-bottom: 1px solid var(--line); cursor: pointer; text-align: left; flex: 0 0 auto;
+}
+.head:focus-visible { outline: 2px solid var(--focus); outline-offset: -4px; }
+.index { color: var(--muted); white-space: nowrap; }
+.title { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; font-size: var(--fs-h3); }
+
+.media { position: relative; flex: 1 1 auto; min-height: 0; }
+.after { position: absolute; inset: 0; }
+.compare { position: absolute; inset: 0; }
+
+/* The link to the case shows while the open card is hovered (always on touch screens); close sits top right */
+.detail {
+  position: absolute; right: var(--s-6); bottom: var(--s-6); z-index: 5;
+  display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-5); border-radius: var(--r-pill);
+  background: var(--btn-bg); color: var(--btn-fg); font-size: var(--fs-ui); font-weight: 500;
+  opacity: 0; transform: translateY(6px); transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+}
+.card[data-state="open"]:hover .detail, .detail:focus-visible { opacity: 1; transform: none; }
+.detail:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.close {
+  position: absolute; top: calc(var(--peek) / 2); right: var(--s-5); z-index: 6; transform: translateY(-50%);
+  display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-pill);
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer;
+}
+.close:hover { background: var(--alt); }
+.close:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+@media (hover: none) {
+  .card[data-state="open"] .detail { opacity: 1; transform: none; }
+}
+@media (max-width: 767px) {
+  .stage { --peek: 56px; height: clamp(520px, 78svh, 760px); }
+  .head { gap: var(--s-3); padding: 0 var(--s-4); }
+  .title { font-size: var(--fs-lead); }
+  .detail { right: var(--s-4); bottom: var(--s-4); }
+  .close { right: var(--s-3); }
+}

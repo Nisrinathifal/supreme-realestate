@@ -1,33 +1,9 @@
-/* Work section on Paper: the intro, then the stack of full-bleed cards */
-.work { position: relative; background: var(--bg); color: var(--ink); padding-top: var(--section-y); }
+/* Work section on Paper: the intro, then the deck */
+.work { position: relative; background: var(--bg); color: var(--ink); padding-block: var(--section-y); }
 .intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); padding-bottom: var(--s-8); max-width: none; }
 .title { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); max-width: 18ch; text-wrap: balance; }
 .lead { margin: 0; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); max-width: 44ch; }
 
-/* The cards share one containing block: card i sticks one title strip (--peek) lower than the one before, so the
-   earlier titles stay in view as a stack; the gap below a card (--dwell) is how long it holds before the next arrives */
-.cards { --peek: 72px; --dwell: 35svh; --top: calc(var(--header-h) + var(--s-3)); list-style: none; margin: 0; padding: 0; position: relative; }
-.card {
-  position: sticky; top: calc(var(--top) + var(--peek) * var(--i, 0));
-  height: calc(100svh - var(--top) - var(--peek) * var(--i, 0) - var(--frame));
-  margin-bottom: var(--dwell);
-}
-.card:last-child { margin-bottom: 0; }
-.cardInner { display: flex; flex-direction: column; height: 100%; background: var(--bg); border-top: 1px solid var(--line); }
-.strip { display: flex; align-items: center; gap: var(--s-6); height: var(--peek); max-width: none; flex: 0 0 auto; }
-.index { margin: 0; color: var(--muted); white-space: nowrap; }
-.caseTitle { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; font-size: var(--fs-h3); min-width: 0; flex: 1 1 auto; }
-.titleLink { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); color: inherit; }
-.open { color: var(--muted); white-space: nowrap; }
-.titleLink:hover .open { color: var(--ink); }
-.titleLink:hover { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
-.titleLink:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
-.media { flex: 1 1 auto; min-height: 0; }
-
 @media (max-width: 767px) {
   .intro { padding-bottom: var(--s-7); }
-  .cards { --peek: 60px; --dwell: 25svh; }
-  .strip { flex-direction: row; }
-  .caseTitle { font-size: var(--fs-ui); font-weight: 500; font-family: var(--font-text); letter-spacing: 0; }
-  .open { display: none; }
 }
