@@ -8,8 +8,8 @@
 .headingMuted { color: var(--muted); }
 .headingInk { font-size: var(--fs-statement); }
 
-/* Static layout: the cards one after another. The deck is about half the frame (reference), not the container */
-.deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(620px, 50vw)); display: flex; flex-direction: column; gap: var(--s-4); }
+/* Static layout: the cards one after another. The deck is about 62% of the frame (a quarter wider than the reference, owner), not the container */
+.deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(780px, 62vw)); display: flex; flex-direction: column; gap: var(--s-4); }
 /* Card: a tight radius, a soft gradient of its tone, a glass hairline and a top highlight (the header pill's language) */
 .card {
   position: relative; isolation: isolate; border-radius: var(--r-md); overflow: hidden; background: var(--bg); color: var(--ink);
@@ -33,7 +33,7 @@
 .cover { position: absolute; inset: 0; z-index: 3; border-radius: inherit; }
 .cover:focus-visible { outline: 2px solid var(--focus); outline-offset: -4px; }
 .photos { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s-3); }
-.photo { flex: 0 0 clamp(140px, 12vw, 200px); border-radius: var(--r-sm); overflow: hidden; }
+.photo { flex: 0 0 clamp(160px, 14vw, 240px); border-radius: var(--r-sm); overflow: hidden; }
 .card:hover .photo { filter: brightness(0.96); }
 /* The link's label: a pill that WorkMotion moves with the pointer anywhere on the card; still, it sits over the photographs */
 .pill {
@@ -48,7 +48,7 @@
 /* Desktop deck (WorkMotion sets data-deck): the deck is one viewport tall and pinned; cards sit on top of each other,
    the ones still to come shorter by one strip each so they wait below the active card */
 @media (min-width: 768px) {
-  .deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 640px); display: block; overflow: hidden; } /* the waiting cards end with the deck */
+  .deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 720px); display: block; overflow: hidden; } /* the waiting cards end with the deck */
   .deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - var(--behind, 0) * var(--peek)); }
 }
 
