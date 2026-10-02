@@ -9,8 +9,8 @@ import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
  * settle, scrubbed by the same scroll (the move that starts in the intro ends here). Desktop deck after the reference:
  * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
  * little narrower), and each next card rises to the top and grows to full width over the current one while its
- * photographs slide in from the right and its note settles, scrubbed. On a fine pointer the link's pill follows the
- * pointer over the photographs and returns to the middle when it leaves. Start states live here; without this the
+ * photographs slide in from the right and its note settles, scrubbed. On a fine pointer the card's pill follows the
+ * pointer anywhere on the card and returns to the photographs when it leaves. Start states live here; without this the
  * CSS stacks the cards (phones) or lists them (reduced motion, no JS).
  */
 export function WorkMotion({ children }: { children: React.ReactNode }) {
@@ -98,13 +98,15 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       mm.add(`${MQ.full} and (hover: hover) and (pointer: fine)`, () => {
         const q = gsap.utils.selector(root);
         const offs: (() => void)[] = [];
-        q<HTMLElement>("[data-work-link]").forEach((link) => {
-          const pill = link.querySelector<HTMLElement>("[data-work-pill]");
-          if (!pill) return;
+        q<HTMLElement>("[data-work-card]").forEach((card) => {
+          const gallery = card.querySelector<HTMLElement>("[data-work-gallery]");
+          const pill = card.querySelector<HTMLElement>("[data-work-pill]");
+          if (!gallery || !pill) return;
+          // The pill rests in the middle of the photographs; the offset is measured from there
           const x = gsap.quickTo(pill, "x", { duration: 0.5, ease: ease.out });
           const y = gsap.quickTo(pill, "y", { duration: 0.5, ease: ease.out });
           const move = (e: PointerEvent) => {
-            const r = link.getBoundingClientRect();
+            const r = gallery.getBoundingClientRect();
             x(e.clientX - r.left - r.width / 2);
             y(e.clientY - r.top - r.height / 2);
           };
@@ -112,11 +114,11 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             x(0);
             y(0);
           };
-          link.addEventListener("pointermove", move);
-          link.addEventListener("pointerleave", leave);
+          card.addEventListener("pointermove", move);
+          card.addEventListener("pointerleave", leave);
           offs.push(() => {
-            link.removeEventListener("pointermove", move);
-            link.removeEventListener("pointerleave", leave);
+            card.removeEventListener("pointermove", move);
+            card.removeEventListener("pointerleave", leave);
             gsap.set(pill, { clearProps: "all" });
           });
         });

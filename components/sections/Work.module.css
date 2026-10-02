@@ -26,12 +26,14 @@
 /* Foot: the note on the left, the photographs on the right running off the card's edge, as in the reference */
 .foot { margin-top: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--s-6); align-items: end; }
 .note { margin: 0; max-width: 32ch; font-size: var(--fs-ui); line-height: 1.5; color: var(--muted); align-self: end; padding-bottom: var(--s-3); }
-.link { position: relative; display: block; margin-right: calc(-1 * clamp(24px, 3.4vw, 48px)); color: inherit; text-decoration: none; border-radius: var(--r-lg); }
-.link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.gallery { position: relative; margin-right: calc(-1 * clamp(24px, 3.4vw, 48px)); }
+/* The whole card is the link (reference): a cover anchor above the content, the pill is its visible label */
+.cover { position: absolute; inset: 0; z-index: 3; border-radius: inherit; }
+.cover:focus-visible { outline: 2px solid var(--focus); outline-offset: -4px; }
 .photos { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s-4); }
 .photo { flex: 0 0 clamp(160px, 18vw, 250px); }
-.link:hover .photo { filter: brightness(0.96); }
-/* The link's label: a pill that WorkMotion moves with the pointer; still, it sits in the middle */
+.card:hover .photo { filter: brightness(0.96); }
+/* The link's label: a pill that WorkMotion moves with the pointer anywhere on the card; still, it sits over the photographs */
 .pill {
   position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2;
   display: inline-flex; align-items: center; gap: var(--s-2); padding: 12px 18px; min-height: 40px; border-radius: var(--r-pill);
@@ -58,7 +60,7 @@
   .index { font-size: var(--fs-lead); }
   .foot { grid-template-columns: 1fr; gap: var(--s-4); }
   .note { padding-bottom: 0; }
-  .link { margin-right: calc(-1 * var(--s-5)); }
+  .gallery { margin-right: calc(-1 * var(--s-5)); }
   .photo { flex-basis: 46vw; }
   .pill { display: none; }
   .heading { margin-bottom: var(--s-7); }
