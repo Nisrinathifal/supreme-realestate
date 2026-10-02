@@ -1,5 +1,5 @@
 /* Paper band after the intro: a centred two-line heading, then the deck of cards */
-.work { --peek: var(--s-7); --stack-top: calc(var(--header-h) + var(--s-8)); /* below the header veil (1.9 × bar) so the first title line reads */ padding-top: var(--s-9); padding-bottom: var(--section-y); background: var(--surface); } /* white, continuing the intro */
+.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: var(--s-9); padding-bottom: var(--section-y); background: var(--surface); } /* white, continuing the intro */
 .heading {
   margin: 0 auto var(--s-8); display: flex; flex-direction: column; align-items: center; text-align: center;
   font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.05;
@@ -10,16 +10,15 @@
 
 /* Static layout: the cards one after another. The deck is about 62% of the frame (a quarter wider than the reference, owner), not the container */
 .deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(780px, 62vw)); display: flex; flex-direction: column; gap: var(--s-4); }
-/* Card: a tight radius, a soft gradient of its tone, a glass hairline and a top highlight (the header pill's language) */
+/* Card: a tight radius, one flat tone, a glass hairline (the header pill's language) */
 .card {
   position: relative; isolation: isolate; border-radius: var(--r-md); overflow: hidden; background: var(--bg); color: var(--ink);
   transform-origin: 50% 0; box-shadow: inset 0 0 0 1px var(--line), var(--shadow-soft);
 }
-.card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--glass-highlight); pointer-events: none; } /* under the copy, over the tone */
-.toneInk { background: linear-gradient(160deg, var(--inv-surface) 0%, var(--inv-bg) 60%); box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: rgba(250,250,247,.14); }
-.toneSky { background: linear-gradient(160deg, var(--surface) 0%, var(--panel-sky) 55%); }
-.toneMoss { background: linear-gradient(160deg, var(--inv-bg) 0%, var(--inv-surface) 60%); --surface: #1A201D; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: rgba(250,250,247,.14); }
-.toneLime { background: linear-gradient(160deg, var(--surface) 0%, var(--tint) 55%); }
+.toneInk { background: var(--inv-bg); box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: rgba(250,250,247,.14); }
+.toneSky { background: var(--panel-sky); }
+.toneMoss { background: var(--inv-surface); --surface: #1A201D; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: rgba(250,250,247,.14); }
+.toneLime { background: var(--tint); }
 .inner { display: flex; flex-direction: column; gap: var(--s-5); height: 100%; padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) * 0.8); }
 .head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-5); }
 .title { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.08; font-size: clamp(24px, 2.3vw, 34px); max-width: 18ch; text-wrap: balance; }
