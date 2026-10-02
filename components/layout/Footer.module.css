@@ -43,12 +43,14 @@
 
 @media (max-width: 767px) {
   .band { padding: var(--s-10) 0; }
-  /* Small screens: section links left, social right on one row; the brand underneath, full width */
-  .top { grid-template-columns: 1fr 1fr; grid-template-areas: "nav social" "brand brand"; gap: var(--s-6) var(--s-4); }
+  /* Small screens after the reference: brand first, then section links left and social links in the second
+     column (both left-aligned); below the rule the phone and the legal pages, no back-to-top */
+  .top { grid-template-columns: 1fr 1fr; grid-template-areas: "brand brand" "nav social"; gap: var(--s-7) var(--s-4); }
   .top > nav { grid-area: nav; }
   .brand { grid-area: brand; align-items: flex-start; text-align: left; }
-  .aside { grid-area: social; justify-self: end; align-items: flex-end; text-align: right; }
-  .bottom { grid-template-columns: 1fr; }
+  .aside { grid-area: social; justify-self: start; align-items: flex-start; }
+  .bottom { grid-template-columns: 1fr; gap: var(--s-5); }
+  .toTop { display: none; }
   .legalLinks { justify-self: start; justify-content: flex-start; }
   .sketches { height: clamp(160px, 44vw, 240px); }
   .sketchLeft { display: none; }
