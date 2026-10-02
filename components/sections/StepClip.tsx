@@ -86,8 +86,9 @@ export function StepClip({ clip, lang }: { clip: AlphaVideoAsset; lang: Lang }) 
   }, [clip.mp4, clip.mp4Mobile, clip.width, clip.gap]);
 
   return (
-    <div ref={wrap} className={styles.clip} style={{ aspectRatio: `${clip.width} / ${clip.height}` }}>
-      <MediaFrame image={clip.poster} ratio="fill" lang={lang} radius="none" sizes="(max-width: 980px) 90vw, 520px" />
+    <div ref={wrap} className={styles.clip} style={{ aspectRatio: `${clip.width} / ${clip.height}` }} data-ready={ready ? "true" : "false"}>
+      {/* The still leaves once the canvas draws: it is the first frame, and would show through the transparent parts */}
+      <MediaFrame image={clip.poster} ratio="fill" lang={lang} radius="none" className={styles.clipStill} sizes="(max-width: 980px) 90vw, 520px" />
       <canvas ref={canvasRef} width={clip.width} height={clip.height} className={styles.clipAnim} data-ready={ready ? "true" : "false"} aria-hidden="true" />
     </div>
   );

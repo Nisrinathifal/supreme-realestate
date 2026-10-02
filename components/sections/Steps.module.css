@@ -34,6 +34,8 @@
 .clip { position: relative; width: min(100%, 46svh * 4 / 3, 520px); margin: var(--s-4) auto; }
 .clipAnim { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 300ms var(--ease); }
 .clipAnim[data-ready="true"] { opacity: 1; }
+.clipStill { transition: opacity 300ms var(--ease); }
+.clip[data-ready="true"] .clipStill { opacity: 0; }
 /* the decoded source behind the canvas: present but invisible */
 .clipSource { position: absolute; inset: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .panelBody { margin: 0; font-size: var(--fs-body); line-height: 1.6; max-width: 36ch; color: var(--muted); }
