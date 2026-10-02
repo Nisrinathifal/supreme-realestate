@@ -43,9 +43,12 @@
 
 @media (max-width: 767px) {
   .band { padding: var(--s-10) 0; }
-  .top, .bottom { grid-template-columns: 1fr; }
-  .brand { align-items: flex-start; text-align: left; }
-  .aside { justify-self: start; align-items: flex-start; }
+  /* Small screens: section links left, social right on one row; the brand underneath, full width */
+  .top { grid-template-columns: 1fr 1fr; grid-template-areas: "nav social" "brand brand"; gap: var(--s-6) var(--s-4); }
+  .top > nav { grid-area: nav; }
+  .brand { grid-area: brand; align-items: flex-start; text-align: left; }
+  .aside { grid-area: social; justify-self: end; align-items: flex-end; text-align: right; }
+  .bottom { grid-template-columns: 1fr; }
   .legalLinks { justify-self: start; justify-content: flex-start; }
   .sketches { height: clamp(160px, 44vw, 240px); }
   .sketchLeft { display: none; }
