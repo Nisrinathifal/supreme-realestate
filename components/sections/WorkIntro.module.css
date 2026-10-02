@@ -1,0 +1,28 @@
+/* Canal-ink viewport: the ring of mascots behind and in front of one display line */
+.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; color: var(--ink); }
+.intro > * { grid-area: 1 / 1; }
+.stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
+/* each mascot: centred on its point of the ring; size scales with the viewport */
+.item {
+  --size: clamp(84px, 11vw, 168px);
+  position: absolute; width: calc(var(--size) * var(--s, 1)); translate: -50% -50%; z-index: 1; pointer-events: auto;
+}
+.front { z-index: 3; }
+.inner { will-change: transform; }
+.tilt { transform-style: preserve-3d; }
+.image { display: block; width: 100%; }
+.image img { display: block; width: 100%; height: auto; }
+.title {
+  position: relative; z-index: 2; margin: 0; padding: 0 var(--gutter); text-align: center;
+  font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking);
+  font-size: var(--fs-display); line-height: 0.98; text-wrap: balance; max-width: 10ch;
+}
+.word { display: inline-block; overflow: hidden; vertical-align: top; margin-right: 0.22em; }
+.word:last-child { margin-right: 0; }
+.wordInner { display: inline-block; }
+
+@media (max-width: 767px) {
+  .intro { min-height: 86svh; }
+  .item { --size: clamp(64px, 19vw, 96px); }
+  .title { font-size: clamp(40px, 12vw, 64px); }
+}

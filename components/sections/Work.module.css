@@ -1,0 +1,65 @@
+/* Paper band after the intro: a centred two-line heading, then the deck of cards */
+.work { --peek: var(--s-7); --stack-top: calc(var(--header-h) + var(--s-5)); padding-bottom: var(--section-y); }
+.heading {
+  margin: 0 auto var(--s-8); display: flex; flex-direction: column; align-items: center; text-align: center;
+  font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.05;
+  font-size: var(--fs-h3);
+}
+.headingMuted { color: var(--muted); }
+.headingInk { font-size: var(--fs-statement); }
+
+/* Static layout: the cards one after another */
+.deck { list-style: none; margin: 0 auto; padding: 0 var(--frame); max-width: calc(var(--maxw) - 2 * var(--gutter)); display: flex; flex-direction: column; gap: var(--s-4); }
+.card {
+  position: relative; isolation: isolate; border-radius: var(--r-xl); overflow: hidden; background: var(--bg); color: var(--ink);
+  transform-origin: 50% 0;
+}
+.toneInk { background: var(--inv-bg); }
+.toneSky { background: var(--panel-sky); }
+.toneMoss { background: var(--inv-surface); --surface: #1A201D; }
+.toneLime { background: var(--tint); }
+.inner { display: flex; flex-direction: column; gap: var(--s-6); height: 100%; padding: clamp(24px, 3.4vw, 48px) clamp(24px, 3.4vw, 48px) clamp(20px, 2.6vw, 36px); }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-6); }
+.title { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.08; font-size: var(--fs-statement); max-width: 18ch; text-wrap: balance; }
+.index { flex: 0 0 auto; font-family: var(--font-display); font-size: var(--fs-h3); line-height: 1; color: var(--muted); padding-top: 0.2em; }
+.body { margin: 0; max-width: 52ch; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); }
+/* Foot: the note on the left, the photographs on the right running off the card's edge, as in the reference */
+.foot { margin-top: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--s-6); align-items: end; }
+.note { margin: 0; max-width: 32ch; font-size: var(--fs-ui); line-height: 1.5; color: var(--muted); align-self: end; padding-bottom: var(--s-3); }
+.link { position: relative; display: block; margin-right: calc(-1 * clamp(24px, 3.4vw, 48px)); color: inherit; text-decoration: none; border-radius: var(--r-lg); }
+.link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.photos { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s-4); }
+.photo { flex: 0 0 clamp(160px, 18vw, 250px); }
+.link:hover .photo { filter: brightness(0.96); }
+/* The link's label: a pill that WorkMotion moves with the pointer; still, it sits in the middle */
+.pill {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2;
+  display: inline-flex; align-items: center; gap: var(--s-2); padding: 12px 18px; min-height: 40px; border-radius: var(--r-pill);
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line);
+  font-family: var(--font-text); font-size: var(--fs-ui); font-weight: 500; line-height: 1; white-space: nowrap; letter-spacing: 0.01em;
+  box-shadow: var(--shadow-soft); pointer-events: none;
+}
+
+/* Desktop deck (WorkMotion sets data-deck): the deck is one viewport tall and pinned; cards sit on top of each other,
+   the ones still to come shorter by one strip each so they wait below the active card */
+@media (min-width: 768px) {
+  .deck[data-deck] { position: relative; height: calc(100svh - var(--stack-top) - var(--frame)); display: block; }
+  .deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - var(--behind, 0) * var(--peek)); }
+}
+
+@media (max-width: 767px) {
+  /* Phones: CSS stack, the next card slides over the previous and leaves its head row (--peek: the padding and the
+     first title line) showing */
+  .work { --peek: calc(var(--s-5) + 1.1 * clamp(26px, 7vw, 36px)); }
+  .deck { padding: 0 var(--frame); }
+  .card { position: sticky; top: calc(var(--stack-top) + var(--peek) * var(--i, 0)); min-height: calc(100svh - var(--stack-top) - var(--peek) * var(--i, 0) - var(--frame)); border-radius: var(--r-lg); }
+  .inner { padding: var(--s-5) var(--s-5) var(--s-5); gap: var(--s-5); }
+  .title { font-size: clamp(26px, 7vw, 36px); }
+  .index { font-size: var(--fs-lead); }
+  .foot { grid-template-columns: 1fr; gap: var(--s-4); }
+  .note { padding-bottom: 0; }
+  .link { margin-right: calc(-1 * var(--s-5)); }
+  .photo { flex-basis: 46vw; }
+  .pill { display: none; }
+  .heading { margin-bottom: var(--s-7); }
+}

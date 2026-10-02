@@ -38,6 +38,7 @@ export const en: Copy = {
       { id: "home", label: draft("Home") },
       { id: "about", label: "About" },
       { id: "approach", label: draft("How we work") },
+      { id: "work", label: draft("Projects") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
@@ -63,6 +64,39 @@ export const en: Copy = {
     ],
   },
   // Sky band: owner concept 2026-10-01 (drafts until approved). The seventh card completes the arc.
+  // Projects: concept 2026-10-02, anonymised cases, all EN draft until approved.
+  work: {
+    intro: draft("See our work"),
+    label: draft("What we deliver."),
+    title: draft("A selection, from old to valuable."),
+    cta: draft("Request the documentation"),
+    items: [
+      {
+        index: "01",
+        title: draft("A home re-planned around the light"),
+        body: draft("An existing home whose plan no longer matched the way people live. We rethought the layout around a bright kitchen and gave every room a clear purpose."),
+        note: draft("Kitchen with an island, bedroom under a skylight, bathroom with black basins."),
+      },
+      {
+        index: "02",
+        title: draft("Dark wood and warm light on a compact plan"),
+        body: draft("A compact home where every centimetre counts. A tall kitchen wall in dark wood, brass details and a calm bathroom turn little space into a grown-up home."),
+        note: draft("Kitchen with a wooden bar, brass tap by a round mirror, living room with wide windows."),
+      },
+      {
+        index: "03",
+        title: draft("Stone, brass and a bedroom under the roof"),
+        body: draft("A building whose attic stayed unused for years. The floor was brought into the home and finished in natural stone and brass: materials that improve with time."),
+        note: draft("Kitchen with a marble worktop, bathroom in natural stone, bedroom under the roof."),
+      },
+      {
+        index: "04",
+        title: draft("Room to breathe, from shell to turnkey"),
+        body: draft("Generous rooms given back their proportions. An open kitchen on the living room, a calm bathroom and a bedroom with a view, delivered turnkey as a place to live."),
+        note: draft("Living room with an open kitchen, bathroom with a round mirror, bedroom with a view."),
+      },
+    ],
+  },
   sky: {
     label: draft("From"),
     title: draft("Potential to Turnkey"),

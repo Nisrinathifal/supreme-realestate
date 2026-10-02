@@ -1,0 +1,105 @@
+"use client";
+
+import { useGSAP } from "@gsap/react";
+import { useRef } from "react";
+import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
+
+/**
+ * Desktop deck after the reference: the deck is pinned one viewport tall; the cards still to come wait as strips
+ * below the active card (each one a little narrower), and as the page scrolls each next card rises to the top and
+ * grows to full width over the current one, scrubbed. Also, on a fine pointer, the link's pill follows the pointer
+ * over the photographs and returns to the middle when it leaves. Start states live here; without this the CSS stacks
+ * the cards (phones) or lists them (reduced motion, no JS).
+ */
+export function WorkMotion({ children }: { children: React.ReactNode }) {
+  const scope = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      setupGsap();
+      const root = scope.current!;
+      const mm = gsap.matchMedia();
+
+      mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
+        const q = gsap.utils.selector(root);
+        const deck = q<HTMLElement>("[data-work-deck]")[0];
+        const cards = q<HTMLElement>("[data-work-card]");
+        const n = cards.length;
+        if (!deck || n < 2) return;
+
+        deck.setAttribute("data-deck", "");
+        const peek = () => cssPx(deck, "--peek", 48);
+        const top = () => cssPx(deck, "--stack-top", 88);
+        // Where card i waits: its top edge one strip per card still behind it above the deck's foot
+        const restY = (i: number) => deck.clientHeight - (n - i) * peek();
+        const restScale = (i: number) => 1 - 0.028 * (n - i);
+
+        cards.forEach((card, i) => {
+          if (i === 0) return;
+          gsap.set(card, { y: () => restY(i), scale: () => restScale(i) });
+        });
+
+        const tl = gsap.timeline({
+          defaults: { ease: ease.inOut },
+          scrollTrigger: {
+            trigger: deck,
+            start: () => `top ${top()}`,
+            end: () => `+=${(n - 1) * window.innerHeight * 0.85}`,
+            pin: true,
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+          },
+        });
+        cards.forEach((card, i) => {
+          if (i === 0) return;
+          tl.to(card, { y: 0, scale: 1, duration: 1 }, i - 1);
+        });
+
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+          deck.removeAttribute("data-deck");
+          gsap.set(cards, { clearProps: "transform" }); // not "all": the cards carry inline custom properties
+          ScrollTrigger.refresh();
+        };
+      });
+
+      mm.add(`${MQ.full} and (hover: hover) and (pointer: fine)`, () => {
+        const q = gsap.utils.selector(root);
+        const offs: (() => void)[] = [];
+        q<HTMLElement>("[data-work-link]").forEach((link) => {
+          const pill = link.querySelector<HTMLElement>("[data-work-pill]");
+          if (!pill) return;
+          const x = gsap.quickTo(pill, "x", { duration: 0.5, ease: ease.out });
+          const y = gsap.quickTo(pill, "y", { duration: 0.5, ease: ease.out });
+          const move = (e: PointerEvent) => {
+            const r = link.getBoundingClientRect();
+            x(e.clientX - r.left - r.width / 2);
+            y(e.clientY - r.top - r.height / 2);
+          };
+          const leave = () => {
+            x(0);
+            y(0);
+          };
+          link.addEventListener("pointermove", move);
+          link.addEventListener("pointerleave", leave);
+          offs.push(() => {
+            link.removeEventListener("pointermove", move);
+            link.removeEventListener("pointerleave", leave);
+            gsap.set(pill, { clearProps: "all" });
+          });
+        });
+        return () => offs.forEach((off) => off());
+      });
+
+      return () => mm.revert();
+    },
+    { scope },
+  );
+
+  return (
+    <div ref={scope} data-work-motion>
+      {children}
+    </div>
+  );
+}
