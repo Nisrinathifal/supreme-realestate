@@ -55,7 +55,7 @@ export function Work({ lang }: { lang: Lang }) {
                       <ul className={styles.photos} data-work-photos>
                         {media.photos.map((p) => (
                           <li key={p.src} className={styles.photo}>
-                            <MediaFrame image={p} ratio="16/9" lang={lang} radius="lg" sizes="(max-width: 767px) 46vw, 240px" />
+                            <MediaFrame image={p} ratio="16/9" lang={lang} radius="none" sizes="(max-width: 767px) 46vw, 200px" />
                           </li>
                         ))}
                       </ul>
