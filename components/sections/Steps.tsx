@@ -1,9 +1,9 @@
-import { stepsFilms, stepsSketches } from "@/content/media";
+import { stepsClips, stepsSketches } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
-import { StepFilm } from "./StepFilm";
+import { StepClip } from "./StepClip";
 import { StepsMotion } from "./StepsMotion";
 import styles from "./Steps.module.css";
 
@@ -48,7 +48,7 @@ export function Steps({ lang }: { lang: Lang }) {
                 <h3 className={styles.panelTitle}>{item.title}</h3>
               </div>
               <div className={styles.panelMedia}>
-                {stepsFilms[i] ? <StepFilm film={stepsFilms[i]} lang={lang} /> : null}
+                {stepsClips[i] ? <StepClip clip={stepsClips[i]} lang={lang} /> : null}
               </div>
               <p className={styles.panelBody}>{item.body}</p>
             </li>

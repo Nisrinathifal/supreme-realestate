@@ -27,6 +27,22 @@ export type VideoAsset = {
   rate?: number;
 };
 
+/**
+ * Looping clip with transparency: one H.264 file carrying the colour on top and the matte (alpha as grey)
+ * below a short black gap (scripts/film-stack.swift); the page composites it on a canvas. Still = keyed first frame.
+ */
+export type AlphaVideoAsset = {
+  mp4: string;
+  /** ≤980px version, optional. */
+  mp4Mobile: string | null;
+  /** Size of one frame (the file is twice as tall plus the gap). */
+  width: number;
+  height: number;
+  /** Black rows between the colour and the matte. */
+  gap: number;
+  poster: ImageAsset;
+};
+
 export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
 
@@ -93,20 +109,22 @@ export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", Shelf
 };
 
 /**
- * Steps section: one looping clip per step (supplied 2026-10-02, 4 s each, canal house on a flat ground that the
- * panel feathers away), re-encoded without metadata by scripts/film-export.swift; posters are their first frames.
+ * Steps section: one looping clip per step (supplied 2026-10-02, 4 s, 24 fps, a canal house on a flat ground).
+ * The ground was keyed to transparency offline (scripts/film-frames.swift → scripts/key-clips.mjs: background model,
+ * shadow kept as a multiply layer) and the keyed frames stacked into colour + matte video (scripts/film-stack.swift).
  */
-const stepFilm = (n: string, nl: string, en: string): VideoAsset => ({
-  webm: null,
-  mp4: `/media/step-film-${n}.mp4`,
-  mp4Mobile: `/media/step-film-${n}-720.mp4`,
-  poster: { src: `step-poster-${n}`, width: 1280, height: 960, alt: { nl, en } },
-  loop: true,
+const stepClip = (n: string, nl: string, en: string): AlphaVideoAsset => ({
+  mp4: `/media/step-clip-${n}.mp4`,
+  mp4Mobile: `/media/step-clip-${n}-720.mp4`,
+  width: 960,
+  height: 719,
+  gap: 8,
+  poster: { src: `step-poster-${n}`, width: 960, height: 719, alpha: true, alt: { nl, en } },
 });
-export const stepsFilms: VideoAsset[] = [
-  stepFilm("01", "Grachtenpand met een kleine inspectierobot", "A canal house with a small survey robot"),
-  stepFilm("02", "Grachtenpand in de steigers, gevel wordt vernieuwd", "A canal house in scaffolding, its front being renewed"),
-  stepFilm("03", "Vernieuwd grachtenpand met verlichte ramen", "A renewed canal house with lit windows"),
+export const stepsClips: AlphaVideoAsset[] = [
+  stepClip("01", "Grachtenpand met een kleine inspectierobot", "A canal house with a small survey robot"),
+  stepClip("02", "Grachtenpand in de steigers, gevel wordt vernieuwd", "A canal house in scaffolding, its front being renewed"),
+  stepClip("03", "Vernieuwd grachtenpand met verlichte ramen", "A renewed canal house with lit windows"),
 ];
 /** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */
 export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
