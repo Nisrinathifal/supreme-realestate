@@ -8,8 +8,7 @@
   --ink:           #1A201D; /* Canal ink */
   --muted:         #5B625D; /* Graphite */
   --tint:          #EEF6DA; /* Lime mist: icon tiles, rare highlight panel */
-  --panel-sky:     #E8EFF6; /* Sky mist: step cards 01/02 (from the hero sky family); ink and Graphite stay ≥ 4.5:1 */
-  --panel-sky-2:   #DCE6F0; /* Sky mist, one step deeper: the second card reads apart from the first in the stack */
+  --panel-sky:     #E8EFF6; /* Sky mist: step cards 01 and 03 (from the hero sky family); ink and Graphite stay ≥ 4.5:1 */
   --accent:        #CFEA7C; /* Supreme lime: signal only, never text on light */
   --on-accent:     #1A201D;
   --btn-bg:        #1A201D;

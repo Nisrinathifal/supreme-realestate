@@ -42,7 +42,7 @@ export function Steps({ lang }: { lang: Lang }) {
 
         <ol className={styles.strip} data-steps-strip>
           {c.steps.items.map((item, i) => (
-            <li key={item.index} className={`${styles.panel} light`} data-steps-panel>
+            <li key={item.index} className={i === 1 ? styles.panel : `${styles.panel} light`} data-steps-panel>
               <div className={styles.panelHead}>
                 <MicroLabel>{item.index}</MicroLabel>
                 <h3 className={styles.panelTitle}>{item.title}</h3>
