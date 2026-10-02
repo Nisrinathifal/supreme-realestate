@@ -1,9 +1,0 @@
-/* Work section on Paper: the intro, then the deck */
-.work { position: relative; background: var(--bg); color: var(--ink); padding-block: var(--section-y); }
-.intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); padding-bottom: var(--s-8); max-width: none; }
-.title { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-h2); max-width: 18ch; text-wrap: balance; }
-.lead { margin: 0; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); max-width: 44ch; }
-
-@media (max-width: 767px) {
-  .intro { padding-bottom: var(--s-7); }
-}

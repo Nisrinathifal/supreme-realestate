@@ -38,7 +38,6 @@ export const en: Copy = {
       { id: "home", label: draft("Home") },
       { id: "about", label: "About" },
       { id: "approach", label: draft("How we work") },
-      { id: "work", label: draft("Work") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "From old to valuable" },
@@ -61,80 +60,6 @@ export const en: Copy = {
       { index: "01", title: draft("Reimagine"), body: draft("Understanding the existing property and its potential.") },
       { index: "02", title: draft("Divide"), body: draft("Transforming larger spaces into independent homes.") },
       { index: "03", title: draft("Deliver"), body: draft("Completing each apartment as a turnkey living experience.") },
-    ],
-  },
-  // Work section (2026-10-02): four cases from the owner's archive, shown anonymously until PRD §6 says otherwise.
-  work: {
-    label: draft("Selected work"),
-    title: draft("Four homes, from old to valuable."),
-    lead: draft("A selection of completed renovations. Interiors only: we do not publish addresses."),
-    of: draft("of"),
-    open: draft("View project"),
-    back: draft("Work"),
-    next: draft("Next project"),
-    more: draft("More work."),
-    continueLabel: draft("Continue"),
-    close: draft("Close"),
-    facts: { home: draft("Home"), scope: draft("Work"), delivery: draft("Delivery"), status: draft("Status") },
-    slider: { label: draft("Photographs"), previous: draft("Previous photograph"), nextSlide: draft("Next photograph") },
-    compare: { before: draft("Before"), after: draft("After"), label: draft("Compare before and after") },
-    items: [
-      {
-        index: "01", title: draft("Light from two sides"), body: draft("An existing home, re-planned around a bright kitchen and living space."),
-        facts: { home: draft("Apartment"), scope: draft("Plan · kitchen · bathroom"), delivery: draft("Turnkey"), status: draft("Delivered") },
-        notes: [
-          { title: draft("Reimagine"), body: draft("A closed plan with small rooms, and daylight on two sides that the old layout never used.") },
-          { title: draft("Divide"), body: draft("One open kitchen and living space, with the bedrooms and the bathroom set apart.") },
-          { title: draft("Deliver"), body: draft("Finished to the last detail: kitchen, bathroom and floors, ready to move in.") },
-        ],
-        chapters: [
-          { key: draft("Light"), statement: draft("Walls came down where the light came in. The kitchen now sits in the middle of the day, not at the end of a corridor.") },
-          { key: draft("Material"), statement: draft("Pale oak, a stone worktop and brass taps: few materials, chosen to age well and to be touched every day.") },
-          { key: draft("Home"), statement: draft("Not a showroom. A calm, finished home where the first evening already feels like living there.") },
-        ],
-      },
-      {
-        index: "02", title: draft("Dark wood, warm light"), body: draft("A compact plan with a tall kitchen wall and a calm bathroom."),
-        facts: { home: draft("Apartment"), scope: draft("Kitchen wall · bathroom · finishes"), delivery: draft("Turnkey, furnished"), status: draft("Delivered") },
-        notes: [
-          { title: draft("Reimagine"), body: draft("A compact floor plan where every square metre has to work.") },
-          { title: draft("Divide"), body: draft("A single tall kitchen wall carries cooking, storage and seating; the bathroom stays quiet and separate.") },
-          { title: draft("Deliver"), body: draft("Dark wood, stone and brass, delivered as one calm whole.") },
-        ],
-        chapters: [
-          { key: draft("Wood"), statement: draft("One dark wall holds the whole kitchen, so the rest of the room can stay empty and light.") },
-          { key: draft("Stone"), statement: draft("Warm stone on the floor and the worktop, a round mirror and brass in the bathroom: small rooms, full attention.") },
-          { key: draft("Home"), statement: draft("Compact, but never cramped. Everything has its place, and the place has a mood.") },
-        ],
-      },
-      {
-        index: "03", title: draft("Stone and brass"), body: draft("Natural stone, brass taps and a bedroom under the roof."),
-        facts: { home: draft("Upper-floor home with attic"), scope: draft("Attic · kitchen · bathroom"), delivery: draft("Turnkey"), status: draft("Delivered") },
-        notes: [
-          { title: draft("Reimagine"), body: draft("A roof that could hold more than storage.") },
-          { title: draft("Divide"), body: draft("The attic opened up for a bedroom; the kitchen and the bathroom below renewed around a stone worktop.") },
-          { title: draft("Deliver"), body: draft("Natural stone, brass and soft colour, finished turnkey.") },
-        ],
-        chapters: [
-          { key: draft("Roof"), statement: draft("The attic was opened from the rafters down. What was storage is now the quietest room in the house.") },
-          { key: draft("Stone"), statement: draft("A veined stone worktop, stone in the shower, brass on the taps: the material does the decorating.") },
-          { key: draft("Home"), statement: draft("Soft colour under a high roof. A home that feels made, not fitted.") },
-        ],
-      },
-      {
-        index: "04", title: draft("Room to breathe"), body: draft("Generous rooms, a quiet bathroom and a bedroom with a view."),
-        facts: { home: draft("Apartment"), scope: draft("Plan · bathroom · finishes"), delivery: draft("Turnkey"), status: draft("Delivered") },
-        notes: [
-          { title: draft("Reimagine"), body: draft("Generous rooms that only needed a clearer order.") },
-          { title: draft("Divide"), body: draft("Living and dining in one open space, bathroom and bedrooms set back.") },
-          { title: draft("Deliver"), body: draft("Light finishes, a quiet bathroom and a bedroom that keeps its view.") },
-        ],
-        chapters: [
-          { key: draft("Space"), statement: draft("The rooms were already generous. The work was to give them order, and then to leave them alone.") },
-          { key: draft("Calm"), statement: draft("A bathroom in one pale tone, a dining corner by the window: nothing shouts, everything is finished.") },
-          { key: draft("Home"), statement: draft("A place to breathe. Delivered complete, with the view left exactly where it was.") },
-        ],
-      },
     ],
   },
   // Sky band: owner concept 2026-10-01 (drafts until approved). The seventh card completes the arc.

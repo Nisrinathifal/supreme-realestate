@@ -3,9 +3,8 @@ import { notFound } from "next/navigation";
 import { AboutPage } from "@/components/pages/AboutPage";
 import { ContactPage } from "@/components/pages/ContactPage";
 import { LegalPage } from "@/components/pages/LegalPage";
-import { WorkCasePage } from "@/components/pages/WorkCasePage";
-import { isLang, langs, legalPages, pageForSlug, routes, workBase, workCount, workForSlug, workSlug, type Lang, type PageKey } from "@/content/routes";
-import { pageMetadata, workMetadata } from "@/lib/seo";
+import { isLang, langs, legalPages, pageForSlug, routes, type Lang, type PageKey } from "@/content/routes";
+import { pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ lang: string; slug: string[] }> };
 
@@ -19,19 +18,13 @@ export function generateStaticParams() {
       const slug = routes[key][lang];
       if (slug) out.push({ lang, slug: [slug] });
     }
-    for (let i = 0; i < workCount; i++) out.push({ lang, slug: [workBase[lang], workSlug(i)] });
   }
   return out;
 }
 
-type Match = { lang: Lang; page: PageKey } | { lang: Lang; work: number };
-
-async function match(params: Params["params"]): Promise<Match | null> {
+async function match(params: Params["params"]): Promise<{ lang: Lang; page: PageKey } | null> {
   const { lang: rawLang, slug } = await params;
-  if (!isLang(rawLang)) return null;
-  const work = workForSlug(rawLang, slug);
-  if (work !== null) return { lang: rawLang, work };
-  if (slug.length !== 1) return null;
+  if (!isLang(rawLang) || slug.length !== 1) return null;
   const page = pageForSlug(rawLang, slug[0]);
   if (!page || page === "home") return null;
   return { lang: rawLang, page };
@@ -40,14 +33,12 @@ async function match(params: Params["params"]): Promise<Match | null> {
 /** Metadata never throws: a thrown notFound() here makes Next skip server rendering of the 404. */
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const m = await match(params);
-  if (!m) return {};
-  return "work" in m ? workMetadata(m.lang, m.work) : pageMetadata(m.lang, m.page);
+  return m ? pageMetadata(m.lang, m.page) : {};
 }
 
 export default async function Page({ params }: Params) {
   const m = await match(params);
   if (!m) notFound();
-  if ("work" in m) return <WorkCasePage lang={m.lang} index={m.work} />;
   const { lang, page } = m;
   const body =
     page === "about" ? (

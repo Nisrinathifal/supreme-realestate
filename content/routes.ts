@@ -42,33 +42,6 @@ export function pageForPath(pathname: string): { page: PageKey; lang: Lang } | n
   return null;
 }
 
-/* Work cases (concept 2026-10-02): detail pages under a translated base, numbered slugs (no names: PRD §6). */
-export const workBase: Record<Lang, string> = { nl: "werk", en: "work" };
-export const workCount = 4;
-export const workSlug = (index: number) => `project-${String(index + 1).padStart(2, "0")}`;
-
-/** Public path of a work case (0-based index) in a language. */
-export function workPathFor(index: number, lang: Lang): string {
-  const prefix = lang === defaultLang ? "" : `/${lang}`;
-  return `${prefix}/${workBase[lang]}/${workSlug(index)}`;
-}
-
-/** Case index for a two-segment slug in a language, or null. */
-export function workForSlug(lang: Lang, slug: string[]): number | null {
-  if (slug.length !== 2 || slug[0] !== workBase[lang]) return null;
-  const index = Array.from({ length: workCount }, (_, i) => i).find((i) => workSlug(i) === slug[1]);
-  return index ?? null;
-}
-
-/** Case index and language for a public pathname, or null. */
-export function workForPath(pathname: string): { index: number; lang: Lang } | null {
-  const clean = pathname.replace(/\/+$/, "") || "/";
-  for (const lang of langs) {
-    for (let i = 0; i < workCount; i++) if (workPathFor(i, lang) === clean) return { index: i, lang };
-  }
-  return null;
-}
-
 export function isLang(v: string): v is Lang {
   return (langs as string[]).includes(v);
 }

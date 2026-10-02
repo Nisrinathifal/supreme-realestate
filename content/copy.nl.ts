@@ -37,7 +37,6 @@ export const nl: Copy = {
       { id: "home", label: draft("Home") },
       { id: "about", label: "Over ons" },
       { id: "approach", label: draft("Werkwijze") },
-      { id: "work", label: draft("Werk") },
     ],
   },
   brand: { wordmark: "SUPREME", descriptor: "REAL ESTATE", tagline: "Van oud naar waardevol" },
@@ -61,80 +60,6 @@ export const nl: Copy = {
       { index: "01", title: draft("Herzien"), body: draft("Begrijpen wat een bestaand pand is en kan worden.") },
       { index: "02", title: draft("Verdelen"), body: draft("Grotere ruimtes omvormen tot zelfstandige woningen.") },
       { index: "03", title: draft("Opleveren"), body: draft("Elke woning turnkey opleveren als een plek om te wonen.") },
-    ],
-  },
-  // Work section (2026-10-02): vier cases uit het archief van de eigenaar, anoniem zolang PRD §6 dat vraagt.
-  work: {
-    label: draft("Geselecteerd werk"),
-    title: draft("Vier woningen, van oud naar waardevol."),
-    lead: draft("Een selectie van afgeronde renovaties. Alleen interieurs: adressen publiceren we niet."),
-    of: draft("van"),
-    open: draft("Bekijk project"),
-    back: draft("Werk"),
-    next: draft("Volgend project"),
-    more: draft("Meer werk."),
-    continueLabel: draft("Verder"),
-    close: draft("Sluiten"),
-    facts: { home: draft("Woning"), scope: draft("Werk"), delivery: draft("Oplevering"), status: draft("Status") },
-    slider: { label: draft("Foto's"), previous: draft("Vorige foto"), nextSlide: draft("Volgende foto") },
-    compare: { before: draft("Voor"), after: draft("Na"), label: draft("Vergelijk voor en na") },
-    items: [
-      {
-        index: "01", title: draft("Licht van twee kanten"), body: draft("Een bestaande woning, opnieuw ingedeeld rond een lichte woonkeuken."),
-        facts: { home: draft("Appartement"), scope: draft("Indeling · keuken · badkamer"), delivery: draft("Turnkey"), status: draft("Opgeleverd") },
-        notes: [
-          { title: draft("Herzien"), body: draft("Een gesloten plattegrond met kleine kamers, en daglicht van twee kanten dat de oude indeling nooit gebruikte.") },
-          { title: draft("Verdelen"), body: draft("Eén open woonkeuken, met de slaapkamers en de badkamer apart gehouden.") },
-          { title: draft("Opleveren"), body: draft("Tot in detail afgewerkt: keuken, badkamer en vloeren, klaar om in te wonen.") },
-        ],
-        chapters: [
-          { key: draft("Licht"), statement: draft("Muren gingen weg waar het licht binnenkwam. De keuken staat nu midden in de dag, niet aan het eind van een gang.") },
-          { key: draft("Materiaal"), statement: draft("Licht eiken, een stenen werkblad en messing kranen: weinig materialen, gekozen om mooi oud te worden en elke dag aangeraakt te worden.") },
-          { key: draft("Thuis"), statement: draft("Geen showroom. Een rustig, afgewerkt huis waar de eerste avond al voelt als wonen.") },
-        ],
-      },
-      {
-        index: "02", title: draft("Donker hout, warm licht"), body: draft("Een compacte plattegrond met een hoge keukenwand en een rustige badkamer."),
-        facts: { home: draft("Appartement"), scope: draft("Keukenwand · badkamer · afwerking"), delivery: draft("Turnkey, ingericht"), status: draft("Opgeleverd") },
-        notes: [
-          { title: draft("Herzien"), body: draft("Een compacte plattegrond waar elke vierkante meter moet werken.") },
-          { title: draft("Verdelen"), body: draft("Eén hoge keukenwand draagt koken, bergen en zitten; de badkamer blijft rustig en apart.") },
-          { title: draft("Opleveren"), body: draft("Donker hout, steen en messing, opgeleverd als één rustig geheel.") },
-        ],
-        chapters: [
-          { key: draft("Hout"), statement: draft("Eén donkere wand draagt de hele keuken, zodat de rest van de ruimte leeg en licht kan blijven.") },
-          { key: draft("Steen"), statement: draft("Warme steen op de vloer en het werkblad, een ronde spiegel en messing in de badkamer: kleine ruimtes, volle aandacht.") },
-          { key: draft("Thuis"), statement: draft("Compact, maar nooit krap. Alles heeft zijn plek, en die plek heeft een stemming.") },
-        ],
-      },
-      {
-        index: "03", title: draft("Steen en messing"), body: draft("Natuursteen, messing kranen en een slaapkamer onder het dak."),
-        facts: { home: draft("Bovenwoning met zolder"), scope: draft("Zolder · keuken · badkamer"), delivery: draft("Turnkey"), status: draft("Opgeleverd") },
-        notes: [
-          { title: draft("Herzien"), body: draft("Een dak dat meer kon dragen dan berging.") },
-          { title: draft("Verdelen"), body: draft("De zolder opengemaakt voor een slaapkamer; keuken en badkamer beneden vernieuwd rond een stenen werkblad.") },
-          { title: draft("Opleveren"), body: draft("Natuursteen, messing en zachte kleur, turnkey afgewerkt.") },
-        ],
-        chapters: [
-          { key: draft("Dak"), statement: draft("De zolder is opengemaakt vanaf de spanten. Wat berging was, is nu de rustigste kamer van het huis.") },
-          { key: draft("Steen"), statement: draft("Een geaderd stenen werkblad, steen in de douche, messing op de kranen: het materiaal doet het decoreren.") },
-          { key: draft("Thuis"), statement: draft("Zachte kleur onder een hoog dak. Een huis dat gemaakt voelt, niet geplaatst.") },
-        ],
-      },
-      {
-        index: "04", title: draft("Ruimte om te ademen"), body: draft("Royale kamers, een rustige badkamer en een slaapkamer met uitzicht."),
-        facts: { home: draft("Appartement"), scope: draft("Indeling · badkamer · afwerking"), delivery: draft("Turnkey"), status: draft("Opgeleverd") },
-        notes: [
-          { title: draft("Herzien"), body: draft("Royale kamers die alleen een duidelijker orde nodig hadden.") },
-          { title: draft("Verdelen"), body: draft("Wonen en eten in één open ruimte, badkamer en slaapkamers naar achteren.") },
-          { title: draft("Opleveren"), body: draft("Lichte afwerking, een rustige badkamer en een slaapkamer die haar uitzicht houdt.") },
-        ],
-        chapters: [
-          { key: draft("Ruimte"), statement: draft("De kamers waren al royaal. Het werk was ze orde te geven, en ze daarna met rust te laten.") },
-          { key: draft("Rust"), statement: draft("Een badkamer in één lichte toon, een eethoek bij het raam: niets schreeuwt, alles is af.") },
-          { key: draft("Thuis"), statement: draft("Een plek om te ademen. Compleet opgeleverd, met het uitzicht precies waar het was.") },
-        ],
-      },
     ],
   },
   // Sky band: owner concept 2026-10-01, NL draft until approved.

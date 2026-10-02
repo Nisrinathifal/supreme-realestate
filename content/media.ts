@@ -126,63 +126,6 @@ export const stepsClips: AlphaVideoAsset[] = [
   stepClip("02", "Grachtenpand in de steigers, gevel wordt vernieuwd", "A canal house in scaffolding, its front being renewed"),
   stepClip("03", "Vernieuwd grachtenpand met verlichte ramen", "A renewed canal house with lit windows"),
 ];
-/**
- * Work section (2026-10-02): four anonymised cases from the owner's archive. Interiors only, no facades, no
- * street signs or house numbers in frame (PRD §6.2); file names neutral. Each case: a 'before' (old state or work
- * in progress, from the owner's archive), a cover ('after'), two details and a gallery.
- */
-const work = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
-export const workCases: { id: string; before: ImageAsset; cover: ImageAsset; details: ImageAsset[]; gallery: ImageAsset[] }[] = [
-  {
-    id: "a",
-    before: work("work-a-00", 4032, 3024, "Ruimte in verbouwing, keuken in aanbouw", "A room under renovation, the kitchen being built"),
-    cover: work("work-a-01", 3000, 2000, "Lichte woonkeuken met kookeiland", "A bright kitchen with an island"),
-    details: [work("work-a-02", 3000, 2000, "Slaapkamer met dakraam", "A bedroom under a skylight"), work("work-a-03", 1333, 2000, "Badkamer met zwarte wastafels", "A bathroom with black basins")],
-    gallery: [
-      work("work-a-04", 3000, 2000, "Woonkamer met grijze bank", "A living room with a grey sofa"),
-      work("work-a-05", 3000, 2000, "Eethoek bij de keuken", "A dining corner by the kitchen"),
-      work("work-a-06", 3000, 2000, "Woonkamer met zithoek", "A living room with a seating corner"),
-      work("work-a-07", 3000, 2000, "Keuken met kookeiland en plant", "A kitchen island with a plant"),
-    ],
-  },
-  {
-    id: "b",
-    before: work("work-b-00", 2157, 1440, "Woonkamer in de oude staat", "The living room in its old state"),
-    cover: work("work-b-01", 3000, 2000, "Donkere keuken met houten bar", "A dark kitchen with a wooden bar"),
-    details: [work("work-b-02", 1333, 2000, "Messing kraan bij een ronde spiegel", "A brass tap by a round mirror"), work("work-b-03", 3000, 2000, "Woonkamer met brede ramen", "A living room with wide windows")],
-    gallery: [
-      work("work-b-04", 3000, 2000, "Donkere keukenwand in de lengte", "The dark kitchen wall along the room"),
-      work("work-b-05", 3000, 2000, "Keuken met gele stoelen", "A kitchen with yellow chairs"),
-      work("work-b-06", 3000, 2000, "Badkamer met ronde spiegel", "A bathroom with a round mirror"),
-      work("work-b-07", 3000, 2000, "Slaapkamer met lamellen", "A bedroom with slatted blinds"),
-    ],
-  },
-  {
-    id: "c",
-    before: work("work-c-00", 4032, 3024, "Zolder in de oude staat, houten spanten", "The attic in its old state, timber rafters"),
-    cover: work("work-c-01", 2160, 1440, "Keuken met marmeren werkblad", "A kitchen with a marble worktop"),
-    details: [work("work-c-02", 2160, 1440, "Badkamer in natuursteen", "A bathroom in natural stone"), work("work-c-03", 2160, 1440, "Slaapkamer onder het dak", "A bedroom under the roof")],
-    gallery: [
-      work("work-c-04", 2160, 1440, "Eethoek naast de keuken", "A dining corner next to the kitchen"),
-      work("work-c-05", 2160, 1440, "Keuken met donker werkblad", "A kitchen with a dark worktop"),
-      work("work-c-06", 2160, 1440, "Eethoek met behang", "A dining corner with wallpaper"),
-      work("work-c-07", 4032, 3024, "Zolder in aanbouw, houten spanten", "The attic under construction, timber rafters"),
-    ],
-  },
-  {
-    id: "d",
-    before: work("work-d-00", 2156, 1440, "Kamer in de oude staat", "A room in its old state"),
-    cover: work("work-d-01", 2160, 1440, "Woonkamer met open keuken", "A living room with an open kitchen"),
-    details: [work("work-d-02", 2158, 1440, "Badkamer met ronde spiegel", "A bathroom with a round mirror"), work("work-d-03", 2158, 1440, "Slaapkamer met uitzicht", "A bedroom with a view")],
-    gallery: [
-      work("work-d-04", 2156, 1440, "Eethoek met roze stoelen", "A dining corner with pink chairs"),
-      work("work-d-05", 2157, 1440, "Eethoek bij het raam", "A dining nook by the window"),
-      work("work-d-06", 2155, 1440, "Douche met glazen wand", "A shower with a glass wall"),
-      work("work-d-07", 2153, 1440, "Woonkamer met blauwe bank", "A living room with a blue sofa"),
-    ],
-  },
-];
-
 /** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */
 export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
   left: { id: "sketch-01", ratio: "1/1", image: { src: "sketch-house-01", width: 470, height: 470, alpha: true, alt: { nl: "Lijntekening van een grachtenpand", en: "Line drawing of a canal house" } } },
