@@ -1,5 +1,5 @@
-/* Canal-ink viewport: the ring of mascots behind and in front of one display line */
-.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; color: var(--ink); }
+/* White viewport: the ring of mascots behind and in front of the headline */
+.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; background: var(--surface); color: var(--ink); }
 .intro > * { grid-area: 1 / 1; }
 .stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
 /* each mascot: centred on its point of the ring; size scales with the viewport */
@@ -12,16 +12,16 @@
 .tilt { transform-style: preserve-3d; }
 .image { display: block; width: 100%; }
 .image img { display: block; width: 100%; height: auto; }
-.text { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: var(--s-5); padding: 0 var(--gutter); text-align: center; will-change: transform, opacity; }
 .title {
-  margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking);
-  font-size: var(--fs-h2); line-height: 1; text-wrap: balance; max-width: 14ch;
+  position: relative; z-index: 2; margin: 0; padding: 0 var(--gutter); text-align: center;
+  font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking);
+  font-size: var(--fs-h2); line-height: 1.02;
 }
-.lead { margin: 0; max-width: 44ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--muted); text-wrap: balance; }
+.line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.lineInner { display: block; will-change: transform; }
 
 @media (max-width: 767px) {
   .intro { min-height: 86svh; }
   .item { --size: clamp(64px, 19vw, 96px); }
-  .title { font-size: clamp(32px, 9vw, 48px); }
-  .lead { font-size: var(--fs-body); }
+  .title { font-size: clamp(28px, 7.6vw, 44px); }
 }

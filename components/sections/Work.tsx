@@ -13,8 +13,8 @@ const tones = [`inverse ${styles.toneInk}`, styles.toneSky, `inverse ${styles.to
 /**
  * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a two-line heading, then four cases as
  * coloured cards. Each card: title, index, body, a note on what the photographs show, three photographs and one link
- * that follows the pointer over them. The band slides up over the pinned intro (`data-overlap`) and its heading and
- * first card arrive with the scroll; on desktop the deck is then pinned and each next card rises over the current one
+ * that follows the pointer over them. The band follows the intro in the flow; its heading and first card settle as
+ * they come into view, scrubbed; on desktop the deck is then pinned and each next card rises over the current one
  * while the ones still to come wait as strips below (WorkMotion). Phones stack the cards with CSS sticky; reduced
  * motion and no-JS read the cards one after another. Cases are anonymous (PRD §6): interiors, no names or addresses.
  */
@@ -22,7 +22,7 @@ export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const n = c.work.items.length;
   return (
-    <section className={`section ${styles.work}`} data-work data-overlap aria-labelledby="work-title">
+    <section className={`section ${styles.work}`} data-work aria-labelledby="work-title">
       <div className="container">
         <h2 id="work-title" className={styles.heading} data-work-heading>
           <span className={styles.headingMuted}>{c.work.label}</span>

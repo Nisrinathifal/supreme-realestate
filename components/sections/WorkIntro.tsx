@@ -20,17 +20,17 @@ const RX = 39; // % of the stage width
 const RY = 37; // % of the stage height
 
 /**
- * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a Canal-ink viewport with the
- * headline and its line in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion
- * pins the band and drives everything from the scroll: the ring drifts and opens, the mascots behind the headline
- * reveal themselves, the headline fades out, and the projects band slides up over it (one continuous move). Hover
- * tilts a mascot towards the pointer. Reduced motion and no-JS: the still ring, then the projects. Slides up over
- * the held steps strip itself (`data-overlap`).
+ * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a white viewport with the headline
+ * in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion pins the band and
+ * drives everything from the scroll: the headline appears one line per scroll step, the ring drifts and opens, the
+ * mascots behind the headline reveal themselves; then the page simply scrolls on into the projects. Hover tilts a
+ * mascot towards the pointer. Reduced motion and no-JS: the full headline and the still ring. Slides up over the
+ * held steps strip (`data-overlap`).
  */
 export function WorkIntro({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   return (
-    <section id="work" className={`inverse ${styles.intro}`} data-work-intro data-overlap data-header-theme="dark" aria-labelledby="work-intro-title">
+    <section id="work" className={styles.intro} data-work-intro data-overlap aria-labelledby="work-intro-title">
       <WorkIntroMotion>
         <div className={styles.stage} data-orbit aria-hidden="true">
           {mascots.map((m, i) => {
@@ -52,12 +52,15 @@ export function WorkIntro({ lang }: { lang: Lang }) {
             );
           })}
         </div>
-        <div className={styles.text} data-orbit-text>
-          <h2 id="work-intro-title" className={styles.title}>
-            {c.work.intro}
-          </h2>
-          <p className={styles.lead}>{c.work.introLead}</p>
-        </div>
+        <h2 id="work-intro-title" className={styles.title}>
+          {c.work.intro.map((line, i) => (
+            <span key={i} className={styles.line}>
+              <span className={styles.lineInner} data-orbit-line>
+                {line}
+              </span>
+            </span>
+          ))}
+        </h2>
       </WorkIntroMotion>
     </section>
   );

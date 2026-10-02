@@ -26,10 +26,10 @@ export type Copy = {
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   /**
-   * Projects: `intro` (headline) and `introLead` sit among the mascots; then a two-line heading (`label` muted, `title` ink) over four
+   * Projects: `intro` is the headline among the mascots, one entry per line (each line reveals on scroll); then a two-line heading (`label` muted, `title` ink) over four
    * stacking cards. Each card: index, title, body, a `note` saying what its photographs show, and one link (`cta`).
    */
-  work: { intro: string; introLead: string; label: string; title: string; cta: string; items: { index: string; title: string; body: string; note: string }[] };
+  work: { intro: string[]; label: string; title: string; cta: string; items: { index: string; title: string; body: string; note: string }[] };
   /** Sky band: brand promise, lead and the two buttons (DESIGN §10.1 hero copy), over the sky photograph. */
   sky: { label: string; title: string; lead: string; ctaPrimary: string; ctaSecondary: string; cards: { title: string; body: string }[] };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };
