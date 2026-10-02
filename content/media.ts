@@ -128,12 +128,14 @@ export const stepsClips: AlphaVideoAsset[] = [
 ];
 /**
  * Work section (2026-10-02): four anonymised cases from the owner's archive. Interiors only, no facades, no
- * street signs or house numbers in frame (PRD §6.2); file names neutral. Each case: a cover and two details.
+ * street signs or house numbers in frame (PRD §6.2); file names neutral. Each case: a 'before' (old state or work
+ * in progress, from the owner's archive), a cover ('after'), two details and a gallery.
  */
 const work = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
-export const workCases: { id: string; cover: ImageAsset; details: ImageAsset[]; gallery: ImageAsset[] }[] = [
+export const workCases: { id: string; before: ImageAsset; cover: ImageAsset; details: ImageAsset[]; gallery: ImageAsset[] }[] = [
   {
     id: "a",
+    before: work("work-a-00", 4032, 3024, "Ruimte in verbouwing, keuken in aanbouw", "A room under renovation, the kitchen being built"),
     cover: work("work-a-01", 3000, 2000, "Lichte woonkeuken met kookeiland", "A bright kitchen with an island"),
     details: [work("work-a-02", 3000, 2000, "Slaapkamer met dakraam", "A bedroom under a skylight"), work("work-a-03", 1333, 2000, "Badkamer met zwarte wastafels", "A bathroom with black basins")],
     gallery: [
@@ -145,6 +147,7 @@ export const workCases: { id: string; cover: ImageAsset; details: ImageAsset[]; 
   },
   {
     id: "b",
+    before: work("work-b-00", 2157, 1440, "Woonkamer in de oude staat", "The living room in its old state"),
     cover: work("work-b-01", 3000, 2000, "Donkere keuken met houten bar", "A dark kitchen with a wooden bar"),
     details: [work("work-b-02", 1333, 2000, "Messing kraan bij een ronde spiegel", "A brass tap by a round mirror"), work("work-b-03", 3000, 2000, "Woonkamer met brede ramen", "A living room with wide windows")],
     gallery: [
@@ -156,6 +159,7 @@ export const workCases: { id: string; cover: ImageAsset; details: ImageAsset[]; 
   },
   {
     id: "c",
+    before: work("work-c-00", 4032, 3024, "Zolder in de oude staat, houten spanten", "The attic in its old state, timber rafters"),
     cover: work("work-c-01", 2160, 1440, "Keuken met marmeren werkblad", "A kitchen with a marble worktop"),
     details: [work("work-c-02", 2160, 1440, "Badkamer in natuursteen", "A bathroom in natural stone"), work("work-c-03", 2160, 1440, "Slaapkamer onder het dak", "A bedroom under the roof")],
     gallery: [
@@ -167,6 +171,7 @@ export const workCases: { id: string; cover: ImageAsset; details: ImageAsset[]; 
   },
   {
     id: "d",
+    before: work("work-d-00", 2156, 1440, "Kamer in de oude staat", "A room in its old state"),
     cover: work("work-d-01", 2160, 1440, "Woonkamer met open keuken", "A living room with an open kitchen"),
     details: [work("work-d-02", 2158, 1440, "Badkamer met ronde spiegel", "A bathroom with a round mirror"), work("work-d-03", 2158, 1440, "Slaapkamer met uitzicht", "A bedroom with a view")],
     gallery: [

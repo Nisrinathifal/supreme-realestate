@@ -34,6 +34,8 @@ export type Copy = {
     facts: { home: string; scope: string; delivery: string; status: string };
     /** Slider controls. */
     slider: { label: string; previous: string; nextSlide: string };
+    /** Before/after comparison: the two labels and the control's name. */
+    compare: { before: string; after: string; label: string };
     /** Per case: title and line; four facts; three notes along the steps; chapters with a keyword and a statement. */
     items: {
       index: string; title: string; body: string;

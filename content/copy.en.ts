@@ -76,6 +76,7 @@ export const en: Copy = {
     continueLabel: draft("Continue"),
     facts: { home: draft("Home"), scope: draft("Work"), delivery: draft("Delivery"), status: draft("Status") },
     slider: { label: draft("Photographs"), previous: draft("Previous photograph"), nextSlide: draft("Next photograph") },
+    compare: { before: draft("Before"), after: draft("After"), label: draft("Compare before and after") },
     items: [
       {
         index: "01", title: draft("Light from two sides"), body: draft("An existing home, re-planned around a bright kitchen and living space."),

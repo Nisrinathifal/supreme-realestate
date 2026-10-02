@@ -230,5 +230,21 @@
   "work-d-07": {
     "width": 2153,
     "height": 1440
+  },
+  "work-a-00": {
+    "width": 4032,
+    "height": 3024
+  },
+  "work-b-00": {
+    "width": 2157,
+    "height": 1440
+  },
+  "work-c-00": {
+    "width": 4032,
+    "height": 3024
+  },
+  "work-d-00": {
+    "width": 2156,
+    "height": 1440
   }
 }

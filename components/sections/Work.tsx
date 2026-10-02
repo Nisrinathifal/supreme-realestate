@@ -1,17 +1,16 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { workCases } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { workPathFor, type Lang } from "@/content/routes";
-import { WorkSlider } from "./WorkSlider";
+import { WorkCompare } from "./WorkCompare";
 import styles from "./Work.module.css";
 
 /**
- * Work section (2026-10-02, after the reference's project rows): an intro, then one plain row per case on Paper,
- * a hairline between them. Left: the index, the title, three facts (home, work, delivery: no city, area, days or
- * year, PRD §6) and the link to the case; right: a sideways row of photographs with a progress line and arrows.
- * Cases are anonymous; copy is draft until the owner replaces it.
+ * Work section (2026-10-02): an intro, then one full-bleed card per case that sticks and stacks: each card is a
+ * title strip (index and the title, which links to the case) over a before/after comparison of the home. Cards
+ * slide up over the previous one as the page scrolls, leaving the earlier strips showing (after the reference
+ * recording); the stacking is CSS, the wipe-in lives in WorkCompare. Cases are anonymous (PRD §6); copy is draft.
  */
 export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
@@ -26,37 +25,29 @@ export function Work({ lang }: { lang: Lang }) {
         <p className={styles.lead}>{c.work.lead}</p>
       </div>
 
-      <ol className={styles.rows}>
+      <ol className={styles.cards}>
         {c.work.items.map((item, i) => {
           const media = workCases[i];
           if (!media) return null;
-          const slides = [media.details[0], media.gallery[0], media.details[1], media.gallery[1]].filter(Boolean);
-          const href = workPathFor(i, lang);
           return (
-            <li key={item.index} className={styles.row} data-work-row>
-              <article className={`container ${styles.rowInner}`} aria-labelledby={`work-${media.id}-title`}>
-                <div className={styles.info}>
+            <li key={item.index} className={styles.card} style={{ "--i": i } as React.CSSProperties} data-work-card>
+              <article className={styles.cardInner} aria-labelledby={`work-${media.id}-title`}>
+                <header className={`container ${styles.strip}`}>
                   <p className={`t-micro ${styles.index}`}>
                     {item.index} {c.work.of} {total}
                   </p>
                   <h3 id={`work-${media.id}-title`} className={styles.caseTitle}>
-                    <Link href={href} className={styles.titleLink}>
+                    <Link href={workPathFor(i, lang)} className={styles.titleLink}>
                       {item.title}
+                      <span className={`t-micro ${styles.open}`} aria-hidden="true">
+                        {c.work.open} →
+                      </span>
                     </Link>
                   </h3>
-                  <dl className={styles.facts}>
-                    {(["home", "scope", "delivery"] as const).map((k) => (
-                      <div key={k} className={styles.fact}>
-                        <dt className="t-micro">{c.work.facts[k]}</dt>
-                        <dd className={styles.factValue}>{item.facts[k]}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                  <Button href={href} variant="secondary" className={styles.open}>
-                    {c.work.open}
-                  </Button>
+                </header>
+                <div className={styles.media}>
+                  <WorkCompare before={media.before} after={media.cover} lang={lang} labels={c.work.compare} />
                 </div>
-                <WorkSlider images={slides} lang={lang} labels={c.work.slider} />
               </article>
             </li>
           );

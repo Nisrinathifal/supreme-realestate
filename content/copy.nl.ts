@@ -76,6 +76,7 @@ export const nl: Copy = {
     continueLabel: draft("Verder"),
     facts: { home: draft("Woning"), scope: draft("Werk"), delivery: draft("Oplevering"), status: draft("Status") },
     slider: { label: draft("Foto's"), previous: draft("Vorige foto"), nextSlide: draft("Volgende foto") },
+    compare: { before: draft("Voor"), after: draft("Na"), label: draft("Vergelijk voor en na") },
     items: [
       {
         index: "01", title: draft("Licht van twee kanten"), body: draft("Een bestaande woning, opnieuw ingedeeld rond een lichte woonkeuken."),
