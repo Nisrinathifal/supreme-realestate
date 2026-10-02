@@ -106,5 +106,17 @@
   "sketch-house-ink-01": {
     "width": 470,
     "height": 470
+  },
+  "step-poster-01": {
+    "width": 1280,
+    "height": 960
+  },
+  "step-poster-02": {
+    "width": 1280,
+    "height": 960
+  },
+  "step-poster-03": {
+    "width": 1280,
+    "height": 960
   }
 }

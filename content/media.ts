@@ -92,11 +92,21 @@ export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", Shelf
   chart: { src: "icon-chart-01", width: 90, height: 90, alt: { nl: "Waarde: stijgende grafiek", en: "Value: a rising chart" }, slot: { x: 85.4, y: 82, w: 13.5 } },
 };
 
-/** Steps section: one illustration per step (4:3) and two line drawings beside the headline. Assets to follow. */
-export const stepsMedia: MediaSlot[] = [
-  { id: "step-01", ratio: "16/9", image: null },
-  { id: "step-02", ratio: "16/9", image: null },
-  { id: "step-03", ratio: "16/9", image: null },
+/**
+ * Steps section: one looping clip per step (supplied 2026-10-02, 4 s each, canal house on a flat ground that the
+ * panel feathers away), re-encoded without metadata by scripts/film-export.swift; posters are their first frames.
+ */
+const stepFilm = (n: string, nl: string, en: string): VideoAsset => ({
+  webm: null,
+  mp4: `/media/step-film-${n}.mp4`,
+  mp4Mobile: `/media/step-film-${n}-720.mp4`,
+  poster: { src: `step-poster-${n}`, width: 1280, height: 960, alt: { nl, en } },
+  loop: true,
+});
+export const stepsFilms: VideoAsset[] = [
+  stepFilm("01", "Grachtenpand met een kleine inspectierobot", "A canal house with a small survey robot"),
+  stepFilm("02", "Grachtenpand in de steigers, gevel wordt vernieuwd", "A canal house in scaffolding, its front being renewed"),
+  stepFilm("03", "Vernieuwd grachtenpand met verlichte ramen", "A renewed canal house with lit windows"),
 ];
 /** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */
 export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {

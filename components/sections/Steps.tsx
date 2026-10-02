@@ -1,8 +1,9 @@
-import { stepsMedia, stepsSketches } from "@/content/media";
+import { stepsFilms, stepsSketches } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
+import { StepFilm } from "./StepFilm";
 import { StepsMotion } from "./StepsMotion";
 import styles from "./Steps.module.css";
 
@@ -41,13 +42,13 @@ export function Steps({ lang }: { lang: Lang }) {
 
         <ol className={styles.strip} data-steps-strip>
           {c.steps.items.map((item, i) => (
-            <li key={item.index} className={`${styles.panel} ${i === 1 ? "" : "light"}`} data-steps-panel>
+            <li key={item.index} className={`${styles.panel} light`} data-steps-panel>
               <div className={styles.panelHead}>
                 <MicroLabel>{item.index}</MicroLabel>
                 <h3 className={styles.panelTitle}>{item.title}</h3>
               </div>
               <div className={styles.panelMedia}>
-                <MediaFrame image={stepsMedia[i]?.image ?? null} ratio="16/9" lang={lang} radius="lg" decorative />
+                {stepsFilms[i] ? <StepFilm film={stepsFilms[i]} lang={lang} /> : null}
               </div>
               <p className={styles.panelBody}>{item.body}</p>
             </li>
