@@ -194,5 +194,25 @@
   "mascot-wrench-01": {
     "width": 1024,
     "height": 1024
+  },
+  "card-architects-01": {
+    "width": 909,
+    "height": 964
+  },
+  "card-builders-01": {
+    "width": 940,
+    "height": 1004
+  },
+  "card-designers-01": {
+    "width": 941,
+    "height": 1004
+  },
+  "card-house-01": {
+    "width": 916,
+    "height": 805
+  },
+  "card-partners-01": {
+    "width": 943,
+    "height": 1005
   }
 }

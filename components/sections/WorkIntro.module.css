@@ -2,11 +2,11 @@
 .intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; background: var(--surface); color: var(--ink); }
 .intro > * { grid-area: 1 / 1; }
 .stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
-/* each mascot: centred on its point of the ring; size scales with the viewport */
-.item {
-  --size: clamp(84px, 11vw, 168px);
-  position: absolute; width: calc(var(--size) * var(--s, 1)); translate: -50% -50%; z-index: 1; pointer-events: auto;
-}
+/* each item: centred on its point of the ring; size scales with the viewport (cards a little larger than mascots) */
+.item { position: absolute; width: calc(var(--size) * var(--s, 1)); translate: -50% -50%; z-index: 1; pointer-events: auto; }
+.card { --size: clamp(96px, 12.5vw, 196px); }
+.mascot { --size: clamp(64px, 8.5vw, 132px); }
+.card .image img { border-radius: var(--r-md); box-shadow: var(--shadow-soft); }
 .front { z-index: 3; }
 .inner { will-change: transform; transform-origin: 50% 50%; }
 .tilt { transform-style: preserve-3d; }
@@ -23,6 +23,7 @@
 
 @media (max-width: 767px) {
   .intro { min-height: 86svh; }
-  .item { --size: clamp(64px, 19vw, 96px); }
+  .card { --size: clamp(72px, 19vw, 96px); }
+  .mascot { --size: clamp(52px, 13vw, 68px); }
   .title { font-size: clamp(28px, 7.6vw, 44px); }
 }

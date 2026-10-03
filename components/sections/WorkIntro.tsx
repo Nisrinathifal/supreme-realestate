@@ -1,27 +1,30 @@
 import type { CSSProperties } from "react";
 import { AlphaImage } from "@/components/ui/AlphaImage";
-import { mascots } from "@/content/media";
+import { mascots, orbitCards } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import { WorkIntroMotion } from "./WorkIntroMotion";
 import styles from "./WorkIntro.module.css";
 
-/** Where each mascot sits on the ring: angle in degrees, radius factor, size factor, in front of or behind the line. */
-const ring = [
-  { a: -118, k: 1, s: 1.05, front: false },
-  { a: -62, k: 0.92, s: 0.9, front: true },
-  { a: -8, k: 1.04, s: 1, front: false },
-  { a: 44, k: 0.96, s: 1.1, front: true },
-  { a: 96, k: 1, s: 0.95, front: false },
-  { a: 150, k: 0.9, s: 1.15, front: true },
-  { a: 206, k: 1.02, s: 0.9, front: false },
-];
+/**
+ * The ring: the five cards and five of the mascots, alternating, evenly spaced from the top. Each item has a radius
+ * factor and a size factor, and sits in front of or behind the headline by turns.
+ */
+const COUNT = 10;
+const ring = Array.from({ length: COUNT }, (_, i) => ({
+  a: -90 + (360 / COUNT) * i,
+  k: i % 4 === 1 ? 0.94 : i % 4 === 3 ? 1.04 : 1,
+  s: i % 2 === 0 ? 1 : i % 4 === 1 ? 0.95 : 1.05,
+  front: i % 2 === 1,
+}));
 const RX = 39; // % of the stage width
 const RY = 37; // % of the stage height
+/** Cards and mascots by turns: even places a card, odd places a mascot (five of the seven). */
+const orbit = ring.map((_, i) => (i % 2 === 0 ? { kind: "card" as const, image: orbitCards[i / 2] } : { kind: "mascot" as const, image: mascots[(i - 1) / 2] }));
 
 /**
  * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a white viewport with the headline
- * in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion (after the reference
+ * in the middle and, on a ring around it, the five owner-supplied cards and five mascots by turns. The CSS places them; WorkIntroMotion (after the reference
  * recordings) turns the ring slowly when the page rests and at the scrolling pace when it scrolls, draws the ring
  * closer and fills the headline in word by word under the pointer, and lets the mascots lag behind as the band
  * scrolls on into the projects. Hover tilts a
@@ -34,8 +37,9 @@ export function WorkIntro({ lang }: { lang: Lang }) {
     <section id="work" className={styles.intro} data-work-intro data-overlap aria-labelledby="work-intro-title">
       <WorkIntroMotion>
         <div className={styles.stage} data-orbit aria-hidden="true">
-          {mascots.map((m, i) => {
-            const p = ring[i % ring.length];
+          {orbit.map((o, i) => {
+            const m = o.image;
+            const p = ring[i];
             const rad = (p.a * Math.PI) / 180;
             const style = {
               left: `${50 + RX * p.k * Math.cos(rad)}%`,
@@ -43,10 +47,10 @@ export function WorkIntro({ lang }: { lang: Lang }) {
               "--s": p.s,
             } as CSSProperties;
             return (
-              <div key={m.src} className={p.front ? `${styles.item} ${styles.front}` : styles.item} style={style} data-orbit-item data-angle={p.a} data-k={p.k} data-front={p.front ? 1 : 0}>
+              <div key={m.src} className={[styles.item, o.kind === "card" ? styles.card : styles.mascot, p.front ? styles.front : ""].filter(Boolean).join(" ")} style={style} data-orbit-item data-angle={p.a} data-k={p.k} data-front={p.front ? 1 : 0}>
                 <div className={styles.inner} data-orbit-inner>
                   <div className={styles.tilt} data-orbit-tilt>
-                    <AlphaImage image={m} lang={lang} size={200} className={styles.image} decorative />
+                    <AlphaImage image={m} lang={lang} size={o.kind === "card" ? 240 : 160} className={styles.image} decorative />
                   </div>
                 </div>
               </div>
