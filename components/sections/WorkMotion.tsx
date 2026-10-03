@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Arrival: the band's tone moves from the intro's Sky mist to white and the heading, the first card and its
+ * Arrival: the shared band tone fades from the intro's Sky mist to white and the heading, the first card and its
  * photographs come up and settle, scrubbed by the scroll. Desktop deck after the reference:
  * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
  * little narrower), and each next card rises to the top and grows to full width over the current one while its
@@ -29,13 +29,15 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const first = q<HTMLElement>("[data-work-card]")[0];
         if (!section || !heading || !first) return;
         const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
-        // The band's tone: it arrives in the intro's Sky mist and settles to white
+        // The shared band tone (--band-tone on body, set to Sky mist by the intro) fades back to white inside this
+        // band's room above the heading, so the colour changes as the projects come in, with no seam
         const tokens = getComputedStyle(document.documentElement);
-        const tone = gsap.fromTo(
-          section,
-          { backgroundColor: tokens.getPropertyValue("--panel-sky").trim() },
-          { backgroundColor: tokens.getPropertyValue("--surface").trim(), ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "top 30%", scrub: true, invalidateOnRefresh: true } },
-        );
+        const tone = gsap.to(document.body, {
+          "--band-tone": tokens.getPropertyValue("--surface").trim(),
+          ease: "none",
+          immediateRender: false,
+          scrollTrigger: { trigger: section, start: "top 70%", end: "top 10%", scrub: true, invalidateOnRefresh: true },
+        });
         gsap.set(heading, { y: 56, opacity: 0 });
         gsap.set(first, { y: 96, scale: 0.94 });
         if (firstPhotos) gsap.set(firstPhotos, { xPercent: 10 });
@@ -49,7 +51,6 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         return () => {
           tone.scrollTrigger?.kill();
           tone.kill();
-          gsap.set(section, { clearProps: "backgroundColor" });
           tl.scrollTrigger?.kill();
           tl.kill();
           gsap.set([heading, first, firstPhotos], { clearProps: "transform,opacity" });

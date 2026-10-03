@@ -24,8 +24,8 @@ const orbit = ring.map((_, i) => (i % 2 === 0 ? { kind: "card" as const, image: 
 
 /**
  * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a white viewport with the headline
- * in the middle and, on a ring around it, the four owner-supplied cards and four mascots by turns. The band's tone
- * moves from white to Sky mist as it comes in (WorkIntroMotion), and the projects band moves back to white. The CSS places them; WorkIntroMotion (after the reference
+ * in the middle and, on a ring around it, the four owner-supplied cards and four mascots by turns. The page's band
+ * tone moves from white to Sky mist as it comes in (WorkIntroMotion) and back to white inside the projects band. The CSS places them; WorkIntroMotion (after the reference
  * recordings) turns the ring slowly when the page rests and at the scrolling pace when it scrolls, draws the ring
  * closer and fills the headline in word by word under the pointer, and lets the mascots lag behind as the band
  * scrolls on into the projects. Hover tilts a
@@ -60,7 +60,7 @@ export function WorkIntro({ lang }: { lang: Lang }) {
         </div>
         <h2 id="work-intro-title" className={styles.title} data-orbit-title>
           {c.work.intro.map((line, i) => (
-            <span key={i} className={styles.line}>
+            <span key={i} className={styles.line} data-orbit-line>
               {line.split(" ").map((word, j) => (
                 <span key={j} className={styles.word} data-orbit-word>
                   {word}

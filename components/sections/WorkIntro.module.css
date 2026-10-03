@@ -1,5 +1,5 @@
-/* Sky-mist viewport (white → Sky mist as it comes in, with JS): the ring of cards and mascots around the headline */
-.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; background: var(--panel-sky); color: var(--ink); }
+/* Viewport in the shared band tone (--band-tone on body, tweened white → Sky mist → white across this band and the next; Sky mist without JS) */
+.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; background: var(--band-tone, var(--panel-sky)); color: var(--ink); }
 .intro > * { grid-area: 1 / 1; }
 .stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
 /* each item: centred on its point of the ring; size scales with the viewport (cards a little larger than mascots) */

@@ -21,9 +21,8 @@ const LAG = [0.24, 0.14, 0.28, 0.17, 0.26, 0.12, 0.21];
  * of the centre: the items start small and tight behind the dim headline and open out to the ring, growing, while the
  * headline comes up to its grey. The items are always a ring around the headline. Left alone the ring turns
  * slowly on its own, each mascot leaning a little as it goes round; while the page scrolls the turn follows the
- * scrolling pace (so much turn per scrolled pixel, smoothed on top of Lenis); with the pointer on the headline the
- * headline fills in from grey to ink word by word and the ring draws closer, still turning slowly. On a coarse
- * pointer the headline fills in with the pinned scroll instead. After the pin each mascot lags behind at its own
+ * scrolling pace (so much turn per scrolled pixel, smoothed on top of Lenis); while pinned the headline turns to ink
+ * one line per scroll step; with the pointer on the headline the ring draws closer, still turning slowly. After the pin each mascot lags behind at its own
  * depth as the band scrolls on. One ticker places everything (transforms only). Reduced motion: the still ring and
  * the ink headline. On a fine pointer a mascot also tilts towards the cursor.
  */
@@ -41,22 +40,21 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         const stage = q<HTMLElement>("[data-orbit]")[0];
         const items = q<HTMLElement>("[data-orbit-item]");
         const inners = q<HTMLElement>("[data-orbit-inner]");
-        const words = q<HTMLElement>("[data-orbit-word]");
-        if (!section || !stage || !items.length || !words.length) return;
+        if (!section || !stage || !items.length) return;
 
         const base = items.map((el) => ({ a: (Number(el.dataset.angle) * Math.PI) / 180, k: Number(el.dataset.k) || 1 }));
         const ink = getComputedStyle(section).color;
         const from = getComputedStyle(section).getPropertyValue("--reveal-from").trim() || ink;
-        gsap.set(words, { color: from });
         gsap.set(items, { force3D: true });
         gsap.set(inners, { force3D: true, transformOrigin: "50% 50%" });
 
-        // The band's tone: white as it slides in, Sky mist once it has arrived (the next band goes back to white)
+        // The band tone, shared with the projects band through --band-tone on body: white as this band slides in, Sky
+        // mist once it has arrived (WorkMotion fades it back to white inside the projects band, so there is no seam)
         const tokens = getComputedStyle(document.documentElement);
         const tone = gsap.fromTo(
-          section,
-          { backgroundColor: tokens.getPropertyValue("--surface").trim() },
-          { backgroundColor: tokens.getPropertyValue("--panel-sky").trim(), ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "top top", scrub: true, invalidateOnRefresh: true } },
+          document.body,
+          { "--band-tone": tokens.getPropertyValue("--surface").trim() },
+          { "--band-tone": tokens.getPropertyValue("--panel-sky").trim(), ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "top top", scrub: true, invalidateOnRefresh: true } },
         );
 
         const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -72,8 +70,10 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
             invalidateOnRefresh: true,
           },
         });
-        if (!fine) tl.to(words, { color: ink, duration: 0.12, stagger: 0.07, ease: ease.out }, 0.1);
-        else tl.to({}, { duration: 1 });
+        // The headline turns to ink one line per scroll step (owner)
+        const lines = q<HTMLElement>("[data-orbit-line]");
+        gsap.set(lines, { color: from });
+        tl.to(lines, { color: ink, duration: 0.16, stagger: 0.2, ease: ease.out }, 0.06);
         const pinST = tl.scrollTrigger!;
 
         // The bloom: the band's arrival (it slides up over the held steps strip)
@@ -147,15 +147,13 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
 
         const offs: (() => void)[] = [];
         if (fine) {
-          // Pointer on the headline: it fills in word by word and the ring draws closer
+          // Pointer on the headline: the ring draws closer
           if (title) {
             const enter = () => {
               nearTarget = 1;
-              gsap.to(words, { color: ink, duration: 0.5, stagger: 0.05, ease: ease.out, overwrite: "auto" });
             };
             const leave = () => {
               nearTarget = 0;
-              gsap.to(words, { color: from, duration: 0.6, stagger: 0.03, ease: ease.out, overwrite: "auto" });
             };
             title.addEventListener("pointerenter", enter);
             title.addEventListener("pointerleave", leave);
@@ -193,7 +191,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         return () => {
           tone.scrollTrigger?.kill();
           tone.kill();
-          gsap.set(section, { clearProps: "backgroundColor" });
+          gsap.set(document.body, { clearProps: "--band-tone" });
           gsap.ticker.remove(tick);
           visible.kill();
           lagST.kill();
@@ -204,7 +202,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
           offs.forEach((off) => off());
           // never clearProps "all": the items carry React inline positions
           gsap.set([items, inners, q("[data-orbit-tilt]")], { clearProps: "transform" });
-          gsap.set(words, { clearProps: "color" });
+          gsap.set(lines, { clearProps: "color" });
           ScrollTrigger.refresh();
         };
       });
