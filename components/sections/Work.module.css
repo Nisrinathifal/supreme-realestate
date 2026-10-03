@@ -40,11 +40,11 @@
   box-shadow: var(--shadow-soft); pointer-events: none;
 }
 
-/* Desktop deck (WorkMotion sets data-deck): the deck is one viewport tall and pinned; cards sit on top of each other,
-   the ones still to come shorter by one strip each so they wait below the active card */
+/* Desktop deck (WorkMotion sets data-deck): the deck is one viewport tall and pinned; the cards lie on top of each
+   other, the first on top, the ones to come stepped down beneath it */
 @media (min-width: 768px) {
   .deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 760px); display: block; overflow: hidden; } /* the waiting cards end with the deck */
-  .deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - var(--behind, 0) * var(--peek)); }
+  .deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - (var(--count, 4) - 1) * var(--peek)); } /* all the same height; the stack steps them down by --peek */
 }
 
 @media (max-width: 767px) {

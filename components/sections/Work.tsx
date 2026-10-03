@@ -33,7 +33,7 @@ export function Work({ lang }: { lang: Lang }) {
         </div>
       </div>
       <WorkMotion>
-        <ol className={styles.deck} data-work-deck>
+        <ol className={styles.deck} data-work-deck style={{ "--count": n } as CSSProperties}>
           {c.work.items.map((item, i) => {
             const media = workCases[i];
             if (!media) return null;

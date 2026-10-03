@@ -67,14 +67,13 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         deck.setAttribute("data-deck", "");
         const peek = () => cssPx(deck, "--peek", 48);
         const top = () => cssPx(deck, "--stack-top", 88);
-        // Where card i waits: its top edge one strip per card still behind it above the deck's foot
-        const restY = (i: number) => deck.clientHeight - (n - i) * peek();
-        const restScale = (i: number) => 1 - 0.028 * (n - i);
-
-        gsap.set(cards, { transformPerspective: 1400, force3D: true });
+        const DEPTH = 34; // px of depth per step down the stack (the deck has perspective)
+        // The stack as in the reference: the first card on top, the ones to come beneath it, each a step lower and a
+        // step deeper, so they show as strips under its foot
+        gsap.set(deck, { perspective: 1400 });
+        cards.forEach((card, i) => gsap.set(card, { zIndex: n - i, y: () => i * peek(), z: -DEPTH * i, transformOrigin: "50% 100%", force3D: true }));
         cards.forEach((card, i) => {
           if (i === 0) return;
-          gsap.set(card, { y: () => restY(i), scale: () => restScale(i) });
           gsap.set(card.querySelector("[data-work-photos]"), { xPercent: 12 });
           gsap.set(card.querySelector("[data-work-note]"), { y: 24, opacity: 0 });
         });
@@ -90,23 +89,25 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             invalidateOnRefresh: true,
           },
         });
-        cards.forEach((card, i) => {
-          if (i === 0) return;
-          // The card on top is lifted away like a sheet of paper: pivoting on its foot, its top tips back and
-          // it rises out of the deck, above the next card, which comes up into its place meanwhile
-          const prev = cards[i - 1];
-          tl.set(prev, { zIndex: 50, transformOrigin: "50% 100%" }, i - 1)
-            .to(prev, { y: () => -deck.clientHeight * 1.15, rotationX: 16, scale: 0.97, duration: 1, ease: "power1.in" }, i - 1)
-            .to(card, { y: 0, scale: 1, duration: 1 }, i - 1)
-            .to(card.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i - 1 + 0.4)
-            .to(card.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, i - 1 + 0.5);
-        });
+        for (let i = 0; i < n - 1; i++) {
+          // The card on top is lifted away like a sheet of paper (rising, its top tipping back) ...
+          tl.to(cards[i], { y: () => -deck.clientHeight * 1.3, rotationX: 14, duration: 1, ease: "power1.in" }, i);
+          // ... while every card beneath comes up one step, the next one into its place
+          for (let j = i + 1; j < n; j++) {
+            const step = j - i - 1;
+            tl.to(cards[j], { y: () => step * peek(), z: -DEPTH * step, duration: 1, ease: "power1.inOut" }, i);
+          }
+          const next = cards[i + 1];
+          tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i + 0.4)
+            .to(next.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, i + 0.5);
+        }
 
         return () => {
           tl.scrollTrigger?.kill();
           tl.kill();
           deck.removeAttribute("data-deck");
           gsap.set(cards, { clearProps: "transform,zIndex,transformOrigin" }); // not "all": the cards carry inline custom properties
+          gsap.set(deck, { clearProps: "perspective" });
           gsap.set(q("[data-work-photos], [data-work-note]"), { clearProps: "transform,opacity" });
           ScrollTrigger.refresh();
         };
