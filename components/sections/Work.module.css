@@ -43,7 +43,7 @@
 /* Desktop deck (WorkMotion sets data-deck): the deck is one viewport tall and pinned; the cards lie on top of each
    other, the first on top, the ones to come stepped down beneath it */
 @media (min-width: 768px) {
-  .deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 760px); display: block; overflow: hidden; } /* the waiting cards end with the deck */
+  .deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 760px); display: block; clip-path: inset(-100svh -40px 0 -40px); } /* the waiting cards end with the deck's foot; a lifted card may rise above it */
   .deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - (var(--count, 4) - 1) * var(--peek)); } /* all the same height; the stack steps them down by --peek */
 }
 

@@ -71,7 +71,10 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         // The stack as in the reference: the first card on top, the ones to come beneath it, each a step lower and a
         // step deeper, so they show as strips under its foot
         gsap.set(deck, { perspective: 1400 });
-        cards.forEach((card, i) => gsap.set(card, { zIndex: n - i, y: () => i * peek(), z: -DEPTH * i, transformOrigin: "50% 100%", force3D: true }));
+        cards.forEach((card, i) => {
+          gsap.set(card, { zIndex: n - i, y: () => i * peek(), z: -DEPTH * i, transformOrigin: "50% 100%", force3D: true });
+          gsap.set(card.querySelector("article"), { transformOrigin: "50% 100%", transformPerspective: 1200, force3D: true });
+        });
         cards.forEach((card, i) => {
           if (i === 0) return;
           gsap.set(card.querySelector("[data-work-photos]"), { xPercent: 12 });
@@ -90,8 +93,25 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           },
         });
         for (let i = 0; i < n - 1; i++) {
-          // The card on top is lifted away like a sheet of paper (rising, its top tipping back) ...
-          tl.to(cards[i], { y: () => -deck.clientHeight * 1.3, rotationX: 14, duration: 1, ease: "power1.in" }, i);
+          // The card on top is lifted away like a sheet of paper: it tips back first (about 30°, still low), then
+          // flies up, and settles to a lighter tilt as it leaves; its contents bend a little more than the card
+          const h = () => deck.clientHeight;
+          tl.to(
+            cards[i],
+            {
+              keyframes: {
+                "0%": { rotationX: 0, y: 0 },
+                "40%": { rotationX: 30, y: () => -h() * 0.22 },
+                "100%": { rotationX: 12, y: () => -h() * 1.45 },
+                easeEach: "power1.inOut",
+              },
+              duration: 1,
+              ease: "none",
+            },
+            i,
+          );
+          const inner = cards[i].querySelector<HTMLElement>("article");
+          if (inner) tl.to(inner, { rotationX: 14, y: -28, duration: 0.5, ease: "power1.out" }, i);
           // ... while every card beneath comes up one step, the next one into its place
           for (let j = i + 1; j < n; j++) {
             const step = j - i - 1;
@@ -107,6 +127,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           tl.kill();
           deck.removeAttribute("data-deck");
           gsap.set(cards, { clearProps: "transform,zIndex,transformOrigin" }); // not "all": the cards carry inline custom properties
+          gsap.set(q("[data-work-card] article"), { clearProps: "transform,transformOrigin" });
           gsap.set(deck, { clearProps: "perspective" });
           gsap.set(q("[data-work-photos], [data-work-note]"), { clearProps: "transform,opacity" });
           ScrollTrigger.refresh();
