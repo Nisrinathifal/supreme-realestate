@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { MediaFrame } from "@/components/ui/MediaFrame";
+import { MicroLabel } from "@/components/ui/MicroLabel";
 import { workCases } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { pathFor, type Lang } from "@/content/routes";
@@ -11,7 +12,7 @@ import styles from "./Work.module.css";
 const tones = [`inverse ${styles.toneInk}`, styles.toneSky, `inverse ${styles.toneMoss}`, styles.toneLime];
 
 /**
- * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a two-line heading, then four cases as
+ * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a label and a heading, then four cases as
  * coloured cards. Each card: title, index, body, a note on what the photographs show, three photographs and one link
  * covering the whole card, whose pill follows the pointer anywhere on the card. The band follows the intro in the flow; its heading and first card settle as
  * they come into view, scrubbed; on desktop the deck is then pinned and each next card rises over the current one
@@ -24,10 +25,12 @@ export function Work({ lang }: { lang: Lang }) {
   return (
     <section className={`section ${styles.work}`} data-work aria-labelledby="work-title">
       <div className="container">
-        <h2 id="work-title" className={styles.heading} data-work-heading>
-          <span className={styles.headingMuted}>{c.work.label}</span>
-          <span className={styles.headingInk}>{c.work.title}</span>
-        </h2>
+        <div className={styles.heading} data-work-heading>
+          <MicroLabel className={styles.label}>{c.work.label}</MicroLabel>
+          <h2 id="work-title" className={styles.title2}>
+            {c.work.title}
+          </h2>
+        </div>
       </div>
       <WorkMotion>
         <ol className={styles.deck} data-work-deck>

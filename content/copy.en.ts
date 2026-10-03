@@ -67,7 +67,7 @@ export const en: Copy = {
   // Projects: concept 2026-10-02, anonymised cases, all EN draft until approved.
   work: {
     intro: [draft("See what"), draft("we've"), draft("transformed.")],
-    label: draft("What we deliver."),
+    label: draft("What we deliver"),
     title: draft("A selection, from old to valuable."),
     cta: draft("Request the documentation"),
     items: [

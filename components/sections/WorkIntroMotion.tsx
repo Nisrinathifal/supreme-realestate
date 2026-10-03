@@ -13,7 +13,7 @@ const RING = { near: 0.68, far: 1 }; // ring size with the pointer on the headli
 const SMOOTH = 0.08; // per-frame lerp of the driven values (on top of Lenis)
 
 /** How far each mascot lags behind the headline once the band scrolls on (its depth), as a share of the stage. */
-const LAG = [0.34, 0.2, 0.4, 0.24, 0.36, 0.18, 0.3];
+const LAG = [0.24, 0.14, 0.28, 0.17, 0.26, 0.12, 0.21];
 
 /**
  * After the reference recordings. The mascots are always a ring around the headline. Left alone the ring turns

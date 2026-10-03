@@ -1,12 +1,8 @@
-/* Paper band after the intro: a centred two-line heading, then the deck of cards */
-.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: var(--s-9); padding-bottom: var(--section-y); background: var(--surface); } /* white, continuing the intro */
-.heading {
-  margin: 0 auto var(--s-8); display: flex; flex-direction: column; align-items: center; text-align: center;
-  font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.05;
-  font-size: var(--fs-h3);
-}
-.headingMuted { color: var(--muted); }
-.headingInk { font-size: var(--fs-statement); }
+/* White band after the intro: a centred label and heading, then the deck of cards */
+.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: var(--section-y); padding-bottom: var(--section-y); background: var(--surface); } /* room above: the mascots lag into this band */ /* white, continuing the intro */
+.heading { margin: 0 auto var(--s-9); display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
+.label { color: var(--muted); }
+.title2 { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-statement); text-wrap: balance; }
 
 /* Static layout: the cards one after another. The deck is about 62% of the frame (a quarter wider than the reference, owner), not the container */
 .deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(780px, 62vw)); display: flex; flex-direction: column; gap: var(--s-4); }
@@ -66,5 +62,5 @@
   .gallery { margin-right: calc(-1 * var(--s-5)); }
   .photo { flex-basis: 46vw; }
   .pill { display: none; }
-  .heading { margin-bottom: var(--s-7); }
+  .heading { margin-bottom: var(--s-7); gap: var(--s-3); }
 }
