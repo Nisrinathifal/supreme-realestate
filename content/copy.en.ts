@@ -64,17 +64,37 @@ export const en: Copy = {
     ],
   },
   // Sky band: owner concept 2026-10-01 (drafts until approved). The seventh card completes the arc.
-  // Work: intro (concept 2026-10-02) and the collaboration stack (owner brief 2026-10-03), all EN draft until approved.
+  // Projects: concept 2026-10-02, anonymised cases, all EN draft until approved.
   work: {
     intro: [draft("See what"), draft("we've"), draft("transformed.")],
-    label: draft("Collaborators"),
-    title: draft("Built through trusted collaboration."),
-    cards: [
-      { index: "01", label: draft("Development"), title: "Supreme Real Estate" },
-      { index: "02", label: draft("Architecture"), title: draft("Architects") },
-      { index: "03", label: draft("Construction"), title: draft("Builders") },
-      { index: "04", label: draft("Interior & design"), title: draft("Designers") },
-      { index: "05", label: draft("Expertise"), title: draft("Partners") },
+    label: draft("What we deliver"),
+    title: draft("A selection, from old to valuable."),
+    cta: draft("Request the documentation"),
+    items: [
+      {
+        index: "01",
+        title: draft("A home re-planned around the light"),
+        body: draft("An existing home whose plan no longer matched the way people live. We rethought the layout around a bright kitchen and gave every room a clear purpose."),
+        note: draft("Kitchen with an island, bedroom under a skylight, bathroom with black basins."),
+      },
+      {
+        index: "02",
+        title: draft("Dark wood and warm light on a compact plan"),
+        body: draft("A compact home where every centimetre counts. A tall kitchen wall in dark wood, brass details and a calm bathroom turn little space into a grown-up home."),
+        note: draft("Kitchen with a wooden bar, brass tap by a round mirror, living room with wide windows."),
+      },
+      {
+        index: "03",
+        title: draft("Stone, brass and a bedroom under the roof"),
+        body: draft("A building whose attic stayed unused for years. The floor was brought into the home and finished in natural stone and brass: materials that improve with time."),
+        note: draft("Kitchen with a marble worktop, bathroom in natural stone, bedroom under the roof."),
+      },
+      {
+        index: "04",
+        title: draft("Room to breathe, from shell to turnkey"),
+        body: draft("Generous rooms given back their proportions. An open kitchen on the living room, a calm bathroom and a bedroom with a view, delivered turnkey as a place to live."),
+        note: draft("Living room with an open kitchen, bathroom with a round mirror, bedroom with a view."),
+      },
     ],
   },
   sky: {

@@ -155,16 +155,43 @@ export const orbitCards: ImageAsset[] = [
 ];
 
 /**
- * Collaboration boards (owner-supplied renders, 2026-10-03, the same five images as the orbit cards with the word
- * cropped off): the picture half of each board in the stack. Generated images, no real place.
+ * Projects (concept 2026-10-02): four anonymised cases, three interiors each from the owner's archive under neutral
+ * names (work-a..d). Interiors only: no facades, names, addresses or figures (PRD §6.2). Alt text says what is visible.
  */
-const board = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
-export const workBoards: ImageAsset[] = [
-  board("board-house-01", 908, 608, "Gevels in avondlicht", "Facades in evening light"),
-  board("board-architects-01", 901, 729, "Maquette en tekeningen", "A model and drawings"),
-  board("board-builders-01", 932, 760, "Twee bouwers op een werk", "Two builders on site"),
-  board("board-designers-01", 933, 760, "Ontwerpers bij een scherm", "Designers at a screen"),
-  board("board-partners-01", 935, 760, "Een handdruk boven een maquette", "A handshake over a model"),
+const work = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
+export const workCases: { id: string; photos: ImageAsset[] }[] = [
+  {
+    id: "a",
+    photos: [
+      work("work-a-01", 3000, 2000, "Lichte woonkeuken met kookeiland", "A bright kitchen with an island"),
+      work("work-a-02", 3000, 2000, "Slaapkamer met dakraam", "A bedroom under a skylight"),
+      work("work-a-03", 1333, 2000, "Badkamer met zwarte wastafels", "A bathroom with black basins"),
+    ],
+  },
+  {
+    id: "b",
+    photos: [
+      work("work-b-01", 3000, 2000, "Donkere keuken met houten bar", "A dark kitchen with a wooden bar"),
+      work("work-b-02", 1333, 2000, "Messing kraan bij een ronde spiegel", "A brass tap by a round mirror"),
+      work("work-b-03", 3000, 2000, "Woonkamer met brede ramen", "A living room with wide windows"),
+    ],
+  },
+  {
+    id: "c",
+    photos: [
+      work("work-c-01", 2160, 1440, "Keuken met marmeren werkblad", "A kitchen with a marble worktop"),
+      work("work-c-02", 2160, 1440, "Badkamer in natuursteen", "A bathroom in natural stone"),
+      work("work-c-03", 2160, 1440, "Slaapkamer onder het dak", "A bedroom under the roof"),
+    ],
+  },
+  {
+    id: "d",
+    photos: [
+      work("work-d-01", 2160, 1440, "Woonkamer met open keuken", "A living room with an open kitchen"),
+      work("work-d-02", 2158, 1440, "Badkamer met ronde spiegel", "A bathroom with a round mirror"),
+      work("work-d-03", 2158, 1440, "Slaapkamer met uitzicht", "A bedroom with a view"),
+    ],
+  },
 ];
 
 /** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */

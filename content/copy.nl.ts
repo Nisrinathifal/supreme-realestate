@@ -63,17 +63,37 @@ export const nl: Copy = {
       { index: "03", title: draft("Opleveren"), body: draft("Elke woning turnkey opleveren als een plek om te wonen.") },
     ],
   },
-  // Work: intro (concept 2026-10-02) and the collaboration stack (owner brief 2026-10-03), all NL draft until approved.
+  // Projects: concept 2026-10-02, anonymised cases, all NL draft until approved.
   work: {
     intro: [draft("Bekijk wat"), draft("wij hebben"), draft("getransformeerd.")],
-    label: draft("Samenwerking"),
-    title: draft("Gebouwd op vertrouwde samenwerking."),
-    cards: [
-      { index: "01", label: draft("Ontwikkeling"), title: "Supreme Real Estate" },
-      { index: "02", label: draft("Architectuur"), title: draft("Architecten") },
-      { index: "03", label: draft("Bouw"), title: draft("Bouwers") },
-      { index: "04", label: draft("Interieur & ontwerp"), title: draft("Ontwerpers") },
-      { index: "05", label: draft("Expertise"), title: draft("Partners") },
+    label: draft("Wat wij opleveren"),
+    title: draft("Een selectie, van oud naar waardevol."),
+    cta: draft("Vraag de documentatie aan"),
+    items: [
+      {
+        index: "01",
+        title: draft("Een woning, opnieuw ingedeeld rond het licht"),
+        body: draft("Een bestaande woning waarvan de plattegrond niet meer paste bij hoe er gewoond wordt. Wij hebben de indeling herzien rond een lichte woonkeuken en elke ruimte een duidelijke functie gegeven."),
+        note: draft("Woonkeuken met kookeiland, slaapkamer onder een dakraam, badkamer met zwarte wastafels."),
+      },
+      {
+        index: "02",
+        title: draft("Donker hout en warm licht op een compacte plattegrond"),
+        body: draft("Een compacte woning waarin elke centimeter telt. Een hoge keukenwand in donker hout, messing details en een rustige badkamer maken van weinig ruimte een volwassen woning."),
+        note: draft("Keuken met houten bar, messing kraan bij een ronde spiegel, woonkamer met brede ramen."),
+      },
+      {
+        index: "03",
+        title: draft("Steen, messing en een slaapkamer onder het dak"),
+        body: draft("Een pand waarin de zolder jarenlang ongebruikt bleef. De verdieping is bij de woning getrokken en afgewerkt in natuursteen en messing: materialen die mooier worden met de tijd."),
+        note: draft("Keuken met marmeren werkblad, badkamer in natuursteen, slaapkamer onder het dak."),
+      },
+      {
+        index: "04",
+        title: draft("Ruimte om te ademen, van casco tot instapklaar"),
+        body: draft("Royale kamers die hun maat terugkregen. Een open keuken aan de woonkamer, een rustige badkamer en een slaapkamer met uitzicht, turnkey opgeleverd als een plek om te wonen."),
+        note: draft("Woonkamer met open keuken, badkamer met ronde spiegel, slaapkamer met uitzicht."),
+      },
     ],
   },
   // Sky band: owner concept 2026-10-01, NL draft until approved.
