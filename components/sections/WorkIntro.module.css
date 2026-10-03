@@ -1,12 +1,12 @@
-/* White viewport: the ring of mascots behind and in front of the headline */
-.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; background: var(--surface); color: var(--ink); }
+/* Sky-mist viewport (white → Sky mist as it comes in, with JS): the ring of cards and mascots around the headline */
+.intro { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; background: var(--panel-sky); color: var(--ink); }
 .intro > * { grid-area: 1 / 1; }
 .stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
 /* each item: centred on its point of the ring; size scales with the viewport (cards a little larger than mascots) */
 .item { position: absolute; width: calc(var(--size) * var(--s, 1)); translate: -50% -50%; z-index: 1; pointer-events: auto; }
 .card { --size: clamp(96px, 12.5vw, 196px); }
 .mascot { --size: clamp(64px, 8.5vw, 132px); }
-.card .image img { border-radius: var(--r-md); box-shadow: var(--shadow-soft); }
+.card .image img { border-radius: var(--r-sm); box-shadow: var(--shadow-soft); }
 .front { z-index: 3; }
 .inner { will-change: transform; transform-origin: 50% 50%; }
 .tilt { transform-style: preserve-3d; }

@@ -142,13 +142,12 @@ export const mascots: ImageAsset[] = [
 ];
 
 /**
- * Orbit cards (owner-supplied renders, 2026-10-03): five square cards that circle the projects headline between the
- * mascots, each with its word on it (Supreme, Architects, Builders, Partners, Designers). Cut from their black
- * background with rounded corners; generated images, no real place. Decorative in the page.
+ * Orbit cards (owner-supplied renders, 2026-10-03): four square cards that circle the projects headline between the
+ * mascots, each with its word on it (Architects, Builders, Partners, Designers). Cut from their black background
+ * with a small corner radius; generated images, no real place. Decorative in the page.
  */
 const card = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alpha: true, alt: { nl, en } });
 export const orbitCards: ImageAsset[] = [
-  card("card-house-01", 916, 805, "Kaart: gevels in avondlicht", "Card: facades in evening light"),
   card("card-architects-01", 909, 964, "Kaart: maquette en tekeningen", "Card: a model and drawings"),
   card("card-builders-01", 940, 1004, "Kaart: twee bouwers op een werk", "Card: two builders on site"),
   card("card-partners-01", 943, 1005, "Kaart: een handdruk boven een maquette", "Card: a handshake over a model"),

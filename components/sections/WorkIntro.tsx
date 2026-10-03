@@ -7,10 +7,10 @@ import { WorkIntroMotion } from "./WorkIntroMotion";
 import styles from "./WorkIntro.module.css";
 
 /**
- * The ring: the five cards and five of the mascots, alternating, evenly spaced from the top. Each item has a radius
+ * The ring: the four cards and four of the mascots, alternating, evenly spaced from the top. Each item has a radius
  * factor and a size factor, and sits in front of or behind the headline by turns.
  */
-const COUNT = 10;
+const COUNT = 8;
 const ring = Array.from({ length: COUNT }, (_, i) => ({
   a: -90 + (360 / COUNT) * i,
   k: i % 4 === 1 ? 0.94 : i % 4 === 3 ? 1.04 : 1,
@@ -19,12 +19,13 @@ const ring = Array.from({ length: COUNT }, (_, i) => ({
 }));
 const RX = 39; // % of the stage width
 const RY = 37; // % of the stage height
-/** Cards and mascots by turns: even places a card, odd places a mascot (five of the seven). */
+/** Cards and mascots by turns: even places a card, odd places a mascot (four of the seven). */
 const orbit = ring.map((_, i) => (i % 2 === 0 ? { kind: "card" as const, image: orbitCards[i / 2] } : { kind: "mascot" as const, image: mascots[(i - 1) / 2] }));
 
 /**
  * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a white viewport with the headline
- * in the middle and, on a ring around it, the five owner-supplied cards and five mascots by turns. The CSS places them; WorkIntroMotion (after the reference
+ * in the middle and, on a ring around it, the four owner-supplied cards and four mascots by turns. The band's tone
+ * moves from white to Sky mist as it comes in (WorkIntroMotion), and the projects band moves back to white. The CSS places them; WorkIntroMotion (after the reference
  * recordings) turns the ring slowly when the page rests and at the scrolling pace when it scrolls, draws the ring
  * closer and fills the headline in word by word under the pointer, and lets the mascots lag behind as the band
  * scrolls on into the projects. Hover tilts a

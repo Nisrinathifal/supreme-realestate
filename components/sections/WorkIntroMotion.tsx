@@ -10,13 +10,16 @@ const PIN = 1.4; // viewports the band stays pinned
 const REVOLUTION = 80; // seconds for one turn of the ring on its own
 const SCROLL_TURN = 0.0016; // radians per scrolled pixel: the turn follows the scrolling pace
 const RING = { near: 0.68, far: 1 }; // ring size with the pointer on the headline (closer) and at rest
+const BLOOM = { ring: 0.06, size: 0.3, title: 0.3 }; // as the band comes in: the ring, the items and the headline start from here
 const SMOOTH = 0.08; // per-frame lerp of the driven values (on top of Lenis)
 
 /** How far each mascot lags behind the headline once the band scrolls on (its depth), as a share of the stage. */
 const LAG = [0.24, 0.14, 0.28, 0.17, 0.26, 0.12, 0.21];
 
 /**
- * After the reference recordings. The mascots are always a ring around the headline. Left alone the ring turns
+ * After the reference recordings. As the band comes in, its tone moves from white to Sky mist and the ring blooms out
+ * of the centre: the items start small and tight behind the dim headline and open out to the ring, growing, while the
+ * headline comes up to its grey. The items are always a ring around the headline. Left alone the ring turns
  * slowly on its own, each mascot leaning a little as it goes round; while the page scrolls the turn follows the
  * scrolling pace (so much turn per scrolled pixel, smoothed on top of Lenis); with the pointer on the headline the
  * headline fills in from grey to ink word by word and the ring draws closer, still turning slowly. On a coarse
@@ -48,6 +51,14 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         gsap.set(items, { force3D: true });
         gsap.set(inners, { force3D: true, transformOrigin: "50% 50%" });
 
+        // The band's tone: white as it slides in, Sky mist once it has arrived (the next band goes back to white)
+        const tokens = getComputedStyle(document.documentElement);
+        const tone = gsap.fromTo(
+          section,
+          { backgroundColor: tokens.getPropertyValue("--surface").trim() },
+          { backgroundColor: tokens.getPropertyValue("--panel-sky").trim(), ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "top top", scrub: true, invalidateOnRefresh: true } },
+        );
+
         const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
         // Pinned; on a coarse pointer the headline fills in with the scroll (no hover there)
         const tl = gsap.timeline({
@@ -65,6 +76,9 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         else tl.to({}, { duration: 1 });
         const pinST = tl.scrollTrigger!;
 
+        // The bloom: the band's arrival (it slides up over the held steps strip)
+        const enterST = ScrollTrigger.create({ trigger: section, start: "top bottom", end: "top top", invalidateOnRefresh: true });
+        const title = q<HTMLElement>("[data-orbit-title]")[0];
         // After the pin: how far the band has scrolled on (the lag)
         const lagST = ScrollTrigger.create({ trigger: section, start: () => pinST.end, end: () => pinST.end + window.innerHeight, invalidateOnRefresh: true });
 
@@ -83,19 +97,24 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         let lastY = window.scrollY;
         let near = 0; // 1 with the pointer on the headline
         let nearTarget = 0;
+        let enter = 0; // smoothed arrival, 0 → 1 as the band slides in
         let lag = 0;
+        const easeOut = (p: number) => 1 - Math.pow(1 - p, 3);
         const place = () => {
           const turn = (t / REVOLUTION) * Math.PI * 2 + scrolled;
-          const ring = RING.far + (RING.near - RING.far) * near;
+          const bloom = easeOut(enter);
+          const ring = (BLOOM.ring + (1 - BLOOM.ring) * bloom) * (RING.far + (RING.near - RING.far) * near);
+          const size = BLOOM.size + (1 - BLOOM.size) * bloom;
           items.forEach((el, i) => {
             const { a, k } = base[i];
             gsap.set(el, {
               x: (Math.cos(a + turn) * ring - Math.cos(a)) * rx * k,
               y: (Math.sin(a + turn) * ring - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
             });
-            // a slight lean as it goes round, each mascot out of phase
-            gsap.set(inners[i], { rotation: 7 * Math.sin(turn * 1.5 + i * 0.9) });
+            // a slight lean as it goes round, each item out of phase
+            gsap.set(inners[i], { scale: size, rotation: 7 * Math.sin(turn * 1.5 + i * 0.9) });
           });
+          if (title) gsap.set(title, { opacity: BLOOM.title + (1 - BLOOM.title) * bloom });
         };
         const tick = (_time: number, dt: number) => {
           t += dt / 1000;
@@ -104,6 +123,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
           lastY = y;
           scrolled += velocity * SCROLL_TURN;
           near += (nearTarget - near) * SMOOTH;
+          enter += (enterST.progress - enter) * SMOOTH * 1.5;
           lag += (lagST.progress - lag) * SMOOTH;
           place();
         };
@@ -116,17 +136,18 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
             measure();
             lastY = window.scrollY;
             lag = lagST.progress;
+            enter = enterST.progress;
             place();
           },
         });
         lag = lagST.progress;
+        enter = enterST.progress;
         place();
         if (visible.isActive) gsap.ticker.add(tick);
 
         const offs: (() => void)[] = [];
         if (fine) {
           // Pointer on the headline: it fills in word by word and the ring draws closer
-          const title = q<HTMLElement>("[data-orbit-title]")[0];
           if (title) {
             const enter = () => {
               nearTarget = 1;
@@ -170,9 +191,14 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         }
 
         return () => {
+          tone.scrollTrigger?.kill();
+          tone.kill();
+          gsap.set(section, { clearProps: "backgroundColor" });
           gsap.ticker.remove(tick);
           visible.kill();
           lagST.kill();
+          enterST.kill();
+          if (title) gsap.set(title, { clearProps: "opacity" });
           tl.scrollTrigger?.kill();
           tl.kill();
           offs.forEach((off) => off());

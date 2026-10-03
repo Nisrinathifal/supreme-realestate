@@ -5,8 +5,8 @@ import { useRef } from "react";
 import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Arrival: as the band slides up over the pinned intro, the heading, the first card and its photographs come up and
- * settle, scrubbed by the same scroll (the move that starts in the intro ends here). Desktop deck after the reference:
+ * Arrival: the band's tone moves from the intro's Sky mist to white and the heading, the first card and its
+ * photographs come up and settle, scrubbed by the scroll. Desktop deck after the reference:
  * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
  * little narrower), and each next card rises to the top and grows to full width over the current one while its
  * photographs slide in from the right and its note settles, scrubbed. On a fine pointer the card's pill follows the
@@ -29,6 +29,13 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const first = q<HTMLElement>("[data-work-card]")[0];
         if (!section || !heading || !first) return;
         const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
+        // The band's tone: it arrives in the intro's Sky mist and settles to white
+        const tokens = getComputedStyle(document.documentElement);
+        const tone = gsap.fromTo(
+          section,
+          { backgroundColor: tokens.getPropertyValue("--panel-sky").trim() },
+          { backgroundColor: tokens.getPropertyValue("--surface").trim(), ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "top 30%", scrub: true, invalidateOnRefresh: true } },
+        );
         gsap.set(heading, { y: 56, opacity: 0 });
         gsap.set(first, { y: 96, scale: 0.94 });
         if (firstPhotos) gsap.set(firstPhotos, { xPercent: 10 });
@@ -40,6 +47,9 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           .to(first, { y: 0, scale: 1, duration: 0.8 }, 0.15)
           .to(firstPhotos, { xPercent: 0, duration: 0.7 }, 0.3);
         return () => {
+          tone.scrollTrigger?.kill();
+          tone.kill();
+          gsap.set(section, { clearProps: "backgroundColor" });
           tl.scrollTrigger?.kill();
           tl.kill();
           gsap.set([heading, first, firstPhotos], { clearProps: "transform,opacity" });
