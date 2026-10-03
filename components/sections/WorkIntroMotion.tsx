@@ -6,15 +6,33 @@ import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 const RX = 0.39; // ring radii as a share of the stage, same as the CSS placement
 const RY = 0.37;
-const DRIFT = 26; // degrees every mascot travels along the ring over the pinned scroll
-const PIN = 1.5; // viewports the band stays pinned
+const PIN = 1.5; // extra viewports the band stays pinned (section ≈ 250vh in all)
+
+/** Four stages of the pinned scroll, as shares of its progress. */
+const STAGE = { enter: [0, 0.25], compose: [0.25, 0.55], float: [0.55, 0.75], leave: [0.75, 1] } as const;
 
 /**
- * One scrubbed timeline over a pinned band, all transforms. The headline comes up one line per scroll step (each
- * line rises out of its own clip). Meanwhile every mascot drifts the same way along the ring: the ones in front move
- * outward and grow, the ones behind the headline come forward from a smaller, dimmer start (they reveal themselves).
- * When the pin ends the page scrolls on into the projects; nothing covers anything. On a fine pointer a mascot tilts
- * towards the cursor. Start states live here; reduced motion: no pin, no scrub, the full headline and the still ring.
+ * Per mascot, by its index on the ring: how it enters (diagonal, vertical or horizontal, from outside), where it
+ * settles (a small asymmetric shift from the CSS ring), how it floats (a few px, a degree or two) and how it leaves.
+ * Values in px are scaled by the stage so the choreography reads the same at any width.
+ */
+const ROLES = [
+  { enter: "diag", settle: { x: -0.02, y: 0.03, r: -2, s: 1.04 }, float: { y: 8, r: 1.5 }, leave: { y: -0.08 } },
+  { enter: "vert", settle: { x: 0.015, y: -0.02, r: 1.5, s: 0.97 }, float: { y: -10, r: -1 }, leave: { y: -0.12 } },
+  { enter: "horiz", settle: { x: 0.025, y: 0.015, r: 2.5, s: 1.02 }, float: { y: 6, r: 2 }, leave: { y: 0.06 } },
+  { enter: "diag", settle: { x: -0.015, y: -0.03, r: -1, s: 1.06 }, float: { y: -7, r: -2 }, leave: { y: 0.1 } },
+  { enter: "vert", settle: { x: 0.02, y: 0.02, r: 1, s: 0.95 }, float: { y: 11, r: 1 }, leave: { y: 0.08 } },
+  { enter: "horiz", settle: { x: -0.03, y: 0.01, r: -2.5, s: 1.03 }, float: { y: -9, r: 3 }, leave: { y: -0.06 } },
+  { enter: "diag", settle: { x: 0.01, y: -0.015, r: 2, s: 0.98 }, float: { y: 5, r: -1.5 }, leave: { y: 0.04 } },
+] as const;
+
+/**
+ * One scrubbed, pinned timeline (GSAP + ScrollTrigger, transforms only) in four stages, after the reference's
+ * "see more work" band: 0–25% the mascots come in from outside the viewport and the headline appears line by line;
+ * 25–55% they settle into an asymmetric composition framing the headline; 55–75% they float a few pixels and a degree
+ * or two; 75–100% they move outward, some up, some down, as the page carries on into the projects. Start states live
+ * here (the CSS ring is the composition reduced motion and no-JS show). On a fine pointer a mascot tilts towards the
+ * cursor.
  */
 export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -33,44 +51,75 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         const lines = q<HTMLElement>("[data-orbit-line]");
         if (!section || !stage || !items.length || !lines.length) return;
 
-        const base = items.map((el) => ({ a: (Number(el.dataset.angle) * Math.PI) / 180, k: Number(el.dataset.k) || 1, front: Number(el.dataset.front) === 1 }));
-        // Where a mascot ends: further along the ring; in front also further out, behind a touch closer in
-        const endX = (i: number) => {
-          const { a, k, front } = base[i];
-          const r = k * (front ? 1.4 : 1.02);
-          const a1 = a + (DRIFT * Math.PI) / 180;
-          return (Math.cos(a1) * r - Math.cos(a) * k) * stage.clientWidth * RX;
+        const W = () => stage.clientWidth;
+        const H = () => stage.clientHeight;
+        const base = items.map((el) => ({ a: (Number(el.dataset.angle) * Math.PI) / 180, k: Number(el.dataset.k) || 1 }));
+        const role = (i: number) => ROLES[i % ROLES.length];
+        // Outward unit direction of a mascot from the headline, in stage units
+        const out = (i: number) => ({ x: Math.cos(base[i].a), y: Math.sin(base[i].a) });
+        // Where it waits before entering: outside the ring in its own direction, partly off the viewport
+        const enterX = (i: number) => {
+          const d = out(i);
+          const r = role(i);
+          if (r.enter === "vert") return 0;
+          const dx = r.enter === "horiz" ? Math.sign(d.x) || 1 : d.x;
+          return dx * W() * 0.2;
         };
-        const endY = (i: number) => {
-          const { a, k, front } = base[i];
-          const r = k * (front ? 1.4 : 1.02);
-          const a1 = a + (DRIFT * Math.PI) / 180;
-          return (Math.sin(a1) * r - Math.sin(a) * k) * stage.clientHeight * RY;
+        const enterY = (i: number) => {
+          const d = out(i);
+          const r = role(i);
+          if (r.enter === "horiz") return 0;
+          const dy = r.enter === "vert" ? Math.sign(d.y) || -1 : d.y;
+          return dy * H() * 0.24;
         };
+        const settleX = (i: number) => role(i).settle.x * W();
+        const settleY = (i: number) => role(i).settle.y * H();
+        const leaveX = (i: number) => settleX(i) + out(i).x * W() * RX * 0.5;
+        const leaveY = (i: number) => settleY(i) + role(i).leave.y * H() + out(i).y * H() * RY * 0.25;
 
-        // Start states: the lines below their clips, the mascots behind the headline small and dim
+        // Start states: lines below their clips; mascots outside, dim, slightly turned and smaller
         gsap.set(lines, { yPercent: 110 });
-        items.forEach((el, i) => {
-          if (!base[i].front) gsap.set(inners[i], { scale: 0.72, opacity: 0.35 });
-        });
+        items.forEach((el, i) => gsap.set(el, { x: () => enterX(i), y: () => enterY(i) }));
+        inners.forEach((el, i) => gsap.set(el, { opacity: 0.35, scale: 0.9, rotation: (i % 2 ? 1 : -1) * (4 + (i % 3)) }));
 
         const tl = gsap.timeline({
-          defaults: { ease: "none" },
+          defaults: { ease: ease.inOut },
           scrollTrigger: {
             trigger: section,
             start: "top top",
             end: () => `+=${window.innerHeight * PIN}`,
             pin: true,
-            scrub: 0.8,
+            scrub: 1,
+            anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
-        // One line per step: 0–.14, .22–.36, .44–.58 of the pinned scroll
-        lines.forEach((line, i) => tl.to(line, { yPercent: 0, duration: 0.14, ease: ease.out }, i * 0.22));
+
+        // Stage 01: the headline one line per step, the mascots arrive one after another
+        lines.forEach((line, i) => tl.to(line, { yPercent: 0, duration: 0.07, ease: ease.out }, 0.02 + i * 0.07));
         items.forEach((el, i) => {
-          tl.to(el, { x: () => endX(i), y: () => endY(i), duration: 1 }, 0);
-          if (base[i].front) tl.to(inners[i], { scale: 1.16, rotation: 5, duration: 1, ease: ease.inOut }, 0);
-          else tl.to(inners[i], { scale: 1, opacity: 1, rotation: -3, duration: 0.6, ease: ease.inOut }, 0.1);
+          const at = STAGE.enter[0] + (i % ROLES.length) * 0.012;
+          tl.to(el, { x: 0, y: 0, duration: 0.2 }, at);
+          tl.to(inners[i], { opacity: 1, scale: 1, rotation: 0, duration: 0.2 }, at);
+        });
+
+        // Stage 02: the composition, each mascot its own shift, turn and size
+        items.forEach((el, i) => {
+          const r = role(i);
+          tl.to(el, { x: () => settleX(i), y: () => settleY(i), duration: STAGE.compose[1] - STAGE.compose[0] }, STAGE.compose[0]);
+          tl.to(inners[i], { rotation: r.settle.r, scale: r.settle.s, duration: STAGE.compose[1] - STAGE.compose[0] }, STAGE.compose[0]);
+        });
+
+        // Stage 03: suspended, a few pixels and a degree or two, scrubbed like everything else
+        inners.forEach((el, i) => {
+          const r = role(i);
+          tl.to(el, { y: r.float.y, rotation: r.settle.r + r.float.r, duration: STAGE.float[1] - STAGE.float[0], ease: "sine.inOut" }, STAGE.float[0]);
+        });
+
+        // Stage 04: outward, some up, some down, a little smaller, as the projects follow
+        items.forEach((el, i) => {
+          tl.to(el, { x: () => leaveX(i), y: () => leaveY(i), duration: STAGE.leave[1] - STAGE.leave[0] }, STAGE.leave[0]);
+          tl.to(inners[i], { scale: role(i).settle.s * 0.94, opacity: 0.7, duration: STAGE.leave[1] - STAGE.leave[0] }, STAGE.leave[0]);
         });
 
         // Hover: the mascot leans towards the pointer, on devices with a fine pointer only

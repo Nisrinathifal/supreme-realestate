@@ -21,9 +21,10 @@ const RY = 37; // % of the stage height
 
 /**
  * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a white viewport with the headline
- * in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion pins the band and
- * drives everything from the scroll: the headline appears one line per scroll step, the ring drifts and opens, the
- * mascots behind the headline reveal themselves; then the page simply scrolls on into the projects. Hover tilts a
+ * in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion pins the band for
+ * about 2.5 viewports and drives everything from the scroll in four stages: the mascots come in from outside while
+ * the headline appears line by line, settle into an asymmetric composition around it, float a little, then move
+ * outward as the page scrolls on into the projects. Hover tilts a
  * mascot towards the pointer. Reduced motion and no-JS: the full headline and the still ring. Slides up over the
  * held steps strip (`data-overlap`).
  */
