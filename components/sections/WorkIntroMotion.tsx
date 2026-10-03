@@ -7,19 +7,22 @@ import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 const RX = 0.39; // ring radii as a share of the stage, same as the CSS placement
 const RY = 0.37;
 const PIN = 1.4; // viewports the band stays pinned
-const REVOLUTION = 90; // seconds for one turn of the ring on its own (the first version's pace)
-const SCROLL_TURN = Math.PI / 2; // a quarter turn more over the pinned scroll
+const REVOLUTION = 80; // seconds for one turn of the ring on its own
+const SCROLL_TURN = 0.0016; // radians per scrolled pixel: the turn follows the scrolling pace
+const RING = { near: 0.68, far: 1 }; // ring size with the pointer on the headline (closer) and at rest
+const SMOOTH = 0.08; // per-frame lerp of the driven values (on top of Lenis)
 
 /** How far each mascot lags behind the headline once the band scrolls on (its depth), as a share of the stage. */
 const LAG = [0.34, 0.2, 0.4, 0.24, 0.36, 0.18, 0.3];
 
 /**
- * The ring stays a ring (owner, 2026-10-03): the mascots keep their formation and turn, slowly on their own as in
- * the first version and a quarter turn more with the pinned scroll, so scrolling and the ring feel joined. One
- * ticker places every mascot from its angle (positions from the stage size, so the ring follows a resize). While the
- * band is pinned the headline fills in from grey to ink word by word, scrubbed. After the pin each mascot lags behind
- * the headline at its own depth as the band scrolls on. Reduced motion: the still ring, the ink headline. On a fine
- * pointer a mascot tilts towards the cursor.
+ * After the reference recordings. The mascots are always a ring around the headline. Left alone the ring turns
+ * slowly on its own, each mascot leaning a little as it goes round; while the page scrolls the turn follows the
+ * scrolling pace (so much turn per scrolled pixel, smoothed on top of Lenis); with the pointer on the headline the
+ * headline fills in from grey to ink word by word and the ring draws closer, still turning slowly. On a coarse
+ * pointer the headline fills in with the pinned scroll instead. After the pin each mascot lags behind at its own
+ * depth as the band scrolls on. One ticker places everything (transforms only). Reduced motion: the still ring and
+ * the ink headline. On a fine pointer a mascot also tilts towards the cursor.
  */
 export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -34,6 +37,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         const q = gsap.utils.selector(root);
         const stage = q<HTMLElement>("[data-orbit]")[0];
         const items = q<HTMLElement>("[data-orbit-item]");
+        const inners = q<HTMLElement>("[data-orbit-inner]");
         const words = q<HTMLElement>("[data-orbit-word]");
         if (!section || !stage || !items.length || !words.length) return;
 
@@ -42,8 +46,10 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         const from = getComputedStyle(section).getPropertyValue("--reveal-from").trim() || ink;
         gsap.set(words, { color: from });
         gsap.set(items, { force3D: true });
+        gsap.set(inners, { force3D: true, transformOrigin: "50% 50%" });
 
-        // Pinned: the headline fills in with the scroll; the pin's progress also turns the ring (read by the ticker)
+        const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+        // Pinned; on a coarse pointer the headline fills in with the scroll (no hover there)
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
@@ -55,53 +61,89 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
             invalidateOnRefresh: true,
           },
         });
-        tl.to(words, { color: ink, duration: 0.12, stagger: 0.07, ease: ease.out }, 0.08);
+        if (!fine) tl.to(words, { color: ink, duration: 0.12, stagger: 0.07, ease: ease.out }, 0.1);
+        else tl.to({}, { duration: 1 });
         const pinST = tl.scrollTrigger!;
 
-        // After the pin: how far the band has scrolled on (read by the ticker for the lag)
-        const lagST = ScrollTrigger.create({
-          trigger: section,
-          start: () => pinST.end,
-          end: () => pinST.end + window.innerHeight,
-          scrub: 1.2,
-          invalidateOnRefresh: true,
-        });
+        // After the pin: how far the band has scrolled on (the lag)
+        const lagST = ScrollTrigger.create({ trigger: section, start: () => pinST.end, end: () => pinST.end + window.innerHeight, invalidateOnRefresh: true });
 
-        // The ring turns: its own slow turn plus the scroll's share; every mascot keeps its place on the ring
         let t = 0;
-        let rx = stage.clientWidth * RX;
-        let ry = stage.clientHeight * RY;
-        let h = stage.clientHeight;
+        let rx = 0;
+        let ry = 0;
+        let h = 0;
         const measure = () => {
           rx = stage.clientWidth * RX;
           ry = stage.clientHeight * RY;
           h = stage.clientHeight;
         };
-        const tick = (_time: number, dt: number) => {
-          t += dt / 1000;
-          const turn = (t / REVOLUTION) * Math.PI * 2 + pinST.progress * SCROLL_TURN;
-          const lag = lagST.progress;
+        measure();
+        let scrolled = 0; // turn added by the scrolling, in radians
+        let velocity = 0; // smoothed scroll speed, px per frame
+        let lastY = window.scrollY;
+        let near = 0; // 1 with the pointer on the headline
+        let nearTarget = 0;
+        let lag = 0;
+        const place = () => {
+          const turn = (t / REVOLUTION) * Math.PI * 2 + scrolled;
+          const ring = RING.far + (RING.near - RING.far) * near;
           items.forEach((el, i) => {
             const { a, k } = base[i];
             gsap.set(el, {
-              x: (Math.cos(a + turn) - Math.cos(a)) * rx * k,
-              y: (Math.sin(a + turn) - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
+              x: (Math.cos(a + turn) * ring - Math.cos(a)) * rx * k,
+              y: (Math.sin(a + turn) * ring - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
             });
+            // a slight lean as it goes round, each mascot out of phase
+            gsap.set(inners[i], { rotation: 7 * Math.sin(turn * 1.5 + i * 0.9) });
           });
+        };
+        const tick = (_time: number, dt: number) => {
+          t += dt / 1000;
+          const y = window.scrollY;
+          velocity += (y - lastY - velocity) * SMOOTH * 2;
+          lastY = y;
+          scrolled += velocity * SCROLL_TURN;
+          near += (nearTarget - near) * SMOOTH;
+          lag += (lagST.progress - lag) * SMOOTH;
+          place();
         };
         const visible = ScrollTrigger.create({
           trigger: section,
           start: "top bottom",
           end: () => pinST.end + window.innerHeight * 1.2,
           onToggle: (self) => (self.isActive ? gsap.ticker.add(tick) : gsap.ticker.remove(tick)),
-          onRefresh: measure,
+          onRefresh: () => {
+            measure();
+            lastY = window.scrollY;
+            lag = lagST.progress;
+            place();
+          },
         });
+        lag = lagST.progress;
+        place();
         if (visible.isActive) gsap.ticker.add(tick);
 
-        // Hover: the mascot leans towards the pointer, on devices with a fine pointer only
-        const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
         const offs: (() => void)[] = [];
         if (fine) {
+          // Pointer on the headline: it fills in word by word and the ring draws closer
+          const title = q<HTMLElement>("[data-orbit-title]")[0];
+          if (title) {
+            const enter = () => {
+              nearTarget = 1;
+              gsap.to(words, { color: ink, duration: 0.5, stagger: 0.05, ease: ease.out, overwrite: "auto" });
+            };
+            const leave = () => {
+              nearTarget = 0;
+              gsap.to(words, { color: from, duration: 0.6, stagger: 0.03, ease: ease.out, overwrite: "auto" });
+            };
+            title.addEventListener("pointerenter", enter);
+            title.addEventListener("pointerleave", leave);
+            offs.push(() => {
+              title.removeEventListener("pointerenter", enter);
+              title.removeEventListener("pointerleave", leave);
+            });
+          }
+          // Pointer on a mascot: it leans towards the cursor
           q<HTMLElement>("[data-orbit-tilt]").forEach((el) => {
             gsap.set(el, { transformPerspective: 700 });
             const rX = gsap.quickTo(el, "rotationX", { duration: 0.6, ease: ease.out });
@@ -135,7 +177,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
           tl.kill();
           offs.forEach((off) => off());
           // never clearProps "all": the items carry React inline positions
-          gsap.set([items, q("[data-orbit-tilt]")], { clearProps: "transform" });
+          gsap.set([items, inners, q("[data-orbit-tilt]")], { clearProps: "transform" });
           gsap.set(words, { clearProps: "color" });
           ScrollTrigger.refresh();
         };
