@@ -88,13 +88,13 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           scrollTrigger: {
             trigger: deck,
             start: () => `top ${top()}`,
-            end: () => `+=${(n - 1) * window.innerHeight * 0.85}`,
+            end: () => `+=${n * window.innerHeight * 0.85}`,
             pin: true,
             scrub: 0.8,
             invalidateOnRefresh: true,
           },
         });
-        for (let i = 0; i < n - 1; i++) {
+        for (let i = 0; i < n; i++) {
           // The card on top is lifted away like a sheet of paper: it tips back first (about 30°, still low), then
           // flies up, and settles to a lighter tilt as it leaves; its contents bend a little more than the card
           const h = () => deck.clientHeight;
@@ -121,8 +121,10 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             tl.to(cards[j], { z: -DEPTH * step, duration: 1, ease: "power1.inOut" }, i);
           }
           const next = cards[i + 1];
-          tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i + 0.4)
-            .to(next.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, i + 0.5);
+          if (next) {
+            tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i + 0.4)
+              .to(next.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, i + 0.5);
+          }
         }
 
         return () => {
