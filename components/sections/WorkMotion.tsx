@@ -66,7 +66,9 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
 
         deck.setAttribute("data-deck", "");
         const peek = () => cssPx(deck, "--peek", 48);
-        const top = () => cssPx(deck, "--stack-top", 88);
+        // --stack-top is a calc() in the CSS (the header veil's height), which cannot be read as a number: same sum here
+        const docEl = document.documentElement;
+        const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
         const DEPTH = 34; // px of depth per step down the stack (the deck has perspective)
         // The stack as in the reference: the first card on top, the ones to come beneath it, each a step lower and a
         // step deeper, so they show as strips under its foot
@@ -112,10 +114,11 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           );
           const inner = cards[i].querySelector<HTMLElement>("article");
           if (inner) tl.to(inner, { rotationX: 14, y: -28, duration: 0.5, ease: "power1.out" }, i);
-          // ... while every card beneath comes up one step, the next one into its place
+          // ... while the stack beneath stays where it is (fixed at the foot, owner): the cards only come forward
+          // one step in depth, the next one to the front
           for (let j = i + 1; j < n; j++) {
             const step = j - i - 1;
-            tl.to(cards[j], { y: () => step * peek(), z: -DEPTH * step, duration: 1, ease: "power1.inOut" }, i);
+            tl.to(cards[j], { z: -DEPTH * step, duration: 1, ease: "power1.inOut" }, i);
           }
           const next = cards[i + 1];
           tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i + 0.4)
