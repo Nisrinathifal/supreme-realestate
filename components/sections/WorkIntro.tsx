@@ -21,10 +21,10 @@ const RY = 37; // % of the stage height
 
 /**
  * Projects intro (concept 2026-10-02, after the reference's "see more work" band): a white viewport with the headline
- * in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion pins the band for
- * about 2.5 viewports and drives everything from the scroll in four stages: the mascots come in from outside while
- * the headline appears line by line, settle into an asymmetric composition around it, float a little, then move
- * outward as the page scrolls on into the projects. Hover tilts a
+ * in the middle and the seven mascots on a ring around it. The CSS places them; WorkIntroMotion pins the band and
+ * drives one continuous, scrubbed move after the reference recording: the mascots start fanned together above the
+ * headline, spread into the ring while the headline fills in word by word, hold with a slight drift, then open
+ * outward and lag behind as the band scrolls on into the projects. Hover tilts a
  * mascot towards the pointer. Reduced motion and no-JS: the full headline and the still ring. Slides up over the
  * held steps strip (`data-overlap`).
  */
@@ -56,9 +56,11 @@ export function WorkIntro({ lang }: { lang: Lang }) {
         <h2 id="work-intro-title" className={styles.title}>
           {c.work.intro.map((line, i) => (
             <span key={i} className={styles.line}>
-              <span className={styles.lineInner} data-orbit-line>
-                {line}
-              </span>
+              {line.split(" ").map((word, j) => (
+                <span key={j} className={styles.word} data-orbit-word>
+                  {word}
+                </span>
+              ))}
             </span>
           ))}
         </h2>

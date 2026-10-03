@@ -8,7 +8,7 @@
   position: absolute; width: calc(var(--size) * var(--s, 1)); translate: -50% -50%; z-index: 1; pointer-events: auto;
 }
 .front { z-index: 3; }
-.inner { will-change: transform; }
+.inner { will-change: transform; transform-origin: 50% 50%; }
 .tilt { transform-style: preserve-3d; }
 .image { display: block; width: 100%; }
 .image img { display: block; width: 100%; height: auto; }
@@ -17,8 +17,9 @@
   font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking);
   font-size: var(--fs-h2); line-height: 1.02;
 }
-.line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
-.lineInner { display: block; will-change: transform; }
+.line { display: block; }
+.word { display: inline-block; margin-right: 0.22em; }
+.word:last-child { margin-right: 0; }
 
 @media (max-width: 767px) {
   .intro { min-height: 86svh; }
