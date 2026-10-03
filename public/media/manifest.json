@@ -119,54 +119,6 @@
     "width": 960,
     "height": 719
   },
-  "work-a-01": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-a-02": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-a-03": {
-    "width": 1333,
-    "height": 2000
-  },
-  "work-b-01": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-b-02": {
-    "width": 1333,
-    "height": 2000
-  },
-  "work-b-03": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-c-01": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-c-02": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-c-03": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-d-01": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-d-02": {
-    "width": 2158,
-    "height": 1440
-  },
-  "work-d-03": {
-    "width": 2158,
-    "height": 1440
-  },
   "mascot-bulb-01": {
     "width": 1024,
     "height": 1024
@@ -210,5 +162,25 @@
   "card-partners-01": {
     "width": 943,
     "height": 1005
+  },
+  "board-architects-01": {
+    "width": 901,
+    "height": 729
+  },
+  "board-builders-01": {
+    "width": 932,
+    "height": 760
+  },
+  "board-designers-01": {
+    "width": 933,
+    "height": 760
+  },
+  "board-house-01": {
+    "width": 908,
+    "height": 608
+  },
+  "board-partners-01": {
+    "width": 935,
+    "height": 760
   }
 }

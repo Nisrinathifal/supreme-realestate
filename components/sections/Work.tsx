@@ -1,79 +1,54 @@
-import type { CSSProperties } from "react";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
-import { workCases } from "@/content/media";
+import { workBoards } from "@/content/media";
 import { getCopy } from "@/content/copy";
-import { pathFor, type Lang } from "@/content/routes";
+import type { Lang } from "@/content/routes";
 import { WorkMotion } from "./WorkMotion";
 import styles from "./Work.module.css";
 
-/** Card surfaces, alternating dark and light: Canal ink, Sky mist, the inverse surface, Lime mist (DESIGN §3). */
-const tones = [`inverse ${styles.toneInk}`, styles.toneSky, `inverse ${styles.toneMoss}`, styles.toneLime];
-
 /**
- * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a label and a heading, then four cases as
- * coloured cards. Each card: title, index, body, a note on what the photographs show, three photographs and one link
- * covering the whole card, whose pill follows the pointer anywhere on the card. The band follows the intro in the flow; its heading and first card settle as
- * they come into view, scrubbed; on desktop the deck is then pinned and each next card rises over the current one
- * while the ones still to come wait as strips below (WorkMotion). Phones stack the cards with CSS sticky; reduced
- * motion and no-JS read the cards one after another. Cases are anonymous (PRD §6): interiors, no names or addresses.
+ * Collaboration (owner brief 2026-10-03, after the reference's deck): five boards, one per collaborator, held as one
+ * physical stack over the headline. With motion (WorkMotion) the section is a tall scroll with a sticky stage: the
+ * top board lifts away first, then the next, each revealing the one beneath, until the five settle around the
+ * headline. Without motion (reduced motion, no JS) the headline and the boards read as a plain list. Each board is a
+ * presentation board: index, label and title beside the picture.
  */
 export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
-  const n = c.work.items.length;
   return (
-    <section className={`section ${styles.work}`} data-work aria-labelledby="work-title">
-      <div className="container">
-        <div className={styles.heading} data-work-heading>
-          <MicroLabel className={styles.label}>{c.work.label}</MicroLabel>
-          <h2 id="work-title" className={styles.title2}>
-            {c.work.title}
-          </h2>
-        </div>
-      </div>
+    <section id="collaboration" className={styles.work} data-work aria-labelledby="work-title">
       <WorkMotion>
-        <ol className={styles.deck} data-work-deck>
-          {c.work.items.map((item, i) => {
-            const media = workCases[i];
-            if (!media) return null;
-            const style = { "--i": i, "--behind": n - 1 - i } as CSSProperties;
-            return (
-              <li key={item.index} className={`${styles.card} ${tones[i % tones.length]}`} style={style} data-work-card>
-                <article className={styles.inner} aria-labelledby={`work-${media.id}-title`}>
-                  <header className={styles.head}>
-                    <h3 id={`work-${media.id}-title`} className={styles.title}>
-                      {item.title}
-                    </h3>
-                    <span className={styles.index} aria-hidden="true">
-                      ({item.index})
-                    </span>
-                  </header>
-                  <p className={styles.body}>{item.body}</p>
-                  <div className={styles.foot}>
-                    <p className={styles.note} data-work-note>
-                      {item.note}
-                    </p>
-                    <div className={styles.gallery} data-work-gallery>
-                      <ul className={styles.photos} data-work-photos>
-                        {media.photos.map((p) => (
-                          <li key={p.src} className={styles.photo}>
-                            <MediaFrame image={p} ratio="16/9" lang={lang} radius="none" sizes="(max-width: 767px) 46vw, 200px" />
-                          </li>
-                        ))}
-                      </ul>
-                      <span className={styles.pill} data-work-pill aria-hidden="true">
-                        {c.work.cta}
-                        <ArrowRight size={16} weight="light" />
-                      </span>
+        <div className={styles.stage} data-work-stage>
+          <div className={`container ${styles.content}`} data-work-content>
+            <MicroLabel className={styles.label}>{c.work.label}</MicroLabel>
+            <h2 id="work-title" className={styles.title}>
+              {c.work.title}
+            </h2>
+          </div>
+          <ol className={styles.stack} data-work-stack>
+            {c.work.cards.map((card, i) => {
+              const image = workBoards[i];
+              return (
+                <li key={card.index} className={styles.card} data-work-card style={{ zIndex: c.work.cards.length - i }}>
+                  <article className={styles.board} aria-labelledby={`work-card-${card.index}`}>
+                    <div className={styles.copy}>
+                      <MicroLabel className={styles.index}>{card.index}</MicroLabel>
+                      <div className={styles.copyFoot}>
+                        <MicroLabel className={styles.cardLabel}>{card.label}</MicroLabel>
+                        <h3 id={`work-card-${card.index}`} className={styles.cardTitle}>
+                          {card.title}
+                        </h3>
+                      </div>
                     </div>
-                  </div>
-                  <a href={pathFor("contact", lang)} className={styles.cover} aria-label={`${item.title}: ${c.work.cta}`} />
-                </article>
-              </li>
-            );
-          })}
-        </ol>
+                    <div className={styles.picture}>
+                      {image ? <MediaFrame image={image} ratio="fill" lang={lang} radius="none" sizes="(max-width: 767px) 100vw, 50vw" className={styles.frame} /> : null}
+                    </div>
+                  </article>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </WorkMotion>
     </section>
   );
