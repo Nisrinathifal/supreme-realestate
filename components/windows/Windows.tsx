@@ -7,8 +7,8 @@ import { MediaFrame } from "@/components/ui/MediaFrame";
 import type { ImageAsset } from "@/content/media";
 import type { WindowBox } from "@/content/projects";
 import type { Lang } from "@/content/routes";
-import { prefersReducedMotion, setupGsap } from "@/lib/motion";
-import { enterTimeline, swapStage } from "./motion";
+import { gsap, prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { enterTimeline, previewIn, previewOut, swapStage } from "./motion";
 import s from "./windows.module.css";
 
 export type WindowProject = {
@@ -28,6 +28,11 @@ export type WindowStrings = { eyebrow: string; explore: string; back: string; mo
 type Props = { lang: Lang; projects: WindowProject[]; strings: WindowStrings };
 type Phase = "idle" | "entering" | "open" | "leaving";
 
+/** Gap between a window and its preview, and the hero-width share beyond which the preview sits on the left. */
+const CARD_GAP = 1.4;
+const CARD_FLIP_AT = 62;
+const HIDE_DELAY = 160;
+
 const noop = () => () => {};
 /** True once on the client, false in the server render (so the portal and the query flag never mismatch hydration). */
 const useClient = () => useSyncExternalStore(noop, () => true, () => false);
@@ -45,8 +50,9 @@ const useDebugFlag = () =>
  * Project windows (concept 2026-10-05): the architecture as the interface. Four hotspots, one per project, sit on
  * windows of four different houses in the hero film (positions in percent of the film, content/projects.ts); they
  * are plain frames, no names or places, and they arrive only once the page has scrolled into the facades
- * (HeroZoom sets `data-shown`). Hover or keyboard focus lifts a window and dims the rest of the facade; click, tap
- * or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
+ * (HeroZoom sets `data-shown`). Hover or keyboard focus lifts a window, dims the rest of the facade and shows a
+ * small preview of the room beside it (image only, no name or place; not on touch, where a tap goes straight in);
+ * click, tap or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
  * the header) with the interior, the project's name, the overview and the index of all four projects, and a way
  * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
  * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
@@ -59,6 +65,8 @@ export function Windows({ lang, projects, strings }: Props) {
   const mounted = useClient();
   const debug = useDebugFlag();
   const filmRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const hideTimer = useRef<number | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const overviewRef = useRef<HTMLElement>(null);
@@ -71,14 +79,48 @@ export function Windows({ lang, projects, strings }: Props) {
 
   useEffect(() => {
     setupGsap();
+    if (cardRef.current) gsap.set(cardRef.current, { autoAlpha: 0 });
   }, []);
 
-  /* ---------- hover / focus: the window lifts and its interior loads ahead of the click ---------- */
+  /* ---------- hover / focus: the window lifts, its preview appears, its interior loads ahead of the click ---------- */
+  const cancelHide = () => {
+    if (hideTimer.current) window.clearTimeout(hideTimer.current);
+    hideTimer.current = null;
+  };
   const show = (id: string) => {
+    cancelHide();
     setActive(id);
     setWarmed((w) => (w.includes(id) ? w : [...w, id]));
   };
-  const hide = () => setActive(null);
+  // A short grace so the pointer can cross the gap from the window to its preview
+  const hide = () => {
+    cancelHide();
+    hideTimer.current = window.setTimeout(() => setActive(null), HIDE_DELAY);
+  };
+
+  // The preview sits beside the lifted window, measured against the hero (a plain child of it, so the scroll
+  // zoom on the hotspot layer does not scale it); it only ever follows a pointer or the keyboard
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    if (!card || !mounted) return;
+    if (!active) {
+      previewOut(card, prefersReducedMotion());
+      return;
+    }
+    const hotspot = filmRef.current?.querySelector<HTMLElement>(`[data-window="${active}"]`);
+    const hero = card.parentElement;
+    if (hotspot && hero) {
+      const h = hotspot.getBoundingClientRect();
+      const r = hero.getBoundingClientRect();
+      const flip = h.left + h.width / 2 > r.left + (r.width * CARD_FLIP_AT) / 100;
+      const gap = (r.width * CARD_GAP) / 100;
+      // Final pixels, not a CSS translate: GSAP folds that property into its own transform on first use
+      card.dataset.side = flip ? "left" : "right";
+      card.style.left = `${(flip ? h.left - gap - card.offsetWidth : h.right + gap) - r.left}px`;
+      card.style.top = `${h.top + h.height / 2 - card.offsetHeight / 2 - r.top}px`;
+    }
+    previewIn(card, prefersReducedMotion());
+  }, [active, mounted]);
 
   /* ---------- enter, leave, switch ---------- */
   const exteriorParts = () => {
@@ -94,6 +136,7 @@ export function Windows({ lang, projects, strings }: Props) {
       const p = projects.find((x) => x.id === id);
       if (!p?.interior) return;
       returnTo.current = filmRef.current?.querySelector<HTMLElement>(`[data-window="${id}"]`) ?? null;
+      cancelHide();
       setWarmed((w) => (w.includes(id) ? w : [...w, id]));
       setActive(null);
       setOpen(id);
@@ -213,6 +256,17 @@ export function Windows({ lang, projects, strings }: Props) {
               <MediaFrame key={p.id} image={p.interior} ratio="fill" lang={lang} radius="none" sizes="100vw" decorative priority />
             ))}
         </div>
+      </div>
+      {/* Preview of the room beside the lifted window: the image and an arrow, nothing written (the window is the control) */}
+      <div ref={cardRef} className={s.card} data-side="right" aria-hidden="true" onPointerEnter={cancelHide} onPointerLeave={hide}>
+        {ap ? (
+          <button type="button" className={s.cardButton} tabIndex={-1} onClick={() => enter(ap.id)}>
+            <MediaFrame image={ap.preview} ratio="16/9" lang={lang} radius="none" sizes="280px" decorative priority className={s.cardMedia} />
+            <span className={s.cardFoot}>
+              <ArrowRight size={18} weight="light" className={s.cardArrow} aria-hidden="true" />
+            </span>
+          </button>
+        ) : null}
       </div>
 
       {mounted

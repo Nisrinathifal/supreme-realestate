@@ -59,6 +59,16 @@ export function enterTimeline({ overlay, rect, exterior, reduced, onComplete }: 
   return tl.play();
 }
 
+/** The preview beside a lifted window: a short rise, no bounce. */
+export function previewIn(el: HTMLElement, reduced: boolean) {
+  if (reduced) return gsap.to(el, { autoAlpha: 1, duration: 0.25, overwrite: true });
+  return gsap.fromTo(el, { autoAlpha: 0, y: 10, scale: 0.985 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.5, ease: ease.out, overwrite: true });
+}
+
+export function previewOut(el: HTMLElement, reduced: boolean) {
+  return gsap.to(el, { autoAlpha: 0, y: reduced ? 0 : 6, duration: 0.28, ease: ease.out, overwrite: true });
+}
+
 /** Changing project inside the overlay: the stage dips out, the image swaps, the stage returns. */
 export function swapStage(stage: HTMLElement, swap: () => void, reduced: boolean) {
   const d = reduced ? 0.2 : 0.35;
