@@ -7,7 +7,7 @@
 .ghostTint { position: absolute; inset: 0; border-radius: inherit; background: color-mix(in srgb, var(--accent) 16%, transparent); }
 .ghostLine { position: absolute; inset: -2px; border: 1px dashed var(--accent); border-radius: inherit; }
 .ghostDot { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; translate: -50% -50%; border-radius: 50%; background: var(--accent); }
-.ghostFill { position: absolute; inset: 0; border-radius: inherit; opacity: 0; box-shadow: inset 0 0 0 1px var(--glass-line); }
+.ghostEdge { position: absolute; inset: 0; border: 1px solid var(--glass-line); border-radius: inherit; opacity: 0; }
 
 /* Static layout: the cards one after another. The deck is about three quarters of the frame (owner), not the container */
 .deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(960px, 76vw)); display: flex; flex-direction: column; gap: var(--s-4); }

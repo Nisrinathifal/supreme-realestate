@@ -6,10 +6,11 @@ import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 import styles from "./Work.module.css";
 
 /**
- * Handoff (desktop, 2026-10-05): as the band scrolls in under the night hero, a ghost of each of the film's four
- * window boxes travels from its window to its card's place in the stack, one after another, the bottom of the
- * stack first, turning into the card on the way (its lime line and dot fade, its corners round, the card's tone
- * fills it), and each card fades in where its ghost stops. Phones (no windows on screen): the first card and its photographs come up and settle, scrubbed. Then the
+ * Handoff (desktop, 2026-10-05): as the band scrolls in under the night hero, the outlines of the film's four
+ * window boxes travel, almost together, to their cards' places in the stack, growing to card size on the way
+ * (the lime dashes and dot give way to a thin hairline); then the deck comes up as one, under the outlines, and
+ * the outlines let go. Outlines only, no plates, so nothing crosses or covers anything on the way. Phones (no
+ * windows on screen): the first card and its photographs come up and settle, scrubbed. Then the
  * deck after the reference, on every width:
  * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
  * little narrower), and each next card rises to the top and grows to full width over the current one while its
@@ -65,9 +66,6 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const layer = document.createElement("div");
         layer.setAttribute("aria-hidden", "true");
         const n = cards.length;
-        // Each ghost has its own share of the scroll: the last card's first, the first card's last, overlapping a little
-        const SPAN = 0.55;
-        const startOf = (i: number) => ((n - 1 - i) / Math.max(1, n - 1)) * (1 - SPAN);
         const ghosts = cards.map((card, i) => {
           const g = document.createElement("div");
           g.className = styles.ghost;
@@ -78,44 +76,47 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           line.className = styles.ghostLine;
           const dot = document.createElement("span");
           dot.className = styles.ghostDot;
-          const fill = document.createElement("span");
-          fill.className = styles.ghostFill;
-          fill.style.background = getComputedStyle(card).backgroundColor;
-          g.append(tint, line, dot, fill);
+          const edge = document.createElement("span");
+          edge.className = styles.ghostEdge;
+          g.append(tint, line, dot, edge);
           layer.append(g);
-          return { g, tint, line, dot, fill };
+          return { g, tint, line, dot, edge };
         });
         document.body.append(layer);
-        gsap.set(cards, { opacity: 0 });
+        gsap.set(deck, { opacity: 0 }); // the deck comes up as one, so no card ever shows through another
         gsap.set(layer, { autoAlpha: 0 });
 
+        // The scroll's shares: the outlines travel first (a small stagger, the last card's first), the deck comes up
+        // under them, then they let go
+        const TRAVEL = 0.5;
+        const STAGGER = 0.05;
+        const DECK_AT = 0.62;
         const update = (p: number) => {
-          const deckRect = deck.getBoundingClientRect();
           gsap.set(layer, { autoAlpha: p > 0 && p < 1 ? 1 : 0 });
+          gsap.set(deck, { opacity: clamp((p - DECK_AT) / 0.24) });
           cards.forEach((card, i) => {
             const box = boxes[i]!;
-            const { g, tint, line, dot, fill } = ghosts[i];
-            const q = clamp((p - startOf(i)) / SPAN); // this ghost's own progress
+            const { g, tint, line, dot, edge } = ghosts[i];
+            const q = clamp((p - (n - 1 - i) * STAGGER) / TRAVEL); // this outline's own travel
             const e = easeInOut(q);
-            // From the window where it is now (the hero is scrolling away) to the card's place once the deck is pinned
+            // From the window where it is now (the hero is scrolling away) to the card where it is now (the deck is
+            // scrolling in): both ends move with the page, so an outline that has arrived rides with its card
             const from = box.getBoundingClientRect();
-            const cr = card.getBoundingClientRect();
-            const to = { left: cr.left, top: top() + (cr.top - deckRect.top), width: cr.width, height: cr.height };
+            const to = card.getBoundingClientRect();
             gsap.set(g, {
               left: from.left + (to.left - from.left) * e,
               top: from.top + (to.top - from.top) * e,
               width: from.width + (to.width - from.width) * e,
               height: from.height + (to.height - from.height) * e,
               borderRadius: 2 + (radius - 2) * e,
-              opacity: 1 - clamp((q - 0.9) / 0.1),
+              opacity: 1 - clamp((p - 0.88) / 0.12),
             });
             gsap.set(dot, { opacity: 1 - clamp(q / 0.2) });
-            gsap.set([tint, line], { opacity: 1 - clamp(q / 0.35) });
-            gsap.set(fill, { opacity: clamp(q / 0.3) });
-            // The film's own box steps aside while its ghost travels
+            gsap.set(tint, { opacity: 1 - clamp(q / 0.5) });
+            gsap.set(line, { opacity: 1 - clamp((q - 0.5) / 0.4) });
+            gsap.set(edge, { opacity: clamp((q - 0.5) / 0.4) });
+            // The film's own box steps aside while its outline travels
             box.style.visibility = p > 0.02 && p < 1 ? "hidden" : "";
-            // The card is solid before its ghost lets go, so the stack beneath never shows through
-            gsap.set(card, { opacity: clamp((q - 0.76) / 0.12) });
           });
         };
         const st = ScrollTrigger.create({
@@ -131,7 +132,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           st.kill();
           layer.remove();
           boxes.forEach((b) => b && (b.style.visibility = ""));
-          gsap.set(cards, { clearProps: "opacity" });
+          gsap.set(deck, { clearProps: "opacity" });
         };
       });
 
