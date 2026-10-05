@@ -109,13 +109,26 @@ export const heroFilm: VideoAsset = {
 /**
  * Night still (supplied 2026-10-05): the same view after dark, windows lit, registered to the day film's first
  * frame (scale and shift found on edge maps, scratch script) so the crossfade never doubles the facades. Comes up
- * over the day film as the page scrolls (HeroNight / HeroScroll); a still, so the view holds steady at night.
+ * over the night film once dusk is done (HeroNight / HeroScroll); a still, so the view holds steady at night.
  */
 export const heroNight: ImageAsset = {
   src: "hero-night-01",
   width: 1920,
   height: 1080,
   alt: { nl: "De grachtenpanden bij avond, de ramen verlicht", en: "The canal houses at night, their windows lit" },
+};
+
+/**
+ * Night film (supplied 2026-10-05): the same view after dark, windows lit, a boat passing. Trimmed to a seamless
+ * loop (1.4167–9.9167 s) and raised to 60 fps like the day film. Carries the dusk: it comes up over the day film as
+ * the page scrolls, then hands over to the night still (HeroNight / HeroScroll).
+ */
+export const heroNightFilm: VideoAsset = {
+  webm: null,
+  mp4: "/media/hero-film-04.mp4",
+  mp4Mobile: "/media/hero-film-04-720.mp4",
+  poster: heroNight,
+  loop: true,
 };
 
 /**
