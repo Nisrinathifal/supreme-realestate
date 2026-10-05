@@ -12,8 +12,8 @@ type Props = { film: VideoAsset; labels: { pause: string; play: string } };
 export const INTRO_DONE = "supreme:intro-done";
 
 /**
- * Hero film over the still: plays once (muted) after the intro has revealed the hero and holds its last frame,
- * which matches the still. Reduced motion / Save-Data: no playback, the still stays. Pause control per
+ * Hero film over the still: starts (muted) after the intro has revealed the hero, then either loops or plays
+ * once and holds its last frame (`film.loop`). Its first frame matches the still. Reduced motion / Save-Data: no playback, the still stays. Pause control per
  * WCAG 2.2.2, visible on keyboard focus only.
  */
 export function HeroFilm({ film, labels }: Props) {
@@ -70,6 +70,7 @@ export function HeroFilm({ film, labels }: Props) {
         className={styles.video}
         data-revealed={revealed ? "true" : "false"}
         muted
+        loop={film.loop}
         playsInline
         preload="auto"
         aria-hidden="true"

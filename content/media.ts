@@ -47,15 +47,16 @@ export type MediaSlot = { id: string; ratio: Ratio; image: ImageAsset | null };
 
 
 /**
- * Hero still (concept supplied 2026-09-30, clean render without logo or copy): a white house in daylight,
- * the city skyline behind it. hero-still-01 is the flattened design mock-up, kept for reference.
+ * Hero still (concept 3, 2026-10-05): the first frame of the canal film, a row of gabled canal houses in
+ * morning light. Atmosphere only: a generated scene, no house numbers, no street or neighbourhood (PRD §6.2).
+ * hero-still-02 (white house, concept 2) and hero-still-01 (mock-up) stay for reference.
  * Note: generated render; DESIGN §12 asks for real photography before launch.
  */
 export const heroStill: ImageAsset = {
-  src: "hero-still-02",
+  src: "hero-still-03",
   width: 1920,
-  height: 1176,
-  alt: { nl: "Witte woning in daglicht, op de achtergrond de stad", en: "A white house in daylight, the city skyline behind it" },
+  height: 1080,
+  alt: { nl: "Grachtenpanden aan het water in het ochtendlicht", en: "Canal houses along the water in morning light" },
 };
 
 /**
@@ -81,17 +82,16 @@ export const introSequence: ImageAsset[] = [
 ];
 
 /**
- * Hero film (supplied 2026-09-29, re-supplied 2026-09-30 for the concept): 10 s, the house renewed from shell
- * to finished, same composition as the still. Re-encoded without metadata by scripts/film-export.swift.
- * WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
+ * Hero film (concept 3, supplied 2026-10-05): 10 s, fixed camera on the canal houses, boats passing, loops.
+ * Re-encoded without metadata or audio by scripts/film-export.swift (hero-film-02, the house renewal, stays
+ * for concept 2). WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
  */
 export const heroFilm: VideoAsset = {
   webm: null,
-  mp4: "/media/hero-film-02.mp4",
-  mp4Mobile: "/media/hero-film-02-720.mp4",
+  mp4: "/media/hero-film-03.mp4",
+  mp4Mobile: "/media/hero-film-03-720.mp4",
   poster: heroStill,
-  loop: false,
-  rate: 1.5, // owner asked for a slightly faster renewal (2026-09-30)
+  loop: true,
 };
 
 /**
