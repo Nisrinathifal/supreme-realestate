@@ -51,9 +51,10 @@ const useDebugFlag = () =>
  * windows of four different houses in the hero film (positions in percent of the film, content/projects.ts); they
  * are plain frames, no names or places, and they arrive only once the page has scrolled into the facades
  * (HeroScroll sets `data-shown` once dusk has fallen and the spotlight, a masked dark layer with a hole at each
- * window, is on). Hover or keyboard focus lights a window and shows a small preview of the room beside it (image
- * only, no name or place; not on touch, where a tap goes straight in); click, tap or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
- * the header) with the interior, the project's name, the overview and the index of all four projects, and a way
+ * window, is on). Hover or keyboard focus lights a window and shows a small preview beside it: the room, the project's
+ * name and its city (not on touch, where a tap goes straight in); click, tap or Enter goes in: the through-the-window
+ * timeline (motion.ts) into a fixed overlay (portalled to <body>, above the header) with the interior, the
+ * project's name, the overview and the index of all four projects, and a way
  * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
  * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
  */
@@ -272,12 +273,16 @@ export function Windows({ lang, projects, strings }: Props) {
             ))}
         </div>
       </div>
-      {/* Preview of the room beside the lifted window: the image and an arrow, nothing written (the window is the control) */}
+      {/* Preview beside the lifted window: the room, the name and the city, and an arrow (the window is the control) */}
       <div ref={cardRef} className={s.card} data-side="right" aria-hidden="true" onPointerEnter={cancelHide} onPointerLeave={hide}>
         {ap ? (
           <button type="button" className={s.cardButton} tabIndex={-1} onClick={() => enter(ap.id)}>
             <MediaFrame image={ap.preview} ratio="16/9" lang={lang} radius="none" sizes="280px" decorative priority className={s.cardMedia} />
             <span className={s.cardFoot}>
+              <span className={s.cardText}>
+                <span className={s.cardName}>{ap.name}</span>
+                <span className={s.cardMeta}>{ap.location}</span>
+              </span>
               <ArrowRight size={18} weight="light" className={s.cardArrow} aria-hidden="true" />
             </span>
           </button>

@@ -1,4 +1,4 @@
-import { heroFilm, heroNightFilm, heroStill } from "@/content/media";
+import { heroFilm, heroNight, heroStill } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import { MediaFrame } from "@/components/ui/MediaFrame";
@@ -13,7 +13,7 @@ import styles from "./Hero.module.css";
  * Hero (concept 2026-09-30): one full-bleed frame with the still underneath and the film over it (plays once
  * after the intro; concept 3 loops the canal film). Concept 3: the key message sits in the sky, in ink; the
  * headline is one line on the waterline, behind the passing boat (HeroBoat redraws the boat over it and lets the
- * first crossing bring the letters in). Scrolling brings dusk (HeroScroll): the night film (HeroNight) comes up
+ * first crossing bring the letters in). Scrolling brings dusk (HeroScroll): the night still (HeroNight) comes up
  * over the day film and the spotlight settles on the four project windows (components/windows); click one to enter
  * its project through that window.
  * Complete without JavaScript (the still). On the first visit the intro (components/motion/Preloader) grows
@@ -28,7 +28,7 @@ export function Hero({ lang }: { lang: Lang }) {
       <div className={styles.frame} data-hero-frame>
         <MediaFrame image={heroStill} ratio="fill" lang={lang} radius="none" priority className={styles.still} />
         {hasFilm ? <HeroFilm film={heroFilm} labels={{ pause: c.hero.pause, play: c.hero.play }} /> : null}
-        {hasFilm ? <HeroNight film={heroNightFilm} /> : null}
+        <HeroNight image={heroNight} lang={lang} />
         <div className={styles.scrim} aria-hidden="true" />
       </div>
       <div className={styles.copy} data-hero-copy>

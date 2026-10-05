@@ -12,7 +12,7 @@ const PHONE_DELAY = 4800;
 
 /**
  * Nightfall on scroll (concept 2026-10-05). On desktop the hero holds (pinned) for a little over one viewport of
- * scroll while the scroll scrubs dusk: the copy leaves, the night film (same view, windows lit) comes up over the
+ * scroll while the scroll scrubs dusk: the copy leaves, the night still (same view, windows lit) comes up over the
  * day film and the boat canvas goes with the day, the whole view eases forward to ZOOM around the houses, then the
  * spotlight settles on the four project windows (the facades around them step back, their frames come on) and
  * they become live. A slow scrub and a little hysteresis on the live state keep it steady under a nervous wheel. Phones get no pin: the windows
@@ -49,13 +49,11 @@ export function HeroScroll() {
         document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: toDark ? "dark" : "light" }));
       };
       const build = () => {
-        // The night film is client-only (HeroNight), so it is looked up here, a frame after the intro, not at mount;
-        // it starts loading now, so dusk never waits on the network
-        const night = hero.querySelector<HTMLVideoElement>("[data-hero-night]");
+        // The night still is hidden outright until now (HeroNight): unseen at opacity 0 first, then let in to load
+        const night = hero.querySelector<HTMLElement>("[data-hero-night]");
         if (night) {
           gsap.set(night, { opacity: 0 });
-          night.preload = "auto";
-          night.load();
+          night.hidden = false;
         }
         tl = gsap.timeline({
           scrollTrigger: {
@@ -71,17 +69,12 @@ export function HeroScroll() {
               else if (self.progress < 0.46) live = false;
               layer.dataset.shown = live ? "true" : "false";
               headerTheme(self.progress > 0.45); // the bar turns to Paper once the sky has gone dark
-              if (!night) return;
-              // The night film only runs while it can be seen
-              if (self.progress > 0.01) {
-                if (night.paused) night.play().catch(() => undefined);
-              } else if (!night.paused) night.pause();
             },
           },
         });
         if (copy) tl.to(copy, { opacity: 0, y: -24, duration: 0.3, ease: "none" }, 0);
         tl.to(targets, { scale: ZOOM, duration: 1, ease: "power1.inOut" }, 0);
-        if (night) tl.to(night, { opacity: 1, duration: 0.8, ease: "none" }, 0);
+        if (night) tl.to(night, { opacity: 1, duration: 0.85, ease: "power1.inOut" }, 0);
         if (canvas) tl.to(canvas, { opacity: 0, duration: 0.5, ease: "none" }, 0.2);
         if (spots) tl.to(spots, { opacity: 1, duration: 0.4, ease: "none" }, 0.55);
         tl.to(boxes, { opacity: 1, duration: 0.3, stagger: 0.06, ease: "none" }, 0.6);
