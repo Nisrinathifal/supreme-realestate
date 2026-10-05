@@ -28,11 +28,12 @@ export function Columns({ tone = "paper", className, ...rest }: Props) {
       focusable="false"
       {...rest}
     >
+      {/* Each band carries its register, so a band's motion can raise them from the floor one by one */}
       {upper.map((cx) => (
-        <rect key={`u${cx}`} x={cx - BAND / 2} y={0} width={BAND} height={BREAK + 6} />
+        <rect key={`u${cx}`} x={cx - BAND / 2} y={0} width={BAND} height={BREAK + 6} data-register="upper" />
       ))}
       {lower.map((cx) => (
-        <rect key={`l${cx}`} x={cx - BAND / 2} y={BREAK} width={BAND} height={900 - BREAK} rx={14} />
+        <rect key={`l${cx}`} x={cx - BAND / 2} y={BREAK} width={BAND} height={900 - BREAK} rx={14} data-register="lower" />
       ))}
     </svg>
   );

@@ -5,7 +5,9 @@ import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
+ * The columns behind the band rise from the floor as it scrolls in (owner, 2026-10-05): band by band, left to
+ * right across both registers, each growing up from its own foot, scrubbed, so the wall builds itself under the
+ * reader. Then the icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
  * simply scrolls on). Start states are set here: the shelf copies of the icons are hidden and the inline icons
  * visible; each inline icon then travels (x, y, scale) onto its compartment and hands over to the shelf copy.
  * Under prefers-reduced-motion nothing runs and both the sentence icons and the filled shelf are shown.
@@ -18,6 +20,25 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
       setupGsap();
       const root = scope.current!;
       const mm = gsap.matchMedia();
+      mm.add(MQ.full, () => {
+        const section = root.closest<HTMLElement>("[data-shelf]");
+        const columns = section?.querySelector<SVGSVGElement>("[data-shelf-columns]");
+        if (!section || !columns) return;
+        // Every band, both registers, left to right by its place on the wall
+        const bands = Array.from(columns.querySelectorAll<SVGRectElement>("rect")).sort((a, b) => Number(a.getAttribute("x")) - Number(b.getAttribute("x")));
+        gsap.set(bands, { scaleY: 0, transformOrigin: "50% 100%" });
+        const rise = gsap.timeline({
+          defaults: { ease: "power2.out" },
+          scrollTrigger: { trigger: section, start: "top 72%", end: "top -5%", scrub: 0.9, invalidateOnRefresh: true },
+        });
+        rise.to(bands, { scaleY: 1, duration: 0.6, stagger: 0.05 }, 0);
+        return () => {
+          rise.scrollTrigger?.kill();
+          rise.kill();
+          gsap.set(bands, { clearProps: "transform" });
+        };
+      });
+
       mm.add(MQ.full, () => {
         const q = gsap.utils.selector(root);
         const rack = q<HTMLElement>("[data-shelf-rack]")[0];
