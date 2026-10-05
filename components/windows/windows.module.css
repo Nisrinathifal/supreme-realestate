@@ -45,7 +45,7 @@
    words. A child of the hero, placed in hero pixels by Windows.tsx, above the hotspot layer; pointer and keyboard only */
 .card { position: absolute; z-index: 5; left: 0; top: 0; width: clamp(200px, 17vw, 280px); }
 .cardButton {
-  display: flex; flex-direction: column; width: 100%; padding: 0; border-radius: var(--r-sm); overflow: hidden; cursor: pointer;
+  display: flex; flex-direction: column; width: 100%; padding: 0; border-radius: var(--r-sm); overflow: hidden; cursor: pointer; text-align: left;
   background: color-mix(in srgb, var(--inv-bg) 82%, transparent); color: var(--inv-ink); border: 1px solid var(--inv-line);
   -webkit-backdrop-filter: blur(var(--blur)) saturate(1.1); backdrop-filter: blur(var(--blur)) saturate(1.1);
   box-shadow: var(--shadow-soft);

@@ -72,35 +72,42 @@ export function HeroBoat({ subject }: Props) {
     let letters: Letter[] = [];
     let pending: { el: HTMLElement; lag: number; x: number | null; letter?: Letter }[] = [];
 
-    /* ---------- geometry: the film covers the hero, anchored top centre ---------- */
+    /* ---------- geometry: where the film's pixels are on screen ----------
+       Read from the <video>'s own rendered box (object-fit cover, anchored top centre), so a pin, a scale on the
+       frame, or a pane resize can never put the drawn boat anywhere but over the filmed one. Viewport px. */
     const geometry = () => {
       const r = hero.getBoundingClientRect();
-      const s = Math.max(r.width / FILM_W, r.height / FILM_H);
-      return { r, s, left: (r.width - FILM_W * s) / 2 };
+      const vb = video.getBoundingClientRect();
+      const s = Math.max(vb.width / FILM_W, vb.height / FILM_H);
+      return { r, s, left: vb.left + (vb.width - FILM_W * s) / 2, top: vb.top };
     };
     const offsetAt = (time: number) => subject.frames[Math.min(subject.frames.length - 1, Math.max(0, Math.round(time * subject.fps)))];
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const { r } = geometry();
-      canvas.width = Math.round(r.width * dpr);
-      canvas.height = Math.round(r.height * dpr);
+      // Layout size (unaffected by any transform on the canvas)
+      canvas.width = Math.round(canvas.offsetWidth * dpr);
+      canvas.height = Math.round(canvas.offsetHeight * dpr);
       pending.forEach((p) => (p.x = null));
       letters.forEach((l) => (l.x = null));
     };
 
     /* ---------- the boat over the headline ---------- */
     const draw = (time: number) => {
-      const dpr = canvas.width / Math.max(1, hero.clientWidth);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const off = offsetAt(time);
       if (!live || !off || video.readyState < 2) return;
-      const { r, s, left } = geometry();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const { s, left, top } = geometry();
+      // Viewport px → this canvas's bitmap px (the canvas shares the video's transform, so the ratio holds under it)
+      const cb = canvas.getBoundingClientRect();
+      if (!cb.width || !cb.height) return;
+      const kx = canvas.width / cb.width;
+      const ky = canvas.height / cb.height;
+      ctx.setTransform(kx, 0, 0, ky, (left - cb.left) * kx, (top - cb.top) * ky);
       const path = new Path2D();
       subject.poly.forEach(([x, y], i) => {
-        const px = left + (x + off[0]) * s;
+        const px = (x + off[0]) * s;
         const py = (y + off[1]) * s;
         if (i) path.lineTo(px, py);
         else path.moveTo(px, py);
@@ -110,20 +117,22 @@ export function HeroBoat({ subject }: Props) {
       if (!pattern) return;
       // The source may be the smaller mobile encode: scale its pixels to film pixels first
       const k = (s * FILM_W) / (video.videoWidth || FILM_W);
-      pattern.setTransform(new DOMMatrix([k, 0, 0, k, left, 0]));
+      pattern.setTransform(new DOMMatrix([k, 0, 0, k, 0, 0]));
       ctx.fillStyle = pattern;
       ctx.strokeStyle = pattern;
       ctx.lineJoin = "round";
       ctx.lineWidth = GROW * 2;
       ctx.fill(path);
       ctx.stroke(path);
-      // The bottom scrim over the boat only, as the CSS scrim lies over the film around it
+      // The bottom scrim over the boat only, as the CSS scrim lies over the film around it (hero space)
       if (stops.length) {
-        const g = ctx.createLinearGradient(0, r.height, 0, 0);
+        const hb = hero.getBoundingClientRect();
+        ctx.setTransform(kx, 0, 0, ky, (hb.left - cb.left) * kx, (hb.top - cb.top) * ky);
+        const g = ctx.createLinearGradient(0, hb.height, 0, 0);
         stops.forEach(([c, at]) => g.addColorStop(at, c));
         ctx.globalCompositeOperation = "source-atop";
         ctx.fillStyle = g;
-        ctx.fillRect(0, 0, r.width, r.height);
+        ctx.fillRect(0, 0, hb.width, hb.height);
         ctx.globalCompositeOperation = "source-over";
       }
     };
@@ -147,7 +156,7 @@ export function HeroBoat({ subject }: Props) {
       // The first crossing is over (the boat has left the frame): whatever is left simply appears
       if (!off) return finish();
       const { r, s, left } = geometry();
-      const tail = r.left + left + (stern + off[0]) * s - WAKE_GAP * r.width;
+      const tail = left + (stern + off[0]) * s - WAKE_GAP * r.width;
       const fade = WAKE_FADE * r.width;
       pending = pending.filter((p) => {
         if (p.x === null) {
@@ -170,9 +179,9 @@ export function HeroBoat({ subject }: Props) {
     const ripple = (time: number) => {
       if (!letters.length) return;
       const off = offsetAt(time);
-      const { r, s, left } = geometry();
-      const bow = off ? r.left + left + (bowX + off[0]) * s : -Infinity;
-      const tail = off ? r.left + left + (stern + off[0]) * s : -Infinity;
+      const { s, left } = geometry();
+      const bow = off ? left + (bowX + off[0]) * s : -Infinity;
+      const tail = off ? left + (stern + off[0]) * s : -Infinity;
       const len = (bowX - stern) * s;
       letters.forEach((l) => {
         if (l.x === null) {
