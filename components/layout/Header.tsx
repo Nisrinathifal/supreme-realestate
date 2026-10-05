@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { DotsNine } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
+import { Flag } from "./Flag";
 import { HEADLINE_IN } from "@/components/sections/HeroFilm";
 import { langs, pageForPath, pathFor, type Lang } from "@/content/routes";
 import { usePublicPathname } from "@/lib/usePublicPathname";
@@ -20,6 +21,7 @@ export type HeaderStrings = {
   closeMenu: string;
   mainNav: string;
   langSwitch: string;
+  switchTo: string;
   nl: string;
   en: string;
   contactUs: string;
@@ -35,8 +37,9 @@ export type HeaderStrings = {
 type Props = { lang: Lang; strings: HeaderStrings };
 
 /**
- * Header (concept 2026-10-05, after the owner's reference): the lockup left; right, a round language button with
- * the other language's code and a nine-dot menu button that opens the glass panel (DESIGN §9.4) on hover (mouse)
+ * Header (concept 2026-10-05, after the owner's reference): the lockup left; right, a small round language button
+ * showing the current language's flag (hover slides it half aside to show the other flag, with the hint "Switch to
+ * English" beside it) and a nine-dot menu button that opens the glass panel (DESIGN §9.4) on hover (mouse)
  * or click/keyboard with the homepage sections, the contact page and the company address and phone. No contact
  * button. A soft Paper veil behind the bar keeps it legible over every band. On the homepage the bar waits out of
  * sight until the headline comes in (HeroBoat says when) and then arrives; elsewhere it is simply there.
@@ -225,8 +228,14 @@ export function Header({ lang, strings }: Props) {
         <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={40} tone={theme === "dark" ? "light" : "ink"} />
 
         <div className={styles.right}>
-          <Link href={otherHref} hrefLang={other} lang={other} className={styles.lang} aria-label={`${strings.langSwitch}: ${other === "nl" ? strings.nl : strings.en}`}>
-            {other.toUpperCase()}
+          <Link href={otherHref} hrefLang={other} lang={other} className={styles.lang} aria-label={strings.switchTo}>
+            <span className={styles.langHint} aria-hidden="true">
+              {strings.switchTo}
+            </span>
+            <span className={styles.flagWrap}>
+              <Flag lang={other} className={styles.flagBack} />
+              <Flag lang={lang} className={styles.flagFront} />
+            </span>
           </Link>
 
           <div className={styles.menuWrap} onPointerEnter={onEnter} onPointerLeave={onLeave}>

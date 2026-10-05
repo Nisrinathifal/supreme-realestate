@@ -67,6 +67,7 @@ export default async function LangLayout({ children, params }: { children: React
             closeMenu: c.nav.closeMenu,
             mainNav: c.a11y.mainNav,
             langSwitch: c.a11y.languageSwitch,
+            switchTo: c.nav.switchTo,
             nl: c.a11y.nl,
             en: c.a11y.en,
             contactUs: c.nav.contactUs,

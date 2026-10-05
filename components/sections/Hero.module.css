@@ -12,10 +12,8 @@
    Both crop from the bottom (the water) so the sky that carries the copy is never cut. */
 .video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; opacity: 0; }
 .video[data-revealed="true"] { opacity: 1; }
-/* Night film, then the night still, over the day film, same crop; unseen until the scroll brings dusk (opacity in JS) */
+/* Night film over the day film, same crop; unseen until the scroll brings dusk (opacity set in JS) */
 .nightFilm { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; }
-.night { position: absolute; inset: 0; }
-.night img { object-position: 50% 0%; }
 .scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: var(--media-scrim-sky), var(--media-scrim); }
 /* The boat redrawn over the headline (HeroBoat), with the scrim baked in so it matches the film around it */
 .boat { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; }

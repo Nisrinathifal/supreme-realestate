@@ -5,9 +5,8 @@ import { HEADER_THEME } from "@/components/layout/Header";
 import { HERO_LIVE } from "@/components/sections/HeroFilm";
 import { gsap, MQ, setupGsap } from "@/lib/motion";
 
-/** Where in the scroll (0–1) the night still starts to come up over the night film, and how long it takes. */
-const STILL_AT = 0.68;
-const STILL_FADE = 0.22;
+/** From this point of the scroll (0–1) night has fallen: the film stops looping and rests on its last frame. */
+const HOLD_AT = 0.7;
 /** How far the facades come forward over the scroll, around the houses' centre. */
 const ZOOM = 1.22;
 /** Phones: the windows arrive this long after the film starts, once the boat has carried the headline in. */
@@ -17,8 +16,9 @@ const PHONE_DELAY = 4800;
  * Nightfall on scroll (concept 2026-10-05). On desktop the hero holds (pinned) for a little over one viewport of
  * scroll while the scroll scrubs dusk: the copy leaves, the night film (same view, windows lit, a boat passing)
  * comes up over the day film and the boat canvas goes with the day, the whole view eases forward to ZOOM around
- * the houses; once it is dark the night still comes up over the film and the view holds, and the spotlight settles
- * on the four project windows (the facades around them step back, their frames come on) and they become live. A slow scrub and a little hysteresis on the live state keep it steady under a nervous wheel. Phones get no pin: the windows
+ * the houses; once it is dark the film finishes its crossing and rests on its last frame (which meets its first, so
+ * nothing jumps), and the spotlight settles on the four project windows (the facades around them step back, their
+ * frames come on) and they become live. A slow scrub and a little hysteresis on the live state keep it steady under a nervous wheel. Phones get no pin: the windows
  * arrive by themselves after the boat has passed, by day. Reduced motion: no pin, no night, the windows are
  * simply there. The hotspot layer carries `data-shown`; its CSS keeps the windows out of sight and out of the
  * tab order until then. Built once the hero is live (HeroFilm), so the tweens record its settled state.
@@ -52,18 +52,13 @@ export function HeroScroll() {
         document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: toDark ? "dark" : "light" }));
       };
       const build = () => {
-        // The night layers (HeroNight) are looked up here, a frame after the hero goes live: the film is client-only and the
-        // still is hidden outright; both unseen at opacity 0 first. The film starts loading now
+        // The night film (HeroNightFilm) is client-only, so it is looked up here, a frame after the hero goes live;
+        // unseen at opacity 0 first, and it starts loading now
         const nightFilm = hero.querySelector<HTMLVideoElement>("[data-hero-night-film]");
-        const night = hero.querySelector<HTMLElement>("[data-hero-night]");
         if (nightFilm) {
           gsap.set(nightFilm, { opacity: 0 });
           nightFilm.preload = "auto";
           nightFilm.load();
-        }
-        if (night) {
-          gsap.set(night, { opacity: 0 });
-          night.hidden = false;
         }
         tl = gsap.timeline({
           scrollTrigger: {
@@ -80,17 +75,19 @@ export function HeroScroll() {
               layer.dataset.shown = live ? "true" : "false";
               headerTheme(self.progress > 0.45); // the bar turns to Paper once the sky has gone dark
               if (!nightFilm) return;
-              // The night film runs only while it can be seen: between first light and the still's full cover
-              const seen = self.progress > 0.01 && self.progress < STILL_AT + STILL_FADE;
-              if (seen && nightFilm.paused) nightFilm.play().catch(() => undefined);
-              else if (!seen && !nightFilm.paused) nightFilm.pause();
+              // The night film runs while it can be seen; once night has fallen it stops looping and rests on its
+              // last frame (ended), and a scroll back up lets it loop and resume (its last frame meets its first)
+              nightFilm.loop = self.progress < HOLD_AT;
+              const seen = self.progress > 0.01;
+              if (!seen) {
+                if (!nightFilm.paused) nightFilm.pause();
+              } else if (nightFilm.paused && (nightFilm.loop || !nightFilm.ended)) nightFilm.play().catch(() => undefined);
             },
           },
         });
         if (copy) tl.to(copy, { opacity: 0, y: -24, duration: 0.3, ease: "none" }, 0);
         tl.to(targets, { scale: ZOOM, duration: 1, ease: "power1.inOut" }, 0);
         if (nightFilm) tl.to(nightFilm, { opacity: 1, duration: 0.62, ease: "power1.inOut" }, 0);
-        if (night) tl.to(night, { opacity: 1, duration: STILL_FADE, ease: "power1.inOut" }, STILL_AT);
         if (canvas) tl.to(canvas, { opacity: 0, duration: 0.5, ease: "none" }, 0.2);
         if (spots) tl.to(spots, { opacity: 1, duration: 0.4, ease: "none" }, 0.55);
         tl.to(boxes, { opacity: 1, duration: 0.3, stagger: 0.06, ease: "none" }, 0.6);

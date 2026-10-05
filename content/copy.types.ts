@@ -16,7 +16,16 @@ export type Copy = {
   };
   a11y: { skip: string; languageSwitch: string; nl: string; en: string; mainNav: string; footerNav: string; legalNav: string; home: string };
   /** Header: menu pill, the sections it lists (anchors on the homepage) and the contact button. */
-  nav: { about: string; contact: string; menu: string; closeMenu: string; contactUs: string; sections: { id: string; label: string }[] };
+  nav: {
+    about: string;
+    contact: string;
+    menu: string;
+    closeMenu: string;
+    contactUs: string;
+    /** The language button's name and hover hint, written in the language it leads to. */
+    switchTo: string;
+    sections: { id: string; label: string }[];
+  };
   brand: { wordmark: string; descriptor: string; tagline: string };
   /** Hero: `headline` (H1, `\n` = line break) with `keyMessage` under it, over the full-bleed still. */
   hero: { headline: string; keyMessage: string; pause: string; play: string };

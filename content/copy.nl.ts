@@ -31,6 +31,7 @@ export const nl: Copy = {
     about: "Over ons",
     contact: "Contact",
     menu: draft("Navigeer naar"),
+    switchTo: draft("Switch to English"),
     closeMenu: "Sluit menu",
     contactUs: "Neem contact op",
     sections: [

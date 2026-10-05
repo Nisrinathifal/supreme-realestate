@@ -31,6 +31,7 @@ export const en: Copy = {
     about: "About",
     contact: "Contact",
     menu: draft("Navigate to"),
+    switchTo: draft("Naar het Nederlands"),
     closeMenu: "Close menu",
     contactUs: draft("Contact us"),
     // Section by section (owner's note 2026-10-01); grows with the homepage

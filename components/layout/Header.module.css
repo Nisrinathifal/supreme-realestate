@@ -25,14 +25,19 @@
 }
 .lockup { min-height: 44px; }
 .right { display: flex; align-items: center; gap: var(--s-2); }
-/* Language: one round button with the other language's code, ink on light, Paper over a dark band */
-.lang {
-  display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: var(--r-pill);
-  background: var(--ink); color: var(--bg);
-  font-size: var(--fs-micro); font-weight: 600; line-height: 1; letter-spacing: 0.06em;
-  transition: background-color 250ms var(--ease), color 250ms var(--ease);
+/* Language: a small circle with the current language's flag, the menu icon's size. Hover or focus slides the flag
+   half aside, showing the other language's flag behind it, and the hint ("Switch to English") settles on the left */
+.lang { position: relative; display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-pill); color: inherit; }
+.flagWrap { position: relative; width: 26px; height: 26px; border-radius: 50%; overflow: hidden; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent); }
+.flagBack, .flagFront { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.flagFront { clip-path: inset(0 0 0 0); transition: clip-path 380ms var(--ease); }
+.lang:hover .flagFront, .lang:focus-visible .flagFront { clip-path: inset(0 50% 0 0); }
+.langHint {
+  position: absolute; right: calc(100% - var(--s-1)); top: 50%; translate: 6px -50%; white-space: nowrap; pointer-events: none;
+  font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em; opacity: 0;
+  transition: opacity 300ms var(--ease), translate 300ms var(--ease);
 }
-.header[data-theme="dark"] .lang { background: var(--on-media); color: var(--ink); }
+.lang:hover .langHint, .lang:focus-visible .langHint { opacity: 1; translate: 0 -50%; }
 .lang:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 /* Menu: the nine dots, bare; the panel hangs from its wrapper */
 .menuWrap { position: relative; }
@@ -77,5 +82,4 @@
 @media (max-width: 560px) {
   .bar { height: var(--header-h); gap: var(--s-2); }
   .lockup img { height: 32px !important; width: auto !important; }
-  .lang { width: 36px; height: 36px; }
 }
