@@ -9,8 +9,6 @@ import { gsap, MQ, setupGsap } from "@/lib/motion";
 const HOLD_AT = 0.7;
 /** How far the facades come forward over the scroll, around the houses' centre. */
 const ZOOM = 1.22;
-/** Phones: the windows arrive this long after the film starts, once the boat has carried the headline in. */
-const PHONE_DELAY = 4800;
 
 /**
  * Nightfall on scroll (concept 2026-10-05). On desktop the hero holds (pinned) for a little over one viewport of
@@ -18,9 +16,9 @@ const PHONE_DELAY = 4800;
  * comes up over the day film and the boat canvas goes with the day, the whole view eases forward to ZOOM around
  * the houses; once it is dark the film finishes its crossing and rests on its last frame (which meets its first, so
  * nothing jumps), and the spotlight settles on the four project windows (the facades around them step back, their
- * frames come on) and they become live. A slow scrub and a little hysteresis on the live state keep it steady under a nervous wheel. Phones get no pin: the windows
- * arrive by themselves after the boat has passed, by day. Reduced motion: no pin, no night, the windows are
- * simply there. The hotspot layer carries `data-shown`; its CSS keeps the windows out of sight and out of the
+ * frames come on) and they become live. A slow scrub and a little hysteresis on the live state keep it steady under
+ * a nervous wheel. Phones get the same dusk (their windows are off screen, so the projects deck under the hero is
+ * the way in). Reduced motion: no pin, no night, the windows are simply there. The hotspot layer carries `data-shown`; its CSS keeps the windows out of sight and out of the
  * tab order until then. Built once the hero is live (HeroFilm), so the tweens record its settled state.
  */
 export function HeroScroll() {
@@ -37,7 +35,7 @@ export function HeroScroll() {
     const boxes = Array.from(layer.querySelectorAll<HTMLElement>("[data-window]"));
     const mm = gsap.matchMedia();
 
-    mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
+    mm.add(MQ.full, () => {
       layer.dataset.shown = "false";
       gsap.set(boxes, { opacity: 0 });
       gsap.set(targets, { transformOrigin: "50% 58%" });
@@ -107,28 +105,8 @@ export function HeroScroll() {
       };
     });
 
-    mm.add(`${MQ.reduce}, (max-width: 767px)`, () => {
-      const reduced = window.matchMedia(MQ.reduce).matches;
-      if (reduced) {
-        layer.dataset.shown = "true";
-        return;
-      }
-      layer.dataset.shown = "false";
-      gsap.set(boxes, { opacity: 0 });
-      let timer = 0;
-      const arrive = () => {
-        timer = window.setTimeout(() => {
-          layer.dataset.shown = "true";
-          gsap.to(boxes, { opacity: 1, duration: 0.6, stagger: 0.08, ease: "power2.out" });
-        }, PHONE_DELAY);
-      };
-      if (document.documentElement.hasAttribute("data-hero-live")) arrive();
-      else document.addEventListener(HERO_LIVE, arrive, { once: true });
-      return () => {
-        window.clearTimeout(timer);
-        document.removeEventListener(HERO_LIVE, arrive);
-        layer.dataset.shown = "true";
-      };
+    mm.add(MQ.reduce, () => {
+      layer.dataset.shown = "true";
     });
 
     return () => mm.revert();

@@ -3,8 +3,10 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { workCases } from "@/content/media";
+import { projects } from "@/content/projects";
 import { getCopy } from "@/content/copy";
-import { pathFor, type Lang } from "@/content/routes";
+import type { Lang } from "@/content/routes";
+import { WorkEnter } from "./WorkEnter";
 import { WorkMotion } from "./WorkMotion";
 import styles from "./Work.module.css";
 
@@ -14,10 +16,12 @@ const tones = [`inverse ${styles.toneInk}`, styles.toneSky, `inverse ${styles.to
 /**
  * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a label and a heading, then four cases as
  * coloured cards. Each card: title, index, body, a note on what the photographs show, three photographs and one link
- * covering the whole card, whose pill follows the pointer anywhere on the card. The band follows the intro in the flow; its heading and first card settle as
- * they come into view, scrubbed; on desktop the deck is then pinned and each next card rises over the current one
- * while the ones still to come wait as strips below (WorkMotion). Phones stack the cards with CSS sticky; reduced
- * motion and no-JS read the cards one after another. Cases are anonymous (PRD §6): interiors, no names or addresses.
+ * covering the whole card, whose pill follows the pointer anywhere on the card. Since 2026-10-05 the band follows
+ * the hero directly and each card is one of the four named projects (content/projects.ts): its name and city
+ * above the case title, and the cover enters that project's overlay (WorkEnter), like a window in the film. Its
+ * heading and first card settle as they come into view, scrubbed; the deck is then pinned and each next card
+ * rises over the current one while the ones still to come wait as strips below (WorkMotion), on phones too.
+ * Reduced motion and no-JS read the cards one after another.
  */
 export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
@@ -36,15 +40,21 @@ export function Work({ lang }: { lang: Lang }) {
         <ol className={styles.deck} data-work-deck style={{ "--count": n } as CSSProperties}>
           {c.work.items.map((item, i) => {
             const media = workCases[i];
-            if (!media) return null;
+            const project = projects[i];
+            if (!media || !project) return null;
             const style = { "--i": i, "--behind": n - 1 - i } as CSSProperties;
             return (
               <li key={item.index} className={`${styles.card} ${tones[i % tones.length]}`} style={style} data-work-card>
                 <article className={styles.inner} aria-labelledby={`work-${media.id}-title`}>
                   <header className={styles.head}>
-                    <h3 id={`work-${media.id}-title`} className={styles.title}>
-                      {item.title}
-                    </h3>
+                    <div>
+                      <p className={`t-micro ${styles.project}`}>
+                        {project.name} · {project.location}
+                      </p>
+                      <h3 id={`work-${media.id}-title`} className={styles.title}>
+                        {item.title}
+                      </h3>
+                    </div>
                     <span className={styles.index} aria-hidden="true">
                       ({item.index})
                     </span>
@@ -63,12 +73,12 @@ export function Work({ lang }: { lang: Lang }) {
                         ))}
                       </ul>
                       <span className={styles.pill} data-work-pill aria-hidden="true">
-                        {c.work.cta}
+                        {c.projects.explore}
                         <ArrowRight size={16} weight="light" />
                       </span>
                     </div>
                   </div>
-                  <a href={pathFor("contact", lang)} className={styles.cover} aria-label={`${item.title}: ${c.work.cta}`} />
+                  <WorkEnter id={project.id} label={c.projects.hotspot(project.name)} className={styles.cover} />
                 </article>
               </li>
             );

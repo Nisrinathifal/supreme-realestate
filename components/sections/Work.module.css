@@ -1,5 +1,5 @@
-/* White band after the intro: a centred label and heading, then the deck of cards */
-.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: calc(var(--section-y) * 3 + var(--s-9)); padding-bottom: var(--section-y); background: var(--band-tone, var(--surface)); } /* same tone as the intro (no seam); the tone fades to white in this room above, where the mascots lag */ /* white, continuing the intro */
+/* White band right after the hero: a centred label and heading, then the deck of cards */
+.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: var(--section-y); padding-bottom: var(--section-y); background: var(--surface); }
 .heading { margin: 0 auto var(--s-9); display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
 .label { color: var(--muted); }
 .title2 { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-statement); text-wrap: balance; }
@@ -17,6 +17,7 @@
 .toneLime { background: var(--tint); }
 .inner { display: flex; flex-direction: column; gap: var(--s-5); height: 100%; padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) * 0.8); }
 .head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-5); }
+.project { margin: 0 0 var(--s-2); color: var(--muted); }
 .title { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: -0.02em; line-height: 1.08; font-size: clamp(24px, 2.3vw, 34px); max-width: 18ch; text-wrap: balance; }
 .index { flex: 0 0 auto; font-family: var(--font-display); font-size: var(--fs-lead); line-height: 1; color: var(--muted); padding-top: 0.25em; }
 .body { margin: 0; max-width: 52ch; font-size: var(--fs-ui); line-height: 1.6; color: var(--muted); }
@@ -40,22 +41,18 @@
   box-shadow: var(--shadow-soft); pointer-events: none;
 }
 
-/* Desktop deck (WorkMotion sets data-deck): the deck is one viewport tall and pinned; the cards lie on top of each
+/* The deck (WorkMotion sets data-deck, on every width): one viewport tall and pinned; the cards lie on top of each
    other, the first on top, the ones to come stepped down beneath it */
-@media (min-width: 768px) {
-  .deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 760px); display: block; clip-path: inset(-100svh -40px 0 -40px); } /* the waiting cards end with the deck's foot; a lifted card may rise above it */
-  .deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - (var(--count, 4) - 1) * var(--peek)); } /* all the same height; the stack steps them down by --peek */
-  /* the strips that show beneath the top card are the foot of each card: kept clear of photographs and copy */
-  .deck[data-deck] .inner { padding-bottom: calc(var(--peek) + var(--s-5)); }
-}
+.deck[data-deck] { position: relative; height: min(calc(100svh - var(--stack-top) - var(--frame)), 760px); display: block; clip-path: inset(-100svh -40px 0 -40px); } /* the waiting cards end with the deck's foot; a lifted card may rise above it */
+.deck[data-deck] .card { position: absolute; inset: 0 var(--frame) auto; height: calc(100% - (var(--count, 4) - 1) * var(--peek)); } /* all the same height; the stack steps them down by --peek */
+/* the strips that show beneath the top card are the foot of each card: kept clear of photographs and copy */
+.deck[data-deck] .inner { padding-bottom: calc(var(--peek) + var(--s-5)); }
 
 @media (max-width: 767px) {
-  /* Phones: CSS stack, the next card slides over the previous and leaves its head row (--peek: the padding and the
-     first title line) showing */
-  .work { --peek: calc(var(--s-5) + 1.1 * clamp(24px, 6.4vw, 32px)); }
-  .deck { padding: 0 var(--frame); }
-  .card { position: sticky; top: calc(var(--stack-top) + var(--peek) * var(--i, 0)); min-height: calc(100svh - var(--stack-top) - var(--peek) * var(--i, 0) - var(--frame)); border-radius: var(--r-md); }
-  .deck { width: 100%; }
+  /* Phones: the same deck, tighter strips and a stacked foot */
+  .work { --peek: var(--s-6); }
+  .deck { padding: 0 var(--frame); width: 100%; }
+  .card { border-radius: var(--r-md); }
   .inner { padding: var(--s-5) var(--s-5) var(--s-5); gap: var(--s-5); }
   .title { font-size: clamp(24px, 6.4vw, 32px); }
   .index { font-size: var(--fs-body); }

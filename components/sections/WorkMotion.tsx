@@ -5,13 +5,13 @@ import { useRef } from "react";
 import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Arrival: the shared band tone fades from the intro's Sky mist to white and the heading, the first card and its
- * photographs come up and settle, scrubbed by the scroll. Desktop deck after the reference:
+ * Arrival: the heading, the first card and its photographs come up and settle, scrubbed by the scroll. Then the
+ * deck after the reference, on every width since 2026-10-05:
  * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
  * little narrower), and each next card rises to the top and grows to full width over the current one while its
  * photographs slide in from the right and its note settles, scrubbed. On a fine pointer the card's pill follows the
  * pointer anywhere on the card and returns to the photographs when it leaves. Start states live here; without this the
- * CSS stacks the cards (phones) or lists them (reduced motion, no JS).
+ * CSS lists the cards (reduced motion, no JS).
  */
 export function WorkMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -29,15 +29,6 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const first = q<HTMLElement>("[data-work-card]")[0];
         if (!section || !heading || !first) return;
         const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
-        // The shared band tone (--band-tone on body, set to Sky mist by the intro) fades back to white inside this
-        // band's room above the heading, so the colour changes as the projects come in, with no seam
-        const tokens = getComputedStyle(document.documentElement);
-        const tone = gsap.to(document.body, {
-          "--band-tone": tokens.getPropertyValue("--surface").trim(),
-          ease: "none",
-          immediateRender: false,
-          scrollTrigger: { trigger: section, start: "top 70%", end: "top 10%", scrub: true, invalidateOnRefresh: true },
-        });
         gsap.set(heading, { y: 56, opacity: 0 });
         gsap.set(first, { y: 96, scale: 0.94 });
         if (firstPhotos) gsap.set(firstPhotos, { xPercent: 10 });
@@ -49,15 +40,13 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           .to(first, { y: 0, scale: 1, duration: 0.8 }, 0.15)
           .to(firstPhotos, { xPercent: 0, duration: 0.7 }, 0.3);
         return () => {
-          tone.scrollTrigger?.kill();
-          tone.kill();
           tl.scrollTrigger?.kill();
           tl.kill();
           gsap.set([heading, first, firstPhotos], { clearProps: "transform,opacity" });
         };
       });
 
-      mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
+      mm.add(MQ.full, () => {
         const q = gsap.utils.selector(root);
         const deck = q<HTMLElement>("[data-work-deck]")[0];
         const cards = q<HTMLElement>("[data-work-card]");

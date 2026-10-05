@@ -122,26 +122,8 @@
 }
 .back:focus-visible, .exploreBtn:focus-visible, .indexItem:focus-visible { outline: 2px solid var(--on-media); outline-offset: 3px; }
 
-/* Phones: the four projects in a row under the hero (the film's windows are off screen there, see ProjectStrip) */
-.strip { padding: var(--s-8) 0 var(--s-6); background: var(--surface); }
-.stripHead { display: flex; flex-direction: column; gap: var(--s-2); padding: 0 var(--gutter); margin-bottom: var(--s-5); }
-.stripTitle { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); letter-spacing: -0.01em; }
-.stripList {
-  display: flex; gap: var(--s-4); padding: 0 var(--gutter) var(--s-2); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
-  -webkit-overflow-scrolling: touch; scrollbar-width: none;
-}
-.stripList::-webkit-scrollbar { display: none; }
-.stripItem { flex: 0 0 62vw; max-width: 300px; scroll-snap-align: start; }
-.stripCard { display: flex; flex-direction: column; gap: var(--s-3); width: 100%; padding: 0; text-align: left; color: var(--ink); border-radius: var(--r-lg); }
-.stripCard:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
-.stripText { display: grid; gap: 2px; padding: 0 var(--s-1); }
-.stripName { font-family: var(--font-display); font-size: var(--fs-ui); font-weight: 500; }
-.stripMeta { font-size: var(--fs-micro); color: var(--muted); }
-.stripArrow { margin: calc(-1 * var(--s-6)) var(--s-2) 0 auto; color: var(--muted); }
-@media (min-width: 768px) { .strip { display: none; } }
-
 @media (max-width: 767px) {
-  /* The film's windows: off screen in the phone crop, so the strip takes over */
+  /* The film's windows: off screen in the phone crop, so the projects deck under the hero takes over */
   .layer { display: none; }
   .overviewGrid { grid-template-columns: 1fr; gap: var(--s-6); }
   .indexList { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
