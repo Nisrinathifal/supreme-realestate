@@ -95,7 +95,7 @@ export const introSequence: ImageAsset[] = [
  * Hero film (concept 3, supplied 2026-10-05): fixed camera on the canal houses, boats passing, loops. Trimmed to
  * 0.083–9.333 s (retimed to 24 fps from zero), where the second boat stands exactly where the first one starts,
  * so the loop has no seam; then raised to 60 fps with motion interpolation (scripts/film-interpolate.swift).
- * Re-encoded without metadata or audio by scripts/film-export.swift (hero-film-02, the house renewal, stays
+ * Re-encoded without metadata or audio by scripts/film-export.swift (hero-film-02, the house renewal, also at 60 fps, stays
  * for concept 2). WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
  */
 export const heroFilm: VideoAsset = {
@@ -158,9 +158,10 @@ export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", Shelf
 };
 
 /**
- * Steps section: one looping clip per step (supplied 2026-10-02, 4 s, 24 fps, a canal house on a flat ground).
+ * Steps section: one looping clip per step (supplied 2026-10-02, 4 s, a canal house on a flat ground).
  * The ground was keyed to transparency offline (scripts/film-frames.swift → scripts/key-clips.mjs: background model,
- * shadow kept as a multiply layer) and the keyed frames stacked into colour + matte video (scripts/film-stack.swift).
+ * shadow kept as a multiply layer), the keyed frames stacked into colour + matte video (scripts/film-stack.swift),
+ * then raised from 24 to 60 fps with motion interpolation (scripts/film-interpolate.swift), matte and colour together.
  */
 const stepClip = (n: string, nl: string, en: string): AlphaVideoAsset => ({
   mp4: `/media/step-clip-${n}.mp4`,
