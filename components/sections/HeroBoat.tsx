@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { SplitText } from "gsap/SplitText";
 import type { FilmSubject } from "@/content/media";
 import { ease, gsap, prefersReducedMotion, saveData, setupGsap } from "@/lib/motion";
-import { INTRO_DONE } from "./HeroFilm";
+import { HEADLINE_IN, HERO_LIVE } from "./HeroFilm";
 import styles from "./Hero.module.css";
 
 type Props = { subject: FilmSubject };
@@ -51,13 +51,19 @@ export function HeroBoat({ subject }: Props) {
     const title = hero?.querySelector<HTMLElement>("[data-hero-title]");
     const lead = hero?.querySelector<HTMLElement>("[data-hero-lead]");
     const ctx = canvas?.getContext("2d");
-    if (!canvas || !hero || !video || !title || !lead || !ctx) return;
+    if (!canvas || !hero || !video || !title || !ctx) return;
     setupGsap();
     gsap.registerPlugin(SplitText);
 
     const stops = gradientStops(getComputedStyle(hero).getPropertyValue("--media-scrim"));
     let cancelled = false;
-    let live = document.documentElement.hasAttribute("data-preloader-skip"); // intro over: the frame fills the hero
+    let live = document.documentElement.hasAttribute("data-hero-live"); // the film runs (HeroFilm)
+    let announced = false; // the headline has started to come in
+    const announce = () => {
+      if (announced) return;
+      announced = true;
+      document.dispatchEvent(new CustomEvent(HEADLINE_IN));
+    };
     let frameCb = 0;
     let raf = 0;
     let stall = 0;
@@ -125,6 +131,7 @@ export function HeroBoat({ subject }: Props) {
     /* ---------- the first crossing brings the copy in ---------- */
     const finish = () => {
       window.clearTimeout(stall);
+      announce();
       if (pending.length) gsap.to(pending.map((p) => p.el), { opacity: 1, duration: 0.7, ease: ease.brand, stagger: 0.015, overwrite: "auto" });
       pending.forEach((p) => {
         if (p.letter) p.letter.rise = 0;
@@ -150,6 +157,7 @@ export function HeroBoat({ subject }: Props) {
         const d = (tail - p.x - p.lag * r.width) / fade;
         if (d <= 0) return true;
         const t = d >= 1 ? 1 : d * d * (3 - 2 * d); // smoothstep: soft at both ends of the wake
+        announce();
         if (p.letter) {
           gsap.set(p.el, { opacity: t });
           p.letter.rise = 30 * (1 - t); // the ripple applies it, with the wave
@@ -210,7 +218,7 @@ export function HeroBoat({ subject }: Props) {
         if (video.paused) finish();
       }, STALL_MS);
     };
-    const onIntroDone = () => {
+    const onLive = () => {
       live = true;
       resize();
       redraw();
@@ -231,18 +239,18 @@ export function HeroBoat({ subject }: Props) {
     video.addEventListener("pause", watch);
     video.addEventListener("seeked", redraw);
     if (live) watch();
-    else document.addEventListener(INTRO_DONE, onIntroDone, { once: true });
+    else document.addEventListener(HERO_LIVE, onLive, { once: true });
     if (hasFrameCb) frameCb = video.requestVideoFrameCallback(onFrame);
     else raf = requestAnimationFrame((t) => onFrame(t));
 
     // Split once the fonts are in, and only while the first crossing is still ahead
     document.fonts.ready.then(() => {
       if (cancelled || video.currentTime > 0.5) return;
-      splits = [new SplitText(title, { type: "words,chars" }), new SplitText(lead, { type: "words" })];
+      splits = [new SplitText(title, { type: "words,chars" }), ...(lead ? [new SplitText(lead, { type: "words" })] : [])];
       letters = (splits[0].chars as HTMLElement[]).map((el) => ({ el, x: null, rise: 30, applied: 30 }));
       pending = [
         ...letters.map((letter) => ({ el: letter.el, lag: 0, x: null, letter })),
-        ...(splits[1].words as HTMLElement[]).map((el) => ({ el, lag: LEAD_LAG, x: null })),
+        ...((splits[1]?.words as HTMLElement[] | undefined) ?? []).map((el) => ({ el, lag: LEAD_LAG, x: null })),
       ];
       gsap.set(pending.map((p) => p.el), { opacity: 0, yPercent: 30 });
     });
@@ -257,7 +265,7 @@ export function HeroBoat({ subject }: Props) {
       video.removeEventListener("playing", onPlaying);
       video.removeEventListener("pause", watch);
       video.removeEventListener("seeked", redraw);
-      document.removeEventListener(INTRO_DONE, onIntroDone);
+      document.removeEventListener(HERO_LIVE, onLive);
       gsap.killTweensOf(pending.map((p) => p.el));
       splits.forEach((sp) => sp.revert());
     };

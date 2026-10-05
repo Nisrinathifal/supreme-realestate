@@ -16,31 +16,38 @@
   content: ""; position: absolute; inset: 0 0 auto 0; height: calc((var(--header-h) + var(--s-5)) * 1.9); z-index: -1;
   background: var(--header-scrim); pointer-events: none;
 }
-/* Three columns: menu left, lockup on the centre line, language + contact right */
+/* While the bar arrives on the homepage (a tween), its own transitions step aside */
+.header[data-arriving="true"] { transition: none; }
+/* Two columns: the lockup left, the language button and the menu right */
 .bar {
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--s-4);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-4);
   height: calc(var(--header-h) + var(--s-5));
 }
-.left { position: relative; justify-self: start; }
 .lockup { min-height: 44px; }
-.right { justify-self: end; display: flex; align-items: center; gap: var(--s-3); }
-
-/* See-through pill (--glass-soft), shared look with the language pill */
-.pill {
-  display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-4);
-  border-radius: var(--r-pill); border: 1px solid var(--glass-line);
-  background: var(--glass-soft); color: var(--glass-fg);
-  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2); backdrop-filter: blur(var(--blur)) saturate(1.2);
-  font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em; white-space: nowrap;
+.right { display: flex; align-items: center; gap: var(--s-2); }
+/* Language: one round button with the other language's code, ink on light, Paper over a dark band */
+.lang {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: var(--r-pill);
+  background: var(--ink); color: var(--bg);
+  font-size: var(--fs-micro); font-weight: 600; line-height: 1; letter-spacing: 0.06em;
+  transition: background-color 250ms var(--ease), color 250ms var(--ease);
 }
-.pill:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
-.cta { min-height: 44px; }
-.ctaShort { display: none; }
+.header[data-theme="dark"] .lang { background: var(--on-media); color: var(--ink); }
+.lang:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+/* Menu: the nine dots, bare; the panel hangs from its wrapper */
+.menuWrap { position: relative; }
+.menu {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-pill); color: inherit;
+  transition: background-color 250ms var(--ease);
+}
+.menu:hover { background: var(--glass-soft); }
+.menu:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
-/* Panel under the pill: glass panel per DESIGN §9.4. The wrapper holds the gap so hover carries over. */
-/* Opens by growing downwards from the pill (grid rows 0fr → 1fr), like the reference; closes the same way */
+
+/* Panel under the menu button, hanging from the right: glass panel per DESIGN §9.4. The wrapper holds the gap so
+   hover carries over. Opens by growing downwards (grid rows 0fr → 1fr), like the reference; closes the same way */
 .panelWrap {
-  position: absolute; left: 0; top: 100%; z-index: 1; padding-top: var(--s-2);
+  position: absolute; right: 0; top: 100%; z-index: 1; padding-top: var(--s-2);
   width: min(380px, calc(100vw - 2 * var(--gutter)));
   display: grid; grid-template-rows: 1fr;
   transition: grid-template-rows 340ms var(--ease-precise), visibility 0s linear 0s;
@@ -62,7 +69,6 @@
   font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: 1.2; letter-spacing: -0.01em;
 }
 .link[aria-current="page"] { color: var(--muted); }
-.panelLang { display: none; }
 .details { margin-top: var(--s-5); padding-top: var(--s-5); border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--s-3); }
 .row { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--s-3); align-items: baseline; }
 .value { display: flex; flex-direction: column; font-size: var(--fs-ui); line-height: 1.4; }
@@ -71,9 +77,5 @@
 @media (max-width: 560px) {
   .bar { height: var(--header-h); gap: var(--s-2); }
   .lockup img { height: 32px !important; width: auto !important; }
-  .barLang { display: none; }
-  .panelLang { display: block; margin-top: var(--s-4); padding-top: var(--s-4); border-top: 1px solid var(--line); }
-  .pill, .cta { padding-inline: var(--s-3); min-height: 40px; }
-  .ctaLong { display: none; }
-  .ctaShort { display: inline; }
+  .lang { width: 36px; height: 36px; }
 }

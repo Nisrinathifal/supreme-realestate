@@ -15,7 +15,6 @@ html {
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
-html[data-preloading] { overflow: hidden; }
 /* A project is open over the page (components/windows): the page holds still and the header steps aside */
 html[data-project-open] { overflow: hidden; }
 html[data-project-open] [data-header] { opacity: 0; pointer-events: none; }

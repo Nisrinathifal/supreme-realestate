@@ -16,9 +16,8 @@ import styles from "./Hero.module.css";
  * first crossing bring the letters in). Scrolling brings dusk (HeroScroll): the night film comes up over the day
  * film and then hands over to the night still (HeroNight) and the spotlight settles on the four project windows (components/windows); click one to enter
  * its project through that window.
- * Complete without JavaScript (the still). On the first visit the intro (components/motion/Preloader) grows
- * `[data-hero-frame]` from a small square to the full viewport and fades `[data-hero-copy]` in; all of those
- * start states are set in JS, never here.
+ * Complete without JavaScript (the still); with it the film starts by itself and marks the hero live (HeroFilm),
+ * and the header arrives once the headline does. No intro, no key message under the lockup (owner, 2026-10-05).
  */
 export function Hero({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
@@ -35,9 +34,6 @@ export function Hero({ lang }: { lang: Lang }) {
         <h1 id="hero-title" className={styles.title} data-hero-title>
           {c.hero.headline.replace(/\s*\n\s*/g, " ")}
         </h1>
-        <p className={styles.lead} data-hero-lead>
-          {c.hero.keyMessage}
-        </p>
       </div>
       {hasFilm && heroFilm.subject ? <HeroBoat subject={heroFilm.subject} /> : null}
       <ProjectWindows lang={lang} />

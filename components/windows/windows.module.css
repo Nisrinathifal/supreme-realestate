@@ -4,7 +4,6 @@
 .layer { position: absolute; inset: 0; z-index: 4; container-type: size; pointer-events: none; }
 .film { position: absolute; top: 0; left: 50%; translate: -50% 0; width: max(100cqw, calc(100cqh * 16 / 9)); height: max(100cqh, calc(100cqw * 9 / 16)); }
 .film > * { pointer-events: auto; }
-:global(html[data-preloading]) .layer { visibility: hidden; }
 
 /* Spotlight (after dusk, HeroScroll fades it in): Canal ink over the facades, masked away in a soft pool around each
    project window. The mask colours are alpha only ("black" = kept), not a design colour. */

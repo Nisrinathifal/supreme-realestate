@@ -35,11 +35,6 @@
 /* Copy (concept 3). A full-size layer sized as a container, so the headline can be placed in film coordinates:
    the film covers the hero anchored at the top, so its drawn height is max(100cqh, 56.25cqw). */
 .copy { position: absolute; inset: 0; z-index: 2; container-type: size; pointer-events: none; }
-/* Key message alone in the sky, in ink */
-.lead {
-  position: absolute; inset: calc(var(--header-h) + var(--s-6)) var(--gutter) auto; margin: 0 auto; max-width: 46ch;
-  font-family: var(--font-text); font-size: var(--fs-body); line-height: 1.5; text-align: center; color: var(--ink);
-}
 /* Headline: one line standing on the waterline (film y 921 of 1080, the boat's keel), so the boat passes in front */
 .title {
   position: absolute; left: 0; right: 0; top: calc(max(100cqh, 56.25cqw) * 0.853); transform: translateY(-100%);
@@ -50,5 +45,4 @@
 
 @media (max-width: 980px) {
   .hero { min-height: 0; }
-  .lead { top: calc(var(--header-h) + var(--s-7)); }
 }

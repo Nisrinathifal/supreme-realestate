@@ -68,9 +68,10 @@ export const heroStill: ImageAsset = {
   alt: { nl: "Grachtenpanden aan het water in het ochtendlicht", en: "Canal houses along the water in morning light" },
 };
 
+
 /**
- * Intro sequence (homepage preloader): 14 small interior details that converge into one line before the hero
- * still grows to full screen. Details, materials and light only, nothing traceable to an address (PRD §6.2).
+ * Fourteen small interior details (the former homepage intro, retired 2026-10-05; still the parked Sky band's
+ * thumbnails). Details, materials and light only, nothing traceable to an address (PRD §6.2).
  */
 const intro = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
 export const introSequence: ImageAsset[] = [

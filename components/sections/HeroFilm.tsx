@@ -8,11 +8,21 @@ import styles from "./Hero.module.css";
 
 type Props = { film: VideoAsset; labels: { pause: string; play: string } };
 
-/** Fired by the intro (Preloader) when the hero is fully on screen, or at once when the intro is skipped. */
-export const INTRO_DONE = "supreme:intro-done";
+/**
+ * Fired on <document> once the hero is live: the film has started, or, without playback (reduced motion, Save-Data,
+ * autoplay refused), after a moment. <html data-hero-live> is set at the same time for anything subscribing late.
+ */
+export const HERO_LIVE = "supreme:hero-live";
+/** Fired on <document> when the headline starts to come in (HeroBoat): the cue for the header to arrive. */
+export const HEADLINE_IN = "supreme:headline-in";
+export const markHeroLive = () => {
+  if (document.documentElement.hasAttribute("data-hero-live")) return;
+  document.documentElement.setAttribute("data-hero-live", "");
+  document.dispatchEvent(new CustomEvent(HERO_LIVE));
+};
 
 /**
- * Hero film over the still: starts (muted) after the intro has revealed the hero, then either loops or plays
+ * Hero film over the still: starts (muted) as soon as it can, then either loops or plays
  * once and holds its last frame (`film.loop`). Its first frame matches the still. Reduced motion / Save-Data: no playback, the still stays. Pause control per
  * WCAG 2.2.2, visible on keyboard focus only.
  */
@@ -23,7 +33,10 @@ export function HeroFilm({ film, labels }: Props) {
 
   useEffect(() => {
     const v = videoRef.current;
-    if (!v || prefersReducedMotion() || saveData()) return;
+    if (!v || prefersReducedMotion() || saveData()) {
+      markHeroLive();
+      return;
+    }
     // One source, chosen once (a <source media> pair makes the browser reload and reset on breakpoint changes)
     const mobile = window.matchMedia("(max-width: 980px)").matches;
     const chosen = (mobile && film.mp4Mobile) || film.mp4 || film.webm;
@@ -44,11 +57,11 @@ export function HeroFilm({ film, labels }: Props) {
       if (v.readyState >= 3) start();
       else v.addEventListener("canplay", start, { once: true });
     };
-    const introDone = document.documentElement.hasAttribute("data-preloader-skip");
-    if (introDone) whenReady();
-    else document.addEventListener(INTRO_DONE, whenReady, { once: true });
+    whenReady();
+    // Autoplay refused or the network slow: the page goes on without the film after a moment
+    const fallback = window.setTimeout(markHeroLive, 4000);
     return () => {
-      document.removeEventListener(INTRO_DONE, whenReady);
+      window.clearTimeout(fallback);
       v.removeEventListener("canplay", start);
       v.removeEventListener("loadeddata", reveal);
     };
@@ -78,6 +91,7 @@ export function HeroFilm({ film, labels }: Props) {
         onPlaying={() => {
           setPlaying(true);
           setRevealed(true);
+          markHeroLive();
         }}
         onPause={() => setPlaying(false)}
       >

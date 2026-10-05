@@ -1,4 +1,3 @@
-import { Preloader } from "@/components/motion/Preloader";
 import { Hero } from "@/components/sections/Hero";
 import { Shelf } from "@/components/sections/Shelf";
 import { Steps } from "@/components/sections/Steps";
@@ -6,11 +5,10 @@ import { Work } from "@/components/sections/Work";
 import { WorkIntro } from "@/components/sections/WorkIntro";
 import type { Lang } from "@/content/routes";
 
-/** Homepage, rebuilt section by section from the 2026-09-30 concept: intro (preloader), hero, shelf statement, the three steps, the projects intro and the projects deck (sky band parked). */
+/** Homepage, rebuilt section by section from the 2026-09-30 concept: the hero film opens the page (no intro since 2026-10-05), then the shelf statement, the three steps, the projects intro and the projects deck (sky band parked). */
 export function HomePage({ lang }: { lang: Lang }) {
   return (
     <>
-      <Preloader lang={lang} />
       <Hero lang={lang} />
       <Shelf lang={lang} />
       <Steps lang={lang} />

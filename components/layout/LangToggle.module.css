@@ -1,9 +1,0 @@
-.toggle { display: inline-flex; align-items: center; }
-.item { display: inline-flex; align-items: center; }
-.sep { width: 1px; height: 14px; background: currentColor; opacity: 0.35; margin-inline: var(--s-2); }
-.link {
-  font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.04em;
-  padding: var(--s-3) var(--s-1); min-height: 44px; display: inline-flex; align-items: center;
-  color: inherit; opacity: 0.62; border-radius: var(--s-1);
-}
-.active { opacity: 1; }

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { HEADER_THEME } from "@/components/layout/Header";
-import { INTRO_DONE } from "@/components/sections/HeroFilm";
+import { HERO_LIVE } from "@/components/sections/HeroFilm";
 import { gsap, MQ, setupGsap } from "@/lib/motion";
 
 /** Where in the scroll (0–1) the night still starts to come up over the night film, and how long it takes. */
@@ -10,7 +10,7 @@ const STILL_AT = 0.68;
 const STILL_FADE = 0.22;
 /** How far the facades come forward over the scroll, around the houses' centre. */
 const ZOOM = 1.22;
-/** Phones: the windows arrive this long after the intro, once the boat has carried the headline in. */
+/** Phones: the windows arrive this long after the film starts, once the boat has carried the headline in. */
 const PHONE_DELAY = 4800;
 
 /**
@@ -21,7 +21,7 @@ const PHONE_DELAY = 4800;
  * on the four project windows (the facades around them step back, their frames come on) and they become live. A slow scrub and a little hysteresis on the live state keep it steady under a nervous wheel. Phones get no pin: the windows
  * arrive by themselves after the boat has passed, by day. Reduced motion: no pin, no night, the windows are
  * simply there. The hotspot layer carries `data-shown`; its CSS keeps the windows out of sight and out of the
- * tab order until then. Built once the intro is over, so the tweens record the hero's settled state.
+ * tab order until then. Built once the hero is live (HeroFilm), so the tweens record its settled state.
  */
 export function HeroScroll() {
   useEffect(() => {
@@ -52,7 +52,7 @@ export function HeroScroll() {
         document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: toDark ? "dark" : "light" }));
       };
       const build = () => {
-        // The night layers (HeroNight) are looked up here, a frame after the intro: the film is client-only and the
+        // The night layers (HeroNight) are looked up here, a frame after the hero goes live: the film is client-only and the
         // still is hidden outright; both unseen at opacity 0 first. The film starts loading now
         const nightFilm = hero.querySelector<HTMLVideoElement>("[data-hero-night-film]");
         const night = hero.querySelector<HTMLElement>("[data-hero-night]");
@@ -98,10 +98,10 @@ export function HeroScroll() {
       const start = () => {
         raf = requestAnimationFrame(build);
       };
-      if (document.documentElement.hasAttribute("data-preloader-skip")) start();
-      else document.addEventListener(INTRO_DONE, start, { once: true });
+      if (document.documentElement.hasAttribute("data-hero-live")) start();
+      else document.addEventListener(HERO_LIVE, start, { once: true });
       return () => {
-        document.removeEventListener(INTRO_DONE, start);
+        document.removeEventListener(HERO_LIVE, start);
         cancelAnimationFrame(raf);
         headerTheme(false);
         tl?.scrollTrigger?.kill();
@@ -125,11 +125,11 @@ export function HeroScroll() {
           gsap.to(boxes, { opacity: 1, duration: 0.6, stagger: 0.08, ease: "power2.out" });
         }, PHONE_DELAY);
       };
-      if (document.documentElement.hasAttribute("data-preloader-skip")) arrive();
-      else document.addEventListener(INTRO_DONE, arrive, { once: true });
+      if (document.documentElement.hasAttribute("data-hero-live")) arrive();
+      else document.addEventListener(HERO_LIVE, arrive, { once: true });
       return () => {
         window.clearTimeout(timer);
-        document.removeEventListener(INTRO_DONE, arrive);
+        document.removeEventListener(HERO_LIVE, arrive);
         layer.dataset.shown = "true";
       };
     });
