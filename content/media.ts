@@ -107,13 +107,14 @@ export const heroFilm: VideoAsset = {
 };
 
 /**
- * Night still (supplied 2026-10-05): the same view after dark, windows lit. Comes up over the day film as the page
- * scrolls (HeroNight / HeroScroll); a still, so the view holds steady once night has fallen.
+ * Night still (supplied 2026-10-05): the same view after dark, windows lit, registered to the day film's first
+ * frame (scale and shift found on edge maps, scratch script) so the crossfade never doubles the facades. Comes up
+ * over the day film as the page scrolls (HeroNight / HeroScroll); a still, so the view holds steady at night.
  */
 export const heroNight: ImageAsset = {
   src: "hero-night-01",
-  width: 1672,
-  height: 941,
+  width: 1920,
+  height: 1080,
   alt: { nl: "De grachtenpanden bij avond, de ramen verlicht", en: "The canal houses at night, their windows lit" },
 };
 
