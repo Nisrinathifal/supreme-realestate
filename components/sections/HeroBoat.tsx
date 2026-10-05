@@ -16,7 +16,11 @@ const FILM_H = 1080;
 const GROW = 1.5;
 /** If the film has not started this long after the intro, or stays paused this long, the copy simply appears. */
 const STALL_MS = 2500;
-/** The key message follows the bow a little later, as a fraction of the drawn film width. */
+/** The wake: letters stay hidden this far behind the stern, then fade in over this length (fractions of the hero width,
+ *  so the trail reads the same on a phone, where the film is far wider than the screen). */
+const WAKE_GAP = 0.03;
+const WAKE_FADE = 0.16;
+/** The key message trails a little further behind. */
 const LEAD_LAG = 0.05;
 
 /** Colour stops of a CSS linear-gradient token, e.g. --media-scrim: [[colour, 0..1], …]. */
@@ -28,7 +32,8 @@ function gradientStops(value: string): [string, number][] {
  * Concept 3: the headline stands on the waterline behind the passing boat. The boat is redrawn from the playing
  * film onto a canvas above the headline, clipped to its traced outline at its offset on the current frame
  * (scripts/film-matte.swift), with the bottom scrim baked in so it matches the film around it. On the first
- * crossing the letters (and the key message's words) rise into place as the bow passes them.
+ * crossing the letters (and the key message's words) surface in the boat's wake: a gap behind the stern, then a
+ * fade over WAKE_FADE, so the newest letters are faint and the ones further back solid, like a trail.
  * Reduced motion and Save-Data: no film, so neither runs and the copy stays in full view over the still.
  */
 export function HeroBoat({ subject }: Props) {
@@ -111,31 +116,31 @@ export function HeroBoat({ subject }: Props) {
     };
 
     /* ---------- the first crossing brings the copy in ---------- */
-    const show = (els: HTMLElement[], stagger = 0) =>
-      gsap.to(els, { opacity: 1, yPercent: 0, duration: 0.7, ease: ease.brand, stagger, overwrite: true });
     const finish = () => {
       window.clearTimeout(stall);
-      if (pending.length) show(pending.map((p) => p.el), 0.015);
+      if (pending.length) gsap.to(pending.map((p) => p.el), { opacity: 1, yPercent: 0, duration: 0.7, ease: ease.brand, stagger: 0.015, overwrite: true });
       pending = [];
     };
+    const stern = Math.min(...subject.poly.map((p) => p[0]));
     const reveal = (time: number) => {
       if (!pending.length) return;
       const off = offsetAt(time);
       // The first crossing is over (the boat has left the frame): whatever is left simply appears
       if (!off) return finish();
       const { r, s, left } = geometry();
-      const bow = r.left + left + (Math.max(...subject.poly.map((p) => p[0])) + off[0]) * s;
-      const passed: HTMLElement[] = [];
+      const tail = r.left + left + (stern + off[0]) * s - WAKE_GAP * r.width;
+      const fade = WAKE_FADE * r.width;
       pending = pending.filter((p) => {
         if (p.x === null) {
           const b = p.el.getBoundingClientRect();
           p.x = b.left + b.width / 2;
         }
-        if (p.x + p.lag * FILM_W * s > bow) return true;
-        passed.push(p.el);
-        return false;
+        const d = (tail - p.x - p.lag * r.width) / fade;
+        if (d <= 0) return true;
+        const t = d >= 1 ? 1 : d * d * (3 - 2 * d); // smoothstep: soft at both ends of the wake
+        gsap.set(p.el, { opacity: t, yPercent: 30 * (1 - t) });
+        return t < 1;
       });
-      if (passed.length) show(passed);
     };
 
     /* ---------- per presented frame ---------- */
@@ -187,7 +192,7 @@ export function HeroBoat({ subject }: Props) {
         ...(splits[0].chars as HTMLElement[]).map((el) => ({ el, lag: 0, x: null })),
         ...(splits[1].words as HTMLElement[]).map((el) => ({ el, lag: LEAD_LAG, x: null })),
       ];
-      gsap.set(pending.map((p) => p.el), { opacity: 0, yPercent: 40 });
+      gsap.set(pending.map((p) => p.el), { opacity: 0, yPercent: 30 });
     });
 
     return () => {

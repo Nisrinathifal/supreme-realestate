@@ -41,7 +41,7 @@
   position: absolute; left: 0; right: 0; top: calc(max(100cqh, 56.25cqw) * 0.853); transform: translateY(-100%);
   margin: 0; padding: 0 var(--gutter); text-align: center; white-space: nowrap; color: var(--on-media);
   font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1;
-  font-size: min(var(--fs-h2), 6.2cqw);
+  font-size: min(calc(var(--fs-h2) * 0.84), 6.2cqw);
 }
 
 @media (max-width: 980px) {
