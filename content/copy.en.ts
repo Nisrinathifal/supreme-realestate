@@ -97,6 +97,23 @@ export const en: Copy = {
       },
     ],
   },
+  // Project windows: concept 2026-10-05. Names, cities and categories from the owner; descriptions are drafts.
+  projects: {
+    hotspot: (name) => `Explore ${name}`,
+    eyebrow: "Project",
+    explore: draft("Explore project"),
+    back: draft("Back to overview"),
+    more: draft("Explore more"),
+    index: draft("Projects"),
+    country: "Netherlands",
+    categories: { residential: draft("Residential"), mixed: draft("Mixed-use") },
+    items: {
+      durgerdammergouw: { description: draft("An existing building, carefully transformed into contemporary homes: its character kept, its value for the long term.") },
+      "prinsen-bolwerk": { description: draft("An existing building, carefully transformed into contemporary homes: its character kept, its value for the long term.") },
+      schoterweg: { description: draft("An existing building, carefully transformed into homes and workspace: its character kept, its value for the long term.") },
+      bezaanjachtplein: { description: draft("An existing building, carefully transformed into contemporary homes: its character kept, its value for the long term.") },
+    },
+  },
   sky: {
     label: draft("From"),
     title: draft("Potential to Turnkey"),

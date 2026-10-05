@@ -56,7 +56,7 @@ Tagline (working): **Van oud naar waardevol** / *From old to valuable*. Tone: cl
 These rules apply to every page, image, caption, file and piece of metadata.
 
 **The public site never shows**
-- Which properties Supreme owns, manages or has worked on: no portfolio grid, no project pages, no project names, no map.
+- Which properties Supreme owns, manages or has worked on beyond the four featured projects of PRD §6.1 (owner decision 2026-10-05): no portfolio grid, no map.
 - Addresses, house numbers, postcodes, neighbourhoods tied to a property.
 - Prices, valuations, rents, yields, returns, financing, lenders, investors.
 - Portfolio size, number of units, square metres, growth figures, pipeline.
@@ -480,7 +480,7 @@ Calm and precise. Everything is readable before any animation runs; never start 
 
 ## 16. Acceptance checklist
 
-- [ ] No property, address, price, portfolio figure, project name or tenant detail anywhere, including image files, EXIF, alt text, metadata and sitemaps.
+- [ ] No property beyond the four featured projects, no house number, postcode, price, portfolio figure or tenant detail anywhere, including image files, EXIF, alt text, metadata and sitemaps.
 - [ ] Company details come from one config, match the KvK registration exactly, and hide any row without a verified value.
 - [ ] No placeholder text, no stock or AI imagery, no broken links on the live site.
 - [ ] Only tokens from §3 are used; no hard-coded colours, fonts or radii.

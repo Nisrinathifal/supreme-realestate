@@ -96,6 +96,23 @@ export const nl: Copy = {
       },
     ],
   },
+  // Project windows: concept 2026-10-05. Names, cities and categories from the owner; descriptions are drafts.
+  projects: {
+    hotspot: (name) => `Bekijk ${name}`,
+    eyebrow: "Project",
+    explore: draft("Bekijk het project"),
+    back: draft("Terug naar het overzicht"),
+    more: draft("Meer projecten"),
+    index: draft("Projecten"),
+    country: "Nederland",
+    categories: { residential: draft("Wonen"), mixed: draft("Gemengd") },
+    items: {
+      durgerdammergouw: { description: draft("Een bestaand pand, zorgvuldig getransformeerd tot hedendaagse woningen: het karakter behouden, de waarde voor de lange termijn.") },
+      "prinsen-bolwerk": { description: draft("Een bestaand pand, zorgvuldig getransformeerd tot hedendaagse woningen: het karakter behouden, de waarde voor de lange termijn.") },
+      schoterweg: { description: draft("Een bestaand pand, zorgvuldig getransformeerd tot wonen en werken: het karakter behouden, de waarde voor de lange termijn.") },
+      bezaanjachtplein: { description: draft("Een bestaand pand, zorgvuldig getransformeerd tot hedendaagse woningen: het karakter behouden, de waarde voor de lange termijn.") },
+    },
+  },
   // Sky band: owner concept 2026-10-01, NL draft until approved.
   sky: {
     label: draft("Van"),

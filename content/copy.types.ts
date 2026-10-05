@@ -30,6 +30,21 @@ export type Copy = {
    * stacking cards. Each card: index, title, body, a `note` saying what its photographs show, and one link (`cta`).
    */
   work: { intro: string[]; label: string; title: string; cta: string; items: { index: string; title: string; body: string; note: string }[] };
+  /**
+   * Project windows (concept 2026-10-05): the hotspot labels, the preview card and the project overlay. `items` is keyed by
+   * project id (content/projects.ts); `hotspot` builds the accessible name of a window.
+   */
+  projects: {
+    hotspot: (name: string) => string;
+    eyebrow: string;
+    explore: string;
+    back: string;
+    more: string;
+    index: string;
+    country: string;
+    categories: { residential: string; mixed: string };
+    items: Record<string, { description: string }>;
+  };
   /** Sky band: brand promise, lead and the two buttons (DESIGN §10.1 hero copy), over the sky photograph. */
   sky: { label: string; title: string; lead: string; ctaPrimary: string; ctaSecondary: string; cards: { title: string; body: string }[] };
   principles: { label: string; title: string; sub: string; items: { index: string; title: string; body: string }[] };

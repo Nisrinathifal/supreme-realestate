@@ -107,6 +107,17 @@ export const heroFilm: VideoAsset = {
 };
 
 /**
+ * Project interior (owner-supplied render, 2026-10-05): the room the first project window opens onto. Used as the
+ * window preview and the fullscreen interior (components/windows). Neutral file name (PRD §6.2).
+ */
+export const interiorLiving: ImageAsset = {
+  src: "interior-living-01",
+  width: 1672,
+  height: 941,
+  alt: { nl: "Lichte woonkamer met open keuken in avondlicht", en: "A bright living room with an open kitchen in evening light" },
+};
+
+/**
  * Shelf section (concept 2026-09-30). The shelf is a transparent cut-out; each icon has its compartment as a
  * centre point and width in % of the shelf image. Icons supplied at 90 px are placeholders until the final
  * assets arrive (they will need ≥ 512 px).

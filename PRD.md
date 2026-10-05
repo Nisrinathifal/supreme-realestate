@@ -27,11 +27,11 @@ It says: *"This is a serious company with substance."* It does **not** show what
 ### Goals
 1. **Pass a background check.** Anyone looking into Supreme finds verified legal details, professional contact details, legal pages and consistent information (§8).
 2. **Premium, future-facing brand.** Calm, precise, high quality; led by film, architecture, materials and light.
-3. **Discretion by design.** No holdings, projects or operational detail on the public site.
+3. **Discretion by design.** No holdings or operational detail on the public site. Four featured projects may be named (owner decision 2026-10-05, §6.1); nothing beyond them.
 4. **Easy, professional contact.** The right people can reach Supreme directly.
 
 ### Non-goals (v1)
-- No portfolio, project pages, map or project captions.
+- No portfolio grid, map or project captions. Only the four featured projects of §6.1, discovered through the hero (project windows); no project pages yet.
 - No listings, prices, search, sales or rental functionality.
 - No figures: portfolio size, units, returns, growth, pipeline.
 - No investor or tenant portal, login area, blog, newsletter, chat widget or job board.
@@ -106,15 +106,17 @@ Navigation shows only: Over ons, Contact, NL/EN. Layouts are in the DESIGN file 
 ## 6. Disclosure policy
 
 ### 6.1 What the public site may say
-Supreme is a real-estate company in Amsterdam; it focuses on existing homes and the long term; its principles (Zorgvuldig, Blijvend, Lange termijn); its brand promise (Van oud naar waardevol); verified company details; how to get in touch. **Nothing more specific.**
+Supreme is a real-estate company in Amsterdam; it focuses on existing homes and the long term; its principles (Zorgvuldig, Blijvend, Lange termijn); its brand promise (Van oud naar waardevol); verified company details; how to get in touch.
+
+Since 2026-10-05 (owner decision) also **four featured projects by name, city and category**: Durgerdammergouw (Amsterdam, residential), Prinsen Bolwerk (Haarlem, residential), Schoterweg (Haarlem, mixed-use), Bezaanjachtplein (Amsterdam, residential), with interior imagery and a short description approved by the owner. **Nothing more specific.**
 
 ### 6.2 What it must never show, and the safeguards
-Never: which properties Supreme owns, manages or has worked on; addresses, house numbers, postcodes or neighbourhoods tied to a property; prices, valuations, rents, yields, financing, lenders, investors; portfolio size, units, square metres, pipeline; tenants or recognisable residents; operational detail (sourcing, deal structure, margins, named suppliers).
+Never: properties beyond the four featured projects of §6.1; house numbers, postcodes or exact addresses, also for the featured projects; prices, valuations, rents, yields, financing, lenders, investors; portfolio size, units, square metres, pipeline; tenants or recognisable residents; operational detail (sourcing, deal structure, margins, named suppliers).
 
 Safeguards:
 - Imagery is atmosphere, not evidence: details, materials, light, spaces that cannot be traced to an address. House numbers, street signs and number plates blurred or cropped.
 - Build-time pipeline strips EXIF/GPS from all images and posters (e.g. `sharp`, which drops metadata unless told to keep it; verify in the chosen setup). Film is re-encoded without metadata.
-- Neutral media file names; a build check fails on file names that look like addresses **[Assumption: simple pattern list in the repo]**.
+- Neutral media file names, also for the featured projects (`interior-living-01`, not the project name); a build check fails on file names that look like addresses **[Assumption: simple pattern list in the repo]**.
 - No captions on public pages.
 - Pre-launch and quarterly disclosure audit (§13).
 
@@ -282,7 +284,7 @@ Dates follow once M0 is done.
 ## 15. Acceptance criteria (launch)
 
 - [ ] All Must pages exist in NL and EN.
-- [ ] Disclosure audit passed: no property, address, figure, project name or tenant detail in pages, images, file names, EXIF, alt text, metadata or sitemaps.
+- [ ] Disclosure audit passed: no property beyond the four featured projects, no house number or postcode, no figure or tenant detail in pages, images, file names, EXIF, alt text, metadata or sitemaps.
 - [ ] Due-diligence checklist (§8) green, including items around the website.
 - [ ] Company details complete, verified, identical to the KvK and consistent everywhere.
 - [ ] Legal pages published with texts from legal.

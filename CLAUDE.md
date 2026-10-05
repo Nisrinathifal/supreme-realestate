@@ -39,7 +39,7 @@ Routing: NL at `/`, EN at `/en`; `next.config` rewrites root paths into `/nl/*` 
 
 ## Hard rules
 1. Never invent content: no company details, copy, numbers, facts, people, addresses beyond the docs. Copy not verbatim from the docs is wrapped in `draft()`. Empty company fields hide their row; never render `[ ]`.
-2. Disclosure (PRD §6): no properties, addresses, prices, portfolio size, tenants, operations — also not in file names, alt text, metadata or sitemap. Media file names neutral (`detail-stair-01`).
+2. Disclosure (PRD §6): no properties beyond the four featured projects in `content/projects.ts` (name, city, category only), no house numbers/postcodes, prices, portfolio size, tenants, operations — also not in file names, alt text, metadata or sitemap. Media file names neutral (`detail-stair-01`), also for project imagery.
 3. Tokens only: every colour, font, radius and spacing comes from `styles/tokens.css`. No hard-coded values in components.
 4. Readable without JS and with reduced motion. Animation start states in JS (`gsap.set`), never `opacity: 0` in CSS. Reduced motion: no Lenis, no pins, no scrub, hero shows poster.
 5. Bilingual: every page in NL and EN, translated slugs from `content/routes.ts`, correct `lang` and `hreflang`.
