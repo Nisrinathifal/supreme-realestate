@@ -11,7 +11,10 @@ import { usePublicPathname } from "@/lib/usePublicPathname";
 import { ease, gsap, prefersReducedMotion, ScrollTrigger, setupGsap } from "@/lib/motion";
 import styles from "./Header.module.css";
 
-/** Fired on <document> by a band that turns dark on its own (the hero at night): detail "dark" | "light". */
+/**
+ * Fired on <document> by a band that turns dark on its own: detail "dark" | "light" (the hero at night), or
+ * { key, dark } for any other source (the projects band, which fades to light as the page moves on).
+ */
 export const HEADER_THEME = "supreme:header-theme";
 /** Dark sources on screen (dark bands, the hero at night): the bar is Paper while any of them is active. */
 const darkSources = new Set<string>();
@@ -171,7 +174,11 @@ export function Header({ lang, strings }: Props) {
 
   // A band that turns dark on its own (the hero as the scroll brings night) says so
   useEffect(() => {
-    const onTheme = (e: Event) => setDark("hero", (e as CustomEvent<"dark" | "light">).detail === "dark");
+    const onTheme = (e: Event) => {
+      const d = (e as CustomEvent<"dark" | "light" | { key: string; dark: boolean }>).detail;
+      if (typeof d === "string") setDark("hero", d === "dark");
+      else setDark(d.key, d.dark);
+    };
     document.addEventListener(HEADER_THEME, onTheme);
     return () => {
       document.removeEventListener(HEADER_THEME, onTheme);

@@ -18,7 +18,9 @@ const tones = [`inverse ${styles.toneInk}`, `light ${styles.toneSky}`, `inverse 
  * covering the whole card, whose pill follows the pointer anywhere on the card. Since 2026-10-05 the band follows
  * the hero directly and each card is one of the four named projects (content/projects.ts): its name and city
  * above the case title, and the cover enters that project's overlay (WorkEnter), like a window in the film. Its
- * A Canal-ink band with no heading, continuing the night hero: the deck rises and comes up as one as it scrolls in. The deck is then pinned and each next card rises over the current one while the
+ * A Canal-ink band with no heading, continuing the night hero, that fades to the next band's wall as the page moves
+ * on (WorkMotion), so the two never meet at an edge: on desktop the film's four window boxes travel
+ * down with the scroll and turn into the cards (WorkMotion's handoff); on phones the deck rises in. The deck is then pinned and each next card rises over the current one while the
  * ones still to come wait as strips below (WorkMotion), on phones too.
  * Reduced motion and no-JS read the cards one after another.
  */
@@ -26,7 +28,7 @@ export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const n = c.work.items.length;
   return (
-    <section className={`section inverse ${styles.work}`} data-work data-header-theme="dark" aria-labelledby="work-title">
+    <section className={`section inverse ${styles.work}`} data-work aria-labelledby="work-title">
       {/* No heading in sight (owner, 2026-10-05): the band continues the night hero; the name stays for assistive tech */}
       <h2 id="work-title" className="visually-hidden">
         {c.work.title}
