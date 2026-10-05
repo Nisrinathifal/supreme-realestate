@@ -50,6 +50,7 @@ export function Header({ lang, strings }: Props) {
   const onHome = pathname === home;
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [hidden, setHidden] = useState(false);
+  const [veil, setVeil] = useState(true);
 
   // The bar leaves once the page has scrolled away over the footer (the sticky footer itself cannot be
   // measured, so the trigger is the end of <main>: from the moment its bottom passes 60% of the viewport)
@@ -93,6 +94,24 @@ export function Header({ lang, strings }: Props) {
       }),
     );
     return () => triggers.forEach((t) => t.kill());
+  }, [pathname]);
+
+  // A band marked data-header-veil="off" (the sky hero, which carries its own copy right under the bar) drops the
+  // light veil while it sits under the bar, so the veil never washes out that copy
+  useEffect(() => {
+    setupGsap();
+    const band = document.querySelector<HTMLElement>('[data-header-veil="off"]');
+    if (!band) return;
+    const t = ScrollTrigger.create({
+      trigger: band,
+      start: "top bottom",
+      end: "bottom 120px",
+      onToggle: (self) => setVeil(!self.isActive),
+    });
+    return () => {
+      t.kill();
+      setVeil(true);
+    };
   }, [pathname]);
 
   // Close on Escape and on a click outside; return focus to the pill when closed via keyboard
@@ -149,7 +168,7 @@ export function Header({ lang, strings }: Props) {
   const sectionHref = (id: string) => (onHome ? `#${id}` : `${home === "/" ? "" : home}/#${id}`);
 
   return (
-    <header className={styles.header} data-header data-theme={theme} data-hidden={hidden ? "true" : "false"}>
+    <header className={styles.header} data-header data-theme={theme} data-veil={veil ? "on" : "off"} data-hidden={hidden ? "true" : "false"}>
       <div className={`container ${styles.bar}`}>
         <div className={styles.left} onPointerEnter={onEnter} onPointerLeave={onLeave}>
           <button ref={buttonRef} type="button" className={styles.pill} aria-expanded={open} aria-controls={panelId} aria-label={open ? strings.closeMenu : undefined} onClick={toggle}>
