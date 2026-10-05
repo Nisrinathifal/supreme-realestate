@@ -13,6 +13,8 @@ import styles from "./Header.module.css";
 
 /** Fired on <document> by a band that turns dark on its own (the hero at night): detail "dark" | "light". */
 export const HEADER_THEME = "supreme:header-theme";
+/** Dark sources on screen (dark bands, the hero at night): the bar is Paper while any of them is active. */
+const darkSources = new Set<string>();
 
 export type HeaderStrings = {
   home: string;
@@ -56,6 +58,11 @@ export function Header({ lang, strings }: Props) {
   const home = pathFor("home", lang);
   const onHome = pathname === home;
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const setDark = (key: string, on: boolean) => {
+    if (on) darkSources.add(key);
+    else darkSources.delete(key);
+    setTheme(darkSources.size ? "dark" : "light");
+  };
   const [hidden, setHidden] = useState(false);
   const [veil, setVeil] = useState(true);
 
@@ -83,7 +90,7 @@ export function Header({ lang, strings }: Props) {
     // A band may be pinned by its own motion: then its scroll range is the pin's range plus the band's height.
     // Evaluated after the pins refresh (priority -1), so the pin's start/end are final.
     const pinOf = (band: HTMLElement) => ScrollTrigger.getAll().find((t) => t.pin === band);
-    const triggers = bands.map((band) =>
+    const triggers = bands.map((band, i) =>
       ScrollTrigger.create({
         trigger: band,
         start: () => {
@@ -97,10 +104,14 @@ export function Header({ lang, strings }: Props) {
           return (pin ? pin.end + band.offsetHeight - overlap : band.getBoundingClientRect().bottom + window.scrollY) - 48;
         },
         refreshPriority: -1,
-        onToggle: (self) => setTheme(self.isActive ? "dark" : "light"),
+        onToggle: (self) => setDark(`band-${i}`, self.isActive),
       }),
     );
-    return () => triggers.forEach((t) => t.kill());
+    return () => {
+      triggers.forEach((t) => t.kill());
+      bands.forEach((_, i) => darkSources.delete(`band-${i}`));
+      setTheme(darkSources.size ? "dark" : "light");
+    };
   }, [pathname]);
 
   // A band marked data-header-veil="off" (the sky hero, which carries its own copy right under the bar) drops the
@@ -160,9 +171,12 @@ export function Header({ lang, strings }: Props) {
 
   // A band that turns dark on its own (the hero as the scroll brings night) says so
   useEffect(() => {
-    const onTheme = (e: Event) => setTheme((e as CustomEvent<"dark" | "light">).detail);
+    const onTheme = (e: Event) => setDark("hero", (e as CustomEvent<"dark" | "light">).detail === "dark");
     document.addEventListener(HEADER_THEME, onTheme);
-    return () => document.removeEventListener(HEADER_THEME, onTheme);
+    return () => {
+      document.removeEventListener(HEADER_THEME, onTheme);
+      darkSources.delete("hero");
+    };
   }, []);
 
   // Close on Escape and on a click outside; return focus to the pill when closed via keyboard

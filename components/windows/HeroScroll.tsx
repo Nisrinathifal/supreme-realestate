@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { HEADER_THEME } from "@/components/layout/Header";
 import { HERO_LIVE } from "@/components/sections/HeroFilm";
-import { gsap, MQ, setupGsap } from "@/lib/motion";
+import { gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /** From this point of the scroll (0–1) night has fallen: the film stops looping and rests on its last frame. */
 const HOLD_AT = 0.7;
@@ -41,12 +41,13 @@ export function HeroScroll() {
       gsap.set(targets, { transformOrigin: "50% 58%" });
       if (spots) gsap.set(spots, { opacity: 0 });
       let tl: gsap.core.Timeline | null = null;
+      let dark: ScrollTrigger | null = null;
       let raf = 0;
       let live = false;
-      let dark = false;
+      let isDark = false;
       const headerTheme = (toDark: boolean) => {
-        if (toDark === dark) return;
-        dark = toDark;
+        if (toDark === isDark) return;
+        isDark = toDark;
         document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: toDark ? "dark" : "light" }));
       };
       const build = () => {
@@ -71,7 +72,6 @@ export function HeroScroll() {
               if (self.progress > 0.58) live = true;
               else if (self.progress < 0.46) live = false;
               layer.dataset.shown = live ? "true" : "false";
-              headerTheme(self.progress > 0.45); // the bar turns to Paper once the sky has gone dark
               if (!nightFilm) return;
               // The night film runs while it can be seen; once night has fallen it stops looping and rests on its
               // last frame (ended), and a scroll back up lets it loop and resume (its last frame meets its first)
@@ -82,6 +82,14 @@ export function HeroScroll() {
               } else if (nightFilm.paused && (nightFilm.loop || !nightFilm.ended)) nightFilm.play().catch(() => undefined);
             },
           },
+        });
+        // The bar turns to Paper once the sky has gone dark, and stays so until the hero's foot passes it
+        const pin = tl.scrollTrigger!;
+        dark = ScrollTrigger.create({
+          start: () => pin.start + 0.45 * (pin.end - pin.start),
+          end: () => pin.end + hero.offsetHeight - 120,
+          onToggle: (self) => headerTheme(self.isActive),
+          onRefresh: (self) => headerTheme(self.isActive),
         });
         if (copy) tl.to(copy, { opacity: 0, y: -24, duration: 0.3, ease: "none" }, 0);
         tl.to(targets, { scale: ZOOM, duration: 1, ease: "power1.inOut" }, 0);
@@ -99,6 +107,7 @@ export function HeroScroll() {
         document.removeEventListener(HERO_LIVE, start);
         cancelAnimationFrame(raf);
         headerTheme(false);
+        dark?.kill();
         tl?.scrollTrigger?.kill();
         tl?.kill();
         layer.dataset.shown = "true";
