@@ -8,7 +8,6 @@ import type { ImageAsset } from "@/content/media";
 import type { WindowBox } from "@/content/projects";
 import type { Lang } from "@/content/routes";
 import { gsap, prefersReducedMotion, setupGsap } from "@/lib/motion";
-import { WINDOW_FOCUS } from "./HeroZoom";
 import { enterTimeline, previewIn, previewOut, swapStage } from "./motion";
 import s from "./windows.module.css";
 
@@ -51,9 +50,9 @@ const useDebugFlag = () =>
  * Project windows (concept 2026-10-05): the architecture as the interface. Four hotspots, one per project, sit on
  * windows of four different houses in the hero film (positions in percent of the film, content/projects.ts); they
  * are plain frames, no names or places, and they arrive only once the page has scrolled into the facades
- * (HeroZoom sets `data-shown`). The scroll camera's stop (WINDOW_FOCUS), a hover or keyboard focus lights a window,
- * dims the rest of the facade and shows a small preview of the room beside it (image only, no name or place; not
- * on touch, where a tap goes straight in); click, tap or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
+ * (HeroScroll sets `data-shown` once dusk has fallen and the spotlight, a masked dark layer with a hole at each
+ * window, is on). Hover or keyboard focus lights a window and shows a small preview of the room beside it (image
+ * only, no name or place; not on touch, where a tap goes straight in); click, tap or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
  * the header) with the interior, the project's name, the overview and the index of all four projects, and a way
  * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
  * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
@@ -68,8 +67,6 @@ export function Windows({ lang, projects, strings }: Props) {
   const filmRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const hideTimer = useRef<number | null>(null);
-  /** The window the scroll camera is holding on, if any: hover and focus take over from it and hand back to it. */
-  const focused = useRef<string | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const overviewRef = useRef<HTMLElement>(null);
@@ -95,26 +92,14 @@ export function Windows({ lang, projects, strings }: Props) {
     setActive(id);
     setWarmed((w) => (w.includes(id) ? w : [...w, id]));
   };
-  // A short grace so the pointer can cross the gap from the window to its preview; then back to the camera's stop
+  // A short grace so the pointer can cross the gap from the window to its preview
   const hide = () => {
     cancelHide();
-    hideTimer.current = window.setTimeout(() => setActive(focused.current), HIDE_DELAY);
+    hideTimer.current = window.setTimeout(() => setActive(null), HIDE_DELAY);
   };
-  useEffect(() => {
-    const onFocus = (e: Event) => {
-      const id = (e as CustomEvent<string | null>).detail;
-      focused.current = id;
-      cancelHide();
-      if (id) show(id);
-      else setActive(null);
-    };
-    document.addEventListener(WINDOW_FOCUS, onFocus);
-    return () => document.removeEventListener(WINDOW_FOCUS, onFocus);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  // The preview sits beside the lit window, measured against the hero (a plain child of it, so the camera zoom on
-  // the hotspot layer does not scale it) and re-placed every frame while it shows, as the camera keeps moving
+  // The preview sits beside the lit window, measured against the hero (a plain child of it) and re-placed every
+  // frame while it shows, so it follows the window through any motion of the frame
   useLayoutEffect(() => {
     const card = cardRef.current;
     if (!card || !mounted) return;
@@ -237,11 +222,19 @@ export function Windows({ lang, projects, strings }: Props) {
   );
 
   const dimStyle = ap?.window ? ({ "--cx": `${ap.window.x + ap.window.w / 2}%`, "--cy": `${ap.window.y + ap.window.h / 2}%` } as CSSProperties) : undefined;
+  // Spotlight mask: one soft hole per window; the layer is intersected with all of them, so it darkens only outside
+  const spotsStyle = {
+    "--spots": projects
+      .filter((p) => p.window)
+      .map(({ window: w }) => `radial-gradient(ellipse ${w!.w * 2.6}% ${w!.h * 1.9}% at ${w!.x + w!.w / 2}% ${w!.y + w!.h / 2}%, transparent 45%, black 100%)`)
+      .join(", "),
+  } as CSSProperties;
 
   return (
     <>
       <div className={s.layer} data-windows data-debug={debug ? "true" : "false"}>
         <div className={s.film} ref={filmRef}>
+          <div className={s.spots} data-spots style={spotsStyle} aria-hidden="true" />
           <div className={s.dim} data-on={ap ? "true" : "false"} style={dimStyle} aria-hidden="true" />
           {projects.map((p) => {
             const w = p.window;

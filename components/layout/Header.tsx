@@ -11,6 +11,9 @@ import { usePublicPathname } from "@/lib/usePublicPathname";
 import { ScrollTrigger, setupGsap } from "@/lib/motion";
 import styles from "./Header.module.css";
 
+/** Fired on <document> by a band that turns dark on its own (the hero at night): detail "dark" | "light". */
+export const HEADER_THEME = "supreme:header-theme";
+
 export type HeaderStrings = {
   home: string;
   wordmark: string;
@@ -119,6 +122,13 @@ export function Header({ lang, strings }: Props) {
       setVeil(true);
     };
   }, [pathname]);
+
+  // A band that turns dark on its own (the hero as the scroll brings night) says so
+  useEffect(() => {
+    const onTheme = (e: Event) => setTheme((e as CustomEvent<"dark" | "light">).detail);
+    document.addEventListener(HEADER_THEME, onTheme);
+    return () => document.removeEventListener(HEADER_THEME, onTheme);
+  }, []);
 
   // Close on Escape and on a click outside; return focus to the pill when closed via keyboard
   useEffect(() => {

@@ -107,6 +107,18 @@ export const heroFilm: VideoAsset = {
 };
 
 /**
+ * Night film (supplied 2026-10-05): the same view after dark, windows lit, a boat passing. Trimmed to a seamless
+ * loop and raised to 60 fps like the day film. Shown over the day film as the page scrolls (HeroNight / HeroScroll).
+ */
+export const heroNightFilm: VideoAsset = {
+  webm: null,
+  mp4: "/media/hero-film-04.mp4",
+  mp4Mobile: "/media/hero-film-04-720.mp4",
+  poster: heroStill,
+  loop: true,
+};
+
+/**
  * Project interior (owner-supplied render, 2026-10-05): the room the first project window opens onto. Used as the
  * window preview and the fullscreen interior (components/windows). Neutral file name (PRD §6.2).
  */
