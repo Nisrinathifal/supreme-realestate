@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { ProjectStripSection } from "@/components/windows/ProjectStripSection";
 import { Shelf } from "@/components/sections/Shelf";
 import { Steps } from "@/components/sections/Steps";
 import { Work } from "@/components/sections/Work";
@@ -10,6 +11,7 @@ export function HomePage({ lang }: { lang: Lang }) {
   return (
     <>
       <Hero lang={lang} />
+      <ProjectStripSection lang={lang} />
       <Shelf lang={lang} />
       <Steps lang={lang} />
       <WorkIntro lang={lang} />

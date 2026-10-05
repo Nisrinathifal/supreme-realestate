@@ -33,6 +33,9 @@ const CARD_GAP = 1.4;
 const CARD_FLIP_AT = 62;
 const HIDE_DELAY = 160;
 
+/** Fired on <document> by another way in (the phone's project strip): detail { id, from } enters from that element. */
+export const ENTER_PROJECT = "supreme:enter-project";
+
 const noop = () => () => {};
 /** True once on the client, false in the server render (so the portal and the query flag never mismatch hydration). */
 const useClient = () => useSyncExternalStore(noop, () => true, () => false);
@@ -139,11 +142,11 @@ export function Windows({ lang, projects, strings }: Props) {
   };
 
   const enter = useCallback(
-    (id: string) => {
+    (id: string, from?: HTMLElement) => {
       if (phase !== "idle") return;
       const p = projects.find((x) => x.id === id);
       if (!p?.interior) return;
-      returnTo.current = filmRef.current?.querySelector<HTMLElement>(`[data-window="${id}"]`) ?? null;
+      returnTo.current = from ?? filmRef.current?.querySelector<HTMLElement>(`[data-window="${id}"]`) ?? null;
       cancelHide();
       setWarmed((w) => (w.includes(id) ? w : [...w, id]));
       setActive(null);
@@ -152,6 +155,15 @@ export function Windows({ lang, projects, strings }: Props) {
     },
     [phase, projects],
   );
+
+  useEffect(() => {
+    const onEnter = (e: Event) => {
+      const { id, from } = (e as CustomEvent<{ id: string; from?: HTMLElement }>).detail;
+      enter(id, from);
+    };
+    document.addEventListener(ENTER_PROJECT, onEnter);
+    return () => document.removeEventListener(ENTER_PROJECT, onEnter);
+  }, [enter]);
 
   useLayoutEffect(() => {
     if (phase !== "entering" || !open) return;
