@@ -38,8 +38,8 @@ type Props = { lang: Lang; strings: HeaderStrings };
 
 /**
  * Header (concept 2026-10-05, after the owner's reference): the lockup left; right, a small round language button
- * showing the current language's flag (hover slides it half aside to show the other flag, with the hint "Switch to
- * English" beside it) and a nine-dot menu button that opens the glass panel (DESIGN §9.4) on hover (mouse)
+ * showing the current language's code (hover brings the flags: the current one half aside and dimmed, the other
+ * language's behind it, with the hint "Switch to English" beside it) and a nine-dot menu button that opens the glass panel (DESIGN §9.4) on hover (mouse)
  * or click/keyboard with the homepage sections, the contact page and the company address and phone. No contact
  * button. A soft Paper veil behind the bar keeps it legible over every band. On the homepage the bar waits out of
  * sight until the headline comes in (HeroBoat says when) and then arrives; elsewhere it is simply there.
@@ -233,6 +233,9 @@ export function Header({ lang, strings }: Props) {
               {strings.switchTo}
             </span>
             <span className={styles.flagWrap}>
+              <span className={styles.langCode} aria-hidden="true">
+                {lang.toUpperCase()}
+              </span>
               <Flag lang={other} className={styles.flagBack} />
               <Flag lang={lang} className={styles.flagFront} />
             </span>

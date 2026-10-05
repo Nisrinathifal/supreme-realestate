@@ -25,17 +25,18 @@
 }
 .lockup { min-height: 44px; }
 .right { display: flex; align-items: center; gap: var(--s-2); }
-/* Language: a small circle with the current language's flag, the menu icon's size. Hover or focus slides the flag
-   half aside, showing the other language's flag behind it, and the hint ("Switch to English") settles on the left */
+/* Language: a small ringed circle with the current language's code, the menu icon's size. Hover or focus brings the
+   flags: the current one on the left half, dimmed, the other language's on the right at full strength (each half
+   clipped to itself, so nothing shows through), and the hint ("Switch to English") settles on the left */
 .lang { position: relative; display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-pill); color: inherit; }
-.flagWrap { position: relative; width: 26px; height: 26px; border-radius: 50%; overflow: hidden; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent); }
-.flagBack, .flagFront { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transition: clip-path 380ms var(--ease), opacity 380ms var(--ease); }
-/* At rest the current flag fills the circle; hovered, it keeps the left half, dimmed, and the other language's
-   flag takes the right half at full strength (each half its own, so nothing shows through the other) */
+.flagWrap { position: relative; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; overflow: hidden; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 55%, transparent); }
+.langCode { font-size: 10px; font-weight: 600; line-height: 1; letter-spacing: 0.06em; transition: opacity 250ms var(--ease); }
+.flagBack, .flagFront { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: clip-path 380ms var(--ease), opacity 300ms var(--ease); }
 .flagFront { clip-path: inset(0 0 0 0); }
 .flagBack { clip-path: inset(0 0 0 100%); }
+.lang:hover .langCode, .lang:focus-visible .langCode { opacity: 0; }
 .lang:hover .flagFront, .lang:focus-visible .flagFront { clip-path: inset(0 50% 0 0); opacity: 0.4; }
-.lang:hover .flagBack, .lang:focus-visible .flagBack { clip-path: inset(0 0 0 50%); }
+.lang:hover .flagBack, .lang:focus-visible .flagBack { clip-path: inset(0 0 0 50%); opacity: 1; }
 .langHint {
   position: absolute; right: calc(100% - var(--s-1)); top: 50%; translate: 6px -50%; white-space: nowrap; pointer-events: none;
   font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em; opacity: 0;
