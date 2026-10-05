@@ -3,7 +3,9 @@
 // template's colours (sum of absolute differences) to find its horizontal (and slight vertical) offset. A frame
 // whose best match is no closer than the empty canal at that spot has no subject (null).
 // Writes { fps, poly, frames: [[dx, dy] | null] }.
-// swiftc -O scripts/film-matte.swift -o /tmp/film-matte && /tmp/film-matte <film.mp4> <out.json>
+// swiftc -O scripts/film-matte.swift -o /tmp/film-matte && /tmp/film-matte <film.mp4> <out.json> [refFilm.mp4]
+// The template colours come from REF_FRAME of refFilm when given (the 24 fps film POLY was traced on), so a
+// re-timed or interpolated film can be followed with the same outline.
 import AVFoundation
 import Foundation
 
@@ -38,6 +40,30 @@ while let s = out.copyNextSampleBuffer(), let pb = CMSampleBufferGetImageBuffer(
   frames.append(f)
 }
 let n = frames.count
+// Template source: the frame POLY was traced on, from the reference film if given
+var refLane: [UInt8] = frames[min(REF_FRAME, n - 1)]
+if a.count > 3 {
+  let refAsset = AVURLAsset(url: URL(fileURLWithPath: a[3]))
+  let r = try! AVAssetReader(asset: refAsset)
+  let t = refAsset.tracks(withMediaType: .video).first!
+  let o = AVAssetReaderTrackOutput(track: t, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
+  r.add(o); r.startReading()
+  var k = 0
+  while let s = o.copyNextSampleBuffer(), let pb = CMSampleBufferGetImageBuffer(s) {
+    if k == REF_FRAME {
+      CVPixelBufferLockBaseAddress(pb, .readOnly)
+      let base = CVPixelBufferGetBaseAddress(pb)!.assumingMemoryBound(to: UInt8.self)
+      let bpr = CVPixelBufferGetBytesPerRow(pb)
+      for y in 0..<rows { for x in 0..<W {
+        let p = (laneTop + y) * bpr + x * 4, q = (y * W + x) * 3
+        refLane[q] = base[p + 2]; refLane[q + 1] = base[p + 1]; refLane[q + 2] = base[p]
+      } }
+      CVPixelBufferUnlockBaseAddress(pb, .readOnly)
+      break
+    }
+    k += 1
+  }
+}
 var med = [UInt8](repeating: 0, count: W * rows * 3)
 var col = [UInt8](repeating: 0, count: n)
 for i in 0..<(W * rows * 3) { for k in 0..<n { col[k] = frames[k][i] }; col.sort(); med[i] = col[n / 2] }
@@ -56,7 +82,7 @@ func inside(_ x: Double, _ y: Double) -> Bool {
 let refIdx = REF_FRAME
 var tpl: [(x: Int, y: Int, r: Int, g: Int, b: Int)] = []
 for y in stride(from: laneTop, to: laneBottom, by: 2) { for x in stride(from: 680, to: 950, by: 2) where inside(Double(x) + 0.5, Double(y) + 0.5) {
-  let q = ((y - laneTop) * W + x) * 3, f = frames[refIdx]
+  let q = ((y - laneTop) * W + x) * 3, f = refLane
   tpl.append((x, y, Int(f[q]), Int(f[q + 1]), Int(f[q + 2])))
 } }
 func cost(_ f: [UInt8], _ dx: Int, _ dy: Int) -> (Double, Double)? {

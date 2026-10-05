@@ -13,34 +13,20 @@
 }
 .dim[data-on="true"] { opacity: 1; }
 
-/* Hotspot: nothing to see until it is chosen; then a hairline in the frame's own light and a 4% lift */
+/* Hotspot: a plain frame in the film's own light (no name, no place), out of sight and out of the tab order until
+   HeroZoom has brought the facades forward (`data-shown`); the chosen one lifts 5% and brightens */
 .hotspot {
   position: absolute; display: block; padding: 0; border-radius: 2px; cursor: pointer;
-  outline: 1px solid transparent; outline-offset: 3px;
+  outline: 1px solid color-mix(in srgb, var(--on-media) 58%, transparent); outline-offset: 3px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--on-media) 22%, transparent);
   transition: transform 400ms var(--ease), outline-color 400ms var(--ease), box-shadow 400ms var(--ease);
   -webkit-tap-highlight-color: transparent;
 }
-.hotspot[data-active="true"] { transform: scale(1.04); outline-color: var(--glass-line); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--on-media) 30%, transparent); }
+.layer[data-shown="false"] .hotspot { visibility: hidden; }
+.hotspot[data-active="true"] { transform: scale(1.05); outline-color: var(--on-media); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--on-media) 45%, transparent); }
 .hotspot:focus-visible { outline: 2px solid var(--on-media); outline-offset: 4px; }
 
-/* Preview card: an editorial label beside the window (left of it near the right edge), Canal ink glass. A child of
-   the hero, placed in hero pixels by Windows.tsx; above the hotspot layer */
-.card { position: absolute; z-index: 5; left: var(--card-left, 0px); top: var(--card-top, 0px); width: clamp(220px, 19vw, 300px); translate: 0 -50%; }
-.card[data-side="left"] { translate: -100% -50%; }
-.cardButton {
-  display: flex; flex-direction: column; width: 100%; padding: 0; text-align: left; border-radius: var(--r-sm); overflow: hidden;
-  background: color-mix(in srgb, var(--inv-bg) 82%, transparent); color: var(--inv-ink); border: 1px solid var(--inv-line);
-  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.1); backdrop-filter: blur(var(--blur)) saturate(1.1);
-  box-shadow: var(--shadow-soft);
-}
-.cardMedia { width: 100%; background: var(--inv-surface); }
-.cardText { display: grid; gap: 2px; padding: var(--s-3) var(--s-4) var(--s-4); }
-.cardName { font-family: var(--font-display); font-size: var(--fs-ui); font-weight: 500; letter-spacing: -0.005em; line-height: 1.25; }
-.cardMeta { font-size: var(--fs-micro); letter-spacing: 0.02em; color: var(--inv-muted); }
-.cardArrow { position: absolute; right: var(--s-4); bottom: var(--s-4); color: var(--inv-ink); transition: transform 250ms var(--ease); }
-.cardButton:hover .cardArrow { transform: translateX(3px); }
-
-/* The interior of a previewed window loads here, unseen, so the click has nothing to wait for */
+/* The interior of a lifted window loads here, unseen, so the click has nothing to wait for */
 .warm { position: absolute; width: 1px; height: 1px; overflow: hidden; visibility: hidden; pointer-events: none; }
 
 /* Debug (?debug=windows): the film box and every hotspot with its id and numbers, in lime (development only) */
@@ -109,12 +95,6 @@
 .back:focus-visible, .exploreBtn:focus-visible, .indexItem:focus-visible { outline: 2px solid var(--on-media); outline-offset: 3px; }
 
 @media (max-width: 767px) {
-  /* The card becomes a compact sheet along the bottom; the window keeps its place */
-  .card, .card[data-side="left"] { position: fixed; left: var(--gutter); right: var(--gutter); bottom: var(--s-5); top: auto; width: auto; translate: 0 0; }
-  .cardButton { flex-direction: row; align-items: center; }
-  .cardMedia { width: 112px; flex: 0 0 auto; }
-  .cardText { flex: 1 1 auto; padding: var(--s-3) var(--s-7) var(--s-3) var(--s-4); }
-  .cardArrow { bottom: auto; top: 50%; translate: 0 -50%; }
   .overviewGrid { grid-template-columns: 1fr; gap: var(--s-6); }
   .indexList { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
   .name { font-size: clamp(32px, 9vw, 44px); }

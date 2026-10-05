@@ -7,8 +7,8 @@ import { MediaFrame } from "@/components/ui/MediaFrame";
 import type { ImageAsset } from "@/content/media";
 import type { WindowBox } from "@/content/projects";
 import type { Lang } from "@/content/routes";
-import { gsap, prefersReducedMotion, setupGsap } from "@/lib/motion";
-import { enterTimeline, previewIn, previewOut, swapStage } from "./motion";
+import { prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { enterTimeline, swapStage } from "./motion";
 import s from "./windows.module.css";
 
 export type WindowProject = {
@@ -28,12 +28,6 @@ export type WindowStrings = { eyebrow: string; explore: string; back: string; mo
 type Props = { lang: Lang; projects: WindowProject[]; strings: WindowStrings };
 type Phase = "idle" | "entering" | "open" | "leaving";
 
-/** Gap between a window and its preview card, in percent of the hero width. */
-const CARD_GAP = 1.4;
-/** Windows further right than this (percent of the hero width) get their card on the left. */
-const CARD_FLIP_AT = 62;
-const HIDE_DELAY = 160;
-
 const noop = () => () => {};
 /** True once on the client, false in the server render (so the portal and the query flag never mismatch hydration). */
 const useClient = () => useSyncExternalStore(noop, () => true, () => false);
@@ -48,14 +42,14 @@ const useDebugFlag = () =>
   );
 
 /**
- * Project windows (concept 2026-10-05): the architecture as the interface. One invisible hotspot per project sits
- * on its window in the hero film (positions in percent of the film, see content/projects.ts). Hover or focus
- * lifts the window a touch, dims the rest of the facade and shows an editorial preview card beside it; on touch
- * the first tap previews and the second enters. Entering plays the through-the-window timeline (motion.ts) into
- * a fixed overlay (portalled to <body>, above the header): the interior, the project's name, the overview and the
- * index of all four projects, with a way back that plays the same timeline in reverse. `?debug=windows` outlines
- * the film box and every hotspot with its id and numbers, for tuning against the footage.
- * UI state (active, open, phase) lives in React; the timelines read it, never the other way round.
+ * Project windows (concept 2026-10-05): the architecture as the interface. Four hotspots, one per project, sit on
+ * windows of four different houses in the hero film (positions in percent of the film, content/projects.ts); they
+ * are plain frames, no names or places, and they arrive only once the page has scrolled into the facades
+ * (HeroZoom sets `data-shown`). Hover or keyboard focus lifts a window and dims the rest of the facade; click, tap
+ * or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
+ * the header) with the interior, the project's name, the overview and the index of all four projects, and a way
+ * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot with its id and
+ * numbers, for tuning against the footage. UI state (active, open, phase) lives in React; the timelines read it.
  */
 export function Windows({ lang, projects, strings }: Props) {
   const [active, setActive] = useState<string | null>(null);
@@ -64,12 +58,7 @@ export function Windows({ lang, projects, strings }: Props) {
   const [warmed, setWarmed] = useState<string[]>([]);
   const mounted = useClient();
   const debug = useDebugFlag();
-  const touch = useRef(false);
-  /** Pointer type of the last press on a window: a touch previews first, a mouse or pen enters at once. */
-  const lastPointer = useRef<string>("mouse");
-  const hideTimer = useRef<number | null>(null);
   const filmRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const overviewRef = useRef<HTMLElement>(null);
@@ -82,55 +71,29 @@ export function Windows({ lang, projects, strings }: Props) {
 
   useEffect(() => {
     setupGsap();
-    touch.current = window.matchMedia("(hover: none)").matches;
-    if (cardRef.current) gsap.set(cardRef.current, { autoAlpha: 0 });
   }, []);
 
-  /* ---------- preview: hover, focus, first tap ---------- */
-  const cancelHide = () => {
-    if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    hideTimer.current = null;
-  };
+  /* ---------- hover / focus: the window lifts and its interior loads ahead of the click ---------- */
   const show = (id: string) => {
-    cancelHide();
     setActive(id);
     setWarmed((w) => (w.includes(id) ? w : [...w, id]));
   };
-  const hideSoon = () => {
-    cancelHide();
-    hideTimer.current = window.setTimeout(() => setActive(null), HIDE_DELAY);
-  };
-  // The card sits beside the active window: measured against the hero, so it is a plain child of the hero (not of
-  // the sized film box, whose containment would also trap the phone's fixed sheet) and the phone can pin it.
-  useLayoutEffect(() => {
-    const card = cardRef.current;
-    if (!card || !mounted) return;
-    if (!active) {
-      previewOut(card, prefersReducedMotion());
-      return;
-    }
-    const hotspot = filmRef.current?.querySelector<HTMLElement>(`[data-window="${active}"]`);
-    const hero = card.parentElement;
-    if (hotspot && hero) {
-      const h = hotspot.getBoundingClientRect();
-      const r = hero.getBoundingClientRect();
-      const flip = h.left + h.width / 2 > r.left + (r.width * CARD_FLIP_AT) / 100;
-      const gap = (r.width * CARD_GAP) / 100;
-      card.dataset.side = flip ? "left" : "right";
-      card.style.setProperty("--card-left", `${(flip ? h.left - gap : h.right + gap) - r.left}px`);
-      card.style.setProperty("--card-top", `${h.top + h.height / 2 - r.top}px`);
-    }
-    previewIn(card, prefersReducedMotion());
-  }, [active, mounted]);
+  const hide = () => setActive(null);
 
   /* ---------- enter, leave, switch ---------- */
+  const exteriorParts = () => {
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    return [hero?.querySelector<HTMLElement>("[data-hero-frame]"), hero?.querySelector<HTMLElement>("canvas"), hero?.querySelector<HTMLElement>("[data-windows]")].filter(
+      (el): el is HTMLElement => Boolean(el),
+    );
+  };
+
   const enter = useCallback(
     (id: string) => {
       if (phase !== "idle") return;
       const p = projects.find((x) => x.id === id);
       if (!p?.interior) return;
       returnTo.current = filmRef.current?.querySelector<HTMLElement>(`[data-window="${id}"]`) ?? null;
-      cancelHide();
       setWarmed((w) => (w.includes(id) ? w : [...w, id]));
       setActive(null);
       setOpen(id);
@@ -143,8 +106,8 @@ export function Windows({ lang, projects, strings }: Props) {
     if (phase !== "entering" || !open) return;
     const overlay = overlayRef.current;
     const hotspot = returnTo.current;
-    const exterior = document.querySelector<HTMLElement>("[data-hero-frame]");
-    if (!overlay || !hotspot || !exterior) {
+    const exterior = exteriorParts();
+    if (!overlay || !hotspot || !exterior.length) {
       setPhase("open");
       return;
     }
@@ -165,10 +128,8 @@ export function Windows({ lang, projects, strings }: Props) {
   const close = useCallback(() => {
     if (phase !== "open") return;
     const t = tl.current;
-    const exterior = document.querySelector<HTMLElement>("[data-hero-frame]");
     const done = () => {
       document.documentElement.removeAttribute("data-project-open");
-      if (exterior) gsap.set(exterior, { clearProps: "transform" });
       tl.current = null;
       setOpen(null);
       setPhase("idle");
@@ -220,36 +181,26 @@ export function Windows({ lang, projects, strings }: Props) {
           {projects.map((p) => {
             const w = p.window;
             if (!w) return null;
-            const isActive = active === p.id;
             return (
               <button
                 key={p.id}
                 type="button"
                 className={s.hotspot}
                 data-window={p.id}
-                data-active={isActive ? "true" : "false"}
+                data-active={active === p.id ? "true" : "false"}
                 style={{ left: `${w.x}%`, top: `${w.y}%`, width: `${w.w}%`, height: `${w.h}%` }}
                 aria-label={p.label}
                 aria-haspopup="dialog"
                 onPointerEnter={(e) => {
-                  if (e.pointerType !== "touch" && !touch.current) show(p.id);
+                  if (e.pointerType !== "touch") show(p.id);
                 }}
-                onPointerLeave={(e) => {
-                  if (e.pointerType !== "touch" && !touch.current) hideSoon();
-                }}
-                onPointerDown={(e) => {
-                  lastPointer.current = e.pointerType;
-                }}
-                // Keyboard focus previews; focus handed back after closing (a mouse journey) does not
+                onPointerLeave={hide}
+                // Keyboard focus lifts the window; focus handed back after closing (a pointer journey) does not
                 onFocus={(e) => {
                   if (e.currentTarget.matches(":focus-visible")) show(p.id);
                 }}
-                onBlur={hideSoon}
-                onClick={() => {
-                  const byTouch = lastPointer.current === "touch" || touch.current;
-                  if (byTouch && !isActive) show(p.id);
-                  else enter(p.id);
-                }}
+                onBlur={hide}
+                onClick={() => enter(p.id)}
               >
                 {debug ? (
                   <>
@@ -263,7 +214,7 @@ export function Windows({ lang, projects, strings }: Props) {
             );
           })}
         </div>
-        {/* The interior of a previewed window loads ahead of the click; nothing else does */}
+        {/* The interior of a lifted window loads ahead of the click; nothing else does */}
         <div className={s.warm} aria-hidden="true">
           {projects
             .filter((p) => p.interior && warmed.includes(p.id) && p.id !== open)
@@ -272,27 +223,6 @@ export function Windows({ lang, projects, strings }: Props) {
             ))}
         </div>
       </div>
-        <div
-          ref={cardRef}
-          className={s.card}
-          data-side="right"
-          onPointerEnter={cancelHide}
-          onPointerLeave={hideSoon}
-          aria-hidden={ap ? undefined : true}
-        >
-          {ap ? (
-            <button type="button" className={s.cardButton} onClick={() => enter(ap.id)} onFocus={cancelHide} onBlur={hideSoon} tabIndex={-1} aria-label={ap.label}>
-              <MediaFrame image={ap.preview} ratio="16/9" lang={lang} radius="none" sizes="300px" decorative priority className={s.cardMedia} />
-              <span className={s.cardText}>
-                <span className={s.cardName}>{ap.name}</span>
-                <span className={s.cardMeta}>
-                  {ap.location} · {ap.category}
-                </span>
-              </span>
-              <ArrowRight size={18} weight="light" className={s.cardArrow} aria-hidden="true" />
-            </button>
-          ) : null}
-        </div>
 
       {mounted
         ? createPortal(

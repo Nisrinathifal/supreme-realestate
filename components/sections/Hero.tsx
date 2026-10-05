@@ -4,6 +4,7 @@ import type { Lang } from "@/content/routes";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { HeroFilm } from "./HeroFilm";
 import { HeroBoat } from "./HeroBoat";
+import { HeroZoom } from "@/components/windows/HeroZoom";
 import { ProjectWindows } from "@/components/windows/ProjectWindows";
 import styles from "./Hero.module.css";
 
@@ -11,8 +12,8 @@ import styles from "./Hero.module.css";
  * Hero (concept 2026-09-30): one full-bleed frame with the still underneath and the film over it (plays once
  * after the intro; concept 3 loops the canal film). Concept 3: the key message sits in the sky, in ink; the
  * headline is one line on the waterline, behind the passing boat (HeroBoat redraws the boat over it and lets the
- * first crossing bring the letters in). The project windows (components/windows) sit over the facades: hover a
- * window for its preview, click it to enter the project through that window.
+ * first crossing bring the letters in). The project windows (components/windows) sit over the facades and arrive
+ * once the page has scrolled into them (HeroZoom): click one to enter its project through that window.
  * Complete without JavaScript (the still). On the first visit the intro (components/motion/Preloader) grows
  * `[data-hero-frame]` from a small square to the full viewport and fades `[data-hero-copy]` in; all of those
  * start states are set in JS, never here.
@@ -37,6 +38,7 @@ export function Hero({ lang }: { lang: Lang }) {
       </div>
       {hasFilm && heroFilm.subject ? <HeroBoat subject={heroFilm.subject} /> : null}
       <ProjectWindows lang={lang} />
+      <HeroZoom />
     </section>
   );
 }

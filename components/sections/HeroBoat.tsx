@@ -22,6 +22,8 @@ const WAKE_GAP = 0.03;
 const WAKE_FADE = 0.16;
 /** The key message trails a little further behind. */
 const LEAD_LAG = 0.05;
+/** Every crossing: how far (percent of their height) the letters ride up on the bow wave before settling in the wake. */
+const RIPPLE = 7;
 
 /** Colour stops of a CSS linear-gradient token, e.g. --media-scrim: [[colour, 0..1], …]. */
 function gradientStops(value: string): [string, number][] {
@@ -33,7 +35,9 @@ function gradientStops(value: string): [string, number][] {
  * film onto a canvas above the headline, clipped to its traced outline at its offset on the current frame
  * (scripts/film-matte.swift), with the bottom scrim baked in so it matches the film around it. On the first
  * crossing the letters (and the key message's words) surface in the boat's wake: a gap behind the stern, then a
- * fade over WAKE_FADE, so the newest letters are faint and the ones further back solid, like a trail.
+ * fade over WAKE_FADE, so the newest letters are faint and the ones further back solid, like a trail. On every
+ * crossing after that the letters ride the water: lifted ahead of the bow, held under the hull, then a damped bob
+ * in the wake, so the boat displaces the headline instead of merely covering it.
  * Reduced motion and Save-Data: no film, so neither runs and the copy stays in full view over the still.
  */
 export function HeroBoat({ subject }: Props) {
@@ -58,7 +62,9 @@ export function HeroBoat({ subject }: Props) {
     let raf = 0;
     let stall = 0;
     let splits: SplitText[] = [];
-    let pending: { el: HTMLElement; lag: number; x: number | null }[] = [];
+    type Letter = { el: HTMLElement; x: number | null; rise: number; applied: number };
+    let letters: Letter[] = [];
+    let pending: { el: HTMLElement; lag: number; x: number | null; letter?: Letter }[] = [];
 
     /* ---------- geometry: the film covers the hero, anchored top centre ---------- */
     const geometry = () => {
@@ -74,6 +80,7 @@ export function HeroBoat({ subject }: Props) {
       canvas.width = Math.round(r.width * dpr);
       canvas.height = Math.round(r.height * dpr);
       pending.forEach((p) => (p.x = null));
+      letters.forEach((l) => (l.x = null));
     };
 
     /* ---------- the boat over the headline ---------- */
@@ -118,10 +125,15 @@ export function HeroBoat({ subject }: Props) {
     /* ---------- the first crossing brings the copy in ---------- */
     const finish = () => {
       window.clearTimeout(stall);
-      if (pending.length) gsap.to(pending.map((p) => p.el), { opacity: 1, yPercent: 0, duration: 0.7, ease: ease.brand, stagger: 0.015, overwrite: true });
+      if (pending.length) gsap.to(pending.map((p) => p.el), { opacity: 1, duration: 0.7, ease: ease.brand, stagger: 0.015, overwrite: "auto" });
+      pending.forEach((p) => {
+        if (p.letter) p.letter.rise = 0;
+        else gsap.to(p.el, { yPercent: 0, duration: 0.7, ease: ease.brand });
+      });
       pending = [];
     };
     const stern = Math.min(...subject.poly.map((p) => p[0]));
+    const bowX = Math.max(...subject.poly.map((p) => p[0]));
     const reveal = (time: number) => {
       if (!pending.length) return;
       const off = offsetAt(time);
@@ -138,8 +150,46 @@ export function HeroBoat({ subject }: Props) {
         const d = (tail - p.x - p.lag * r.width) / fade;
         if (d <= 0) return true;
         const t = d >= 1 ? 1 : d * d * (3 - 2 * d); // smoothstep: soft at both ends of the wake
-        gsap.set(p.el, { opacity: t, yPercent: 30 * (1 - t) });
+        if (p.letter) {
+          gsap.set(p.el, { opacity: t });
+          p.letter.rise = 30 * (1 - t); // the ripple applies it, with the wave
+        } else gsap.set(p.el, { opacity: t, yPercent: 30 * (1 - t) });
         return t < 1;
+      });
+    };
+
+    /* ---------- every crossing: the headline rides the water ---------- */
+    const ripple = (time: number) => {
+      if (!letters.length) return;
+      const off = offsetAt(time);
+      const { r, s, left } = geometry();
+      const bow = off ? r.left + left + (bowX + off[0]) * s : -Infinity;
+      const tail = off ? r.left + left + (stern + off[0]) * s : -Infinity;
+      const len = (bowX - stern) * s;
+      letters.forEach((l) => {
+        if (l.x === null) {
+          const b = l.el.getBoundingClientRect();
+          l.x = b.left + b.width / 2;
+        }
+        let wave = 0;
+        if (off) {
+          if (l.x > bow) {
+            // Ahead of the bow: lifted as the bow wave reaches it
+            const u = (l.x - bow) / (len * 0.35);
+            if (u < 1) wave = -RIPPLE * (1 - u * u * (3 - 2 * u));
+          } else if (l.x >= tail) {
+            wave = -RIPPLE; // under the hull
+          } else {
+            // In the wake: a damped bob that dies out about one boat-length behind
+            const u = (tail - l.x) / (len * 1.1);
+            if (u < 1.4) wave = -RIPPLE * Math.cos(1.5 * Math.PI * u) * Math.exp(-1.6 * u) * (u > 1 ? (1.4 - u) / 0.4 : 1);
+          }
+        }
+        const y = l.rise + wave;
+        if (Math.abs(y - l.applied) > 0.05) {
+          l.applied = y;
+          gsap.set(l.el, { yPercent: y });
+        }
       });
     };
 
@@ -149,6 +199,7 @@ export function HeroBoat({ subject }: Props) {
       const time = meta ? meta.mediaTime : video.currentTime;
       draw(time);
       reveal(time);
+      ripple(time);
       if (hasFrameCb) frameCb = video.requestVideoFrameCallback(onFrame);
       else raf = requestAnimationFrame((t) => onFrame(t));
     };
@@ -188,8 +239,9 @@ export function HeroBoat({ subject }: Props) {
     document.fonts.ready.then(() => {
       if (cancelled || video.currentTime > 0.5) return;
       splits = [new SplitText(title, { type: "words,chars" }), new SplitText(lead, { type: "words" })];
+      letters = (splits[0].chars as HTMLElement[]).map((el) => ({ el, x: null, rise: 30, applied: 30 }));
       pending = [
-        ...(splits[0].chars as HTMLElement[]).map((el) => ({ el, lag: 0, x: null })),
+        ...letters.map((letter) => ({ el: letter.el, lag: 0, x: null, letter })),
         ...(splits[1].words as HTMLElement[]).map((el) => ({ el, lag: LEAD_LAG, x: null })),
       ];
       gsap.set(pending.map((p) => p.el), { opacity: 0, yPercent: 30 });

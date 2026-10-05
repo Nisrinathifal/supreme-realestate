@@ -93,7 +93,7 @@ export const introSequence: ImageAsset[] = [
 /**
  * Hero film (concept 3, supplied 2026-10-05): fixed camera on the canal houses, boats passing, loops. Trimmed to
  * 0.083–9.333 s (retimed to 24 fps from zero), where the second boat stands exactly where the first one starts,
- * so the loop has no seam.
+ * so the loop has no seam; then raised to 60 fps with motion interpolation (scripts/film-interpolate.swift).
  * Re-encoded without metadata or audio by scripts/film-export.swift (hero-film-02, the house renewal, stays
  * for concept 2). WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
  */
