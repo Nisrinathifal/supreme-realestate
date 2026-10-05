@@ -48,8 +48,8 @@ const useDebugFlag = () =>
  * (HeroZoom sets `data-shown`). Hover or keyboard focus lifts a window and dims the rest of the facade; click, tap
  * or Enter goes in: the through-the-window timeline (motion.ts) into a fixed overlay (portalled to <body>, above
  * the header) with the interior, the project's name, the overview and the index of all four projects, and a way
- * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot with its id and
- * numbers, for tuning against the footage. UI state (active, open, phase) lives in React; the timelines read it.
+ * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
+ * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
  */
 export function Windows({ lang, projects, strings }: Props) {
   const [active, setActive] = useState<string | null>(null);
@@ -201,16 +201,7 @@ export function Windows({ lang, projects, strings }: Props) {
                 }}
                 onBlur={hide}
                 onClick={() => enter(p.id)}
-              >
-                {debug ? (
-                  <>
-                    <span className={s.debugDot} aria-hidden="true" />
-                    <span className={s.debugLabel} aria-hidden="true">
-                      {p.id} · x {w.x} y {w.y} w {w.w} h {w.h}
-                    </span>
-                  </>
-                ) : null}
-              </button>
+              />
             );
           })}
         </div>
