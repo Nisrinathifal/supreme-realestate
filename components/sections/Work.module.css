@@ -1,13 +1,6 @@
 /* Canal-ink band right after the night hero, no heading: just the deck of cards */
 .work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: var(--s-6); padding-bottom: var(--section-y); background: var(--inv-bg); }
 
-/* Handoff ghosts (WorkMotion, desktop): a window box from the film on its way to being a card. Fixed, under the
-   header; WorkMotion sets its box, radius and the opacities of its parts as the scroll moves */
-.ghost { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; border-radius: 2px; }
-.ghostTint { position: absolute; inset: 0; border-radius: inherit; background: color-mix(in srgb, var(--accent) 16%, transparent); }
-.ghostLine { position: absolute; inset: -2px; border: 1px dashed var(--accent); border-radius: inherit; }
-.ghostDot { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; translate: -50% -50%; border-radius: 50%; background: var(--accent); }
-.ghostEdge { position: absolute; inset: 0; border: 1px solid var(--glass-line); border-radius: inherit; opacity: 0; }
 
 /* Static layout: the cards one after another. The deck is about three quarters of the frame (owner), not the container */
 .deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(960px, 76vw)); display: flex; flex-direction: column; gap: var(--s-4); }

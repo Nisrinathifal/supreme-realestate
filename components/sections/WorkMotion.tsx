@@ -3,14 +3,10 @@
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
-import styles from "./Work.module.css";
 
 /**
- * Handoff (desktop, 2026-10-05): as the band scrolls in under the night hero, the outlines of the film's four
- * window boxes travel, almost together, to their cards' places in the stack, growing to card size on the way
- * (the lime dashes and dot give way to a thin hairline); then the deck comes up as one, under the outlines, and
- * the outlines let go. Outlines only, no plates, so nothing crosses or covers anything on the way. Phones (no
- * windows on screen): the first card and its photographs come up and settle, scrubbed. Then the
+ * Arrival: as the band scrolls in under the night hero (whose window boxes simply scroll away with it), the deck
+ * rises and comes up as one, the first card's photographs settling, scrubbed. Then the
  * deck after the reference, on every width:
  * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
  * little narrower), and each next card rises to the top and grows to full width over the current one while its
@@ -27,112 +23,25 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       const root = scope.current!;
       const mm = gsap.matchMedia();
 
-      // Phones: arrival. The first card and its photographs come up and settle as the band scrolls in
-      mm.add(`${MQ.full} and (max-width: 767px)`, () => {
-        const section = root.closest("[data-work]") as HTMLElement | null;
-        const q = gsap.utils.selector(root);
-        const first = q<HTMLElement>("[data-work-card]")[0];
-        if (!section || !first) return;
-        const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
-        gsap.set(first, { y: 96, scale: 0.94 });
-        if (firstPhotos) gsap.set(firstPhotos, { xPercent: 10 });
-        const tl = gsap.timeline({
-          defaults: { ease: ease.inOut },
-          scrollTrigger: { trigger: section, start: "top 95%", end: "top 12%", scrub: 0.8, invalidateOnRefresh: true },
-        });
-        tl.to(first, { y: 0, scale: 1, duration: 0.8 }, 0.15).to(firstPhotos, { xPercent: 0, duration: 0.7 }, 0.3);
-        return () => {
-          tl.scrollTrigger?.kill();
-          tl.kill();
-          gsap.set([first, firstPhotos], { clearProps: "transform,opacity" });
-        };
-      });
-
-      // Desktop: the handoff from the film's windows to the cards
-      mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
+      // Arrival: the deck rises and comes up as one as the band scrolls in, its first card's photographs settling
+      mm.add(MQ.full, () => {
         const section = root.closest("[data-work]") as HTMLElement | null;
         const q = gsap.utils.selector(root);
         const deck = q<HTMLElement>("[data-work-deck]")[0];
-        const cards = q<HTMLElement>("[data-work-card]");
-        const boxes = cards.map((card) => document.querySelector<HTMLElement>(`[data-window="${card.dataset.project}"]`));
-        if (!section || !deck || !cards.length || boxes.some((b) => !b)) return;
-        const docEl = document.documentElement;
-        const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
-        const radius = cssPx(docEl, "--r-md", 18);
-        const clamp = (v: number) => Math.min(1, Math.max(0, v));
-        const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-
-        // One ghost per window, built from the card's own tone
-        const layer = document.createElement("div");
-        layer.setAttribute("aria-hidden", "true");
-        const n = cards.length;
-        const ghosts = cards.map((card, i) => {
-          const g = document.createElement("div");
-          g.className = styles.ghost;
-          g.style.zIndex = String(n - i);
-          const tint = document.createElement("span");
-          tint.className = styles.ghostTint;
-          const line = document.createElement("span");
-          line.className = styles.ghostLine;
-          const dot = document.createElement("span");
-          dot.className = styles.ghostDot;
-          const edge = document.createElement("span");
-          edge.className = styles.ghostEdge;
-          g.append(tint, line, dot, edge);
-          layer.append(g);
-          return { g, tint, line, dot, edge };
+        const first = q<HTMLElement>("[data-work-card]")[0];
+        if (!section || !deck || !first) return;
+        const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
+        gsap.set(deck, { opacity: 0, y: 80 });
+        if (firstPhotos) gsap.set(firstPhotos, { xPercent: 8 });
+        const tl = gsap.timeline({
+          defaults: { ease: "power2.out" },
+          scrollTrigger: { trigger: section, start: "top 92%", end: "top 30%", scrub: 1, invalidateOnRefresh: true },
         });
-        document.body.append(layer);
-        gsap.set(deck, { opacity: 0 }); // the deck comes up as one, so no card ever shows through another
-        gsap.set(layer, { autoAlpha: 0 });
-
-        // The scroll's shares: the outlines travel first (a small stagger, the last card's first), the deck comes up
-        // under them, then they let go
-        const TRAVEL = 0.5;
-        const STAGGER = 0.05;
-        const DECK_AT = 0.62;
-        const update = (p: number) => {
-          gsap.set(layer, { autoAlpha: p > 0 && p < 1 ? 1 : 0 });
-          gsap.set(deck, { opacity: clamp((p - DECK_AT) / 0.24) });
-          cards.forEach((card, i) => {
-            const box = boxes[i]!;
-            const { g, tint, line, dot, edge } = ghosts[i];
-            const q = clamp((p - (n - 1 - i) * STAGGER) / TRAVEL); // this outline's own travel
-            const e = easeInOut(q);
-            // From the window where it is now (the hero is scrolling away) to the card where it is now (the deck is
-            // scrolling in): both ends move with the page, so an outline that has arrived rides with its card
-            const from = box.getBoundingClientRect();
-            const to = card.getBoundingClientRect();
-            gsap.set(g, {
-              left: from.left + (to.left - from.left) * e,
-              top: from.top + (to.top - from.top) * e,
-              width: from.width + (to.width - from.width) * e,
-              height: from.height + (to.height - from.height) * e,
-              borderRadius: 2 + (radius - 2) * e,
-              opacity: 1 - clamp((p - 0.88) / 0.12),
-            });
-            gsap.set(dot, { opacity: 1 - clamp(q / 0.2) });
-            gsap.set(tint, { opacity: 1 - clamp(q / 0.5) });
-            gsap.set(line, { opacity: 1 - clamp((q - 0.5) / 0.4) });
-            gsap.set(edge, { opacity: clamp((q - 0.5) / 0.4) });
-            // The film's own box steps aside while its outline travels
-            box.style.visibility = p > 0.02 && p < 1 ? "hidden" : "";
-          });
-        };
-        const st = ScrollTrigger.create({
-          trigger: section,
-          start: "top bottom",
-          end: () => `top ${top()}`,
-          scrub: true,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => update(self.progress),
-          onRefresh: (self) => update(self.progress),
-        });
+        tl.to(deck, { opacity: 1, y: 0, duration: 1 }, 0).to(firstPhotos, { xPercent: 0, duration: 0.8 }, 0.2);
         return () => {
-          st.kill();
-          layer.remove();
-          boxes.forEach((b) => b && (b.style.visibility = ""));
-          gsap.set(deck, { clearProps: "opacity" });
+          tl.scrollTrigger?.kill();
+          tl.kill();
+          gsap.set([deck, firstPhotos], { clearProps: "transform,opacity" });
         };
       });
 

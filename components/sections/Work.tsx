@@ -18,9 +18,7 @@ const tones = [`inverse ${styles.toneInk}`, `light ${styles.toneSky}`, `inverse 
  * covering the whole card, whose pill follows the pointer anywhere on the card. Since 2026-10-05 the band follows
  * the hero directly and each card is one of the four named projects (content/projects.ts): its name and city
  * above the case title, and the cover enters that project's overlay (WorkEnter), like a window in the film. Its
- * A Canal-ink band with no heading, continuing the night hero: on desktop the film's four window boxes travel
- * down with the scroll, become the cards and settle into the stack (WorkMotion's handoff); on phones the first card
- * settles as it comes into view. The deck is then pinned and each next card rises over the current one while the
+ * A Canal-ink band with no heading, continuing the night hero: the deck rises and comes up as one as it scrolls in. The deck is then pinned and each next card rises over the current one while the
  * ones still to come wait as strips below (WorkMotion), on phones too.
  * Reduced motion and no-JS read the cards one after another.
  */
