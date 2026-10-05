@@ -102,10 +102,16 @@ export function Header({ lang, strings }: Props) {
     setupGsap();
     const band = document.querySelector<HTMLElement>('[data-header-veil="off"]');
     if (!band) return;
+    // The band may be pinned by its own motion (the hero's window stops): then its range is the pin's plus its height
+    const pinOf = () => ScrollTrigger.getAll().find((t) => t.pin === band);
     const t = ScrollTrigger.create({
       trigger: band,
       start: "top bottom",
-      end: "bottom 120px",
+      end: () => {
+        const pin = pinOf();
+        return (pin ? pin.end + band.offsetHeight : band.getBoundingClientRect().bottom + window.scrollY) - 120;
+      },
+      refreshPriority: -1,
       onToggle: (self) => setVeil(!self.isActive),
     });
     return () => {

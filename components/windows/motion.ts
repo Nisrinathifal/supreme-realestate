@@ -16,8 +16,7 @@ type Enter = {
  * Through the window (concept 2026-10-05). The interior is a full-viewport image clipped to the window's rectangle,
  * so the part of the room seen "through the glass" is already the real room; the clip then opens to the full
  * viewport while the image settles from 1.3× to 1 around the window's centre, which reads as a camera push.
- * Meanwhile the exterior dims and eases 6% away (on top of whatever zoom the scroll has given it). The copy and
- * the back control arrive last.
+ * Meanwhile the exterior dims and, from the plain view, eases 6% away. The copy and the back control arrive last.
  * The timeline is returned paused-and-played so the caller can reverse it to leave the same way.
  * Reduced motion: a plain fade in the same order.
  */
@@ -47,12 +46,15 @@ export function enterTimeline({ overlay, rect, exterior, reduced, onComplete }: 
   gsap.set(stage, { clipPath: pane, autoAlpha: 1 });
   gsap.set(image, { scale: 1.3, transformOrigin: origin });
   gsap.set(ui, { autoAlpha: 0, y: 14 });
-  // Already zoomed by the scroll: keep its origin, or the frame would jump; otherwise push from the window
+  // The scroll camera (HeroZoom) may already hold the exterior zoomed and panned: then it stays put under the
+  // dimmer (any push would move around its own origin and jump); from the plain view it eases 6% away from the window
   const base = Number(gsap.getProperty(exterior[0], "scale")) || 1;
-  if (base === 1) gsap.set(exterior, { transformOrigin: origin });
+  if (base === 1) {
+    gsap.set(exterior, { transformOrigin: origin });
+    tl.to(exterior, { scale: 1.06, duration: 1.4, ease: "power3.inOut" }, 0);
+  }
 
   tl.to(dimmer, { opacity: 1, duration: 0.7, ease: ease.out }, 0.1)
-    .to(exterior, { scale: base * 1.06, duration: 1.4, ease: "power3.inOut" }, 0)
     .to(stage, { clipPath: "inset(0px 0px 0px 0px round 0px)", duration: 1.25, ease: "power3.inOut" }, 0.25)
     .to(image, { scale: 1, duration: 1.6, ease: "power3.inOut" }, 0.2)
     .to(ui, { autoAlpha: 1, y: 0, duration: 0.6, ease: ease.out, stagger: 0.05 }, 1.15);
