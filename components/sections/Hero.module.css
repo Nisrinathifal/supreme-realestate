@@ -34,11 +34,12 @@
 }
 .title {
   margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02;
-  font-size: var(--fs-h2); white-space: pre-line; text-wrap: balance; max-width: 16ch;
+  font-size: var(--fs-h2); text-wrap: balance; max-width: 16ch;
 }
 /* The sky is the top ~32% of the film, whose drawn height is max(100svh, 56.25vw). Headline + lead + header must fit
    in it, so the headline is capped to that height (two lines ≈ 2 × size) and never pushes into the gables. */
 @media (min-width: 981px) { .title { font-size: max(34px, min(var(--fs-h2), max(15svh, 8.4vw) - 58px)); } }
+.line { display: block; }
 .lead { margin: 0; font-family: var(--font-text); font-size: var(--fs-body); line-height: 1.5; max-width: 46ch; }
 
 @media (max-width: 980px) {

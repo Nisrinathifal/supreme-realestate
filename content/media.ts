@@ -25,6 +25,11 @@ export type VideoAsset = {
   loop: boolean;
   /** Playback speed (1 = as encoded). */
   rate?: number;
+  /**
+   * Path of a subject crossing the film, measured per frame: [seconds, x as a fraction of the film width]. The hero
+   * copy appears letter by letter as the subject passes under it (components/sections/HeroReveal).
+   */
+  path?: [number, number][];
 };
 
 /**
@@ -82,7 +87,8 @@ export const introSequence: ImageAsset[] = [
 ];
 
 /**
- * Hero film (concept 3, supplied 2026-10-05): 10 s, fixed camera on the canal houses, boats passing, loops.
+ * Hero film (concept 3, supplied 2026-10-05): fixed camera on the canal houses, boats passing, loops. Trimmed to
+ * 0.083–9.333 s, where the second boat stands exactly where the first one starts, so the loop has no seam.
  * Re-encoded without metadata or audio by scripts/film-export.swift (hero-film-02, the house renewal, stays
  * for concept 2). WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
  */
@@ -92,6 +98,8 @@ export const heroFilm: VideoAsset = {
   mp4Mobile: "/media/hero-film-03-720.mp4",
   poster: heroStill,
   loop: true,
+  // Bow of the first boat, left to right (tracked against the median frame); it leaves the frame at 4.25 s
+  path: [[0, 0.1125], [0.5, 0.198], [1, 0.2875], [1.5, 0.392], [2, 0.4875], [2.5, 0.606], [3, 0.717], [3.5, 0.829], [4, 0.954], [4.25, 1]],
 };
 
 /**

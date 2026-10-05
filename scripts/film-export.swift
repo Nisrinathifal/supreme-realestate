@@ -1,5 +1,6 @@
 // Re-encodes a film with AVFoundation (AVAssetReader/Writer): H.264 at a target bitrate, no audio,
-// all metadata dropped (PRD §6.2). Usage: xcrun swift scripts/film-export.swift <in> <out.mp4> <width> <kbps>
+// all metadata dropped (PRD §6.2). Usage: xcrun swift scripts/film-export.swift <in> <out.mp4> <width> <kbps> [start end]
+// Optional start/end (seconds) trim the film, e.g. to a span whose last frame meets its first for a seamless loop.
 import AVFoundation
 import Foundation
 let a = CommandLine.arguments
@@ -16,6 +17,11 @@ let reader = try! AVAssetReader(asset: asset)
 let readerOut = AVAssetReaderTrackOutput(track: track, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
 readerOut.alwaysCopiesSampleData = false
 reader.add(readerOut)
+var t0 = CMTime.zero
+if a.count >= 7, let s = Double(a[5]), let e = Double(a[6]) {
+  t0 = CMTime(seconds: s, preferredTimescale: 600)
+  reader.timeRange = CMTimeRange(start: t0, end: CMTime(seconds: e, preferredTimescale: 600))
+}
 let writer = try! AVAssetWriter(outputURL: output, fileType: .mp4)
 writer.metadata = []
 writer.shouldOptimizeForNetworkUse = true
@@ -34,7 +40,7 @@ let writerIn = AVAssetWriterInput(mediaType: .video, outputSettings: settings)
 writerIn.expectsMediaDataInRealTime = false
 writerIn.transform = track.preferredTransform
 writer.add(writerIn)
-writer.startWriting(); reader.startReading(); writer.startSession(atSourceTime: .zero)
+writer.startWriting(); reader.startReading(); writer.startSession(atSourceTime: t0)
 let queue = DispatchQueue(label: "encode"); let sem = DispatchSemaphore(value: 0)
 writerIn.requestMediaDataWhenReady(on: queue) {
   while writerIn.isReadyForMoreMediaData {
