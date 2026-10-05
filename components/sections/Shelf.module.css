@@ -3,8 +3,12 @@
   position: relative; min-height: 100svh; overflow: hidden; color: var(--ink);
   background: linear-gradient(180deg, var(--alt) 0%, var(--alt) 70%, var(--line) 100%);
 }
-/* The daylight comes up once the projects band before it has faded into this wall (WorkMotion sets --daylight-on) */
-.shelf::before { content: ""; position: absolute; inset: 0; background: var(--daylight); pointer-events: none; opacity: var(--daylight-on, 1); }
+/* Daylight from the top left; the top starts in Paper, the colour the projects band above fades into (WorkMotion), and
+   settles into the wall further down, so the two bands meet in one colour */
+.shelf::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, var(--bg) 0, color-mix(in srgb, var(--bg) 0%, transparent) 45svh), var(--daylight);
+}
 .shelf > * { position: relative; }
 .shelf > svg { position: absolute; }
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */

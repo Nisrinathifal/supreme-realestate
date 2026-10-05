@@ -32,7 +32,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "work", dark } }));
 
       // The band's tone (after the earlier projects intro): Canal ink while the deck plays, then, over the last
-      // viewport before the next band shows, it fades to that band's wall (Stone), so the two meet without an edge.
+      // viewport before the next band shows, it fades to Paper, where that band's wall begins, so they meet in one colour.
       // The header reads it as dark until the fade is half way.
       let fading = false;
       mm.add(MQ.full, () => {
@@ -43,33 +43,18 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           band,
           { backgroundColor: tokens.getPropertyValue("--inv-bg").trim() },
           {
-            backgroundColor: tokens.getPropertyValue("--alt").trim(),
+            backgroundColor: tokens.getPropertyValue("--bg").trim(),
             ease: "none",
             immediateRender: false,
             // Over the last viewport before the next band shows, so it is the same Stone by the time their edges meet
             scrollTrigger: { trigger: next, start: "top 190%", end: "top 100%", scrub: true, invalidateOnRefresh: true },
           },
         );
-        // ... and the next band's daylight comes up after the meeting, so the edge stays one flat Stone
-        const light = gsap.fromTo(
-          next,
-          { "--daylight-on": 0 },
-          {
-            "--daylight-on": 1,
-            ease: "none",
-            immediateRender: false,
-            scrollTrigger: { trigger: next, start: "top 100%", end: "top 20%", scrub: true, invalidateOnRefresh: true },
-          },
-        );
-        gsap.set(next, { "--daylight-on": 0 });
         return () => {
           fading = false;
           tone.scrollTrigger?.kill();
           tone.kill();
-          light.scrollTrigger?.kill();
-          light.kill();
           gsap.set(band, { clearProps: "backgroundColor" });
-          next.style.removeProperty("--daylight-on");
         };
       });
       const dark = band
