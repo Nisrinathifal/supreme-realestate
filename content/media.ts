@@ -234,6 +234,67 @@ export const workCases: { id: string; photos: ImageAsset[] }[] = [
   },
 ];
 
+/**
+ * Project pages (2026-10-06): the photographs and before/after pairs of the four featured projects, under neutral
+ * names (case-<a..d>-NN, before-<b|c>-NN; a = Durgerdammergouw, b = Prinsen Bolwerk, c = Schoterweg,
+ * d = Bezaanjachtplein). Interiors and works in progress only: no facades, no street, no faces (PRD §6.2).
+ * From the owner's archive (old site): d is Bezaanjachtplein's own set; a–c are stand-ins until each project's own
+ * set arrives (content/projects.ts flags them `placeholder`). One face in before-b-02 is blurred. Alt text says what is visible.
+ */
+const room = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
+export const caseImages = {
+  a: [
+    room("case-a-01", 2160, 1440, "Eethoek met botanisch behang", "A dining area with botanical wallpaper"),
+    room("case-a-02", 2160, 1440, "Keukeneiland in gemarmerd steen", "A kitchen island in marbled stone"),
+    room("case-a-03", 2160, 1440, "Badkamer met een marmeren wand", "A bathroom with a marble wall"),
+    room("case-a-04", 2160, 1440, "Eettafel met roze stoelen bij de keuken", "A dining table with pink chairs by the kitchen"),
+    room("case-a-05", 2160, 1440, "Lange witte keuken met spots", "A long white kitchen with spotlights"),
+    room("case-a-06", 2160, 1440, "Slaapkamer met een roze sprei", "A bedroom with a pink bedspread"),
+    room("case-a-07", 2160, 1440, "Gang met visgraatvloer", "A hallway with a herringbone floor"),
+  ],
+  b: [
+    room("case-b-01", 2157, 1440, "Woonkamer met hoge ramen en glas-in-lood", "A living room with tall stained-glass windows"),
+    room("case-b-02", 2160, 1440, "Witte keuken met kookeiland", "A white kitchen with an island"),
+    room("case-b-03", 2156, 1440, "Eettafel met roze stoelen bij de keuken", "A dining table with pink chairs by the kitchen"),
+    room("case-b-04", 2158, 1440, "Lichte woonkamer met bank en hoge ramen", "A bright living room with a sofa and tall windows"),
+    room("case-b-05", 2160, 1440, "Woonkamer met cognac bank en open keuken", "A living room with a cognac sofa and an open kitchen"),
+    room("case-b-06", 2155, 1440, "Woon- en eethoek bij een glas-in-loodraam", "A living and dining corner by a stained-glass window"),
+    room("case-b-07", 2156, 1440, "Slaapkamer met tweepersoonsbed", "A bedroom with a double bed"),
+    room("case-b-08", 2158, 1440, "Badkamer met ronde spiegel en ligbad", "A bathroom with a round mirror and a bath"),
+  ],
+  c: [
+    room("case-c-01", 2160, 1440, "Keuken onder de kap met blauwe barkrukken", "A kitchen under the roof with blue bar stools"),
+    room("case-c-02", 2157, 1440, "Keukeneiland en eethoek bij de balkondeur", "A kitchen island and dining area by the balcony door"),
+    room("case-c-03", 2156, 1440, "Keuken met zwart werkblad en uitzicht", "A kitchen with a black worktop and a view"),
+    room("case-c-04", 2157, 1440, "Woonkamer met grijze hoekbank", "A living room with a grey corner sofa"),
+    room("case-c-05", 2160, 1440, "Trap met houten treden", "A staircase with wooden treads"),
+    room("case-c-06", 2157, 1440, "Badkamer met ronde spiegel en natuursteen", "A bathroom with a round mirror and natural stone"),
+    room("case-c-07", 2160, 1440, "Balkon met uitzicht over het groen", "A balcony looking out over greenery"),
+  ],
+  d: [
+    room("case-d-01", 2400, 1600, "Woonkamer met eettafel en keuken", "A living room with a dining table and kitchen"),
+    room("case-d-02", 2400, 1600, "Open keuken met eiland en woonkamer", "An open kitchen with an island and living room"),
+    room("case-d-03", 2400, 1600, "Keuken met eiland en barkrukken", "A kitchen with an island and bar stools"),
+    room("case-d-04", 2400, 1600, "Witte keuken met eettafel", "A white kitchen with a dining table"),
+    room("case-d-05", 2400, 1600, "Woonkamer met grijze bank", "A living room with a grey sofa"),
+    room("case-d-06", 2400, 1600, "Slaapkamer met kastwand", "A bedroom with built-in wardrobes"),
+    room("case-d-07", 1333, 2000, "Badkamer met zwarte wastafel", "A bathroom with a black basin"),
+    room("case-d-08", 2400, 1600, "Slaapkamer met oranje sprei", "A bedroom with an orange bedspread"),
+    room("case-d-09", 2400, 1600, "Lichte slaapkamer met groot raam", "A bright bedroom with a large window"),
+  ],
+};
+/** The same rooms during the works (3:2 crops, to sit under their finished photos in the before/after frame). */
+export const beforeImages = {
+  b: [
+    room("before-b-01", 2400, 1600, "Dezelfde keuken tijdens de verbouwing", "The same kitchen during the renovation"),
+    room("before-b-02", 2400, 1600, "De woonverdieping gestript, voor de verbouwing", "The living floor stripped back, before the renovation"),
+  ],
+  c: [
+    room("before-c-01", 2400, 1600, "De zolder gestript, voor de verbouwing", "The roof space stripped back, before the renovation"),
+    room("before-c-02", 2400, 1600, "De nieuwe kapconstructie in aanbouw", "The new roof structure going up"),
+  ],
+};
+
 /** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */
 export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {
   left: { id: "sketch-01", ratio: "1/1", image: { src: "sketch-house-01", width: 470, height: 470, alpha: true, alt: { nl: "Lijntekening van een grachtenpand", en: "Line drawing of a canal house" } } },

@@ -52,7 +52,18 @@ export type Copy = {
     index: string;
     country: string;
     categories: { residential: string; mixed: string };
-    items: Record<string, { description: string }>;
+    /** The project page in the overlay (2026-10-06): facts, the story's chapter labels, before/after, photos, next. */
+    page: {
+      facts: { project: string; city: string; category: string; country: string };
+      chapters: { opportunity: string; approach: string; outcome: string; why: string };
+      compare: { title: string; before: string; after: string; hint: string; slider: (room: string) => string };
+      /** Room names for the before/after pairs, keyed by `compare[].room` in content/projects.ts. */
+      rooms: Record<string, string>;
+      gallery: { title: string; count: (n: number) => string; open: (i: number, n: number) => string; counter: (i: number, n: number) => string; close: string; prev: string; next: string };
+      next: string;
+    };
+    /** Per project: `title` is the discreet headline (kind of building — city), `lede` one line under it, then the story. */
+    items: Record<string, { title: string; lede: string; opportunity: string; approach: string; outcome: string; why: string }>;
   };
   /** Sky band: brand promise, lead and the two buttons (DESIGN §10.1 hero copy), over the sky photograph. */
   sky: { label: string; title: string; lead: string; ctaPrimary: string; ctaSecondary: string; cards: { title: string; body: string }[] };

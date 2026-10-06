@@ -4,27 +4,14 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExter
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { MediaFrame } from "@/components/ui/MediaFrame";
-import type { ImageAsset } from "@/content/media";
-import type { WindowBox } from "@/content/projects";
 import type { Lang } from "@/content/routes";
 import { gsap, prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { enterTimeline, previewIn, previewOut, swapStage } from "./motion";
+import { ProjectPage } from "./ProjectPage";
+import type { WindowProject, WindowStrings } from "./types";
 import s from "./windows.module.css";
 
-export type WindowProject = {
-  id: string;
-  name: string;
-  location: string;
-  category: string;
-  country: string;
-  description: string;
-  /** Accessible name of the window ("Explore Durgerdammergouw"). */
-  label: string;
-  preview: ImageAsset;
-  interior: ImageAsset | null;
-  window: WindowBox | null;
-};
-export type WindowStrings = { eyebrow: string; explore: string; back: string; more: string; index: string };
+export type { WindowProject, WindowStrings } from "./types";
 type Props = { lang: Lang; projects: WindowProject[]; strings: WindowStrings };
 type Phase = "idle" | "entering" | "open" | "leaving";
 
@@ -57,7 +44,7 @@ const useDebugFlag = () =>
  * window, is on). Hover or keyboard focus lights a window and shows a small preview beside it: the room, the project's
  * name and its city (not on touch, where a tap goes straight in); click, tap or Enter goes in: the through-the-window
  * timeline (motion.ts) into a fixed overlay (portalled to <body>, above the header) with the interior, the
- * project's name, the overview and the index of all four projects, and a way
+ * project's name, then the project page (ProjectPage: story, before/after, photos, next) and the index of all four, and a way
  * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
  * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
  */
@@ -73,7 +60,6 @@ export function Windows({ lang, projects, strings }: Props) {
   const hideTimer = useRef<number | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const overviewRef = useRef<HTMLElement>(null);
   const tl = useRef<ReturnType<typeof enterTimeline> | null>(null);
   const returnTo = useRef<HTMLElement | null>(null);
 
@@ -215,7 +201,11 @@ export function Windows({ lang, projects, strings }: Props) {
     swapStage(stage, () => setOpen(id), prefersReducedMotion());
   };
 
-  const toOverview = () => overviewRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+  const toOverview = () =>
+    scrollerRef.current
+      ?.querySelector<HTMLElement>("[data-project-sheet]")
+      ?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+  const nextOf = (id: string) => projects[(projects.findIndex((p) => p.id === id) + 1) % projects.length];
 
   useEffect(() => {
     if (phase !== "open") return;
@@ -341,19 +331,16 @@ export function Windows({ lang, projects, strings }: Props) {
                         </p>
                       </div>
                     </section>
-                    <section className={`inverse ${s.overview}`} ref={overviewRef} aria-label={op.name}>
-                      <div className={s.overviewGrid}>
-                        <MediaFrame image={op.interior} ratio="16/9" lang={lang} sizes="(max-width: 767px) 100vw, 60vw" />
-                        <div className={s.info}>
-                          <p className="t-micro">{op.category}</p>
-                          <h3 className={s.infoName}>{op.name}</h3>
-                          <p className={s.infoPlace}>
-                            {op.location}, {op.country}
-                          </p>
-                          <p className={s.infoBody}>{op.description}</p>
-                        </div>
-                      </div>
-                    </section>
+                    <ProjectPage
+                      key={op.id}
+                      project={op}
+                      next={nextOf(op.id)}
+                      lang={lang}
+                      strings={strings.page}
+                      scroller={scrollerRef}
+                      live={phase === "open"}
+                      onNext={(id) => switchTo(id)}
+                    />
                     <section className={`inverse ${s.indexSection}`} aria-label={strings.index}>
                       <div className={s.indexInner}>
                         <div className={s.indexHead}>

@@ -71,7 +71,11 @@
 .dimmer { position: absolute; inset: 0; background: color-mix(in srgb, var(--inv-bg) 64%, transparent); }
 .stage { position: absolute; inset: 0; overflow: hidden; background: var(--inv-bg); }
 .image { position: absolute; inset: 0; }
-.stageScrim { position: absolute; inset: 0; pointer-events: none; background: var(--media-scrim); }
+/* The film scrim, plus a soft pool of ink behind the centred name so it holds on a bright room */
+.stageScrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(42% 30% at 50% 50%, color-mix(in srgb, var(--inv-bg) 36%, transparent), transparent), var(--media-scrim);
+}
 .scroller { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 
 /* First screen: the room, and the project's name low in it so the image stays the hero */
@@ -87,14 +91,6 @@
 }
 .exploreBtn:hover { background: color-mix(in srgb, var(--on-media) 24%, transparent); }
 .exploreLabel { color: var(--on-media); }
-
-/* Overview: a large frame and a short column of facts on Canal ink; no card, no listing */
-.overview { padding: var(--section-y) var(--gutter); }
-.overviewGrid { max-width: var(--maxw); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--s-9); align-items: center; }
-.info { display: flex; flex-direction: column; gap: var(--s-4); max-width: 44ch; }
-.infoName { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: var(--fs-statement); }
-.infoPlace { font-size: var(--fs-ui); color: var(--muted); }
-.infoBody { font-size: var(--fs-body); line-height: 1.6; color: var(--muted); }
 
 /* Index: the four projects as an architectural index, the open one held, the others subdued */
 .indexSection { padding: 0 var(--gutter) var(--section-y); }
@@ -125,7 +121,6 @@
 @media (max-width: 767px) {
   /* The film's windows: off screen in the phone crop, so the projects deck under the hero takes over */
   .layer { display: none; }
-  .overviewGrid { grid-template-columns: 1fr; gap: var(--s-6); }
   .indexList { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
   .name { font-size: clamp(32px, 9vw, 44px); }
   .back span { display: none; }

@@ -1,4 +1,4 @@
-import { interiorLiving, workCases, type ImageAsset } from "./media";
+import { beforeImages, caseImages, interiorLiving, type ImageAsset } from "./media";
 
 /**
  * A window in the hero film, in percent of the film frame (1920 × 1080), not of the viewport: the film covers the
@@ -6,6 +6,9 @@ import { interiorLiving, workCases, type ImageAsset } from "./media";
  * every screen. Tune them with `?debug=windows` on the homepage.
  */
 export type WindowBox = { x: number; y: number; w: number; h: number };
+
+/** A before/after pair: the same room during the works and finished. `room` keys copy `projects.page.rooms`. */
+export type Comparison = { room: string; before: ImageAsset; after: ImageAsset };
 
 export type Project = {
   id: string;
@@ -18,14 +21,18 @@ export type Project = {
   /** The room behind the window. */
   interior: ImageAsset | null;
   window: WindowBox | null;
-  /** The interior is a stand-in from the owner's archive until the project's own imagery arrives. */
+  /** The project page's photographs, in reading order (the first opens the gallery). */
+  gallery: ImageAsset[];
+  /** Before/after pairs; none = the page leaves the section out. */
+  compare: Comparison[];
+  /** The imagery is a stand-in from the owner's archive until the project's own set arrives. */
   placeholder?: boolean;
 };
 
 /**
  * The four featured projects (owner, 2026-10-05; PRD §6.1), each on a window of a different house in the film.
- * Descriptions live in copy.*.ts under `projects.items`. Only the first has its own interior (the owner's render);
- * the other three show archive interiors as stand-ins until their imagery arrives.
+ * Their stories live in copy.*.ts under `projects.items`. Only the first room (Durgerdammergouw, the owner's render)
+ * is the project's own; the rest of the imagery is archive stand-ins (`placeholder`) until each project's set arrives.
  */
 export const projects: Project[] = [
   {
@@ -35,6 +42,9 @@ export const projects: Project[] = [
     category: "residential",
     preview: interiorLiving,
     interior: interiorLiving,
+    gallery: [interiorLiving, ...caseImages.a],
+    compare: [],
+    placeholder: true,
     // Middle house, second floor, right window (frame at 1003–1055 × 583–683 film px)
     window: { x: 52.2, y: 54, w: 2.75, h: 9.3 },
   },
@@ -43,8 +53,13 @@ export const projects: Project[] = [
     name: "Prinsen Bolwerk",
     location: "Haarlem",
     category: "residential",
-    preview: workCases[1].photos[2],
-    interior: workCases[1].photos[2],
+    preview: caseImages.b[0],
+    interior: caseImages.b[0],
+    gallery: caseImages.b,
+    compare: [
+      { room: "kitchen", before: beforeImages.b[0], after: caseImages.b[1] },
+      { room: "living", before: beforeImages.b[1], after: caseImages.b[0] },
+    ],
     placeholder: true,
     // Dark house on the left, second row, middle window (471–520 × 628–710)
     window: { x: 24.5, y: 58.1, w: 2.55, h: 7.6 },
@@ -54,8 +69,13 @@ export const projects: Project[] = [
     name: "Schoterweg",
     location: "Haarlem",
     category: "mixed",
-    preview: workCases[2].photos[0],
-    interior: workCases[2].photos[0],
+    preview: caseImages.c[0],
+    interior: caseImages.c[0],
+    gallery: caseImages.c,
+    compare: [
+      { room: "attic", before: beforeImages.c[0], after: caseImages.c[0] },
+      { room: "roof", before: beforeImages.c[1], after: caseImages.c[1] },
+    ],
     placeholder: true,
     // Brown house, lower row, the lit window (696–745 × 671–758)
     window: { x: 36.25, y: 62.1, w: 2.55, h: 8.1 },
@@ -65,9 +85,11 @@ export const projects: Project[] = [
     name: "Bezaanjachtplein",
     location: "Amsterdam",
     category: "residential",
-    preview: workCases[3].photos[0],
-    interior: workCases[3].photos[0],
-    placeholder: true,
+    preview: caseImages.d[0],
+    interior: caseImages.d[0],
+    gallery: caseImages.d,
+    compare: [],
+    // Its own photographs (from the owner's old site), so not a stand-in
     // Dark house on the right, lower row, middle window (1487–1535 × 673–763)
     window: { x: 77.4, y: 62.3, w: 2.5, h: 8.3 },
   },
