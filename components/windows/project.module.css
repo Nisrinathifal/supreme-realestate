@@ -22,6 +22,31 @@
 .heroCredit dd { margin: 0; font-size: var(--fs-ui); font-weight: 500; }
 .heroCredit dd[data-pending] { font-weight: 400; opacity: 0.6; }
 
+/* Scroll badge (after NGH): words turning around a small mouse. Sticky, so it rises to the top centre and holds
+   there while the hero is in view; ProjectPage shrinks it on the way up and fades it out with the hero's foot. */
+.badgeTrack { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+.badge {
+  position: sticky; top: var(--s-4); flex: none; margin-top: calc(50svh + clamp(96px, 9vw, 150px)); width: 96px; height: 96px;
+  pointer-events: auto;
+  display: grid; place-items: center; border-radius: var(--r-pill); color: var(--on-media);
+}
+.badgeRing { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; animation: badge-turn 18s linear infinite; }
+.badgeText { fill: currentColor; font-family: var(--font-text); font-size: 9px; font-weight: 500; letter-spacing: 0.22em; }
+.badgeMouse {
+  display: flex; justify-content: center; width: 28px; height: 42px; padding-top: var(--s-2); border-radius: var(--r-pill);
+  background: var(--on-media); box-shadow: var(--shadow-soft);
+}
+.badgeDot { width: 9px; height: 9px; border-radius: var(--r-pill); background: var(--ink); animation: badge-dot 2s var(--ease) infinite; }
+.badge:hover .badgeMouse { transform: translateY(2px); }
+.badge:focus-visible { outline: 2px solid var(--on-media); outline-offset: 4px; }
+@keyframes badge-turn { to { transform: rotate(360deg); } }
+@keyframes badge-dot {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  70% { transform: translateY(14px); opacity: 1; }
+  100% { transform: translateY(18px); opacity: 0; }
+}
+
 /* ---------- the Stone body: label left, text right ---------- */
 .page .body { background: var(--alt); }
 .split {
@@ -35,12 +60,6 @@
   color: var(--ink); max-width: 22ch; text-wrap: balance;
 }
 .overviewText { font-size: clamp(19px, 1.6vw, 24px); line-height: 1.5; color: var(--ink); max-width: 44ch; text-wrap: pretty; }
-.textLink {
-  align-self: flex-start; display: inline-flex; align-items: center; gap: var(--s-2); padding: var(--s-2) 0; font-size: var(--fs-ui);
-  font-weight: 500; color: var(--ink); transition: gap 300ms var(--ease);
-}
-.textLink:hover { gap: var(--s-3); }
-.textLink:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 .whyText {
   grid-column: 4 / 12; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-statement); line-height: 1.14;
   letter-spacing: -0.02em; color: var(--ink); max-width: 24ch; text-wrap: pretty;
@@ -64,10 +83,31 @@
 .tile:focus-visible { outline: 2px solid var(--focus); outline-offset: -6px; }
 .block[data-kind="full"] .tile { width: 100%; aspect-ratio: 4 / 3; }
 .block[data-kind="tallLeft"] .tile, .block[data-kind="tallRight"] .tile { width: 50%; aspect-ratio: 4 / 5; }
-.block[data-kind="tallRight"] { justify-content: flex-end; }
 .block[data-kind="wide"] { justify-content: flex-end; }
 .block[data-kind="wide"] .tile { width: 84%; aspect-ratio: 1 / 1; }
 .block[data-kind="pair"] .tile { width: calc(50% - var(--s-3) / 2); aspect-ratio: 4 / 5; }
+
+/* A line of narrative in the open half beside a half-width photograph */
+.block[data-kind="tallLeft"] { flex-direction: row-reverse; justify-content: flex-end; }
+.block[data-kind="tallRight"] { justify-content: flex-start; }
+.note { flex: 1; align-self: center; display: flex; flex-direction: column; gap: var(--s-4); padding: 0 var(--gutter); max-width: 50%; }
+.block[data-kind="tallLeft"] .note { padding-left: var(--s-9); }
+.block[data-kind="tallRight"] .note { align-items: flex-end; text-align: right; padding-right: var(--s-9); }
+.noteText {
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3vw, 46px); line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--ink); max-width: 15ch; text-wrap: balance;
+}
+.noteCaption { display: flex; gap: var(--s-3); max-width: 34ch; font-size: var(--fs-ui); line-height: 1.5; color: var(--muted); }
+.block[data-kind="tallRight"] .noteCaption { flex-direction: row-reverse; }
+.noteNumber { flex: none; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* ---------- the details, held while the other projects slide over them ---------- */
+.cover { position: relative; }
+.coverUnder { position: sticky; top: var(--cover-top, 0px); z-index: 0; }
+.coverOver { position: relative; z-index: 1; }
+
+/* The site footer closes the page here in the flow (not sticky: the hero above is see-through) */
+.footerSlot > footer { position: relative; z-index: auto; }
 
 /* ---------- before and after, on Canal ink ---------- */
 .compareBand { padding: var(--section-y) 0; }
@@ -185,6 +225,11 @@
   .block[data-kind="pair"] { flex-direction: column; gap: clamp(40px, 8vh, 72px); }
   .block[data-kind="full"] .tile, .block[data-kind="pair"] .tile { width: 100%; aspect-ratio: 4 / 5; }
   .block[data-kind="tallLeft"] .tile, .block[data-kind="tallRight"] .tile { width: 86%; }
+  .block[data-kind="tallLeft"], .block[data-kind="tallRight"] { flex-direction: column-reverse; gap: var(--s-6); }
+  .block[data-kind="tallRight"] .tile { align-self: flex-end; }
+  .note, .block[data-kind="tallLeft"] .note, .block[data-kind="tallRight"] .note { max-width: none; padding: 0 var(--gutter); align-items: flex-start; text-align: left; }
+  .block[data-kind="tallRight"] .noteCaption { flex-direction: row; }
+  .badge { margin-top: calc(50svh + 72px); }
   .block[data-kind="wide"] .tile { width: 100%; aspect-ratio: 1 / 1; }
   .compareFrame { aspect-ratio: 4 / 5; }
   .grip { width: 52px; height: 52px; margin: -26px 0 0 -26px; }
@@ -196,5 +241,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cardMedia img, .cardArrow, .textLink { transition: none; }
+  .cardMedia img, .cardArrow { transition: none; }
+  .badgeRing, .badgeDot { animation: none; }
 }

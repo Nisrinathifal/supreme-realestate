@@ -29,6 +29,9 @@ export type WindowProject = {
 export type PageStrings = {
   overview: string;
   details: string;
+  scroll: string;
+  /** Short lines from the brand's own path (Reimagined, Transformed, …) set beside the photographs. */
+  notes: { title: string; body: string }[];
   chapters: { opportunity: string; approach: string; outcome: string; why: string };
   compare: { title: string; before: string; after: string; hint: string };
   gallery: { title: string; close: string; prev: string; next: string };

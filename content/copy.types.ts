@@ -58,6 +58,8 @@ export type Copy = {
       credits: { developer: string; architect: string; builder: string; interior: string; photography: string; location: string; category: string; pending: string };
       overview: string;
       details: string;
+      /** The hero's scroll badge: its accessible name, also the text that turns around it. */
+      scroll: string;
       chapters: { opportunity: string; approach: string; outcome: string; why: string };
       compare: { title: string; before: string; after: string; hint: string; slider: (room: string) => string };
       /** Room names for the before/after pairs, keyed by `compare[].room` in content/projects.ts. */

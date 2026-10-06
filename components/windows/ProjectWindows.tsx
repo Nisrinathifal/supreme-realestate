@@ -1,3 +1,4 @@
+import { Footer } from "@/components/layout/Footer";
 import { getCopy } from "@/content/copy";
 import { projects } from "@/content/projects";
 import type { Lang } from "@/content/routes";
@@ -44,11 +45,14 @@ export function ProjectWindows({ lang }: { lang: Lang }) {
   const page = {
     overview: pg.overview,
     details: pg.details,
+    scroll: pg.scroll,
+    // The middle four steps of the brand's path (sky band copy): reimagined, transformed, refined, turnkey
+    notes: c.sky.cards.slice(2, 6),
     chapters: pg.chapters,
     compare: { title: pg.compare.title, before: pg.compare.before, after: pg.compare.after, hint: pg.compare.hint },
     gallery: { title: pg.gallery.title, close: pg.gallery.close, prev: pg.gallery.prev, next: pg.gallery.next },
     others: pg.others,
     view: pg.view,
   };
-  return <Windows lang={lang} projects={items} strings={{ eyebrow, explore, back, more, index, page }} />;
+  return <Windows lang={lang} projects={items} strings={{ eyebrow, explore, back, more, index, page }} footer={<Footer lang={lang} />} />;
 }

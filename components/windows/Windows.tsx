@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Lenis from "lenis";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
@@ -13,7 +13,13 @@ import type { WindowProject, WindowStrings } from "./types";
 import s from "./windows.module.css";
 
 export type { WindowProject, WindowStrings } from "./types";
-type Props = { lang: Lang; projects: WindowProject[]; strings: WindowStrings };
+type Props = {
+  lang: Lang;
+  projects: WindowProject[];
+  strings: WindowStrings;
+  /** The site footer (a server component), closing every project page. */
+  footer: ReactNode;
+};
 type Phase = "idle" | "entering" | "open" | "leaving";
 
 /** Gap between a window and its preview, and the hero-width share beyond which the preview sits on the left. */
@@ -49,7 +55,7 @@ const useDebugFlag = () =>
  * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
  * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
  */
-export function Windows({ lang, projects, strings }: Props) {
+export function Windows({ lang, projects, strings, footer }: Props) {
   const [active, setActive] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -225,6 +231,17 @@ export function Windows({ lang, projects, strings }: Props) {
     t.reverse();
   }, [phase]);
 
+  // A link in the footer leaves the overlay where it stands: no reverse, the page beneath simply takes over
+  const closeNow = useCallback(() => {
+    if (phase === "idle") return;
+    tl.current?.progress(0).kill();
+    tl.current = null;
+    lenisRef.current?.stop();
+    document.documentElement.removeAttribute("data-project-open");
+    setOpen(null);
+    setPhase("idle");
+  }, [phase]);
+
   const switchTo = (id: string) => {
     if (phase !== "open" || id === open) return;
     const p = projects.find((x) => x.id === id);
@@ -330,6 +347,7 @@ export function Windows({ lang, projects, strings }: Props) {
               aria-labelledby="project-title"
               data-project-overlay
               data-phase={phase}
+              data-past-hero="false"
               data-lenis-prevent
               hidden={phase === "idle"}
             >
@@ -353,14 +371,24 @@ export function Windows({ lang, projects, strings }: Props) {
                       lenis={lenisRef}
                       live={phase === "open"}
                       onOpen={(id) => switchTo(id)}
+                      footer={footer}
+                      onLeave={closeNow}
                     />
                   ) : null}
                 </div>
               </div>
-              <button type="button" className={s.back} data-back onClick={close}>
-                <ArrowLeft size={18} weight="light" aria-hidden="true" />
-                <span>{strings.back}</span>
-              </button>
+              {/* Back: an icon until hovered or focused, then it opens out to its label. Hidden over the hero (the scroll
+                  badge has the top there) and shown once the page has moved on: ProjectPage sets data-past-hero. */}
+              <div className={s.backWrap} data-back>
+                <button type="button" className={s.back} onClick={close} aria-label={strings.back}>
+                  <span className={s.backIcon} aria-hidden="true">
+                    <ArrowLeft size={18} weight="light" />
+                  </span>
+                  <span className={s.backLabel} aria-hidden="true">
+                    {strings.back}
+                  </span>
+                </button>
+              </div>
             </div>,
             document.body,
           )

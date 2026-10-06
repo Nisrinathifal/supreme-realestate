@@ -78,19 +78,32 @@
 }
 .scroller { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 
-/* Back: one glass pill, top left, where the menu pill sits on the page beneath */
+/* Back: a round glass icon, top left; hover or focus opens it out to its label. Out of sight over the project's
+   hero (the scroll badge holds the top there), in once the page has moved on (data-past-hero, set by ProjectPage). */
+.backWrap { position: absolute; z-index: 3; top: calc(var(--s-4) + env(safe-area-inset-top)); left: var(--gutter); }
 .back {
-  position: absolute; z-index: 3; top: calc(var(--s-4) + env(safe-area-inset-top)); left: var(--gutter);
-  display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-4); border-radius: var(--r-pill);
+  display: inline-flex; align-items: center; height: 48px; padding: 0; border-radius: var(--r-pill);
   border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--inv-bg) 55%, transparent); color: var(--on-media);
   -webkit-backdrop-filter: blur(var(--blur)); backdrop-filter: blur(var(--blur));
   font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em; white-space: nowrap;
+  transition: opacity 450ms var(--ease), transform 450ms var(--ease), background-color 250ms var(--ease);
+}
+.backIcon { display: grid; place-items: center; width: 46px; height: 46px; flex: none; transition: transform 400ms var(--ease); }
+.backLabel {
+  max-width: 0; overflow: hidden; opacity: 0;
+  transition: max-width 500ms var(--ease), opacity 300ms var(--ease), padding 500ms var(--ease);
+}
+.back:hover, .back:focus-visible { background: color-mix(in srgb, var(--inv-bg) 72%, transparent); }
+.back:hover .backLabel, .back:focus-visible .backLabel { max-width: 220px; opacity: 1; padding-right: var(--s-5); }
+.back:hover .backIcon { transform: translateX(-2px); }
+.overlay[data-past-hero="false"] .back:not(:focus-visible) {
+  /* still focusable (no visibility: hidden), so Tab brings it back for keyboard users */
+  opacity: 0; transform: translateY(-10px) scale(0.86); pointer-events: none;
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
 }
 .back:focus-visible { outline: 2px solid var(--on-media); outline-offset: 3px; }
 
 @media (max-width: 767px) {
   /* The film's windows: off screen in the phone crop, so the projects deck under the hero takes over */
   .layer { display: none; }
-  .back span { display: none; }
-  .back { padding: 0 var(--s-3); }
 }

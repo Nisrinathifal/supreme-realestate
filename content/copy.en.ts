@@ -121,6 +121,7 @@ export const en: Copy = {
       },
       overview: draft("Overview"),
       details: draft("Project details"),
+      scroll: draft("Scroll down"),
       chapters: { opportunity: draft("The opportunity"), approach: draft("Our approach"), outcome: draft("The outcome"), why: draft("Why it matters") },
       compare: {
         title: draft("Before and after"),

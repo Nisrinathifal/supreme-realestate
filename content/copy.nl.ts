@@ -120,6 +120,7 @@ export const nl: Copy = {
       },
       overview: draft("Overzicht"),
       details: draft("Projectdetails"),
+      scroll: draft("Scroll naar beneden"),
       chapters: { opportunity: draft("De kans"), approach: draft("Onze aanpak"), outcome: draft("Het resultaat"), why: draft("Waarom het ertoe doet") },
       compare: {
         title: draft("Voor en na"),
