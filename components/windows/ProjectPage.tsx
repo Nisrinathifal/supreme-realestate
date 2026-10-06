@@ -26,13 +26,14 @@ type Props = {
 };
 
 /**
- * How the photographs are laid: edge to edge, square-cornered and large. `full` spans the page; `pair` sets one
- * photograph flush left and a second flush right, dropped lower, travelling faster (the stagger reads as depth);
- * `right` and `left` hold one photograph against an edge. Each part of the gallery starts from its own point in
- * the cycle so the two halves don't repeat each other; a pair never gets left with one photograph.
+ * How the photographs are laid (after the reference: each about a screen tall, one at a time, edge to edge,
+ * square-cornered): `full` spans the page; `tallLeft` / `tallRight` fill half of it against one edge; `wide` takes
+ * most of it from the right; `pair` sets two halves side by side with a hairline gap. The sides alternate, so
+ * there is always open Stone beside or between the pictures. Each part of the gallery starts from its own point in
+ * the cycle; a pair never gets left with one photograph.
  */
-type Block = "full" | "pair" | "right" | "left";
-const CYCLE: Block[] = ["full", "pair", "right", "pair", "left"];
+type Block = "full" | "tallLeft" | "wide" | "pair" | "tallRight";
+const CYCLE: Block[] = ["full", "tallLeft", "wide", "pair", "full", "tallRight"];
 function compose(count: number, offset: number) {
   const out: { kind: Block; n: number }[] = [];
   let k = offset;
@@ -46,9 +47,6 @@ function compose(count: number, offset: number) {
   }
   return out;
 }
-
-/** Drift per photograph, in viewport heights over its pass: the second of a pair travels fastest. */
-const speedOf = (kind: Block, j: number) => (kind === "pair" ? (j === 0 ? 0.03 : 0.12) : kind === "full" ? 0 : 0.06);
 
 /** Words as spans, for the scroll reveal; screen readers still read one sentence. */
 function Words({ text }: { text: string }) {
@@ -87,11 +85,11 @@ function Spread({ gallery, indices, blocks, lang, onOpen }: SpreadProps) {
                 type="button"
                 className={s.tile}
                 data-tile={index}
-                data-speed={speedOf(b.kind, j)}
+                data-pair={b.kind === "pair" ? j : undefined}
                 onClick={() => onOpen(index)}
                 aria-label={item.open}
               >
-                <MediaFrame image={item.image} ratio="fill" lang={lang} radius="none" sizes={b.kind === "full" ? "100vw" : "(max-width: 767px) 100vw, 60vw"} />
+                <MediaFrame image={item.image} ratio="fill" lang={lang} radius="none" sizes={b.kind === "full" || b.kind === "wide" ? "100vw" : "(max-width: 767px) 100vw, 50vw"} />
               </button>
             );
           })}
@@ -104,10 +102,10 @@ function Spread({ gallery, indices, blocks, lang, onOpen }: SpreadProps) {
 /**
  * The project page (2026-10-06, after the owner's reference: an architectural studio's project page). The room is the
  * hero: the project's name large over it, what it is under that, and the credits along its foot. Then, on Stone, the
- * overview, and the photographs edge to edge (no rounded corners) in staggered spreads that drift at different
- * speeds as you scroll; before and after on Canal ink; the rest of the photographs; why it matters; the project
+ * overview, and the photographs edge to edge (no rounded corners), each about a screen tall, opening one at a time
+ * with the scroll; before and after on Canal ink; the rest of the photographs; why it matters; the project
  * details (the story and every credit); and the other three projects. Every photograph opens into the viewer.
- * Scrolling runs on the overlay's own Lenis (Windows), so the drift is smooth; reduced motion keeps every state final.
+ * Scrolling runs on the overlay's own Lenis (Windows), so the reveals are smooth; reduced motion keeps every state final.
  * Credits the owner has not given yet read "To be confirmed" (draft copy), never a guess.
  */
 export function ProjectPage({ project, others, lang, strings, scroller, lenis, live, onOpen }: Props) {
@@ -155,22 +153,16 @@ export function ProjectPage({ project, others, lang, strings, scroller, lenis, l
           gsap.fromTo(r, { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: st({ trigger: r, start: "top 92%", once: true }) }),
         );
 
-        // Photographs: uncovered from below once, then each drifts at its own speed, the picture inside a little slower
+        // Photographs open one at a time, slowly, with the scroll: the frame widens and rises from its lower edge
+        // while the picture inside settles from close up; then the picture drifts a little inside its frame. The
+        // second of a pair opens a beat after the first.
         q<HTMLElement>("[data-tile]").forEach((tile) => {
-          const speed = Number(tile.dataset.speed || 0) * k;
           const img = tile.querySelector("img");
-          gsap.fromTo(
-            tile,
-            { clipPath: "inset(14% 0% 0% 0%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "power3.out", clearProps: "clipPath", scrollTrigger: st({ trigger: tile, start: "top 95%", once: true }) },
-          );
-          if (speed)
-            gsap.fromTo(
-              tile,
-              { y: () => speed * window.innerHeight },
-              { y: () => -speed * window.innerHeight, ease: "none", scrollTrigger: st({ trigger: tile, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true }) },
-            );
-          if (img) gsap.fromTo(img, { yPercent: -6, scale: 1.14 }, { yPercent: 6, scale: 1.14, ease: "none", scrollTrigger: st({ trigger: tile, start: "top bottom", end: "bottom top", scrub: true }) });
+          const late = tile.dataset.pair === "1" ? 8 : 0;
+          const reveal = gsap.timeline({ scrollTrigger: st({ trigger: tile, start: `top ${100 - late}%`, end: `top ${28 - late}%`, scrub: true }) });
+          reveal.fromTo(tile, { clipPath: `inset(${22 * k}% ${7 * k}% 0% ${7 * k}%)` }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none" }, 0);
+          if (img) reveal.fromTo(img, { scale: 1.32 }, { scale: 1.06, ease: "none" }, 0);
+          if (img) gsap.fromTo(img, { yPercent: -4 }, { yPercent: 4, ease: "none", scrollTrigger: st({ trigger: tile, start: "top bottom", end: "bottom top", scrub: true }) });
         });
 
         // The before/after frame opens out to the page's edges as it arrives

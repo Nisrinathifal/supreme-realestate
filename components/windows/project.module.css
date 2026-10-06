@@ -54,19 +54,20 @@
 .credit dd { margin: 0; font-size: var(--fs-ui); font-weight: 500; text-align: right; }
 .credit dd[data-pending] { font-weight: 400; color: var(--muted); }
 
-/* ---------- photographs: edge to edge, staggered, square ---------- */
-.spread { display: flex; flex-direction: column; gap: clamp(24px, 7vw, 120px); padding-bottom: var(--section-y); }
-.block { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; }
+/* ---------- photographs: a screen tall each, edge to edge, square, sides alternating ---------- */
+.spread { display: flex; flex-direction: column; gap: clamp(64px, 14vh, 160px); padding: var(--s-9) 0 var(--section-y); }
+.block { display: flex; gap: var(--s-3); }
 .tile {
   --tile-r: 0px;
-  position: relative; display: block; width: 100%; padding: 0; overflow: hidden; background: var(--line); cursor: zoom-in;
+  position: relative; display: block; flex: none; padding: 0; overflow: hidden; background: var(--line); cursor: zoom-in;
 }
 .tile:focus-visible { outline: 2px solid var(--focus); outline-offset: -6px; }
-.block[data-kind="full"] .tile { grid-column: 1 / -1; aspect-ratio: 16 / 9; max-height: 100svh; }
-.block[data-kind="pair"] .tile:first-child { grid-column: 1 / 7; aspect-ratio: 4 / 5; }
-.block[data-kind="pair"] .tile:last-child { grid-column: 8 / 13; aspect-ratio: 4 / 5; margin-top: 28vh; }
-.block[data-kind="right"] .tile { grid-column: 5 / 13; aspect-ratio: 3 / 2; }
-.block[data-kind="left"] .tile { grid-column: 1 / 9; aspect-ratio: 3 / 2; }
+.block[data-kind="full"] .tile { width: 100%; aspect-ratio: 4 / 3; }
+.block[data-kind="tallLeft"] .tile, .block[data-kind="tallRight"] .tile { width: 50%; aspect-ratio: 4 / 5; }
+.block[data-kind="tallRight"] { justify-content: flex-end; }
+.block[data-kind="wide"] { justify-content: flex-end; }
+.block[data-kind="wide"] .tile { width: 84%; aspect-ratio: 1 / 1; }
+.block[data-kind="pair"] .tile { width: calc(50% - var(--s-3) / 2); aspect-ratio: 4 / 5; }
 
 /* ---------- before and after, on Canal ink ---------- */
 .compareBand { padding: var(--section-y) 0; }
@@ -180,12 +181,11 @@
   .split { grid-template-columns: 1fr; }
   .label, .splitMain, .whyText, .details .splitMain { grid-column: 1 / -1; }
   .credits { grid-template-columns: 1fr; }
-  .block { grid-template-columns: repeat(6, minmax(0, 1fr)); row-gap: var(--grid-gap); }
-  .block[data-kind="full"] .tile { aspect-ratio: 4 / 5; }
-  .block[data-kind="pair"] .tile:first-child { grid-column: 1 / 6; }
-  .block[data-kind="pair"] .tile:last-child { grid-column: 2 / 7; margin-top: 0; }
-  .block[data-kind="right"] .tile { grid-column: 2 / 7; }
-  .block[data-kind="left"] .tile { grid-column: 1 / 6; }
+  .spread { gap: clamp(40px, 8vh, 72px); padding-top: var(--s-6); }
+  .block[data-kind="pair"] { flex-direction: column; gap: clamp(40px, 8vh, 72px); }
+  .block[data-kind="full"] .tile, .block[data-kind="pair"] .tile { width: 100%; aspect-ratio: 4 / 5; }
+  .block[data-kind="tallLeft"] .tile, .block[data-kind="tallRight"] .tile { width: 86%; }
+  .block[data-kind="wide"] .tile { width: 100%; aspect-ratio: 1 / 1; }
   .compareFrame { aspect-ratio: 4 / 5; }
   .grip { width: 52px; height: 52px; margin: -26px 0 0 -26px; }
   .othersList { grid-template-columns: 1fr; }
