@@ -22,14 +22,18 @@ export type WindowProject = {
   galleryCount: string;
   /** Before/after pairs: the room's name and the slider's accessible name. */
   compare: { room: string; slider: string; before: ImageAsset; after: ImageAsset }[];
+  /** Credits in display order, each a label and a value (an unknown one already reads "To be confirmed"). */
+  credits: { label: string; value: string; pending: boolean; hero: boolean }[];
 };
 
 export type PageStrings = {
-  facts: { project: string; city: string; category: string; country: string };
+  overview: string;
+  details: string;
   chapters: { opportunity: string; approach: string; outcome: string; why: string };
   compare: { title: string; before: string; after: string; hint: string };
   gallery: { title: string; close: string; prev: string; next: string };
-  next: string;
+  others: string;
+  view: string;
 };
 
 export type WindowStrings = { eyebrow: string; explore: string; back: string; more: string; index: string; page: PageStrings };

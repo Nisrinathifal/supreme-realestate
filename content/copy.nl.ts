@@ -108,7 +108,18 @@ export const nl: Copy = {
     country: "Nederland",
     categories: { residential: draft("Wonen"), mixed: draft("Gemengd") },
     page: {
-      facts: { project: draft("Project"), city: draft("Stad"), category: draft("Categorie"), country: draft("Land") },
+      credits: {
+        developer: draft("Ontwikkelaar"),
+        architect: draft("Architect"),
+        builder: draft("Aannemer"),
+        interior: draft("Interieur"),
+        photography: draft("Fotografie"),
+        location: draft("Locatie"),
+        category: draft("Categorie"),
+        pending: draft("Volgt"),
+      },
+      overview: draft("Overzicht"),
+      details: draft("Projectdetails"),
       chapters: { opportunity: draft("De kans"), approach: draft("Onze aanpak"), outcome: draft("Het resultaat"), why: draft("Waarom het ertoe doet") },
       compare: {
         title: draft("Voor en na"),
@@ -127,7 +138,8 @@ export const nl: Copy = {
         prev: draft("Vorige foto"),
         next: draft("Volgende foto"),
       },
-      next: draft("Volgend project"),
+      others: draft("Andere projecten"),
+      view: draft("Bekijk project"),
     },
     // Prinsen Bolwerk: vertaling van het voorbeeld van de eigenaar (2026-10-06). De andere drie volgen die vorm als
     // concept: bewust algemeen (geen feiten naast naam, stad en categorie) tot de eigenaar ze schrijft.

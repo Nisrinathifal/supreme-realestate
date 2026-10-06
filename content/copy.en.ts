@@ -109,7 +109,18 @@ export const en: Copy = {
     country: "Netherlands",
     categories: { residential: draft("Residential"), mixed: draft("Mixed-use") },
     page: {
-      facts: { project: draft("Project"), city: draft("City"), category: draft("Category"), country: draft("Country") },
+      credits: {
+        developer: draft("Developer"),
+        architect: draft("Architect"),
+        builder: draft("Builder"),
+        interior: draft("Interior design"),
+        photography: draft("Photography"),
+        location: draft("Location"),
+        category: draft("Category"),
+        pending: draft("To be confirmed"),
+      },
+      overview: draft("Overview"),
+      details: draft("Project details"),
       chapters: { opportunity: draft("The opportunity"), approach: draft("Our approach"), outcome: draft("The outcome"), why: draft("Why it matters") },
       compare: {
         title: draft("Before and after"),
@@ -128,7 +139,8 @@ export const en: Copy = {
         prev: draft("Previous photo"),
         next: draft("Next photo"),
       },
-      next: draft("Next project"),
+      others: draft("Other projects"),
+      view: draft("View project"),
     },
     // Prinsen Bolwerk: the owner's own example (2026-10-06), verbatim. The other three follow its shape as drafts:
     // generic on purpose (no facts beyond name, city and category) until the owner writes them.

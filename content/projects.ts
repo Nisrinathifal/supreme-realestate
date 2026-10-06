@@ -10,6 +10,13 @@ export type WindowBox = { x: number; y: number; w: number; h: number };
 /** A before/after pair: the same room during the works and finished. `room` keys copy `projects.page.rooms`. */
 export type Comparison = { room: string; before: ImageAsset; after: ImageAsset };
 
+/**
+ * Who made it. null = not given by the owner yet: the page says so ("To be confirmed") rather than guess. The
+ * developer is always Supreme Real Estate (copy `siteName`). Names only, no contact details.
+ */
+export type Credits = { architect: string | null; builder: string | null; interior: string | null; photography: string | null };
+const unknown: Credits = { architect: null, builder: null, interior: null, photography: null };
+
 export type Project = {
   id: string;
   name: string;
@@ -25,6 +32,7 @@ export type Project = {
   gallery: ImageAsset[];
   /** Before/after pairs; none = the page leaves the section out. */
   compare: Comparison[];
+  credits: Credits;
   /** The imagery is a stand-in from the owner's archive until the project's own set arrives. */
   placeholder?: boolean;
 };
@@ -46,6 +54,7 @@ export const projects: Project[] = [
     compare: [],
     placeholder: true,
     // Middle house, second floor, right window (frame at 1003–1055 × 583–683 film px)
+    credits: unknown,
     window: { x: 52.2, y: 54, w: 2.75, h: 9.3 },
   },
   {
@@ -62,6 +71,7 @@ export const projects: Project[] = [
     ],
     placeholder: true,
     // Dark house on the left, second row, middle window (471–520 × 628–710)
+    credits: unknown,
     window: { x: 24.5, y: 58.1, w: 2.55, h: 7.6 },
   },
   {
@@ -78,6 +88,7 @@ export const projects: Project[] = [
     ],
     placeholder: true,
     // Brown house, lower row, the lit window (696–745 × 671–758)
+    credits: unknown,
     window: { x: 36.25, y: 62.1, w: 2.55, h: 8.1 },
   },
   {
@@ -91,6 +102,7 @@ export const projects: Project[] = [
     compare: [],
     // Its own photographs (from the owner's old site), so not a stand-in
     // Dark house on the right, lower row, middle window (1487–1535 × 673–763)
+    credits: unknown,
     window: { x: 77.4, y: 62.3, w: 2.5, h: 8.3 },
   },
 ];

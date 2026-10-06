@@ -54,13 +54,18 @@ export type Copy = {
     categories: { residential: string; mixed: string };
     /** The project page in the overlay (2026-10-06): facts, the story's chapter labels, before/after, photos, next. */
     page: {
-      facts: { project: string; city: string; category: string; country: string };
+      /** Labels of the credits (hero row and project details). `pending` stands in for a credit the owner has not given yet. */
+      credits: { developer: string; architect: string; builder: string; interior: string; photography: string; location: string; category: string; pending: string };
+      overview: string;
+      details: string;
       chapters: { opportunity: string; approach: string; outcome: string; why: string };
       compare: { title: string; before: string; after: string; hint: string; slider: (room: string) => string };
       /** Room names for the before/after pairs, keyed by `compare[].room` in content/projects.ts. */
       rooms: Record<string, string>;
       gallery: { title: string; count: (n: number) => string; open: (i: number, n: number) => string; counter: (i: number, n: number) => string; close: string; prev: string; next: string };
-      next: string;
+      /** The other three projects at the foot of the page. */
+      others: string;
+      view: string;
     };
     /** Per project: `title` is the discreet headline (kind of building — city), `lede` one line under it, then the story. */
     items: Record<string, { title: string; lede: string; opportunity: string; approach: string; outcome: string; why: string }>;

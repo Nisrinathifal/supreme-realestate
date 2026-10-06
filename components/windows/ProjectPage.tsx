@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
-import { ArrowRight, ArrowsOut } from "@phosphor-icons/react/dist/ssr";
+import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from "react";
+import type Lenis from "lenis";
+import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { MediaFrame } from "@/components/ui/MediaFrame";
-import type { ImageAsset } from "@/content/media";
 import type { Lang } from "@/content/routes";
-import { gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
+import { gsap, MQ, prefersReducedMotion, ScrollTrigger, setupGsap } from "@/lib/motion";
 import { Compare } from "./Compare";
 import { Lightbox } from "./Lightbox";
 import type { PageStrings, WindowProject } from "./types";
@@ -13,43 +13,42 @@ import s from "./project.module.css";
 
 type Props = {
   project: WindowProject;
-  next: WindowProject;
+  /** The other projects, offered at the foot of the page. */
+  others: WindowProject[];
   lang: Lang;
   strings: PageStrings;
   scroller: RefObject<HTMLDivElement | null>;
+  /** The overlay's own smooth scroll (null under reduced motion). */
+  lenis: RefObject<Lenis | null>;
   /** The overlay has finished entering: measurements are final. */
   live: boolean;
-  onNext: (id: string) => void;
+  onOpen: (id: string) => void;
 };
 
-type Chapter = {
-  key: "opportunity" | "approach" | "outcome";
-  text: string;
-  image: ImageAsset | null;
-};
-
-/** Gallery rows in twelfths: a wide-and-narrow pair, then a three-up, then the pair mirrored; never one photo alone. */
-const ROWS = [
-  [7, 5],
-  [4, 4, 4],
-  [5, 7],
-  [4, 4, 4],
-];
-function galleryRows(n: number) {
-  const rows: number[][] = [];
-  let i = 0;
-  let k = 0;
-  while (i < n) {
-    const left = n - i;
-    let row = ROWS[k++ % ROWS.length];
-    if (left === 1) row = [12];
-    else if (left === 2) row = [6, 6];
-    else if (left - row.length === 1) row = row.length === 2 ? [4, 4, 4] : [7, 5];
-    rows.push(row);
-    i += row.length;
+/**
+ * How the photographs are laid: edge to edge, square-cornered and large. `full` spans the page; `pair` sets one
+ * photograph flush left and a second flush right, dropped lower, travelling faster (the stagger reads as depth);
+ * `right` and `left` hold one photograph against an edge. Each part of the gallery starts from its own point in
+ * the cycle so the two halves don't repeat each other; a pair never gets left with one photograph.
+ */
+type Block = "full" | "pair" | "right" | "left";
+const CYCLE: Block[] = ["full", "pair", "right", "pair", "left"];
+function compose(count: number, offset: number) {
+  const out: { kind: Block; n: number }[] = [];
+  let k = offset;
+  let left = count;
+  while (left > 0) {
+    let kind = CYCLE[k++ % CYCLE.length];
+    if (kind === "pair" && left < 2) kind = "full";
+    const n = kind === "pair" ? 2 : 1;
+    out.push({ kind, n });
+    left -= n;
   }
-  return rows;
+  return out;
 }
+
+/** Drift per photograph, in viewport heights over its pass: the second of a pair travels fastest. */
+const speedOf = (kind: Block, j: number) => (kind === "pair" ? (j === 0 ? 0.03 : 0.12) : kind === "full" ? 0 : 0.06);
 
 /** Words as spans, for the scroll reveal; screen readers still read one sentence. */
 function Words({ text }: { text: string }) {
@@ -64,350 +63,261 @@ function Words({ text }: { text: string }) {
   );
 }
 
+type SpreadProps = {
+  gallery: WindowProject["gallery"];
+  /** Which photographs, by their index in the gallery (the viewer steps through all of them). */
+  indices: number[];
+  blocks: { kind: Block; n: number }[];
+  lang: Lang;
+  onOpen: (i: number) => void;
+};
+
+/** One run of the gallery: blocks of photographs, each a button into the viewer. */
+function Spread({ gallery, indices, blocks, lang, onOpen }: SpreadProps) {
+  const starts = blocks.map((_, bi) => blocks.slice(0, bi).reduce((n, b) => n + b.n, 0));
+  return (
+    <div className={s.spread}>
+      {blocks.map((b, bi) => (
+        <div key={bi} className={s.block} data-kind={b.kind}>
+          {indices.slice(starts[bi], starts[bi] + b.n).map((index, j) => {
+            const item = gallery[index];
+            return (
+              <button
+                key={index}
+                type="button"
+                className={s.tile}
+                data-tile={index}
+                data-speed={speedOf(b.kind, j)}
+                onClick={() => onOpen(index)}
+                aria-label={item.open}
+              >
+                <MediaFrame image={item.image} ratio="fill" lang={lang} radius="none" sizes={b.kind === "full" ? "100vw" : "(max-width: 767px) 100vw, 60vw"} />
+              </button>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /**
- * The project page (2026-10-06), the overlay's continuation under the room: a Paper sheet rises over the interior
- * with the discreet headline, the lede and the facts; the story in three chapters beside one held photograph that
- * turns, chapter by chapter, from the property as found to the finished room (a thin rail marks where you are);
- * before and after on Canal ink (Compare); every photograph in an editorial grid that opens into the viewer
- * (Lightbox); and why it matters, with the way on to the next project. All scroll motion runs on the overlay's own
- * scroller (Lenis is off in there); reduced motion keeps every state final and only the held photograph swaps.
+ * The project page (2026-10-06, after the owner's reference: an architectural studio's project page). The room is the
+ * hero: the project's name large over it, what it is under that, and the credits along its foot. Then, on Stone, the
+ * overview, and the photographs edge to edge (no rounded corners) in staggered spreads that drift at different
+ * speeds as you scroll; before and after on Canal ink; the rest of the photographs; why it matters; the project
+ * details (the story and every credit); and the other three projects. Every photograph opens into the viewer.
+ * Scrolling runs on the overlay's own Lenis (Windows), so the drift is smooth; reduced motion keeps every state final.
+ * Credits the owner has not given yet read "To be confirmed" (draft copy), never a guess.
  */
-export function ProjectPage({ project, next, lang, strings, scroller, live, onNext }: Props) {
+export function ProjectPage({ project, others, lang, strings, scroller, lenis, live, onOpen }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [viewer, setViewer] = useState<number | null>(null);
-  const [active, setActive] = useState(0);
   const p = project;
-  const pairs = p.compare;
-  const g = p.gallery.map((x) => x.image);
-
-  // The held photograph per chapter: as found, during, finished (archive pairs where there are any)
-  const chapters: Chapter[] = p.story
-    ? [
-        {
-          key: "opportunity",
-          text: p.story.opportunity,
-          image: pairs[0]?.before ?? g[1] ?? null,
-        },
-        {
-          key: "approach",
-          text: p.story.approach,
-          image: pairs[1]?.before ?? g[2] ?? null,
-        },
-        {
-          key: "outcome",
-          text: p.story.outcome,
-          image: pairs[0]?.after ?? g[3] ?? g[0] ?? null,
-        },
-      ]
-    : [];
-  const rows = galleryRows(p.gallery.length);
-  const rowStart = rows.map((_, r) => rows.slice(0, r).reduce((n, row) => n + row.length, 0));
+  // The hero already shows the room: the spreads leave that photograph out (the viewer keeps it)
+  const shown = p.gallery.map((_, i) => i).filter((i) => p.gallery[i].image.src !== p.interior?.src);
+  const half = Math.ceil(shown.length / 2);
 
   const tileFor = useCallback((i: number) => root.current?.querySelector<HTMLElement>(`[data-tile="${i}"]`) ?? null, []);
-  const toChapter = (i: number) => root.current?.querySelector<HTMLElement>(`[data-chapter="${i}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  const scrollToEl = (el: HTMLElement | null | undefined) => {
+    if (!el) return;
+    if (lenis.current) lenis.current.scrollTo(el, { offset: -24, duration: 1.4 });
+    else el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+  };
 
   useLayoutEffect(() => {
     setupGsap();
     const el = root.current;
     const sc = scroller.current;
     if (!el || !sc) return;
-    const triggers: ScrollTrigger[] = [];
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(el);
       const st = (vars: ScrollTrigger.Vars) => ({ scroller: sc, ...vars });
-
-      // Where you are in the story: the chapter in the middle of the view holds the photograph (also under reduced motion)
-      q<HTMLElement>("[data-chapter]").forEach((ch, i) => {
-        triggers.push(
-          ScrollTrigger.create(
-            st({
-              trigger: ch,
-              start: "top 55%",
-              end: "bottom 55%",
-              onToggle: (self) => self.isActive && setActive(i),
-            }),
-          ),
-        );
-      });
-
       const mm = gsap.matchMedia();
-      mm.add(MQ.full, () => {
-        // The room's name steps back as the sheet comes up over it
-        const title = sc.querySelector<HTMLElement>("[data-project-focus]");
-        const sheet = q<HTMLElement>("[data-project-sheet]")[0];
-        if (title && sheet)
-          gsap.to(title, {
-            y: -48,
-            opacity: 0,
-            ease: "none",
-            scrollTrigger: st({
-              trigger: sheet,
-              start: "top bottom",
-              end: "top 35%",
-              scrub: true,
-            }),
-          });
+      mm.add({ full: MQ.full, phone: "(max-width: 767px)" }, (c) => {
+        if (!c.conditions?.full) return;
+        const k = c.conditions.phone ? 0.5 : 1;
 
-        // The headline block arrives once, line by line
-        const rise = q<HTMLElement>("[data-rise]");
-        gsap.fromTo(
-          rise,
-          { y: 28, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.9,
-            stagger: 0.08,
-            ease: "power3.out",
-            scrollTrigger: st({ trigger: sheet, start: "top 70%", once: true }),
-          },
-        );
+        // The name and the credits step back as the Stone comes up over the room
+        const body = q<HTMLElement>("[data-body]")[0];
+        const heroBits = q<HTMLElement>("[data-hero-copy], [data-hero-credits]");
+        if (body) gsap.to(heroBits, { y: -64, opacity: 0, ease: "none", stagger: 0.04, scrollTrigger: st({ trigger: body, start: "top bottom", end: "top 30%", scrub: true }) });
 
-        // Each chapter (and the closing line) fills in from Graphite to ink with the scroll
+        // Overview and why it matters fill in from Graphite to ink with the scroll
         const from = getComputedStyle(el).getPropertyValue("--reveal-from").trim();
         q<HTMLElement>("[data-reveal]").forEach((block) => {
           const words = block.querySelectorAll<HTMLElement>("[data-word]");
-          gsap.fromTo(
-            words,
-            { color: from },
-            {
-              color: getComputedStyle(block).color,
-              stagger: 0.1,
-              ease: "none",
-              scrollTrigger: st({
-                trigger: block,
-                start: "top 82%",
-                end: "bottom 50%",
-                scrub: true,
-              }),
-            },
-          );
+          gsap.fromTo(words, { color: from }, { color: getComputedStyle(block).color, stagger: 0.1, ease: "none", scrollTrigger: st({ trigger: block, start: "top 85%", end: "bottom 55%", scrub: true }) });
         });
 
-        // The rail fills as the story is read
-        const fill = q<HTMLElement>("[data-rail-fill]")[0];
-        const story = q<HTMLElement>("[data-story]")[0];
-        if (fill && story)
-          gsap.fromTo(
-            fill,
-            { scaleY: 0 },
-            {
-              scaleY: 1,
-              ease: "none",
-              scrollTrigger: st({
-                trigger: story,
-                start: "top 55%",
-                end: "bottom 55%",
-                scrub: true,
-              }),
-            },
-          );
+        // Short blocks (labels, details, credits, cards) rise once as they arrive
+        q<HTMLElement>("[data-rise]").forEach((r) =>
+          gsap.fromTo(r, { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: st({ trigger: r, start: "top 92%", once: true }) }),
+        );
 
-        // The before/after frame opens to full width as it arrives
-        const frame = q<HTMLElement>("[data-compare-frame]")[0];
-        if (frame)
-          gsap.fromTo(
-            frame,
-            { clipPath: "inset(0% 6% 0% 6% round 32px)" },
-            { clipPath: "inset(0% 0% 0% 0% round 24px)", ease: "none", scrollTrigger: st({ trigger: frame, start: "top bottom", end: "top 35%", scrub: true }) },
-          );
-
-        // Photographs uncover from below as they come into view, once
+        // Photographs: uncovered from below once, then each drifts at its own speed, the picture inside a little slower
         q<HTMLElement>("[data-tile]").forEach((tile) => {
+          const speed = Number(tile.dataset.speed || 0) * k;
           const img = tile.querySelector("img");
-          const tl = gsap.timeline({
-            scrollTrigger: st({ trigger: tile, start: "top 92%", once: true }),
-          });
-          tl.fromTo(
+          gsap.fromTo(
             tile,
-            { clipPath: "inset(18% 0% 0% 0% round 24px)" },
-            {
-              clipPath: "inset(0% 0% 0% 0% round 24px)",
-              duration: 1.1,
-              ease: "power3.out",
-              clearProps: "clipPath",
-            },
-            0,
+            { clipPath: "inset(14% 0% 0% 0%)" },
+            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "power3.out", clearProps: "clipPath", scrollTrigger: st({ trigger: tile, start: "top 95%", once: true }) },
           );
-          if (img)
-            tl.fromTo(
-              img,
-              { scale: 1.14 },
-              {
-                scale: 1,
-                duration: 1.4,
-                ease: "power3.out",
-                clearProps: "transform",
-              },
-              0,
+          if (speed)
+            gsap.fromTo(
+              tile,
+              { y: () => speed * window.innerHeight },
+              { y: () => -speed * window.innerHeight, ease: "none", scrollTrigger: st({ trigger: tile, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true }) },
             );
+          if (img) gsap.fromTo(img, { yPercent: -6, scale: 1.14 }, { yPercent: 6, scale: 1.14, ease: "none", scrollTrigger: st({ trigger: tile, start: "top bottom", end: "bottom top", scrub: true }) });
         });
+
+        // The before/after frame opens out to the page's edges as it arrives
+        const frame = q<HTMLElement>("[data-compare-frame]")[0];
+        if (frame) gsap.fromTo(frame, { clipPath: "inset(0% 8% 0% 8%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none", scrollTrigger: st({ trigger: frame, start: "top bottom", end: "top 30%", scrub: true }) });
       });
       return () => mm.revert();
     }, el);
-    return () => {
-      triggers.forEach((t) => t.kill());
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, [scroller]);
 
   // Measurements settle once the overlay's enter timeline has finished (it moves the scroller)
   useLayoutEffect(() => {
     if (!live || !scroller.current) return;
+    lenis.current?.resize();
     ScrollTrigger.getAll()
       .filter((t) => t.scroller === scroller.current)
       .forEach((t) => t.refresh());
-  }, [live, scroller]);
+  }, [live, scroller, lenis]);
 
-  const facts = [
-    { k: strings.facts.project, v: p.name },
-    { k: strings.facts.city, v: p.location },
-    { k: strings.facts.category, v: p.category },
-    { k: strings.facts.country, v: p.country },
-  ];
+  const heroCredits = p.credits.filter((c) => c.hero);
+  const chapters = p.story
+    ? [
+        { key: "approach" as const, text: p.story.approach },
+        { key: "outcome" as const, text: p.story.outcome },
+      ]
+    : [];
+  const spread = (indices: number[], offset: number) => (
+    <Spread gallery={p.gallery} indices={indices} blocks={compose(indices.length, offset)} lang={lang} onOpen={setViewer} />
+  );
 
   return (
     <div ref={root} className={s.page}>
-      <article className={`light ${s.sheet}`} data-project-sheet aria-labelledby="project-page-title">
-        <header className={s.intro}>
-          <div className={s.introMain}>
-            <p className={`t-micro ${s.kicker}`} data-rise>
-              {p.category} · {p.location}
-            </p>
-            <h3 id="project-page-title" className={s.title} data-rise>
-              {p.title}
-            </h3>
+      {/* The room as the hero: name, what it is, credits along the foot */}
+      <header className={s.hero}>
+        <div className={s.heroCopy} data-hero-copy data-project-focus tabIndex={-1}>
+          <p className={`t-micro ${s.heroKicker}`}>
+            {p.category} · {p.location}
+          </p>
+          <h2 id="project-title" className={s.heroName}>
+            {p.name}
+          </h2>
+          <p className={s.heroTitle}>{p.title}</p>
+        </div>
+        <dl className={s.heroCredits} data-hero-credits>
+          {heroCredits.map((c) => (
+            <div key={c.label} className={s.heroCredit}>
+              <dt>{c.label}</dt>
+              <dd data-pending={c.pending ? "true" : undefined}>{c.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </header>
+
+      <div className={`light ${s.body}`} data-body>
+        <section className={s.split} aria-labelledby="project-overview">
+          <h3 id="project-overview" className={`t-micro ${s.label}`} data-rise>
+            {strings.overview}
+          </h3>
+          <div className={s.splitMain}>
             {p.lede ? (
-              <p className={s.lede} data-rise>
+              <p className={s.overviewLede} data-rise>
                 {p.lede}
               </p>
             ) : null}
+            {p.story ? (
+              <p className={s.overviewText} data-reveal>
+                <Words text={p.story.opportunity} />
+              </p>
+            ) : null}
+            <button type="button" className={s.textLink} onClick={() => scrollToEl(root.current?.querySelector<HTMLElement>("[data-details]"))} data-rise>
+              <ArrowDown size={16} weight="light" aria-hidden="true" />
+              {strings.details}
+            </button>
           </div>
-          <dl className={s.facts} data-rise>
-            {facts.map((f) => (
-              <div key={f.k} className={s.fact}>
-                <dt className="t-micro">{f.k}</dt>
-                <dd>{f.v}</dd>
-              </div>
-            ))}
-          </dl>
-        </header>
+        </section>
+        {spread(shown.slice(0, half), 0)}
+      </div>
 
-        {chapters.length ? (
-          <section className={s.story} data-story aria-label={p.title}>
-            <div className={s.held} aria-hidden="true">
-              <div className={s.heldFrame}>
-                {chapters.map((c, i) => (
-                  <div key={c.key} className={s.heldLayer} data-on={i <= active ? "true" : "false"} style={{ zIndex: i + 1 } as CSSProperties}>
-                    <MediaFrame image={c.image} ratio="fill" lang={lang} radius="none" sizes="(max-width: 767px) 1px, 40vw" decorative />
-                  </div>
-                ))}
-              </div>
-              <div className={s.rail}>
-                <span className={s.railTrack}>
-                  <span className={s.railFill} data-rail-fill />
-                </span>
-                <ol className={s.railList}>
-                  {chapters.map((c, i) => (
-                    <li key={c.key}>
-                      <button type="button" tabIndex={-1} className={s.railItem} data-on={i === active ? "true" : "false"} onClick={() => toChapter(i)}>
-                        {strings.chapters[c.key]}
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
-            <div className={s.chapters}>
-              {chapters.map((c, i) => (
-                <section key={c.key} className={s.chapter} data-chapter={i} aria-labelledby={`chapter-${c.key}`}>
-                  {c.image ? (
-                    <MediaFrame image={c.image} ratio="16/9" lang={lang} radius="lg" sizes="(max-width: 767px) 100vw, 1px" className={s.chapterImage} />
-                  ) : null}
-                  <h4 id={`chapter-${c.key}`} className={`t-micro ${s.chapterLabel}`}>
-                    {strings.chapters[c.key]}
-                  </h4>
-                  <p className={s.chapterText} data-reveal>
-                    <Words text={c.text} />
-                  </p>
-                </section>
-              ))}
-            </div>
-          </section>
-        ) : null}
-      </article>
-
-      {pairs.length ? (
+      {p.compare.length ? (
         <section className={`inverse ${s.compareBand}`} aria-label={strings.compare.title}>
-          <div className={s.compareWrap} data-compare-wrap>
-            <Compare pairs={pairs} strings={strings.compare} lang={lang} scroller={scroller} />
-          </div>
+          <Compare pairs={p.compare} strings={strings.compare} lang={lang} scroller={scroller} />
         </section>
       ) : null}
 
-      <section className={`light ${s.gallery}`} aria-labelledby="project-gallery-title">
-        <div className={s.galleryHead}>
-          <h3 id="project-gallery-title" className={s.bandTitle}>
-            {strings.gallery.title}
-          </h3>
-          <p className="t-micro">{p.galleryCount}</p>
-        </div>
-        <div className={s.grid}>
-          {rows.map((row, r) => (
-            <div
-              key={r}
-              className={s.row}
-              data-count={row.length}
-              style={
-                {
-                  "--cols": row.map((c) => `${c}fr`).join(" "),
-                } as CSSProperties
-              }
-            >
-              {row.map((_, c) => {
-                const i = rowStart[r] + c;
-                const item = p.gallery[i];
-                return (
-                  <button key={i} type="button" className={s.tile} data-tile={i} onClick={() => setViewer(i)} aria-label={item.open}>
-                    <MediaFrame image={item.image} ratio="fill" lang={lang} radius="none" sizes="(max-width: 767px) 100vw, 60vw" />
-                    <span className={s.tileIcon} aria-hidden="true">
-                      <ArrowsOut size={16} weight="light" />
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className={`inverse ${s.closing}`} aria-labelledby="chapter-why">
+      <div className={`light ${s.body}`}>
+        {spread(shown.slice(half), 2)}
         {p.story ? (
-          <div className={s.why}>
-            <h4 id="chapter-why" className="t-micro">
+          <section className={s.split} aria-labelledby="chapter-why">
+            <h3 id="chapter-why" className={`t-micro ${s.label}`} data-rise>
               {strings.chapters.why}
-            </h4>
+            </h3>
             <p className={s.whyText} data-reveal>
               <Words text={p.story.why} />
             </p>
+          </section>
+        ) : null}
+        <section className={`${s.split} ${s.details}`} data-details aria-labelledby="project-details">
+          <h3 id="project-details" className={`t-micro ${s.label}`} data-rise>
+            {strings.details}
+          </h3>
+          <div className={s.splitMain}>
+            {chapters.map((c) => (
+              <div key={c.key} className={s.chapter} data-rise>
+                <h4 className={s.chapterLabel}>{strings.chapters[c.key]}</h4>
+                <p className={s.chapterText}>{c.text}</p>
+              </div>
+            ))}
+            <dl className={s.credits} data-rise>
+              {p.credits.map((c) => (
+                <div key={c.label} className={s.credit}>
+                  <dt className="t-micro">{c.label}</dt>
+                  <dd data-pending={c.pending ? "true" : undefined}>{c.value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-        ) : null}
-        {next.id !== p.id ? (
-          <button type="button" className={s.next} onClick={() => onNext(next.id)}>
-            <span className={s.nextText}>
-              <span className="t-micro">{strings.next}</span>
-              <span className={s.nextName}>{next.name}</span>
-              <span className={s.nextMeta}>{next.title}</span>
-            </span>
-            <span className={s.nextMedia} aria-hidden="true">
-              <MediaFrame image={next.preview} ratio="fill" lang={lang} radius="none" sizes="(max-width: 767px) 90vw, 30vw" decorative />
-            </span>
-            <span className={s.nextArrow} aria-hidden="true">
-              <ArrowRight size={22} weight="light" />
-            </span>
-          </button>
-        ) : null}
-      </section>
+        </section>
+      </div>
+
+      {others.length ? (
+        <section className={`inverse ${s.others}`} aria-labelledby="project-others">
+          <h3 id="project-others" className={s.othersTitle} data-rise>
+            {strings.others}
+          </h3>
+          <ul className={s.othersList}>
+            {others.map((o) => (
+              <li key={o.id} data-rise>
+                <button type="button" className={s.card} onClick={() => onOpen(o.id)} aria-label={`${strings.view}: ${o.name}`}>
+                  <span className={s.cardMedia}>
+                    <MediaFrame image={o.preview} ratio="fill" lang={lang} radius="none" sizes="(max-width: 767px) 100vw, 33vw" decorative />
+                  </span>
+                  <span className={s.cardFoot}>
+                    <span className={s.cardText}>
+                      <span className={s.cardName}>{o.name}</span>
+                      <span className={s.cardMeta}>{o.title}</span>
+                    </span>
+                    <span className={s.cardArrow} aria-hidden="true">
+                      <ArrowUpRight size={20} weight="light" />
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {viewer !== null ? (
         <Lightbox items={p.gallery} start={viewer} tileFor={tileFor} onClose={() => setViewer(null)} strings={strings.gallery} lang={lang} />

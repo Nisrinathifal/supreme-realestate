@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
+import Lenis from "lenis";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import type { Lang } from "@/content/routes";
-import { gsap, prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { gsap, MQ, prefersReducedMotion, ScrollTrigger, setupGsap } from "@/lib/motion";
 import { enterTimeline, previewIn, previewOut, swapStage } from "./motion";
 import { ProjectPage } from "./ProjectPage";
 import type { WindowProject, WindowStrings } from "./types";
@@ -60,6 +61,7 @@ export function Windows({ lang, projects, strings }: Props) {
   const hideTimer = useRef<number | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
   const tl = useRef<ReturnType<typeof enterTimeline> | null>(null);
   const returnTo = useRef<HTMLElement | null>(null);
 
@@ -119,6 +121,36 @@ export function Windows({ lang, projects, strings }: Props) {
     return () => cancelAnimationFrame(raf);
   }, [active, mounted]);
 
+  /* ---------- the overlay's own smooth scroll ---------- */
+  // Lenis on the overlay's scroller (the page's Lenis skips it: data-lenis-prevent), wired to ScrollTrigger like the
+  // page's (SmoothScroll). Stopped while the overlay is closed. Reduced motion: native scrolling.
+  useEffect(() => {
+    const wrapper = scrollerRef.current;
+    const content = wrapper?.querySelector<HTMLElement>("[data-scroller-content]");
+    if (!mounted || !wrapper || !content) return;
+    setupGsap();
+    const mm = gsap.matchMedia();
+    mm.add(MQ.full, () => {
+      const lenis = new Lenis({ wrapper, content, duration: 1.15, smoothWheel: true });
+      lenis.stop();
+      lenis.on("scroll", () => ScrollTrigger.update());
+      const tick = (t: number) => lenis.raf(t * 1000);
+      gsap.ticker.add(tick);
+      lenisRef.current = lenis;
+      return () => {
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+        lenisRef.current = null;
+      };
+    });
+    return () => mm.revert();
+  }, [mounted]);
+
+  const toTop = () => {
+    if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true, force: true });
+    if (scrollerRef.current) scrollerRef.current.scrollTop = 0;
+  };
+
   /* ---------- enter, leave, switch ---------- */
   const exteriorParts = () => {
     const hero = document.querySelector<HTMLElement>("[data-hero]");
@@ -161,7 +193,8 @@ export function Windows({ lang, projects, strings }: Props) {
       return;
     }
     document.documentElement.setAttribute("data-project-open", "");
-    if (scrollerRef.current) scrollerRef.current.scrollTop = 0;
+    toTop();
+    lenisRef.current?.start();
     tl.current = enterTimeline({
       overlay,
       rect: hotspot.getBoundingClientRect(),
@@ -186,7 +219,8 @@ export function Windows({ lang, projects, strings }: Props) {
     };
     if (!t) return done();
     setPhase("leaving");
-    if (scrollerRef.current) scrollerRef.current.scrollTop = 0;
+    toTop();
+    lenisRef.current?.stop();
     t.eventCallback("onReverseComplete", done);
     t.reverse();
   }, [phase]);
@@ -197,15 +231,10 @@ export function Windows({ lang, projects, strings }: Props) {
     const stage = overlayRef.current?.querySelector<HTMLElement>("[data-stage]");
     if (!p?.interior || !stage) return;
     setWarmed((w) => (w.includes(id) ? w : [...w, id]));
-    scrollerRef.current?.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    if (lenisRef.current) lenisRef.current.scrollTo(0, { duration: 1.2 });
+    else scrollerRef.current?.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
     swapStage(stage, () => setOpen(id), prefersReducedMotion());
   };
-
-  const toOverview = () =>
-    scrollerRef.current
-      ?.querySelector<HTMLElement>("[data-project-sheet]")
-      ?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
-  const nextOf = (id: string) => projects[(projects.findIndex((p) => p.id === id) + 1) % projects.length];
 
   useEffect(() => {
     if (phase !== "open") return;
@@ -312,68 +341,21 @@ export function Windows({ lang, projects, strings }: Props) {
                 <div className={s.stageScrim} />
               </div>
               <div className={s.scroller} data-scroller ref={scrollerRef}>
-                {op ? (
-                  <>
-                    <section className={s.titleScreen}>
-                      <div className={s.titleBlock} data-project-focus tabIndex={-1}>
-                        <p className={`t-micro ${s.eyebrow}`}>{strings.eyebrow}</p>
-                        <h2 id="project-title" className={s.name}>
-                          {op.name}
-                        </h2>
-                        <p className={s.meta}>
-                          {op.location} · {op.category}
-                        </p>
-                        <button type="button" className={s.exploreBtn} onClick={toOverview} aria-label={strings.explore}>
-                          <ArrowRight size={20} weight="light" aria-hidden="true" />
-                        </button>
-                        <p className={`t-micro ${s.exploreLabel}`} aria-hidden="true">
-                          {strings.explore}
-                        </p>
-                      </div>
-                    </section>
+                <div data-scroller-content>
+                  {op ? (
                     <ProjectPage
                       key={op.id}
                       project={op}
-                      next={nextOf(op.id)}
+                      others={projects.filter((p) => p.id !== op.id && p.interior)}
                       lang={lang}
                       strings={strings.page}
                       scroller={scrollerRef}
+                      lenis={lenisRef}
                       live={phase === "open"}
-                      onNext={(id) => switchTo(id)}
+                      onOpen={(id) => switchTo(id)}
                     />
-                    <section className={`inverse ${s.indexSection}`} aria-label={strings.index}>
-                      <div className={s.indexInner}>
-                        <div className={s.indexHead}>
-                          <p className="t-micro">{strings.index}</p>
-                          <h3 className={s.indexTitle}>{strings.more}</h3>
-                        </div>
-                        <ul className={s.indexList}>
-                          {projects.map((p) => {
-                            const current = p.id === open;
-                            const available = Boolean(p.interior);
-                            return (
-                              <li key={p.id}>
-                                <button
-                                  type="button"
-                                  className={s.indexItem}
-                                  aria-current={current ? "true" : undefined}
-                                  aria-disabled={available ? undefined : "true"}
-                                  onClick={() => (available ? switchTo(p.id) : undefined)}
-                                >
-                                  <MediaFrame image={p.preview} ratio="4/5" lang={lang} radius="lg" sizes="(max-width: 767px) 45vw, 22vw" decorative />
-                                  <span className={s.indexName}>{p.name}</span>
-                                  <span className={s.indexMeta}>
-                                    {p.location} · {p.category}
-                                  </span>
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    </section>
-                  </>
-                ) : null}
+                  ) : null}
+                </div>
               </div>
               <button type="button" className={s.back} data-back onClick={close}>
                 <ArrowLeft size={18} weight="light" aria-hidden="true" />

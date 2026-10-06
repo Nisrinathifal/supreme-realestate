@@ -78,36 +78,6 @@
 }
 .scroller { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 
-/* First screen: the room, and the project's name low in it so the image stays the hero */
-.titleScreen { min-height: 100%; display: grid; place-items: center; padding: var(--s-9) var(--gutter) var(--s-9); }
-.titleBlock { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); text-align: center; outline: none; }
-.eyebrow { color: var(--on-media); opacity: 0.72; }
-.name { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; font-size: clamp(36px, 4.6vw, 64px); text-wrap: balance; }
-.meta { font-size: var(--fs-ui); opacity: 0.85; }
-.exploreBtn {
-  margin-top: var(--s-5); display: grid; place-items: center; width: 56px; height: 56px; border-radius: var(--r-pill);
-  border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--on-media) 14%, transparent); color: var(--on-media);
-  -webkit-backdrop-filter: blur(var(--blur)); backdrop-filter: blur(var(--blur)); transition: background-color 250ms var(--ease);
-}
-.exploreBtn:hover { background: color-mix(in srgb, var(--on-media) 24%, transparent); }
-.exploreLabel { color: var(--on-media); }
-
-/* Index: the four projects as an architectural index, the open one held, the others subdued */
-.indexSection { padding: 0 var(--gutter) var(--section-y); }
-.indexInner { max-width: var(--maxw); margin: 0 auto; border-top: 1px solid var(--line); padding-top: var(--s-8); }
-.indexHead { display: flex; flex-direction: column; gap: var(--s-2); margin-bottom: var(--s-6); }
-.indexTitle { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); letter-spacing: -0.01em; }
-.indexList { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-5); }
-.indexItem {
-  display: flex; flex-direction: column; gap: var(--s-3); width: 100%; padding: var(--s-2); text-align: left; border-radius: var(--r-lg);
-  opacity: 0.55; transition: opacity 300ms var(--ease), box-shadow 300ms var(--ease);
-}
-.indexItem[aria-current="true"] { opacity: 1; box-shadow: inset 0 0 0 1px var(--line); }
-.indexItem:hover:not([aria-disabled="true"]) { opacity: 1; }
-.indexItem[aria-disabled="true"] { cursor: default; }
-.indexName { font-family: var(--font-display); font-size: var(--fs-ui); font-weight: 500; padding: 0 var(--s-2); }
-.indexMeta { font-size: var(--fs-micro); color: var(--muted); padding: 0 var(--s-2) var(--s-1); margin-top: calc(-1 * var(--s-2)); }
-
 /* Back: one glass pill, top left, where the menu pill sits on the page beneath */
 .back {
   position: absolute; z-index: 3; top: calc(var(--s-4) + env(safe-area-inset-top)); left: var(--gutter);
@@ -116,13 +86,11 @@
   -webkit-backdrop-filter: blur(var(--blur)); backdrop-filter: blur(var(--blur));
   font-size: var(--fs-ui); font-weight: 500; line-height: 1; letter-spacing: 0.01em; white-space: nowrap;
 }
-.back:focus-visible, .exploreBtn:focus-visible, .indexItem:focus-visible { outline: 2px solid var(--on-media); outline-offset: 3px; }
+.back:focus-visible { outline: 2px solid var(--on-media); outline-offset: 3px; }
 
 @media (max-width: 767px) {
   /* The film's windows: off screen in the phone crop, so the projects deck under the hero takes over */
   .layer { display: none; }
-  .indexList { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
-  .name { font-size: clamp(32px, 9vw, 44px); }
   .back span { display: none; }
   .back { padding: 0 var(--s-3); }
 }
