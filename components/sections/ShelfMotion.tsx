@@ -43,6 +43,7 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
       place();
       const ro = new ResizeObserver(place);
       if (wall) ro.observe(wall);
+      if (svg) ro.observe(svg); // its box grows when the daylight rise lets it reach up
 
       mm.add(MQ.full, () => {
         const section = root.closest<HTMLElement>("[data-shelf]");
@@ -50,6 +51,8 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
         if (!section || !columns) return;
         // Every band, both registers, left to right by its place on the wall (the registers interleave); they wait for
         // the band above to have faded to Paper (WorkMotion), then rise one at a time to their full height
+        // dusk at the wall's foot into the dark steps band (Shelf.module.css)
+        section.setAttribute("data-dusk", "");
         const bands = Array.from(columns.querySelectorAll<SVGRectElement>("rect")).sort((a, b) => Number(a.getAttribute("x")) - Number(b.getAttribute("x")));
         gsap.set(bands, { scaleY: 0, transformOrigin: "50% 100%" });
         const rise = gsap.to(bands, {
@@ -57,11 +60,12 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
           ease: "power2.out",
           duration: 0.5,
           stagger: 0.1,
-          scrollTrigger: { trigger: section, start: "top 112%", end: "top 30%", scrub: 0.8, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: section, start: "top 80%", end: "top 15%", scrub: 0.8, invalidateOnRefresh: true }, // once the daylight has risen
         });
         return () => {
           rise.scrollTrigger?.kill();
           rise.kill();
+          section.removeAttribute("data-dusk");
           gsap.set(bands, { clearProps: "transform" });
         };
       });

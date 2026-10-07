@@ -11,8 +11,8 @@ import styles from "./Work.module.css";
  * frames; the title comes up; the frames travel to their cards and become them; the title goes; then the deck after
  * the reference, on every width: pinned one viewport tall, the cards still to come waiting as strips beneath the
  * active card, each next card rising to the front as the one above lifts away, its photographs sliding in and its
- * note settling, scrubbed. On a fine pointer the card's pill follows the pointer. The band's tone fades to Paper
- * before the next band. Start states live here; without this the CSS lists the cards (reduced motion, no JS).
+ * note settling, scrubbed. On a fine pointer the card's pill follows the pointer. The next band's daylight rises
+ * over the band's foot. Start states live here; without this the CSS lists the cards (reduced motion, no JS).
  */
 export function WorkMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -26,30 +26,17 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       const next = band?.nextElementSibling as HTMLElement | null;
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "work", dark } }));
 
-      // The band's tone (after the earlier projects intro): obsidian while the deck plays, then, over the last
-      // viewport before the next band shows, it fades to Paper, where that band's wall begins, so they meet in one colour.
-      // The header reads it as dark until the fade is half way.
+      // The band stays dark to its foot; the next band brings daylight up over it as a long soft rise of Paper
+      // (Shelf.module.css, [data-dawn]) instead of the whole band fading through grey, so the last card leaves on
+      // the dark ground and no edge ever shows between the two. Only with motion: without it the bands simply meet.
       let fading = false;
       mm.add(MQ.full, () => {
         if (!band || !next) return;
         fading = true;
-        const tokens = getComputedStyle(document.documentElement);
-        const tone = gsap.fromTo(
-          band,
-          { backgroundColor: tokens.getPropertyValue("--band-dark").trim() },
-          {
-            backgroundColor: tokens.getPropertyValue("--bg").trim(),
-            ease: "none",
-            immediateRender: false,
-            // Over the last viewport before the next band shows, so it is the same Stone by the time their edges meet
-            scrollTrigger: { trigger: next, start: "top 190%", end: "top 100%", scrub: true, invalidateOnRefresh: true },
-          },
-        );
+        next.setAttribute("data-dawn", "");
         return () => {
           fading = false;
-          tone.scrollTrigger?.kill();
-          tone.kill();
-          gsap.set(band, { clearProps: "backgroundColor" });
+          next.removeAttribute("data-dawn");
         };
       });
       const dark = band
@@ -57,7 +44,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             trigger: band,
             start: "top 48px",
             endTrigger: next ?? band,
-            end: () => (fading && next ? "top 145%" : next ? "top 48px" : "bottom 48px"),
+            end: () => (fading && next ? "top 40%" : next ? "top 48px" : "bottom 48px"), // light once the rise is behind the header
             invalidateOnRefresh: true,
             refreshPriority: -1,
             onToggle: (self) => header(self.isActive),
@@ -85,8 +72,9 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
         // pin begins exactly as the band has covered the hero
         root.setAttribute("data-handoff", "");
-        // ... and a short foot: the next band (and its statement) follows the last card straight away
-        gsap.set(band, { paddingTop: () => top(), paddingBottom: () => cssPx(docEl, "--s-9", 96) });
+        // ... and a foot as tall as most of the next band's daylight rise, so the last card (which stays and scrolls
+        // away with the page) is never washed by it, and the light comes up just behind it
+        gsap.set(band, { paddingTop: () => top(), paddingBottom: () => window.innerHeight * 0.56 });
 
         deck.setAttribute("data-deck", "");
         gsap.set(deck, { perspective: 1400 });
@@ -106,7 +94,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           scrollTrigger: {
             trigger: root,
             start: () => `top ${top()}`,
-            end: () => `+=${(n + HAND) * window.innerHeight * 0.85}`,
+            end: () => `+=${(n - 1 + HAND + 0.25) * window.innerHeight * 0.85}`,
             pin: true,
             scrub: 0.8,
             invalidateOnRefresh: true,
@@ -127,7 +115,9 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         // Then the cards rise in, as one stack, with a strong ease-out, and rest a moment before the first lifts
         tl.fromTo(deck, { autoAlpha: 0, y: () => window.innerHeight * 0.5 }, { autoAlpha: 1, y: 0, duration: HAND * 0.7, ease: "expo.out", immediateRender: false }, 0);
 
-        for (let i = 0; i < n; i++) {
+        // Every card but the last is lifted away; the last one stays and leaves with the page, so the band never
+        // shows an empty screen before the daylight
+        for (let i = 0; i < n - 1; i++) {
           const at = HAND + i;
           // The card on top is lifted away like a sheet of paper: it tips back first (about 30°, still low), then
           // flies up, and settles to a lighter tilt as it leaves; its contents bend a little more than the card
@@ -159,6 +149,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, at + 0.4).to(next.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, at + 0.5);
           }
         }
+
+        tl.to({}, { duration: 0.25 }); // the last card rests a moment before the page moves on
 
         return () => {
           tl.scrollTrigger?.kill();

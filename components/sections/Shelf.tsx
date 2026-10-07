@@ -7,13 +7,13 @@ import { ShelfMotion } from "./ShelfMotion";
 import styles from "./Shelf.module.css";
 
 /** A transparent image (icon or cut-out): AVIF/WebP with a PNG fallback from the pipeline. */
-function Alpha({ src, alt, size, className }: { src: string; alt: string; size: number; className?: string }) {
+function Alpha({ src, alt, size, ratio = 1, className }: { src: string; alt: string; size: number; ratio?: number; className?: string }) {
   const base = `/media/${src}`;
   return (
     <picture className={className}>
       <source type="image/avif" srcSet={`${base}-640.avif 640w, ${base}-1280.avif 1280w`} sizes={`${size}px`} />
       <source type="image/webp" srcSet={`${base}-640.webp 640w, ${base}-1280.webp 1280w`} sizes={`${size}px`} />
-      <img src={`${base}-640.png`} alt={alt} width={size} height={size} loading="lazy" decoding="async" />
+      <img src={`${base}-640.png`} alt={alt} width={size} height={Math.round(size / ratio)} loading="lazy" decoding="async" />
     </picture>
   );
 }
@@ -47,7 +47,8 @@ export function Shelf({ lang }: { lang: Lang }) {
           </div>
 
           <div className={styles.rack} data-shelf-rack style={{ aspectRatio: `${shelfImage.width} / ${shelfImage.height}` }}>
-            <Alpha src={shelfImage.src} alt={shelfImage.alt[lang]} size={960} className={styles.rackImage} />
+            {/* its own ratio, so the page does not shrink when it loads (that moved every pin below it) */}
+            <Alpha src={shelfImage.src} alt={shelfImage.alt[lang]} size={960} ratio={shelfImage.width / shelfImage.height} className={styles.rackImage} />
             {order.map((key) => {
               const icon = shelfIcons[key];
               return (

@@ -129,6 +129,10 @@ These rules apply to every page, image, caption, file and piece of metadata.
 **Projects band (owner, 2026-10-07).** The band is `--band-dark` #0C100E (a deeper Canal ink, one step below the
 dark cards in the same hue, so nothing clashes; Paper 18.4:1). Its cards keep the brand's own tones, light first: Sky mist,
 Canal ink, Lime mist, Moss (inv-surface); project line, index and the band's label in the quiet text colour. Supreme navy and cyan were tried and dropped (owner).
+One dark ground on the page: the steps band uses `--band-dark` too, its inverse panel (02) Canal ink a step above it.
+Between dark and light bands the colour never fades as a whole (that passes through grey): with motion on, Paper rises
+softly over the dark band's foot (Shelf `[data-dawn]`) and dusk falls at the wall's foot into the steps band
+(`[data-dusk]`); the last project card stays and leaves with the page. Without motion the bands simply meet.
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 

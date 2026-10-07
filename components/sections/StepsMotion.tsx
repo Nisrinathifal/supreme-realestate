@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Desktop choreography after the reference: the band is pinned for ~5 viewports. The headline lines rise in;
+ * Desktop choreography after the reference: the headline lines rise in as the band comes up; the band is then pinned for ~5 viewports;
  * the strip of panels (laid out as one row by `data-row`) starts tiny at the bottom right, grows to the full
  * viewport while the headline fades, then slides sideways so panels 02 and 03 pass through, and holds.
  * All start states are set here; without this (phones, reduced motion, no JS) the CSS stacks everything.
@@ -41,9 +41,13 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
           defaults: { ease: ease.inOut },
           scrollTrigger: { trigger: section, start: "top top", end: "+=580%", pin: true, scrub: 1.2, anticipatePin: 1, invalidateOnRefresh: true },
         });
-        tl.to(lines, { yPercent: 0, duration: 0.12, ease: ease.out, stagger: 0.03 }, 0)
-          .to(sketches, { opacity: 0.9, y: 0, duration: 0.12, ease: ease.out }, 0.02)
-          .to({}, { duration: 0.08 })
+        // The headline rises while the band comes up out of the wall's dusk, so the pinned band never opens empty;
+        // the pin then holds it a moment to be read
+        const intro = gsap
+          .timeline({ scrollTrigger: { trigger: section, start: "top 75%", end: "top 5%", scrub: 0.8, invalidateOnRefresh: true } })
+          .to(lines, { yPercent: 0, duration: 0.6, ease: ease.out, stagger: 0.15 }, 0)
+          .to(sketches, { opacity: 0.9, y: 0, duration: 0.6, ease: ease.out }, 0.1);
+        tl.to({}, { duration: 0.2 }, 0)
           .to(strip, { opacity: 1, duration: 0.05, ease: "none" }, 0.2)
           .to(strip, { scale: 1, xPercent: 0, yPercent: 0, duration: 0.3, ease: ease.precise }, 0.2)
           .to(stage, { opacity: 0, duration: 0.14 }, 0.3)
@@ -51,6 +55,8 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
           .to({}, { duration: 0.14 }); // held while the next band covers it
 
         return () => {
+          intro.scrollTrigger?.kill();
+          intro.kill();
           strip.removeAttribute("data-row");
           gsap.set([lines, sketches, strip, stage], { clearProps: "all" });
           if (next) gsap.set(next, { clearProps: "marginTop,zIndex,position" });
