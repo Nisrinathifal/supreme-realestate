@@ -1,21 +1,8 @@
 /* Canal-ink band right after the night hero, no heading: just the deck of cards */
 .work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ position: relative; padding-top: var(--s-6); padding-bottom: calc(var(--section-y) * 2); background: var(--inv-bg); } /* the room at the foot is where the band fades to the next one's Stone */
 
-/* Handoff (WorkMotion, desktop): a window cut out of the night film, standing on the band while it covers the
-   hero (fixed, under the header), framed in the hero's lime */
-.cut {
-  position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; border-radius: 2px;
-  background: var(--window-light) center / 100% 100% no-repeat; box-shadow: 0 0 0 1px var(--accent), 0 0 24px color-mix(in srgb, var(--window-light) 40%, transparent);
-}
-.cut::after { content: ""; position: absolute; inset: -4px; border: 1px dashed var(--accent); border-radius: 4px; }
-/* ... then inside its card: the same window, at its place, while the card opens around it (WorkMotion sets its box) */
-.cardLight {
-  position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; border-radius: 2px;
-  background: var(--window-light) center / 100% 100% no-repeat; box-shadow: 0 0 0 1px var(--accent);
-}
-
-/* The title over the windows during the handoff: in the static layout it heads the list; with the handoff running
-   (WorkMotion sets data-handoff on its root, which is pinned) it floats in the upper part of the view */
+/* The title of the band: in the static layout it heads the list; with the arrival running (WorkMotion sets
+   data-handoff on its root, which is pinned) it sits just above the stack and rises in with the cards */
 .lead { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); padding: var(--s-8) var(--gutter) var(--s-7); text-align: center; }
 .leadLabel { color: var(--muted); }
 .leadTitle {
@@ -23,16 +10,14 @@
   max-width: 16ch; text-wrap: balance; color: var(--ink);
 }
 .motion[data-handoff] > .lead {
-  /* in the upper part of the view, over the windows; it dissolves as they open into the cards */
-  position: absolute; z-index: 95; left: 0; right: 0; top: calc(24svh - var(--stack-top)); padding: 0 var(--gutter);
-  gap: var(--s-3); pointer-events: none;
+  /* centred in the room between the bar and the top of the stack (WorkMotion keeps it at yPercent -50) */
+  position: absolute; z-index: 2; left: 0; right: 0; top: calc((var(--header-h) - var(--stack-top)) / 2 + var(--s-3)); padding: 0 var(--gutter);
+  gap: var(--s-2); pointer-events: none;
 }
-.motion[data-handoff] > .lead .leadTitle { font-size: clamp(32px, 3.6vw, 58px); max-width: 20ch; }
+.motion[data-handoff] > .lead .leadTitle { font-size: clamp(28px, 2.8vw, 44px); max-width: none; }
 .motion[data-handoff] { position: relative; }
 
 /* Static layout: the cards one after another. The deck is about three quarters of the frame (owner), not the container */
-/* The shelf's columns in the band's foot (WorkColumns): one viewport plus the foot, behind the deck, running on into the wall */
-.columns { position: absolute; left: 0; right: 0; bottom: 0; height: calc(100svh + var(--section-y) * 2); z-index: 0; pointer-events: none; }
 .deck { position: relative; z-index: 1; --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(960px, 76vw)); display: flex; flex-direction: column; gap: var(--s-4); }
 /* Card: a tight radius, one flat tone, a glass hairline (the header pill's language) */
 .card {

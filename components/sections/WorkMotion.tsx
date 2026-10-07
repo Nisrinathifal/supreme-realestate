@@ -64,15 +64,13 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           })
         : null;
 
-      // The handoff and the deck (owner, 2026-10-07). The band has slid up over the held night hero (HeroScroll); the
-      // windows stay on it, alone, as lime frames (plates in a fixed layer, so the band never hides them). Once it
-      // has covered the hero, the band's root is pinned: the title comes up at the top, the frames travel to their
-      // cards (solid in the card's tone early, one after another), the deck appears beneath them as they land and
-      // they fade, so the cards' contents appear in place; the title goes as the stack shows; then the stack plays.
-      // Phones (no windows on screen): the title, then the deck rises in. Without JS / reduced motion: the title
-      // heads the list and the cards follow one another.
-      mm.add({ full: MQ.full, desktop: MQ.desktop }, (ctx) => {
-        if (!ctx.conditions?.full || !band) return;
+      // The arrival and the deck (owner, 2026-10-07). The band has slid up over the held night hero (HeroScroll);
+      // once it has covered it, the band's root is pinned: the title and the deck rise in together, as one piece
+      // (a strong ease-out, no ease-in on an entrance); with the cards fully in place the title leaves, quicker than
+      // it came, and the stack plays. Same on every width. Without JS / reduced motion: the title heads the list
+      // and the cards follow one another.
+      mm.add(MQ.full, () => {
+        if (!band) return;
         const q = gsap.utils.selector(root);
         const deck = q<HTMLElement>("[data-work-deck]")[0];
         const cards = q<HTMLElement>("[data-work-card]");
@@ -82,9 +80,9 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const docEl = document.documentElement;
         const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
         const peek = () => cssPx(deck, "--peek", 48);
-        const radius = cssPx(docEl, "--r-md", 18);
         const DEPTH = 34; // px of depth per step down the stack (the deck has perspective)
-        const HAND = 1.6; // the handoff's share of the pinned timeline, in card steps
+        const HAND = 1.2; // the arrival's share of the pinned timeline, in card steps
+        const enter = "expo.out"; // the strong ease-out of an entrance (≈ cubic-bezier(.23, 1, .32, 1))
 
         // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
         // pin begins exactly as the band has covered the hero
@@ -102,150 +100,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           gsap.set(card.querySelector("[data-work-photos]"), { xPercent: 12 });
           gsap.set(card.querySelector("[data-work-note]"), { y: 24, opacity: 0 });
         });
-        if (lead) gsap.set(lead, { opacity: 0, yPercent: -20 });
 
-        /* ---------- the windows (desktop: the film's windows are on screen) ---------- */
-        // Each window is cut out of the night film (its own lit pixels, framed in lime). While the band slides up
-        // over the held hero the cut-outs stand on it in a fixed layer; once the band is held, each card, already in
-        // its place in the stack, shows only through an opening the size of its window, showing that window; the
-        // opening widens to the whole card around it while the window fades, so the window opens into the card
-        // (the bottom of the stack first, the top card last). Nothing stretches and nothing flies.
-        const boxes = ctx.conditions.desktop ? cards.map((card) => document.querySelector<HTMLElement>(`[data-window="${card.dataset.project}"]`)) : [];
-        const withWindows = boxes.length === n && boxes.every(Boolean);
-        const layer = document.createElement("div");
-        layer.setAttribute("aria-hidden", "true");
-        const cuts = withWindows
-          ? cards.map((_, i) => {
-              const g = document.createElement("div");
-              g.className = styles.cut;
-              g.style.zIndex = String(n - i);
-              layer.append(g);
-              return g;
-            })
-          : [];
-        // Inside each card: the window, at its own place and size (the card itself is clipped to the opening)
-        const lights = withWindows
-          ? cards.map((card) => {
-              const el = document.createElement("span");
-              el.className = styles.cardLight;
-              el.setAttribute("aria-hidden", "true");
-              card.append(el);
-              return el;
-            })
-          : [];
-        if (withWindows) document.body.append(layer);
-        gsap.set(layer, { autoAlpha: 0 });
-
-        // The windows' light, cut from whatever the hero shows (the night film once dusk has fallen)
-        let shots: string[] = [];
-        const shoot = () => {
-          const hero = document.querySelector<HTMLElement>("[data-hero]");
-          const night = hero?.querySelector<HTMLVideoElement>("[data-hero-night-film]");
-          const media: HTMLVideoElement | HTMLImageElement | null | undefined =
-            night && night.readyState >= 2 && Number(getComputedStyle(night).opacity) > 0.5 ? night : hero?.querySelector<HTMLImageElement>("[data-hero-frame] img");
-          if (!media) return;
-          const iw = media instanceof HTMLVideoElement ? media.videoWidth : media.naturalWidth;
-          const ih = media instanceof HTMLVideoElement ? media.videoHeight : media.naturalHeight;
-          if (!iw || !ih) return;
-          const v = media.getBoundingClientRect();
-          const scale = Math.max(v.width / iw, v.height / ih); // object-fit: cover, object-position: 50% 0%
-          const ox = v.left + (v.width - iw * scale) / 2;
-          const oy = v.top;
-          try {
-            shots = boxes.map((box) => {
-              const w = box!.getBoundingClientRect();
-              const sw = w.width / scale;
-              const sh = w.height / scale;
-              const c = document.createElement("canvas");
-              c.width = Math.max(1, Math.round(sw * 2));
-              c.height = Math.max(1, Math.round(sh * 2));
-              c.getContext("2d")?.drawImage(media, (w.left - ox) / scale, (w.top - oy) / scale, sw, sh, 0, 0, c.width, c.height);
-              return c.toDataURL("image/jpeg", 0.9);
-            });
-          } catch {
-            shots = [];
-          }
-          cuts.forEach((g, i) => (g.style.backgroundImage = shots[i] ? `url(${shots[i]})` : ""));
-          lights.forEach((el, i) => (el.style.backgroundImage = shots[i] ? `url(${shots[i]})` : ""));
-        };
-
-        // Where the windows are: the hero is held until the pin below begins, then scrolls away under the band, so
-        // a window's place is its place at that moment (measured now, less the distance scrolled since)
-        let pinStart = 0;
-        const fromRect = (box: HTMLElement) => {
-          const r = box.getBoundingClientRect();
-          const drift = Math.max(0, window.scrollY - pinStart);
-          return { left: r.left, top: r.top + drift, width: r.width, height: r.height };
-        };
-        const OPEN = 0.6; // one card's share of the handoff
-        const STAGGER = 0.12;
-        const openEase = gsap.parseEase("power3.inOut");
-        let covering = false;
-        let hand = 0; // 0..1 through the handoff
-        const draw = () => {
-          if (!withWindows) return;
-          const opening = hand > 0 && hand < 1;
-          gsap.set(layer, { autoAlpha: covering && hand === 0 ? 1 : 0 });
-          gsap.set(deck, { autoAlpha: hand > 0 ? 1 : 0 });
-          boxes.forEach((box) => box && (box.style.visibility = covering || opening ? "hidden" : ""));
-          if (covering && hand === 0) {
-            if (!shots.length) shoot();
-            cuts.forEach((g, i) => {
-              const w = fromRect(boxes[i]!);
-              gsap.set(g, { left: w.left, top: w.top, width: w.width, height: w.height });
-            });
-            return;
-          }
-          cards.forEach((card, i) => {
-            const light = lights[i];
-            if (!opening) {
-              gsap.set(card, { clipPath: "none" });
-              gsap.set(light, { autoAlpha: 0 });
-              return;
-            }
-            const qn = Math.min(1, Math.max(0, (hand - (n - 1 - i) * STAGGER) / OPEN));
-            const e = openEase(qn);
-            const r = card.getBoundingClientRect();
-            const k = r.width / card.offsetWidth || 1; // the stack's depth scales a card: work in its own units
-            const w = fromRect(boxes[i]!);
-            const W = card.offsetWidth;
-            const H = card.offsetHeight;
-            const l0 = (w.left - r.left) / k;
-            const t0 = (w.top - r.top) / k;
-            const ww = w.width / k;
-            const wh = w.height / k;
-            const left = l0 * (1 - e);
-            const top = t0 * (1 - e);
-            const right = (W - l0 - ww) * (1 - e);
-            const bottom = (H - t0 - wh) * (1 - e);
-            const round = 2 + (radius / k - 2) * e;
-            gsap.set(card, { clipPath: qn >= 1 ? "none" : `inset(${top}px ${right}px ${bottom}px ${left}px round ${round}px)` });
-            // The window itself stays where it was, its own size, and fades as the card opens around it
-            gsap.set(light, {
-              autoAlpha: 1 - Math.min(1, Math.max(0, (qn - 0.08) / 0.42)),
-              left: l0,
-              top: t0,
-              width: ww,
-              height: wh,
-            });
-          });
-        };
-        // While the band slides up over the held hero, the windows stand on it, cut out
-        const cover = ScrollTrigger.create({
-          trigger: band,
-          start: "top bottom",
-          end: "top top",
-          invalidateOnRefresh: true,
-          onToggle: (self) => {
-            covering = self.isActive || (self.progress >= 1 && hand === 0);
-            if (self.isActive && self.direction > 0) shots = []; // a fresh cut each time the band comes up
-            draw();
-          },
-          onUpdate: () => draw(),
-        });
-
-        /* ---------- the pinned timeline: handoff, then the stack ---------- */
-        const proxy = { p: 0 };
+        /* ---------- the pinned timeline: arrival, then the stack ---------- */
         const tl = gsap.timeline({
           defaults: { ease: ease.inOut },
           scrollTrigger: {
@@ -255,23 +111,16 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             pin: true,
             scrub: 0.8,
             invalidateOnRefresh: true,
-            onRefresh: (self) => {
-              pinStart = self.start;
-              draw();
-            },
           },
         });
-        // The handoff: title in, the plates fly and land (or, on phones, the deck rises in), title out
-        tl.to(proxy, { p: 1, duration: HAND, ease: "none", onUpdate: () => ((hand = proxy.p), draw()) }, 0);
+        // Title and deck come up together from below, the deck a breath behind the title, and settle
+        const rise = () => window.innerHeight * 0.55;
+        tl.fromTo(deck, { y: rise, opacity: 0 }, { y: 0, opacity: 1, duration: HAND * 0.72, ease: enter }, 0.04);
         if (lead) {
-          // ... and as the windows open into the cards it grows and dissolves towards the viewer
-          tl.to(lead, { opacity: 1, yPercent: -50, duration: 0.3, ease: "power2.out" }, 0).to(
-            lead,
-            { opacity: 0, scale: 1.3, yPercent: -40, duration: HAND * 0.42, ease: "power1.in" },
-            HAND * 0.42,
-          );
+          tl.fromTo(lead, { y: rise, yPercent: -50, opacity: 0 }, { y: 0, yPercent: -50, opacity: 1, duration: HAND * 0.68, ease: enter }, 0)
+            // ... and once the cards are fully in place it leaves, up and out, quicker than it came
+            .to(lead, { y: -24, opacity: 0, duration: HAND * 0.22, ease: "power2.in" }, HAND * 0.76);
         }
-        if (!withWindows) tl.fromTo(deck, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: HAND * 0.6, ease: "power2.out" }, HAND * 0.35);
 
         for (let i = 0; i < n; i++) {
           const at = HAND + i;
@@ -307,13 +156,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         }
 
         return () => {
-          cover.kill();
           tl.scrollTrigger?.kill();
           tl.kill();
-          layer.remove();
-          lights.forEach((el) => el.remove());
-          gsap.set(cards, { clearProps: "clipPath" });
-          boxes.forEach((b) => b && (b.style.visibility = ""));
           root.removeAttribute("data-handoff");
           deck.removeAttribute("data-deck");
           gsap.set(band, { clearProps: "paddingTop" });

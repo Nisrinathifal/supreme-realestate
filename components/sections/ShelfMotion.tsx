@@ -5,8 +5,8 @@ import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * The columns behind the wall rise with the ones in the projects band's foot, column by column, once that band has
- * turned Paper (WorkColumns drives both, so they read as one column; owner, 2026-10-07). The icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
+ * The wall's columns stand tall, up through the projects band's empty foot, and rise one at a time to their full
+ * height once that band has faded to Paper (owner, 2026-10-07). The icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
  * simply scrolls on). Start states are set here: the shelf copies of the icons are hidden and the inline icons
  * visible; each inline icon then travels (x, y, scale) onto its compartment and hands over to the shelf copy.
  * Under prefers-reduced-motion nothing runs and both the sentence icons and the filled shelf are shown.
@@ -19,6 +19,28 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
       setupGsap();
       const root = scope.current!;
       const mm = gsap.matchMedia();
+      mm.add(MQ.full, () => {
+        const section = root.closest<HTMLElement>("[data-shelf]");
+        const columns = section?.querySelector<SVGSVGElement>("[data-shelf-columns]");
+        if (!section || !columns) return;
+        // Every band, both registers, left to right by its place on the wall; they wait for the band above to have
+        // faded to Paper (WorkMotion), then rise one at a time to their full height
+        const bands = Array.from(columns.querySelectorAll<SVGRectElement>("rect")).sort((a, b) => Number(a.getAttribute("x")) - Number(b.getAttribute("x")));
+        gsap.set(bands, { scaleY: 0, transformOrigin: "50% 100%" });
+        const rise = gsap.to(bands, {
+          scaleY: 1,
+          ease: "power2.out",
+          duration: 0.5,
+          stagger: 0.1,
+          scrollTrigger: { trigger: section, start: "top 112%", end: "top 30%", scrub: 0.8, invalidateOnRefresh: true },
+        });
+        return () => {
+          rise.scrollTrigger?.kill();
+          rise.kill();
+          gsap.set(bands, { clearProps: "transform" });
+        };
+      });
+
       mm.add(MQ.full, () => {
         const q = gsap.utils.selector(root);
         const rack = q<HTMLElement>("[data-shelf-rack]")[0];
