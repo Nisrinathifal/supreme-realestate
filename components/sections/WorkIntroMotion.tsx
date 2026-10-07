@@ -121,6 +121,8 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
             gsap.set(el, {
               x: (Math.cos(a + turn) * ring - Math.cos(a)) * rx * k,
               y: (Math.sin(a + turn) * ring - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
+              // and fades as it lags, so nothing is left hanging over the About band that comes up under it
+              autoAlpha: Math.max(0, 1 - lag * 1.8),
             });
             // a slight lean as it goes round, each item out of phase
             gsap.set(inners[i], { scale: size, rotation: 7 * Math.sin(turn * 1.5 + i * 0.9) });
@@ -215,6 +217,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
           offs.forEach((off) => off());
           // never clearProps "all": the items carry React inline positions
           gsap.set([items, inners, q("[data-orbit-tilt]")], { clearProps: "transform" });
+          gsap.set(items, { clearProps: "opacity,visibility" });
           gsap.set(lines, { clearProps: "color" });
           ScrollTrigger.refresh();
         };
