@@ -8,13 +8,14 @@ import { MicroLabel } from "@/components/ui/MicroLabel";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { CompanyDetailsList } from "./CompanyDetailsList";
 import { AboutStoryMotion } from "./AboutStoryMotion";
+import { IdentityCard } from "./IdentityCard";
 import styles from "./AboutStory.module.css";
 
 /**
  * About + company details (owner, 2026-10-07), under the collaboration ring. "From old to valuable", told literally:
  * the company story in five chapters beside one photograph of a featured project's kitchen that renews from the
- * works to the finished room as the chapters are read (AboutStoryMotion). The story ends in the proof: the company
- * details, laid out like a register extract, with a link to check them in the KvK register. Every row shows only
+ * works to the finished room as the chapters are read (AboutStoryMotion). The story ends in the proof: the company's
+ * identity card (IdentityCard, a 3D card the pointer can turn), the remaining details, a link to the KvK register. Every row shows only
  * a verified value (company.json); until the extract arrives a development placeholder says what is missing.
  * Reduced motion and no-JS: the finished room, every chapter in full, the register in place.
  */
@@ -99,29 +100,28 @@ export function AboutStory({ lang }: { lang: Lang }) {
               </ul>
             </div>
 
-            <div className={styles.card} data-register-card>
-              <div className={styles.cardHead}>
-                <span className="t-micro">{r.extract}</span>
-                <span className={styles.cardName}>{company.legalName}</span>
-              </div>
-              <CompanyDetailsList lang={lang} className={styles.cardList} />
-              {has(company.kvk) ? (
-                <a className={styles.verify} href={`https://www.kvk.nl/zoeken/?source=all&q=${encodeURIComponent(company.kvk)}`} target="_blank" rel="noopener noreferrer">
-                  {r.verify}
-                  <ArrowUpRight size={16} weight="light" aria-hidden="true" />
-                </a>
-              ) : (
-                <Placeholder note={r.pending} className={styles.pending} />
-              )}
-              <div className={styles.docs}>
-                <span className="t-micro">{r.documents}</span>
-                <ul className={styles.docList}>
-                  {docs.map((d) => (
-                    <li key={d.key}>
-                      <a href={d.href}>{d.label}</a>
-                    </li>
-                  ))}
-                </ul>
+            <div className={styles.idWrap} data-register-card>
+              <IdentityCard lang={lang} />
+              <div className={styles.idMore}>
+                <CompanyDetailsList lang={lang} exclude={["legalName", "tradeName", "kvk", "vat", "visitingAddress"]} />
+                {has(company.kvk) ? (
+                  <a className={styles.verify} href={`https://www.kvk.nl/zoeken/?source=all&q=${encodeURIComponent(company.kvk)}`} target="_blank" rel="noopener noreferrer">
+                    {r.verify}
+                    <ArrowUpRight size={16} weight="light" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <Placeholder note={r.pending} className={styles.pending} />
+                )}
+                <div className={styles.docs}>
+                  <span className="t-micro">{r.documents}</span>
+                  <ul className={styles.docList}>
+                    {docs.map((d) => (
+                      <li key={d.key}>
+                        <a href={d.href}>{d.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

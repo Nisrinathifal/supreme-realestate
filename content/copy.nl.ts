@@ -78,6 +78,7 @@ export const nl: Copy = {
     verify: draft("Controleer in het KvK-register"),
     documents: draft("Documenten"),
     pending: "Placeholder: KvK-nummer, BTW-nummer, vestigingsadres en contactgegevens volgen uit het KvK-uittreksel.",
+    card: { name: draft("Naam"), form: draft("Rechtsvorm"), formValue: draft("Besloten vennootschap"), activity: draft("Activiteit"), activityValue: draft("Vastgoed"), kvk: "KvK", vat: draft("BTW"), office: draft("Vestiging"), country: draft("Nederland"), label: draft("Identiteitskaart van Supreme Real Estate B.V.") },
   },
   // Steps: owner concept 2026-10-01, NL draft until approved.
   steps: {

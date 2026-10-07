@@ -3,21 +3,23 @@ import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import styles from "./CompanyDetailsList.module.css";
 
-type Row = { key: string; value: React.ReactNode };
+type Field = keyof ReturnType<typeof getCopy>["companyKeys"];
+type Row = { id: Field; key: string; value: React.ReactNode };
 
 /**
  * Definition list of verified company details (DESIGN §9.7). Rows without a verified value are
  * omitted entirely. Key order follows the spec.
  */
-export function CompanyDetailsList({ lang, showManagement = true, className }: { lang: Lang; showManagement?: boolean; className?: string }) {
+export function CompanyDetailsList({ lang, showManagement = true, exclude = [], className }: { lang: Lang; showManagement?: boolean; /** Rows shown elsewhere (the identity card). */ exclude?: Field[]; className?: string }) {
   const c = getCopy(lang);
   const k = c.companyKeys;
   const rows: Row[] = [];
-  if (has(company.legalName)) rows.push({ key: k.legalName, value: company.legalName });
-  if (has(company.tradeName)) rows.push({ key: k.tradeName, value: company.tradeName });
-  if (has(company.kvk)) rows.push({ key: k.kvk, value: company.kvk });
+  if (has(company.legalName)) rows.push({ id: "legalName", key: k.legalName, value: company.legalName });
+  if (has(company.tradeName)) rows.push({ id: "tradeName", key: k.tradeName, value: company.tradeName });
+  if (has(company.kvk)) rows.push({ id: "kvk", key: k.kvk, value: company.kvk });
   if (hasAddress(company.visitingAddress)) {
     rows.push({
+      id: "visitingAddress",
       key: k.visitingAddress,
       value: formatAddressLines(company.visitingAddress).map((l, i) => (
         <span key={i} className={styles.line}>
@@ -28,6 +30,7 @@ export function CompanyDetailsList({ lang, showManagement = true, className }: {
   }
   if (postalDiffers()) {
     rows.push({
+      id: "postalAddress",
       key: k.postalAddress,
       value: formatAddressLines(company.postalAddress).map((l, i) => (
         <span key={i} className={styles.line}>
@@ -36,12 +39,13 @@ export function CompanyDetailsList({ lang, showManagement = true, className }: {
       )),
     });
   }
-  if (has(company.vat)) rows.push({ key: k.vat, value: company.vat });
-  if (has(company.email)) rows.push({ key: k.email, value: <a href={`mailto:${company.email}`}>{company.email}</a> });
-  if (has(company.phone)) rows.push({ key: k.phone, value: <a href={telHref(company.phone)}>{company.phone}</a> });
-  if (has(company.availability[lang])) rows.push({ key: k.availability, value: company.availability[lang] });
+  if (has(company.vat)) rows.push({ id: "vat", key: k.vat, value: company.vat });
+  if (has(company.email)) rows.push({ id: "email", key: k.email, value: <a href={`mailto:${company.email}`}>{company.email}</a> });
+  if (has(company.phone)) rows.push({ id: "phone", key: k.phone, value: <a href={telHref(company.phone)}>{company.phone}</a> });
+  if (has(company.availability[lang])) rows.push({ id: "availability", key: k.availability, value: company.availability[lang] });
   if (showManagement && company.management.length > 0) {
     rows.push({
+      id: "management",
       key: k.management,
       value: company.management.map((p, i) => (
         <span key={i} className={styles.line}>
@@ -53,6 +57,7 @@ export function CompanyDetailsList({ lang, showManagement = true, className }: {
   }
   if (has(company.linkedin)) {
     rows.push({
+      id: "linkedin",
       key: k.linkedin,
       value: (
         <a href={company.linkedin} rel="noopener noreferrer" target="_blank">
@@ -61,11 +66,12 @@ export function CompanyDetailsList({ lang, showManagement = true, className }: {
       ),
     });
   }
-  if (rows.length === 0) return null;
+  const shown = rows.filter((r) => !exclude.includes(r.id));
+  if (shown.length === 0 && !has(company.emailLegal)) return null;
   return (
     <div className={[styles.wrap, className].filter(Boolean).join(" ")}>
       <dl className={styles.list}>
-        {rows.map((r) => (
+        {shown.map((r) => (
           <div key={r.key} className={styles.row}>
             <dt className="t-micro">{r.key}</dt>
             <dd className={`t-legal ${styles.value}`}>{r.value}</dd>

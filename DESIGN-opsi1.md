@@ -141,6 +141,12 @@ five chapters beside one held photograph (Prinsen Bolwerk's kitchen) that renews
 finished room as the chapters are read, the chapter at the reading line at full strength; then the company details as
 a register extract (rows written in from the left), proof lines that show only with verified data, a link to the KvK
 register once the number exists, the legal pages. `#about` points to it (the shelf is `#potential`).
+The company details lead with an **identity card** (owner, 2026-10-07): ID-1 proportions on Canal ink, the light
+lockup, the lime chip (a signal on dark), a canal-house drawing in the roof frame as portrait, only verified fields
+(legal form and activity derived), the columns as security print, the S mark as watermark and a machine-readable zone.
+It turns towards the pointer in 3D with a holographic sheen and a spring back (`IdentityTilt`): an owner-requested
+exception to REFERENCE-MOTION §9's "no tilt", for fine pointers with motion on only; touch and reduced motion get the
+flat card.
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 
