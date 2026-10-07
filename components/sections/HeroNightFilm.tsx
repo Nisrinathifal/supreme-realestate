@@ -23,8 +23,9 @@ export function HeroNightFilm({ film }: { film: VideoAsset }) {
     const mobile = window.matchMedia("(max-width: 980px)").matches;
     const chosen = (mobile && film.mp4Mobile) || film.mp4 || film.webm;
     if (chosen) v.src = chosen;
+    v.defaultPlaybackRate = v.playbackRate = film.rate ?? 1; // the same pace as the day film; the default survives HeroScroll's load()
     gsap.set(v, { opacity: 0 });
-  }, [mounted, film.mp4, film.mp4Mobile, film.webm]);
+  }, [mounted, film.mp4, film.mp4Mobile, film.webm, film.rate]);
   if (!mounted) return null;
   return <video ref={ref} className={styles.nightFilm} data-hero-night-film muted loop playsInline preload="none" aria-hidden="true" tabIndex={-1} />;
 }

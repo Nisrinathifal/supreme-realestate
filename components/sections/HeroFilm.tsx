@@ -44,7 +44,7 @@ export function HeroFilm({ film, labels }: Props) {
       v.src = chosen;
       v.load();
     }
-    v.playbackRate = film.rate ?? 1;
+    v.defaultPlaybackRate = v.playbackRate = film.rate ?? 1; // the default survives a later load()
     // Show the first frame (the house as a shell) as soon as it is decoded: the intro grows this frame
     const reveal = () => setRevealed(true);
     if (v.readyState >= 2) reveal();

@@ -104,6 +104,7 @@ export const heroFilm: VideoAsset = {
   mp4Mobile: "/media/hero-film-03-720.mp4",
   poster: heroStill,
   loop: true,
+  rate: 0.65, // a canal boat's own pace (owner, 2026-10-07: slower, realistic); the night film keeps the same pace
   subject: heroBoat as FilmSubject, // the tour boat; the headline sits behind it
 };
 
@@ -120,6 +121,7 @@ export const heroNightFilm: VideoAsset = {
   mp4Mobile: "/media/hero-film-04-720.mp4",
   poster: heroStill,
   loop: true,
+  rate: 0.65,
 };
 
 /**
