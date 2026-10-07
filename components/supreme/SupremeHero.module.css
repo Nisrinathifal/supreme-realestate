@@ -1,0 +1,64 @@
+/* The About band with the 3D model. Static (phones, reduced motion, no WebGL, no JS): title, the SVG elevation, the
+   stages as a list. Live ([data-live]): one pinned viewport, the canvas under the bar, stage panels by turns. */
+.band { --bar: calc(var(--header-h) + var(--s-3)); --panel: min(calc(34vw - 2 * var(--gutter)), 440px); position: relative; z-index: 3; color: var(--ink); background: var(--bg); } /* above the collaboration ring (z 2) */
+
+.stage { display: flex; flex-direction: column; gap: var(--s-8); padding: var(--section-y) var(--gutter); max-width: calc(var(--maxw) + 2 * var(--gutter)); margin: 0 auto; }
+.head { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
+.label { color: var(--muted); }
+.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display); line-height: 0.95; letter-spacing: -0.035em; text-wrap: balance; }
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; margin-right: 0.22em; }
+.mask:last-child { margin-right: 0; }
+.mask > span { display: inline-block; }
+
+/* the picture: the SVG elevation on Stone (static), the canvas (live) */
+.view { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: var(--alt); overflow: hidden; }
+.view canvas { display: block; }
+.elevation { width: auto; height: 86%; max-width: 90%; }
+.svgWall { stroke: var(--scene-graphite); stroke-width: 0.09; fill: color-mix(in srgb, var(--scene-brick) 14%, transparent); }
+.svgWindow { stroke: var(--scene-graphite); stroke-width: 0.06; fill: var(--bg); }
+.svgLevel { stroke: var(--scene-teal); stroke-width: 0.03; stroke-dasharray: 0.25 0.2; }
+.svgDim { stroke: var(--scene-teal); stroke-width: 0.05; }
+.svgGround { stroke: var(--scene-graphite); stroke-width: 0.08; }
+
+.stages { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s-7) var(--grid-gap); }
+.stageItem { position: relative; display: flex; flex-direction: column; gap: var(--s-3); }
+.index { color: var(--muted); }
+.stageTitle { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.stageBody { margin: 0; max-width: 40ch; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.close { margin: var(--s-3) 0 0; max-width: 40ch; padding-top: var(--s-4); border-top: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.6; color: var(--ink); }
+.rail, .dusk { display: none; }
+
+/* ---------- live ---------- */
+.band[data-live] .stage { position: relative; display: block; max-width: none; height: 100svh; padding: 0; overflow: hidden; }
+.band[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-5)); padding: 0 var(--gutter); z-index: 2; }
+.band[data-live] .view { position: absolute; left: 0; right: 0; top: var(--bar); bottom: 0; aspect-ratio: auto; display: block; background: var(--bg); z-index: 1; will-change: transform; }
+.band[data-live] .stages { display: block; }
+.band[data-live] .stageItem { position: absolute; top: var(--bar); bottom: 0; width: var(--panel); justify-content: center; gap: var(--s-4); z-index: 2; }
+/* a soft Paper veil behind each panel, so the text reads over the table */
+.band[data-live] .stageItem::before {
+  content: ""; position: absolute; top: 0; bottom: 0; width: calc(var(--panel) + 2 * var(--gutter) + 8vw); z-index: -1; pointer-events: none;
+}
+.band[data-live] .left { left: var(--gutter); }
+.band[data-live] .left::before { left: calc(-1 * var(--gutter)); background: linear-gradient(90deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 88%, transparent) 55%, transparent 100%); }
+.band[data-live] .right { right: var(--gutter); }
+.band[data-live] .right::before { right: calc(-1 * var(--gutter)); background: linear-gradient(270deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 88%, transparent) 55%, transparent 100%); }
+.band[data-live] .stageTitle { font-size: clamp(32px, 3.1vw, 54px); line-height: 1.02; }
+.band[data-live] .stageBody { font-size: var(--fs-lead); }
+
+/* the six-stage rail at the foot */
+.band[data-live] .rail {
+  position: absolute; left: 50%; bottom: var(--s-6); z-index: 2; transform: translateX(-50%);
+  display: flex; gap: var(--s-5); list-style: none; margin: 0; padding: var(--s-2) var(--s-4); border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg) 82%, transparent); box-shadow: inset 0 0 0 1px var(--line);
+}
+.dot { display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-micro); letter-spacing: 0.04em; color: var(--muted); transition: color 300ms var(--ease); }
+.dot::before { content: ""; width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--line); transition: background-color 300ms var(--ease); }
+.dot[data-active] { color: var(--ink); }
+.dot[data-active]::before { background: var(--ink); }
+.band[data-live] .dusk { display: block; position: absolute; inset: 0; z-index: 3; background: var(--band-dark); pointer-events: none; }
+
+@media (max-width: 980px) {
+  .title { font-size: var(--fs-h2); }
+  .view { aspect-ratio: 4 / 5; }
+  .elevation { height: 88%; }
+}

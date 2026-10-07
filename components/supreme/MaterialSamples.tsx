@@ -1,0 +1,116 @@
+"use client";
+
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import type { Color, Group, Texture } from "three";
+import { HOUSE } from "@/lib/supreme/buildingStates";
+import { brickTexture, color, concreteTexture, documentTexture, rulerTexture, woodTexture } from "@/lib/supreme/materials";
+import type { SceneState } from "@/lib/supreme/sceneTimeline";
+
+/** Three street trees on the quay: trunk and a low-poly crown; they grow in at delivery. */
+const TREES: [number, number, number][] = [
+  [-12, 0, HOUSE.depth / 2 + 5.4],
+  [-7.5, 0, HOUSE.depth / 2 + 5.6],
+  [9, 0, HOUSE.depth / 2 + 5.3],
+]; // on the quay beside the house, clear of the front when it is folded down
+
+/**
+ * The developer's desk around the model: the canal in front of the quay, material samples (brick, oak, concrete,
+ * teal), a pencil, a ruler and a stack of documents, and the street trees. Static, except the trees, which grow to
+ * full size at delivery.
+ */
+export function MaterialSamples({ state }: { state: SceneState }) {
+  const trees = useRef<(Group | null)[]>([]);
+  const t = useMemo(
+    () => ({
+      brick: brickTexture(),
+      oak: woodTexture(),
+      concrete: concreteTexture(),
+      ruler: rulerTexture(),
+      docs: [documentTexture(3), documentTexture(5), documentTexture(9)],
+      c: {
+        brick: color("--scene-brick"),
+        oak: color("--scene-oak"),
+        concrete: color("--scene-concrete"),
+        teal: color("--scene-teal"),
+        ink: color("--ink"),
+        paper: color("--bg"),
+        leaf: color("--inv-surface"),
+        graphite: color("--scene-graphite"),
+      },
+    }),
+    [],
+  );
+
+  useFrame(() => {
+    trees.current.forEach((g, i) => {
+      if (!g) return;
+      const k = Math.min(1, Math.max(0, state.trees * 1.2 - i * 0.08));
+      g.scale.setScalar(0.35 + 0.65 * k);
+    });
+  });
+
+  const samples: { pos: [number, number, number]; map: Texture | null; col: Color }[] = [
+    { pos: [6.2, 0, 12.8], map: t.brick, col: t.c.brick },
+    { pos: [8.1, 0, 13.1], map: t.oak, col: t.c.oak },
+    { pos: [10.0, 0, 12.9], map: t.concrete, col: t.c.concrete },
+    { pos: [11.9, 0, 13.2], map: null, col: t.c.teal },
+  ];
+
+  return (
+    <group>
+      {/* the canal in front of the quay: a band of water tone drawn on the site plan */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, HOUSE.depth / 2 + 9]} receiveShadow>
+        <planeGeometry args={[48, 8]} />
+        <meshStandardMaterial color={t.c.teal} transparent opacity={0.16} roughness={0.6} />
+      </mesh>
+
+      {samples.map((s, i) => (
+        <mesh key={i} position={[s.pos[0], 0.07, s.pos[2]]} rotation={[0, (i - 1.5) * 0.06, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1.6, 0.14, 1.6]} />
+          <meshStandardMaterial map={s.map} color={s.col} roughness={0.85} />
+        </mesh>
+      ))}
+
+      {/* pencil: graphite hexagon body, sharpened tip */}
+      <group position={[3.6, 0.13, 14.6]} rotation={[0, 0.5, 0]}>
+        <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.13, 0.13, 5.2, 6]} />
+          <meshStandardMaterial color={t.c.graphite} roughness={0.6} />
+        </mesh>
+        <mesh position={[2.85, 0, 0]} rotation={[0, 0, -Math.PI / 2]} castShadow>
+          <coneGeometry args={[0.13, 0.5, 6]} />
+          <meshStandardMaterial color={t.c.oak} roughness={0.7} />
+        </mesh>
+      </group>
+
+      {/* ruler */}
+      <mesh position={[-7.5, 0.04, 13.6]} rotation={[0, -0.08, 0]} castShadow receiveShadow>
+        <boxGeometry args={[9, 0.08, 1.1]} />
+        <meshStandardMaterial map={t.ruler} roughness={0.5} />
+      </mesh>
+
+      {/* a stack of property documents */}
+      {t.docs.map((map, i) => (
+        <mesh key={i} position={[-14 + i * 0.25, 0.03 + i * 0.012, -7 - i * 0.2]} rotation={[-Math.PI / 2, 0, 0.12 - i * 0.09]} receiveShadow castShadow>
+          <planeGeometry args={[6, 7.8]} />
+          <meshStandardMaterial map={map} roughness={1} />
+        </mesh>
+      ))}
+
+      {/* street trees */}
+      {TREES.map((p, i) => (
+        <group key={i} position={p} ref={(el) => void (trees.current[i] = el)}>
+          <mesh position={[0, 1.1, 0]} castShadow>
+            <cylinderGeometry args={[0.12, 0.16, 2.2, 6]} />
+            <meshStandardMaterial color={t.c.graphite} roughness={0.9} />
+          </mesh>
+          <mesh position={[0, 3.1, 0]} castShadow>
+            <icosahedronGeometry args={[1.45, 1]} />
+            <meshStandardMaterial color={t.c.leaf} roughness={0.9} flatShading />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}

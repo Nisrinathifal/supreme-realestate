@@ -66,6 +66,14 @@ export const nl: Copy = {
       { name: draft("Oplevering"), body: draft("Van aankoop, ontwerp en vergunning tot installatie en afbouw: elke stap in eigen hand. Na enkele weken verbouwen staat er een sleutelklaar appartement, en zo krijgt de regio er steeds weer een woning bij.") },
     ],
     close: draft("We staan open voor samenwerking met vakmensen, makelaars en gemeenten die dezelfde ambitie delen."),
+    stages: [
+      { label: draft("Bestaand"), title: draft("Bestaand vastgoed."), chapter: 0 },
+      { label: draft("Potentie"), title: draft("Potentie, klaar om ontsloten te worden."), chapter: 1 },
+      { label: draft("Herontwikkeling"), title: draft("Zorgvuldig getransformeerd."), chapter: null },
+      { label: draft("Ontwerp"), title: draft("Ontworpen rond de toekomstige bewoner."), chapter: 2 },
+      { label: draft("Realisatie"), title: draft("Van eerste schets tot laatste afwerking."), chapter: 3 },
+      { label: draft("Oplevering"), title: draft("Weer een woning erbij in de regio."), chapter: 4 },
+    ],
   },
   register: {
     label: draft("Bedrijf"),
