@@ -1,64 +1,49 @@
-/* About: Paper, as the band above settles into it */
-.about { position: relative; color: var(--ink); background: var(--bg); }
-.inner { display: flex; flex-direction: column; padding-top: var(--section-y); padding-bottom: var(--section-y); }
+/* About: a continuous camera. Static (phones, reduced motion, no JS): title, the frame (its last scene, the finished
+   kitchen, on top), the chapters in a grid. Live ([data-live], wide screens with motion): one pinned viewport. */
+.about { --dock: 34vw; position: relative; color: var(--ink); background: var(--bg); }
 
-/* ---------- head: the brand promise, large, in word masks ---------- */
-.head { display: flex; flex-direction: column; gap: var(--s-5); margin-bottom: var(--s-9); }
+.stage { display: flex; flex-direction: column; gap: var(--s-8); padding: var(--section-y) var(--gutter); max-width: calc(var(--maxw) + 2 * var(--gutter)); margin: 0 auto; }
+.head { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
 .label { color: var(--muted); }
-.title {
-  margin: 0; max-width: 12ch; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: 1;
-  letter-spacing: -0.03em; text-wrap: balance;
-}
-.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; margin-right: 0.24em; }
+.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display); line-height: 0.95; letter-spacing: -0.035em; text-wrap: balance; }
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; margin-right: 0.22em; }
 .mask:last-child { margin-right: 0; }
 .mask > span { display: inline-block; }
 
-/* ---------- the story: one photograph held while the chapters pass ---------- */
-.story { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; }
-.aside { grid-column: 1 / 7; align-self: stretch; }
-.sticky { position: sticky; top: calc(var(--header-h) + var(--s-6)); display: flex; flex-direction: column; gap: var(--s-5); }
-.chapters { grid-column: 8 / 13; display: flex; flex-direction: column; }
+/* The frame and its scenes, stacked; the last (finished) is on top */
+.frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band-dark); }
+.camera { position: absolute; inset: 0; }
+.scene { position: absolute; inset: 0; }
+.drawing { background: var(--band-dark); }
+.sketches { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; gap: 4%; padding: 6% 8% 0; }
+.sketch { width: 38%; max-width: 520px; }
+.sketch img { display: block; width: 100%; height: auto; }
+/* The darkening into the letter band; none at rest */
+.dusk { position: absolute; inset: 0; background: var(--band-dark); pointer-events: none; display: none; }
 
-/* --wipe 0–100: how much of the finished room shows (100 without motion; AboutStoryMotion scrubs it) */
-.frame { --wipe: 100; position: relative; margin: 0; width: min(100%, 64svh); aspect-ratio: 1; overflow: hidden; background: var(--alt); }
-.layer { position: absolute; inset: 0; }
-.after { clip-path: inset(0 calc(100% - var(--wipe) * 1%) 0 0); }
-.seam {
-  position: absolute; top: 0; bottom: 0; left: calc(var(--wipe) * 1%); width: 2px; margin-left: -1px;
-  background: var(--on-media); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent);
+.chapters { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s-7) var(--grid-gap); }
+.chapter { display: flex; flex-direction: column; gap: var(--s-3); }
+.index { color: var(--muted); }
+.chapterName { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: 1.05; letter-spacing: -0.02em; }
+.chapterBody { margin: 0; max-width: 40ch; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.close { margin: var(--s-3) 0 0; max-width: 40ch; padding-top: var(--s-4); border-top: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.6; color: var(--ink); }
+
+/* ---------- live: the camera run ---------- */
+.about[data-live] .stage { position: relative; display: block; max-width: none; height: 100svh; padding: 0; overflow: hidden; }
+.about[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-5)); padding: 0 var(--gutter); z-index: 2; }
+.about[data-live] .frame { position: absolute; inset: 0; aspect-ratio: auto; z-index: 1; will-change: clip-path; }
+.about[data-live] .camera { will-change: transform; }
+.about[data-live] .dusk { display: block; }
+.about[data-live] .chapters { display: block; }
+.about[data-live] .chapter {
+  position: absolute; top: 0; bottom: 0; width: calc(var(--dock) - 2 * var(--gutter)); max-width: 440px; justify-content: center; z-index: 2; gap: var(--s-4);
 }
-.frame:not([data-phase]) .seam { display: none; } /* no seam on the finished room at rest */
-.tags { position: absolute; left: var(--s-4); bottom: var(--s-4); }
-.tags > span {
-  display: inline-block; padding: var(--s-1) var(--s-3); border-radius: var(--r-pill); font-size: var(--fs-micro); font-weight: 500;
-  letter-spacing: 0.04em; text-transform: uppercase; color: var(--on-media); background: color-mix(in srgb, var(--inv-bg) 55%, transparent);
-  -webkit-backdrop-filter: blur(var(--blur)); backdrop-filter: blur(var(--blur));
-}
-.tags > .tagBefore { display: none; }
-.frame[data-phase="before"] .tags > .tagBefore { display: inline-block; }
-.frame[data-phase="before"] .tags > .tagAfter { display: none; }
-
-/* The chapters as stops under the photograph: the one being read in ink */
-.rail { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); width: min(100%, 64svh); }
-.stop { font-size: var(--fs-ui); color: var(--muted); transition: color 300ms var(--ease); }
-.stop::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: var(--s-2); border-radius: var(--r-pill); background: var(--line); vertical-align: 0.15em; transition: background-color 300ms var(--ease); }
-.stop[data-active] { color: var(--ink); }
-.stop[data-active]::before { background: var(--ink); }
-
-.chapter { display: flex; flex-direction: column; justify-content: center; gap: var(--s-4); min-height: 52svh; transition: opacity 400ms var(--ease); }
-.chapterName { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: 1.1; letter-spacing: -0.02em; }
-.chapterBody { margin: 0; max-width: 40ch; font-size: var(--fs-lead); line-height: 1.6; color: var(--muted); text-wrap: pretty; }
-/* With the story running (desktop, motion on) only the chapter being read is at full strength */
-.about[data-story-live] .chapter { opacity: 0.3; }
-.about[data-story-live] .chapter[data-active] { opacity: 1; }
-.close { margin: var(--s-7) 0 0; max-width: 40ch; padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: var(--fs-body); line-height: 1.6; color: var(--ink); }
+.about[data-live] .left { left: var(--gutter); }
+.about[data-live] .right { right: var(--gutter); }
+.about[data-live] .chapterName { font-size: clamp(36px, 3.6vw, 64px); line-height: 1; }
+.about[data-live] .chapterBody { font-size: var(--fs-lead); }
 
 @media (max-width: 980px) {
-  .head { margin-bottom: var(--s-7); }
-  .aside, .chapters { grid-column: 1 / -1; }
-  .sticky { position: static; }
-  .frame, .rail { width: 100%; }
-  .rail { display: none; }
-  .chapters { margin-top: var(--s-7); gap: var(--s-7); }
-  .chapter { min-height: 0; }
+  .title { font-size: var(--fs-h2); }
+  .frame { aspect-ratio: 4 / 3; }
 }

@@ -136,10 +136,13 @@ softly over the dark band's foot (Shelf `[data-dawn]`) and dusk falls at the wal
 The project page follows the same system: a Paper body (no Stone), its dark bands (before/after, other projects) on
 `--band-dark`; a chapter under a statement (the outcome, our approach) is the clear second level: hairline, name at
 `--fs-h3`, text at lead size.
-Homepage About (2026-10-07), under the collaboration ring, on Paper: the brand promise as title; the company story in
-five chapters beside one held photograph (Prinsen Bolwerk's kitchen) that renews under a seam from the works to the
-finished room as the chapters are read, the chapter at the reading line at full strength; then the company details
-(below). `#about` points to it (the shelf is `#potential`); `#company` to the letter band.
+Homepage About (2026-10-07), under the collaboration ring, on Paper, after the "design at the speed of thought" run
+of illoca.unseen.co: one continuous camera. The brand promise large over a wide frame; pinned, the frame opens to the
+view (always under the bar) and docks right and left by turns with a chapter beside it, its scene changing without a
+cut while the camera keeps pushing in: the city's gables (why), a floor stripped back (what we do), the line drawings
+on the dark ground (design), the kitchen during the works (realisation), the same kitchen finished (delivery). At the
+end it fills the view and darkens into the letter band. Phones, reduced motion, no JS: title, finished kitchen, chapters.
+`#about` points to it (the shelf is `#potential`); `#company` to the letter band.
 The company details follow in their own dark band as a **letter in an envelope** (owner, 2026-10-07, after the
 "open letter" band of illoca.unseen.co): title at the top, the shelf's four 3D icons around, a kraft envelope (Stone
 mixed with the window light, a lime seal with the site logo's roof-S mark) at the foot of the view. Pinned, the letter rises out of the

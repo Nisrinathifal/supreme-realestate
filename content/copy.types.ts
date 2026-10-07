@@ -38,8 +38,6 @@ export type Copy = {
     title: string;
     chapters: { name: string; body: string }[];
     close: string;
-    /** Tags on the photograph that renews as the story is read. */
-    frame: { before: string; after: string };
   };
   /** Company details band: the letter that comes out of the envelope. */
   register: {

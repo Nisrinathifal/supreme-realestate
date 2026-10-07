@@ -66,7 +66,6 @@ export const en: Copy = {
       { name: draft("Delivery"), body: draft("From purchase, design and permit to installation and finishing: every step in our own hands. After a few weeks of building work a turnkey apartment stands ready, and the region gains one more home.") },
     ],
     close: draft("We are open to working with professionals, brokers and municipalities who share the same ambition."),
-    frame: { before: draft("During the works"), after: draft("Delivered") },
   },
   register: {
     label: draft("Company"),
