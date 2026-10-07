@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supreme Logo Pack</title>
+<style>
+  :root {
+    --page: #F4F3EF; --panel: #FFFFFF; --text: #1A201D; --muted: #5B625D; --line: #E2E3DC; --focus: #1A201D;
+    --radius: 12px; --gap: 16px;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #121614; --panel: #1C2220; --text: #F1F1EC; --muted: #A3AAA5; --line: #2E3632; --focus: #F1F1EC; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); }
+  header, main { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 32px; padding-bottom: 8px; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  main { display: grid; grid-template-columns: 300px 1fr; gap: 24px; padding-top: 24px; padding-bottom: 48px; align-items: start; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .controls { position: sticky; top: 16px; display: grid; gap: 18px; }
+  @media (max-width: 860px) { .controls { position: static; } }
+  .label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .group { display: grid; grid-template-columns: 88px 1fr; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 13px; }
+  .group .name { color: var(--muted); }
+  .dots { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,.12); }
+  .note { font-size: 12px; color: var(--muted); margin: 6px 0 0; line-height: 1.4; }
+  button, .chip { font: inherit; font-size: 13px; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  button[aria-pressed="true"] { background: var(--text); color: var(--panel); border-color: var(--text); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .swatch { display: grid; grid-template-columns: 36px 1fr 92px; gap: 10px; align-items: center; margin-bottom: 8px; font-size: 14px; }
+  .swatch input[type=color] { width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: none; cursor: pointer; }
+  .swatch input[type=text] { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; width: 100%; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--text); text-transform: uppercase; }
+  .check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+  pre { margin: 0; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--page); border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow-x: auto; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+  .card.wide { grid-column: 1 / -1; }
+  .stage { display: grid; place-items: center; padding: 36px 24px; min-height: 260px; transition: background-color .2s; }
+  .stage svg { width: 100%; height: auto; max-height: 260px; }
+  .card.wide .stage svg { max-width: 640px; max-height: 180px; }
+  .card[data-layout="mark"] .stage svg { max-width: 180px; }
+  .card[data-layout="stacked"] .stage svg, .card[data-layout="wordmark"] .stage svg { max-width: 300px; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); font-size: 13px; }
+  .bar .actions { display: flex; gap: 6px; }
+  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--panel); padding: 8px 14px; border-radius: 999px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Logo pack Supreme Real Estate</h1>
+  <p>Pilih palet atau warna sendiri. Unduh tiap varian sebagai SVG atau PNG (2048 px).</p>
+</header>
+<main>
+  <aside class="controls panel" aria-label="Warna">
+    <div>
+      <p class="label">Palet warna</p>
+      <div id="presets"></div>
+      <p class="note" id="paletteNote"></p>
+    </div>
+    <div>
+      <p class="label">Bentuk</p>
+      <div class="chips" id="variants"></div>
+    </div>
+    <div>
+      <p class="label">Gaya</p>
+      <div class="chips" id="styles">
+        <button data-style="flat">Flat</button>
+        <button data-style="gradient">Gradasi</button>
+        <button data-style="mono">Mono</button>
+      </div>
+    </div>
+    <div id="swatches">
+      <p class="label">Warna</p>
+    </div>
+    <label class="check"><input type="checkbox" id="withBg"> Sertakan latar saat mengunduh</label>
+    <div>
+      <p class="label">CSS (untuk svg/web/*.svg inline)</p>
+      <pre id="css"></pre>
+      <div style="margin-top:8px"><button id="copyCss">Salin CSS</button></div>
+    </div>
+  </aside>
+  <section class="grid" id="previews" aria-label="Pratinjau"></section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const GLYPHS = {"medium":{"A":{"d":"M3.31 100.00L43.95 -0.86L59.08 -0.86L99.42 100.00L80.12 100.00L72.19 79.47L30.12 79.47L22.26 100.00L3.31 100.00ZM35.88 64.34L66.57 64.34L51.30 24.28L35.88 64.34Z","adv":102.67},"E":{"d":"M10.81 100.00L10.81 -0.86L79.90 -0.86L79.90 15.06L28.89 15.06L28.89 40.78L75.72 40.78L75.72 56.12L28.89 56.12L28.89 84.01L80.62 84.01L80.62 100.00L10.81 100.00Z","adv":86.82},"L":{"d":"M10.81 100.00L10.81 -0.86L28.89 -0.86L28.89 83.86L76.08 83.86L76.08 100.00L10.81 100.00Z","adv":80.19},"M":{"d":"M10.81 100.00L10.81 -0.86L23.63 -0.86L61.17 59.37L98.63 -0.86L111.53 -0.86L111.53 100.00L93.44 100.00L93.44 36.67L67.29 78.82L55.04 78.82L28.82 36.67L28.82 100.00L10.81 100.00Z","adv":122.26},"P":{"d":"M10.81 100.00L10.81 -0.86L50.65 -0.86C68.85 -0.86 83.93 11.81 83.93 30.55C83.93 49.32 68.90 62.03 50.65 62.03L28.89 62.03L28.89 100.00L10.81 100.00ZM48.56 13.83L28.89 13.83L28.89 47.33L48.56 47.33C58.37 47.33 65.85 40.48 65.85 30.55C65.85 20.64 58.32 13.83 48.56 13.83Z","adv":88.9},"R":{"d":"M10.81 100.00L10.81 -0.86L49.93 -0.86C66.99 -0.86 82.56 10.10 82.56 28.24C82.56 44.33 70.45 55.15 55.04 56.84L89.27 100.00L67.29 100.00L34.51 57.28L28.89 57.28L28.89 100.00L10.81 100.00ZM48.41 13.83L28.89 13.83L28.89 43.23L48.27 43.23C57.27 43.23 64.48 38.01 64.48 28.53C64.48 19.35 57.15 13.83 48.41 13.83Z","adv":92.36},"S":{"d":"M39.99 101.51C25.47 101.51 12.72 96.11 3.46 84.80L15.42 72.91C21.80 81.11 30.50 85.52 40.92 85.52C48.57 85.52 58.36 82.55 58.36 73.34C58.36 49.05 10.16 58.11 10.16 26.08C10.16 7.44 26.62 -2.38 43.73 -2.38C55.83 -2.38 67.93 2.24 75.94 11.53L63.98 23.41C58.49 17.40 51.65 13.54 43.37 13.54C36.40 13.54 28.17 16.34 28.17 24.57C28.17 47.28 76.44 39.61 76.44 71.83C76.44 92.33 58.43 101.51 39.99 101.51Z","adv":81.99},"T":{"d":"M36.53 100.00L36.53 15.20L3.60 15.20L3.60 -0.86L87.46 -0.86L87.46 15.20L54.61 15.20L54.61 100.00L36.53 100.00Z","adv":91.07},"U":{"d":"M50.00 101.51C27.31 101.51 9.44 84.29 9.44 61.46L9.44 -0.86L27.59 -0.86L27.59 61.96C27.59 74.85 36.97 84.73 50.00 84.73C63.00 84.73 72.19 74.96 72.19 62.10L72.19 -0.86L90.42 -0.86L90.42 61.60C90.42 84.46 72.71 101.51 50.00 101.51Z","adv":99.78}},"regular":{"A":{"d":"M4.47 100.00L45.39 0.00L55.19 0.00L95.97 100.00L81.27 100.00L72.19 77.38L27.81 77.38L18.88 100.00L4.47 100.00ZM32.56 65.56L67.58 65.56L50.14 21.76L32.56 65.56Z","adv":100.29},"E":{"d":"M11.82 100.00L11.82 0.00L77.67 0.00L77.67 12.39L25.36 12.39L25.36 42.94L73.63 42.94L73.63 54.76L25.36 54.76L25.36 87.61L78.39 87.61L78.39 100.00L11.82 100.00Z","adv":85.01},"L":{"d":"M11.82 100.00L11.82 0.00L25.36 0.00L25.36 87.61L74.64 87.61L74.64 100.00L11.82 100.00Z","adv":79.54},"M":{"d":"M11.82 100.00L11.82 0.00L21.33 0.00L60.52 64.41L99.57 0.00L109.08 0.00L109.08 100.00L95.53 100.00L95.53 29.68L65.27 79.54L55.76 79.54L25.36 29.68L25.36 100.00L11.82 100.00Z","adv":120.89},"P":{"d":"M11.82 100.00L11.82 0.00L48.99 0.00C66.67 0.00 81.27 12.36 81.27 30.55C81.27 48.73 66.67 61.10 48.99 61.10L25.36 61.10L25.36 100.00L11.82 100.00ZM48.13 11.82L25.36 11.82L25.36 49.28L48.13 49.28C59.10 49.28 67.58 41.72 67.58 30.55C67.58 19.37 59.10 11.82 48.13 11.82Z","adv":87.32},"R":{"d":"M11.82 100.00L11.82 0.00L48.56 0.00C65.09 0.00 79.83 10.78 79.83 28.24C79.83 44.99 66.79 55.64 50.72 56.34L86.60 100.00L69.45 100.00L34.15 56.48L25.36 56.48L25.36 100.00L11.82 100.00ZM48.13 11.82L25.36 11.82L25.36 45.10L47.98 45.10C58.14 45.10 66.28 39.23 66.28 28.53C66.28 18.13 58.06 11.82 48.13 11.82Z","adv":90.78},"S":{"d":"M39.63 101.44C25.54 101.44 13.26 95.79 4.61 84.58L13.83 75.36C20.18 84.21 29.18 88.76 40.06 88.76C49.09 88.76 59.80 84.78 59.80 74.21C59.80 47.30 11.10 58.08 11.10 25.50C11.10 8.11 26.44 -1.44 42.51 -1.44C54.11 -1.44 65.37 3.30 72.77 12.39L63.54 21.61C58.00 15.17 50.82 11.24 42.22 11.24C33.84 11.24 24.64 15.00 24.64 24.64C24.64 49.72 73.49 40.34 73.49 73.20C73.49 92.31 57.03 101.44 39.63 101.44Z","adv":79.97},"T":{"d":"M38.33 100.00L38.33 12.39L4.32 12.39L4.32 0.00L85.73 0.00L85.73 12.39L51.87 12.39L51.87 100.00L38.33 100.00Z","adv":90.06},"U":{"d":"M49.28 101.44C27.69 101.44 10.66 84.59 10.66 62.97L10.66 0.00L24.21 0.00L24.21 62.68C24.21 77.09 34.62 88.47 49.28 88.47C63.90 88.47 74.21 77.22 74.21 62.82L74.21 0.00L87.90 0.00L87.90 63.11C87.90 84.80 70.88 101.44 49.28 101.44Z","adv":98.41}}};
+const PALETTE_DATA = {"groups":{"concept":{"label":"Konsep","note":"Warna dari render konsep logo.","swatches":[["Slate green","#33494A"],["Bronze","#9D8574"],["Cream","#FBFAF6"],["Grey","#8A8B86"]]},"daylight":{"label":"Daylight","note":"Paper dan Canal ink membawa merek. Supreme lime tetap di bawah 2%, seperti cahaya lewat jendela.","swatches":[["Canal ink","#1A201D"],["Paper","#FAFAF7"],["Supreme lime","#CFEA7C"],["Stone","#EEEEE9"],["Graphite","#5B625D"],["Sage","#A7B4A2"],["Lime mist","#EEF6DA"]]},"soft-canal":{"label":"Soft canal","note":"Krem hangat dan sand dengan hijau kanal pekat. Brass sebagai aksen, dipakai hemat seperti perangkat logam di pintu depan.","swatches":[["Canal green","#23372F"],["Cream","#F4F0E7"],["Brass","#B8975A"],["Sand","#D9CFC1"],["Linen","#E9E2D3"],["Sage","#9FAE9B"],["Moss grey","#5E6A62"]]},"deep-canal":{"label":"Deep canal","note":"Air gelap dan hijau kanal Amsterdam, diangkat oleh satu aksen hijau segar.","swatches":[["Deep canal","#11373F"],["Canal teal","#164E50"],["Harbour green","#22776B"],["Mint","#DAF4D7"],["Fresh green","#88DE7C"]]},"mono":{"label":"Mono","note":"Satu warna, untuk emboss, gravir, dan cetak satu tinta.","swatches":[]}},"presets":{"original":{"group":"concept","label":"Terang","bg":"#FBFAF6","roof":"#9D8574","s":"#33494A","word":"#33494A","tag":"#8A8B86","style":"flat"},"reverse":{"group":"concept","label":"Gelap","bg":"#22302F","roof":"#B89E89","s":"#FBFAF6","word":"#FBFAF6","tag":"#B89E89","style":"flat"},"daylight":{"group":"daylight","label":"Terang","bg":"#FAFAF7","roof":"#A7B4A2","s":"#1A201D","word":"#1A201D","tag":"#5B625D","style":"flat"},"daylight-dark":{"group":"daylight","label":"Gelap","bg":"#1A201D","roof":"#CFEA7C","s":"#FAFAF7","word":"#FAFAF7","tag":"#A7B4A2","style":"flat"},"soft-canal":{"group":"soft-canal","label":"Terang","bg":"#F4F0E7","roof":"#B8975A","s":"#23372F","word":"#23372F","tag":"#5E6A62","style":"flat"},"soft-canal-dark":{"group":"soft-canal","label":"Gelap","bg":"#23372F","roof":"#B8975A","s":"#F4F0E7","word":"#F4F0E7","tag":"#9FAE9B","style":"flat"},"deep-canal":{"group":"deep-canal","label":"Terang","bg":"#DAF4D7","roof":"#22776B","s":"#11373F","word":"#11373F","tag":"#164E50","style":"flat"},"deep-canal-dark":{"group":"deep-canal","label":"Gelap","bg":"#11373F","roof":"#88DE7C","s":"#DAF4D7","word":"#DAF4D7","tag":"#88DE7C","style":"flat"},"ink":{"group":"mono","label":"Ink","bg":"#FAFAF7","roof":"#1A201D","s":"#1A201D","word":"#1A201D","tag":"#1A201D","style":"mono"},"white":{"group":"mono","label":"Putih","bg":"#1A201D","roof":"#FFFFFF","s":"#FFFFFF","word":"#FFFFFF","tag":"#FFFFFF","style":"mono"}}};
+// Supreme Real Estate logo: geometry + lockups. Pure functions, no dependencies.
+// Used by tools/build.mjs (files) and inlined into index.html (recolour tool).
+//
+// Two mark shapes on the same 30° isometric grid, sharing the wordmark and lockups:
+//   roof  (A, concept "Geometry grid + Property + Flow + Roof"): roof chevron, a second chevron whose
+//         left arm folds back into the upper S, and the lower S stroke. One band thickness `t`, gap `g`.
+//   cube  (B, concept "Letter S + Property + Structure"): an S cut from an isometric cube silhouette;
+//         S faces in the S colour, roof/structure faces (top-right arm, right wall, underside) in the roof colour.
+
+const S30 = Math.tan(Math.PI / 6);
+
+const ROOF = { H: 100, t: 34, g: 22, xOut: -88, E: 25, rEnd: 9, rTip: 2 };
+
+const f = (n) => +n.toFixed(2);
+
+/** Polygon → path, rounding the corners that have a radius (quadratic corner). */
+function roundPoly(pts, radii = []) {
+  const n = pts.length;
+  const cmds = [];
+  for (let i = 0; i < n; i++) {
+    const P = pts[i], A = pts[(i - 1 + n) % n], B = pts[(i + 1) % n];
+    const r = radii[i] || 0;
+    if (!r) { cmds.push(["L", P]); continue; }
+    const la = Math.hypot(A[0] - P[0], A[1] - P[1]), lb = Math.hypot(B[0] - P[0], B[1] - P[1]);
+    const rr = Math.min(r, la / 2, lb / 2);
+    const a = [P[0] + ((A[0] - P[0]) / la) * rr, P[1] + ((A[1] - P[1]) / la) * rr];
+    const b = [P[0] + ((B[0] - P[0]) / lb) * rr, P[1] + ((B[1] - P[1]) / lb) * rr];
+    cmds.push(["L", a], ["Q", P, b]);
+  }
+  cmds[0][0] = "M";
+  return cmds.map(([c, p, q]) => c + f(p[0]) + " " + f(p[1]) + (q ? " " + f(q[0]) + " " + f(q[1]) : "")).join("") + "Z";
+}
+
+/** Mark A: bands as path data, in a box starting at (0,0). */
+function roofMark(geo = ROOF) {
+  const { H, t, g, xOut, E, rEnd, rTip } = geo;
+  const s = S30;
+  const y0 = t + g;                 // band 2 apex
+  const c = y0 - 2 * s * xOut;      // band 2 fold: lower-arm outer edge y = c + s·x
+  const xIn = xOut + t / s;         // inner fold vertex
+  const yV = y0 - s * xOut;         // both fold vertices sit at this height
+  const d = c + g;                  // band 3 top edge y = d + s·x
+  const sh = (pts) => pts.map(([x, y]) => [x + H, y]);
+
+  const band1 = [[0, 0], [H, s * H], [H, s * H + t], [0, t], [-H, s * H + t], [-H, s * H]];
+  const band2 = [[0, y0], [H, y0 + s * H], [H, y0 + t + s * H], [0, y0 + t], [xIn, yV], [E, c - t + s * E], [E, c + s * E], [xOut, yV]];
+  const radii2 = [0, 0, 0, 0, rTip, rEnd, rEnd, rTip];
+  const sLeft = [[0, y0], [0, y0 + t], [xIn, yV], [E, c - t + s * E], [E, c + s * E], [xOut, yV]];
+  const roofRight = [[0, y0], [H, y0 + s * H], [H, y0 + t + s * H], [0, y0 + t]];
+  const band3 = [[-H, d - s * H], [E, d + s * E], [E, d + t + s * E], [-H, d + t - s * H]];
+
+  const p = {
+    band1: roundPoly(sh(band1)),
+    band2: roundPoly(sh(band2), radii2),
+    band2S: roundPoly(sh(sLeft), [0, 0, rTip, rEnd, rEnd, rTip]),
+    band2Roof: roundPoly(sh(roofRight)),
+    band3: roundPoly(sh(band3), [0, rEnd, rEnd, 0]),
+  };
+  return {
+    width: 2 * H,
+    height: f(d + t + s * E),
+    // gradient style (concept render): S colour → roof colour across the apex of band 2
+    gradients: { main: { x1: f(H - 6), y1: 0, x2: f(H + 48), y2: 0, stops: [[0, "s"], [1, "roof"]] } },
+    draw(style, gid, C) {
+      const band2 =
+        style === "gradient"
+          ? `<path fill="url(#${gid("main")})" d="${p.band2}"/>`
+          : style === "mono"
+            ? `<path class="${C.s}" d="${p.band2}"/>`
+            : `<path class="${C.s}" d="${p.band2S}"/><path class="${C.roof}" d="${p.band2Roof}"/>`;
+      return `<path class="${C.roof}" d="${p.band1}"/>${band2}<path class="${C.s}" d="${p.band3}"/>`;
+    },
+  };
+}
+
+const CUBE = { H: 100, a: 45, xv: -43, tb: 31, face: 32, tBlock: 36, x1: 30, x2: 55, x3: 67 };
+
+/** Mark B: S cut from an isometric cube (regular hexagon silhouette), in a box starting at (0,0). */
+function cubeMark(geo = CUBE) {
+  const { H, a, xv, tb, face, tBlock, x1, x2, x3 } = geo;
+  const s = S30;
+  const yB = 4 * s * H;                          // bottom apex
+  const low = (x) => yB - s * Math.abs(x);       // lower silhouette edges
+  const yv = a - s * xv;                          // inner fold vertex (top arm inner edge meets band)
+  const top = (x) => yv + s * (x - xv);           // middle band top edge
+  const bot = (x) => top(x) + tb;                 // middle band bottom edge
+  const sh = (pts) => pts.map(([x, y]) => [x + H, y]);
+
+  // S colour: top-left arm + middle band (ending in a vertical face), lower-left block
+  const sBand = [[0, 0], [0, a], [xv, yv], [x2, top(x2)], [x2, low(x2)], [x1, low(x1)], [x1, bot(x1)], [-H, bot(-H)], [-H, s * H]];
+  const sBlock = [[-H, low(-H) - tBlock], [0, yB - tBlock], [0, yB], [-H, low(-H)]];
+  // roof colour: top-right arm + right wall ("7"), underside face of the band + its vertical face
+  const roofArm = [[0, 0], [H, s * H], [H, low(H)], [x3, low(x3)], [x3, a + s * x3], [0, a]];
+  const roofFace = [[-H, bot(-H)], [x1, bot(x1)], [x1, low(x1)], [0, yB], [0, bot(0) + face], [-H, bot(-H) + face]];
+  const p = Object.fromEntries(Object.entries({ sBand, sBlock, roofArm, roofFace }).map(([k, v]) => [k, roundPoly(sh(v))]));
+
+  return {
+    width: 2 * H,
+    height: f(yB),
+    // gradient style: roof faces darken towards the S colour at the bottom, like the concept render
+    gradients: { main: { x1: 0, y1: 0, x2: 0, y2: f(yB), stops: [[0, "roof"], [0.5, "roof"], [1, "s"]] } },
+    draw(style, gid, C) {
+      const roof = (d) =>
+        style === "gradient" ? `<path fill="url(#${gid("main")})" d="${d}"/>`
+          : style === "mono" ? `<path class="${C.roof}" fill-opacity="0.55" d="${d}"/>`
+            : `<path class="${C.roof}" d="${d}"/>`;
+      return roof(p.roofArm) + roof(p.roofFace) + `<path class="${C.s}" d="${p.sBand}"/><path class="${C.s}" d="${p.sBlock}"/>`;
+    },
+  };
+}
+
+const MARKS = {
+  roof: { label: "A · Roof-S", build: roofMark },
+  cube: { label: "B · Cube-S", build: cubeMark },
+};
+
+/** Lay out a word from outlined glyphs. Returns {svg, width, height} with cap height = size. */
+function word(glyphs, text, size, tracking, cls) {
+  const k = size / 100;
+  let x = 0, minX = Infinity, maxX = -Infinity;
+  const parts = [];
+  for (const ch of text) {
+    if (ch === " ") { x += 26 + tracking / k; continue; }
+    const gph = glyphs[ch];
+    const xs = gph.d.match(/-?\d+(\.\d+)?/g).map(Number).filter((_, i) => i % 2 === 0);
+    minX = Math.min(minX, x + Math.min(...xs));
+    maxX = Math.max(maxX, x + Math.max(...xs));
+    parts.push(`<path transform="translate(${f(x)} 0)" d="${gph.d}"/>`);
+    x += gph.adv + tracking / k;
+  }
+  const width = (maxX - minX) * k;
+  return {
+    svg: (tx, ty) => `<g class="${cls}" transform="translate(${f(tx - minX * k)} ${f(ty)}) scale(${+k.toFixed(5)})">${parts.join("")}</g>`,
+    width: f(width),
+    height: size,
+  };
+}
+
+/** Spread a word so its outline width equals `target`. */
+function fitWord(glyphs, text, size, target, cls) {
+  const probe = word(glyphs, text, size, 0, cls);
+  const gaps = [...text].length - 1;
+  return word(glyphs, text, size, (target - probe.width) / gaps, cls);
+}
+
+const CLASSES = { roof: "sre-roof", s: "sre-s", word: "sre-word", tag: "sre-tag" };
+
+/**
+ * Build one lockup as an SVG string.
+ * layout: "mark" | "stacked" | "horizontal" | "wordmark"
+ * colors: { roof, s, word, tag } concrete colours, or null → CSS-variable template.
+ * opts: { variant: key of MARKS, style: "flat" | "gradient" | "mono", mono: colour for mono, bg, pad: padding ratio }
+ */
+function buildLogo(glyphs, layout, colors, opts = {}) {
+  const style = opts.style || "flat";
+  const m = MARKS[opts.variant || "roof"].build();
+  const C = CLASSES;
+  const gid = (name) => `sre-grad-${opts.variant || "roof"}-${layout}-${name}`;
+  const tpl = !colors;
+  const fallback = { roof: "#9D8574", s: "#33494A", word: "#33494A", tag: "#8A8B86" };
+  const col = (key) => (style === "mono" ? (opts.mono || "currentColor") : tpl ? `var(--supreme-${key}, ${fallback[key]})` : colors[key]);
+
+  const markSvg = (x, y, scale) =>
+    `<g transform="translate(${f(x)} ${f(y)}) scale(${+scale.toFixed(5)})">${m.draw(style, gid, C)}</g>`;
+
+  let w, h, body;
+  if (layout === "mark") {
+    w = m.width; h = m.height;
+    body = markSvg(0, 0, 1);
+  } else if (layout === "stacked") {
+    const markW = 200, wordW = 276;
+    const sup = fitWord(glyphs.medium, "SUPREME", 28, wordW, C.word);
+    const tag = fitWord(glyphs.regular, "REAL ESTATE", 10, wordW * 0.74, C.tag);
+    w = wordW; const mx = (w - markW) / 2;
+    const yWord = m.height + 22, yTag = yWord + sup.height + 17;
+    h = yTag + tag.height;
+    body = markSvg(mx, 0, 1) + sup.svg(0, yWord) + tag.svg((w - tag.width) / 2, yTag);
+  } else if (layout === "horizontal") {
+    const scale = 0.62, markW = 200 * scale, markH = m.height * scale;
+    const sup = word(glyphs.medium, "SUPREME", markH * 0.3, markH * 0.3 * 0.42, C.word);
+    const tag = fitWord(glyphs.regular, "REAL ESTATE", markH * 0.11, sup.width, C.tag);
+    const gap = markH * 0.26, lineGap = sup.height * 0.62;
+    const blockH = sup.height + lineGap + tag.height;
+    const tx = markW + gap, ty = (markH - blockH) / 2;
+    w = tx + sup.width; h = markH;
+    body = markSvg(0, 0, scale) + sup.svg(tx, ty) + tag.svg(tx, ty + sup.height + lineGap);
+  } else if (layout === "wordmark") {
+    const sup = fitWord(glyphs.medium, "SUPREME", 28, 276, C.word);
+    const tag = fitWord(glyphs.regular, "REAL ESTATE", 10, 276 * 0.74, C.tag);
+    w = 276; h = sup.height + 17 + tag.height;
+    body = sup.svg(0, 0) + tag.svg((w - tag.width) / 2, sup.height + 17);
+  } else throw new Error("unknown layout " + layout);
+
+  const pad = (opts.pad ?? 0) * Math.max(w, h);
+  const vb = `${f(-pad)} ${f(-pad)} ${f(w + 2 * pad)} ${f(h + 2 * pad)}`;
+  const stop = ([o, k, op]) => `<stop offset="${o}" style="stop-color:${k.startsWith("#") ? k : col(k)}${op == null ? "" : `;stop-opacity:${op}`}"/>`;
+  const grad =
+    style === "gradient"
+      ? `<defs>${Object.entries(m.gradients).map(([n, gr]) => `<linearGradient id="${gid(n)}" gradientUnits="userSpaceOnUse" x1="${gr.x1}" y1="${gr.y1}" x2="${gr.x2}" y2="${gr.y2}">${gr.stops.map(stop).join("")}</linearGradient>`).join("")}</defs>`
+      : "";
+  const css = `<style>.${C.roof}{fill:${col("roof")}}.${C.s}{fill:${col("s")}}.${C.word}{fill:${col("word")}}.${C.tag}{fill:${col("tag")}}</style>`;
+  const bg = opts.bg ? `<rect x="${f(-pad)}" y="${f(-pad)}" width="${f(w + 2 * pad)}" height="${f(h + 2 * pad)}" fill="${opts.bg}"/>` : "";
+  const title = layout === "mark" ? "Supreme Real Estate mark" : "Supreme Real Estate";
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" width="${f(w + 2 * pad)}" height="${f(h + 2 * pad)}" role="img" aria-label="${title}"><title>${title}</title>${css}${grad}${bg}${body}</svg>`;
+}
+
+
+const FIELDS = [
+  ["roof", "Atap (roof)"], ["s", "S"], ["word", "SUPREME"], ["tag", "REAL ESTATE"], ["bg", "Latar"],
+];
+const LAYOUTS = [
+  ["horizontal", "Horizontal", true], ["stacked", "Bertumpuk"], ["mark", "Ikon"], ["wordmark", "Wordmark"],
+];
+const PALETTES = PALETTE_DATA.presets, GROUPS = PALETTE_DATA.groups;
+let state = { ...PALETTES.original, preset: "original", variant: "roof" };
+try { const saved = JSON.parse(localStorage.getItem("supreme-logo-state")); if (saved && saved.roof) state = { variant: "roof", ...saved }; } catch {}
+if (!MARKS[state.variant]) state.variant = "roof";
+
+const $ = (s) => document.querySelector(s);
+const toast = (msg) => { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1600); };
+
+// presets, one row per palette group; group swatches feed the colour pickers' datalist
+const list = document.createElement("datalist"); list.id = "swatchList";
+for (const [gkey, g] of Object.entries(GROUPS)) {
+  const row = document.createElement("div"); row.className = "group";
+  const name = document.createElement("span"); name.className = "name"; name.textContent = g.label;
+  const dots = document.createElement("span"); dots.className = "dots";
+  for (const [n, hex] of g.swatches) { const i = document.createElement("i"); i.style.background = hex; i.title = `${n} ${hex}`; dots.append(i); const o = document.createElement("option"); o.value = hex; o.label = n; list.append(o); }
+  name.append(dots);
+  const chips = document.createElement("span"); chips.className = "chips";
+  for (const [key, p] of Object.entries(PALETTES).filter(([, p]) => p.group === gkey)) {
+    const b = document.createElement("button");
+    b.textContent = p.label; b.dataset.preset = key;
+    b.onclick = () => { state = { ...p, preset: key, variant: state.variant }; render(); };
+    chips.append(b);
+  }
+  row.append(name, chips);
+  $("#presets").append(row);
+}
+document.body.append(list);
+for (const [key, m] of Object.entries(MARKS)) {
+  const b = document.createElement("button");
+  b.textContent = m.label; b.dataset.variant = key;
+  b.onclick = () => { state.variant = key; render(); };
+  $("#variants").append(b);
+}
+document.querySelectorAll("#styles button").forEach((b) => (b.onclick = () => { state.style = b.dataset.style; state.preset = null; render(); }));
+
+// swatches
+for (const [key, label] of FIELDS) {
+  const row = document.createElement("div");
+  row.className = "swatch";
+  row.innerHTML = `<input type="color" list="swatchList" aria-label="${label}"><span>${label}</span><input type="text" aria-label="${label} hex" maxlength="7" spellcheck="false">`;
+  const [pick, , text] = row.children;
+  pick.oninput = () => { state[key] = pick.value.toUpperCase(); state.preset = null; render(); };
+  text.onchange = () => { if (/^#[0-9a-f]{6}$/i.test(text.value)) { state[key] = text.value.toUpperCase(); state.preset = null; render(); } else text.value = state[key]; };
+  row.dataset.key = key;
+  $("#swatches").append(row);
+}
+
+// preview cards
+for (const [layout, label, wide] of LAYOUTS) {
+  const card = document.createElement("article");
+  card.className = "card" + (wide ? " wide" : "");
+  card.dataset.layout = layout;
+  card.innerHTML = `<div class="stage"></div><div class="bar"><span>${label}</span><span class="actions"><button data-fmt="svg">SVG</button><button data-fmt="png">PNG</button></span></div>`;
+  card.querySelectorAll("button").forEach((b) => (b.onclick = () => download(layout, b.dataset.fmt)));
+  $("#previews").append(card);
+}
+
+const svgFor = (layout, withBg) =>
+  buildLogo(GLYPHS, layout, state, { variant: state.variant, style: state.style, mono: state.s, bg: withBg ? state.bg : null, pad: withBg ? 0.12 : 0 });
+
+function render() {
+  document.querySelectorAll("#presets button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.preset === state.preset));
+  const g = state.preset && GROUPS[PALETTES[state.preset].group];
+  $("#paletteNote").textContent = g ? g.note : "Warna sendiri. Klik kotak warna: palet tersedia di dalam pemilih.";
+  document.querySelectorAll("#variants button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.variant === state.variant));
+  document.querySelectorAll("#styles button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.style === state.style));
+  document.querySelectorAll(".swatch").forEach((row) => {
+    const k = row.dataset.key, [pick, , text] = row.children;
+    pick.value = state[k]; if (document.activeElement !== text) text.value = state[k];
+    const hide = state.style === "mono" && k !== "s" && k !== "bg";
+    row.style.opacity = hide ? 0.35 : 1;
+    row.children[1].textContent = state.style === "mono" && k === "s" ? "Warna mono" : FIELDS.find((f) => f[0] === k)[1];
+  });
+  document.querySelectorAll(".card").forEach((card) => {
+    const stage = card.querySelector(".stage");
+    stage.style.backgroundColor = state.bg;
+    stage.innerHTML = svgFor(card.dataset.layout, false).replace(/sre-grad-/g, "sre-grad-prev-");
+  });
+  const mono = state.style === "mono";
+  $("#css").textContent = `:root {\n  --supreme-roof: ${mono ? state.s : state.roof};\n  --supreme-s: ${state.s};\n  --supreme-word: ${mono ? state.s : state.word};\n  --supreme-tag: ${mono ? state.s : state.tag};\n}`;
+  try { localStorage.setItem("supreme-logo-state", JSON.stringify(state)); } catch {}
+}
+
+function save(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function download(layout, fmt) {
+  const withBg = $("#withBg").checked;
+  const svg = svgFor(layout, withBg);
+  const name = `supreme-${layout === "wordmark" ? "" : state.variant + "-"}${layout}-${state.preset || "custom"}${state.style !== "flat" ? "-" + state.style : ""}`;
+  if (fmt === "svg") { save(new Blob([svg], { type: "image/svg+xml" }), name + ".svg"); toast("SVG diunduh"); return; }
+  const img = new Image();
+  const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+  img.onload = () => {
+    const w = 2048, h = Math.round((img.height / img.width) * w);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    c.getContext("2d").drawImage(img, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+    c.toBlob((b) => { save(b, name + ".png"); toast("PNG diunduh"); }, "image/png");
+  };
+  img.src = url;
+}
+$("#copyCss").onclick = async () => { try { await navigator.clipboard.writeText($("#css").textContent); toast("CSS disalin"); } catch { toast("Tidak bisa menyalin"); } };
+render();
+</script>
+</body>
+</html>

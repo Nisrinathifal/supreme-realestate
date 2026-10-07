@@ -10,3 +10,4 @@ playwright-report/
 lighthouse/
 *.log
 .DS_Store
+media/archive/

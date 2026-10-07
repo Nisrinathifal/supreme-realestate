@@ -1,0 +1,41 @@
+{
+  "groups": {
+    "concept": {
+      "label": "Konsep",
+      "note": "Warna dari render konsep logo.",
+      "swatches": [["Slate green", "#33494A"], ["Bronze", "#9D8574"], ["Cream", "#FBFAF6"], ["Grey", "#8A8B86"]]
+    },
+    "daylight": {
+      "label": "Daylight",
+      "note": "Paper dan Canal ink membawa merek. Supreme lime tetap di bawah 2%, seperti cahaya lewat jendela.",
+      "swatches": [["Canal ink", "#1A201D"], ["Paper", "#FAFAF7"], ["Supreme lime", "#CFEA7C"], ["Stone", "#EEEEE9"], ["Graphite", "#5B625D"], ["Sage", "#A7B4A2"], ["Lime mist", "#EEF6DA"]]
+    },
+    "soft-canal": {
+      "label": "Soft canal",
+      "note": "Krem hangat dan sand dengan hijau kanal pekat. Brass sebagai aksen, dipakai hemat seperti perangkat logam di pintu depan.",
+      "swatches": [["Canal green", "#23372F"], ["Cream", "#F4F0E7"], ["Brass", "#B8975A"], ["Sand", "#D9CFC1"], ["Linen", "#E9E2D3"], ["Sage", "#9FAE9B"], ["Moss grey", "#5E6A62"]]
+    },
+    "deep-canal": {
+      "label": "Deep canal",
+      "note": "Air gelap dan hijau kanal Amsterdam, diangkat oleh satu aksen hijau segar.",
+      "swatches": [["Deep canal", "#11373F"], ["Canal teal", "#164E50"], ["Harbour green", "#22776B"], ["Mint", "#DAF4D7"], ["Fresh green", "#88DE7C"]]
+    },
+    "mono": {
+      "label": "Mono",
+      "note": "Satu warna, untuk emboss, gravir, dan cetak satu tinta.",
+      "swatches": []
+    }
+  },
+  "presets": {
+    "original": { "group": "concept", "label": "Terang", "bg": "#FBFAF6", "roof": "#9D8574", "s": "#33494A", "word": "#33494A", "tag": "#8A8B86", "style": "flat" },
+    "reverse": { "group": "concept", "label": "Gelap", "bg": "#22302F", "roof": "#B89E89", "s": "#FBFAF6", "word": "#FBFAF6", "tag": "#B89E89", "style": "flat" },
+    "daylight": { "group": "daylight", "label": "Terang", "bg": "#FAFAF7", "roof": "#A7B4A2", "s": "#1A201D", "word": "#1A201D", "tag": "#5B625D", "style": "flat" },
+    "daylight-dark": { "group": "daylight", "label": "Gelap", "bg": "#1A201D", "roof": "#CFEA7C", "s": "#FAFAF7", "word": "#FAFAF7", "tag": "#A7B4A2", "style": "flat" },
+    "soft-canal": { "group": "soft-canal", "label": "Terang", "bg": "#F4F0E7", "roof": "#B8975A", "s": "#23372F", "word": "#23372F", "tag": "#5E6A62", "style": "flat" },
+    "soft-canal-dark": { "group": "soft-canal", "label": "Gelap", "bg": "#23372F", "roof": "#B8975A", "s": "#F4F0E7", "word": "#F4F0E7", "tag": "#9FAE9B", "style": "flat" },
+    "deep-canal": { "group": "deep-canal", "label": "Terang", "bg": "#DAF4D7", "roof": "#22776B", "s": "#11373F", "word": "#11373F", "tag": "#164E50", "style": "flat" },
+    "deep-canal-dark": { "group": "deep-canal", "label": "Gelap", "bg": "#11373F", "roof": "#88DE7C", "s": "#DAF4D7", "word": "#DAF4D7", "tag": "#88DE7C", "style": "flat" },
+    "ink": { "group": "mono", "label": "Ink", "bg": "#FAFAF7", "roof": "#1A201D", "s": "#1A201D", "word": "#1A201D", "tag": "#1A201D", "style": "mono" },
+    "white": { "group": "mono", "label": "Putih", "bg": "#1A201D", "roof": "#FFFFFF", "s": "#FFFFFF", "word": "#FFFFFF", "tag": "#FFFFFF", "style": "mono" }
+  }
+}

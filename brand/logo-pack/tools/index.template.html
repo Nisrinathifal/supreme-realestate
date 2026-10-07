@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supreme Logo Pack</title>
+<style>
+  :root {
+    --page: #F4F3EF; --panel: #FFFFFF; --text: #1A201D; --muted: #5B625D; --line: #E2E3DC; --focus: #1A201D;
+    --radius: 12px; --gap: 16px;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #121614; --panel: #1C2220; --text: #F1F1EC; --muted: #A3AAA5; --line: #2E3632; --focus: #F1F1EC; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); }
+  header, main { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 32px; padding-bottom: 8px; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  main { display: grid; grid-template-columns: 300px 1fr; gap: 24px; padding-top: 24px; padding-bottom: 48px; align-items: start; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .controls { position: sticky; top: 16px; display: grid; gap: 18px; }
+  @media (max-width: 860px) { .controls { position: static; } }
+  .label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .group { display: grid; grid-template-columns: 88px 1fr; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 13px; }
+  .group .name { color: var(--muted); }
+  .dots { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,.12); }
+  .note { font-size: 12px; color: var(--muted); margin: 6px 0 0; line-height: 1.4; }
+  button, .chip { font: inherit; font-size: 13px; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  button[aria-pressed="true"] { background: var(--text); color: var(--panel); border-color: var(--text); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .swatch { display: grid; grid-template-columns: 36px 1fr 92px; gap: 10px; align-items: center; margin-bottom: 8px; font-size: 14px; }
+  .swatch input[type=color] { width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: none; cursor: pointer; }
+  .swatch input[type=text] { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; width: 100%; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--text); text-transform: uppercase; }
+  .check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+  pre { margin: 0; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--page); border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow-x: auto; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+  .card.wide { grid-column: 1 / -1; }
+  .stage { display: grid; place-items: center; padding: 36px 24px; min-height: 260px; transition: background-color .2s; }
+  .stage svg { width: 100%; height: auto; max-height: 260px; }
+  .card.wide .stage svg { max-width: 640px; max-height: 180px; }
+  .card[data-layout="mark"] .stage svg { max-width: 180px; }
+  .card[data-layout="stacked"] .stage svg, .card[data-layout="wordmark"] .stage svg { max-width: 300px; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); font-size: 13px; }
+  .bar .actions { display: flex; gap: 6px; }
+  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--panel); padding: 8px 14px; border-radius: 999px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Logo pack Supreme Real Estate</h1>
+  <p>Pilih palet atau warna sendiri. Unduh tiap varian sebagai SVG atau PNG (2048 px).</p>
+</header>
+<main>
+  <aside class="controls panel" aria-label="Warna">
+    <div>
+      <p class="label">Palet warna</p>
+      <div id="presets"></div>
+      <p class="note" id="paletteNote"></p>
+    </div>
+    <div>
+      <p class="label">Bentuk</p>
+      <div class="chips" id="variants"></div>
+    </div>
+    <div>
+      <p class="label">Gaya</p>
+      <div class="chips" id="styles">
+        <button data-style="flat">Flat</button>
+        <button data-style="gradient">Gradasi</button>
+        <button data-style="mono">Mono</button>
+      </div>
+    </div>
+    <div id="swatches">
+      <p class="label">Warna</p>
+    </div>
+    <label class="check"><input type="checkbox" id="withBg"> Sertakan latar saat mengunduh</label>
+    <div>
+      <p class="label">CSS (untuk svg/web/*.svg inline)</p>
+      <pre id="css"></pre>
+      <div style="margin-top:8px"><button id="copyCss">Salin CSS</button></div>
+    </div>
+  </aside>
+  <section class="grid" id="previews" aria-label="Pratinjau"></section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/*__DATA__*/
+/*__LOGO__*/
+
+const FIELDS = [
+  ["roof", "Atap (roof)"], ["s", "S"], ["word", "SUPREME"], ["tag", "REAL ESTATE"], ["bg", "Latar"],
+];
+const LAYOUTS = [
+  ["horizontal", "Horizontal", true], ["stacked", "Bertumpuk"], ["mark", "Ikon"], ["wordmark", "Wordmark"],
+];
+const PALETTES = PALETTE_DATA.presets, GROUPS = PALETTE_DATA.groups;
+let state = { ...PALETTES.original, preset: "original", variant: "roof" };
+try { const saved = JSON.parse(localStorage.getItem("supreme-logo-state")); if (saved && saved.roof) state = { variant: "roof", ...saved }; } catch {}
+if (!MARKS[state.variant]) state.variant = "roof";
+
+const $ = (s) => document.querySelector(s);
+const toast = (msg) => { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1600); };
+
+// presets, one row per palette group; group swatches feed the colour pickers' datalist
+const list = document.createElement("datalist"); list.id = "swatchList";
+for (const [gkey, g] of Object.entries(GROUPS)) {
+  const row = document.createElement("div"); row.className = "group";
+  const name = document.createElement("span"); name.className = "name"; name.textContent = g.label;
+  const dots = document.createElement("span"); dots.className = "dots";
+  for (const [n, hex] of g.swatches) { const i = document.createElement("i"); i.style.background = hex; i.title = `${n} ${hex}`; dots.append(i); const o = document.createElement("option"); o.value = hex; o.label = n; list.append(o); }
+  name.append(dots);
+  const chips = document.createElement("span"); chips.className = "chips";
+  for (const [key, p] of Object.entries(PALETTES).filter(([, p]) => p.group === gkey)) {
+    const b = document.createElement("button");
+    b.textContent = p.label; b.dataset.preset = key;
+    b.onclick = () => { state = { ...p, preset: key, variant: state.variant }; render(); };
+    chips.append(b);
+  }
+  row.append(name, chips);
+  $("#presets").append(row);
+}
+document.body.append(list);
+for (const [key, m] of Object.entries(MARKS)) {
+  const b = document.createElement("button");
+  b.textContent = m.label; b.dataset.variant = key;
+  b.onclick = () => { state.variant = key; render(); };
+  $("#variants").append(b);
+}
+document.querySelectorAll("#styles button").forEach((b) => (b.onclick = () => { state.style = b.dataset.style; state.preset = null; render(); }));
+
+// swatches
+for (const [key, label] of FIELDS) {
+  const row = document.createElement("div");
+  row.className = "swatch";
+  row.innerHTML = `<input type="color" list="swatchList" aria-label="${label}"><span>${label}</span><input type="text" aria-label="${label} hex" maxlength="7" spellcheck="false">`;
+  const [pick, , text] = row.children;
+  pick.oninput = () => { state[key] = pick.value.toUpperCase(); state.preset = null; render(); };
+  text.onchange = () => { if (/^#[0-9a-f]{6}$/i.test(text.value)) { state[key] = text.value.toUpperCase(); state.preset = null; render(); } else text.value = state[key]; };
+  row.dataset.key = key;
+  $("#swatches").append(row);
+}
+
+// preview cards
+for (const [layout, label, wide] of LAYOUTS) {
+  const card = document.createElement("article");
+  card.className = "card" + (wide ? " wide" : "");
+  card.dataset.layout = layout;
+  card.innerHTML = `<div class="stage"></div><div class="bar"><span>${label}</span><span class="actions"><button data-fmt="svg">SVG</button><button data-fmt="png">PNG</button></span></div>`;
+  card.querySelectorAll("button").forEach((b) => (b.onclick = () => download(layout, b.dataset.fmt)));
+  $("#previews").append(card);
+}
+
+const svgFor = (layout, withBg) =>
+  buildLogo(GLYPHS, layout, state, { variant: state.variant, style: state.style, mono: state.s, bg: withBg ? state.bg : null, pad: withBg ? 0.12 : 0 });
+
+function render() {
+  document.querySelectorAll("#presets button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.preset === state.preset));
+  const g = state.preset && GROUPS[PALETTES[state.preset].group];
+  $("#paletteNote").textContent = g ? g.note : "Warna sendiri. Klik kotak warna: palet tersedia di dalam pemilih.";
+  document.querySelectorAll("#variants button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.variant === state.variant));
+  document.querySelectorAll("#styles button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.style === state.style));
+  document.querySelectorAll(".swatch").forEach((row) => {
+    const k = row.dataset.key, [pick, , text] = row.children;
+    pick.value = state[k]; if (document.activeElement !== text) text.value = state[k];
+    const hide = state.style === "mono" && k !== "s" && k !== "bg";
+    row.style.opacity = hide ? 0.35 : 1;
+    row.children[1].textContent = state.style === "mono" && k === "s" ? "Warna mono" : FIELDS.find((f) => f[0] === k)[1];
+  });
+  document.querySelectorAll(".card").forEach((card) => {
+    const stage = card.querySelector(".stage");
+    stage.style.backgroundColor = state.bg;
+    stage.innerHTML = svgFor(card.dataset.layout, false).replace(/sre-grad-/g, "sre-grad-prev-");
+  });
+  const mono = state.style === "mono";
+  $("#css").textContent = `:root {\n  --supreme-roof: ${mono ? state.s : state.roof};\n  --supreme-s: ${state.s};\n  --supreme-word: ${mono ? state.s : state.word};\n  --supreme-tag: ${mono ? state.s : state.tag};\n}`;
+  try { localStorage.setItem("supreme-logo-state", JSON.stringify(state)); } catch {}
+}
+
+function save(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function download(layout, fmt) {
+  const withBg = $("#withBg").checked;
+  const svg = svgFor(layout, withBg);
+  const name = `supreme-${layout === "wordmark" ? "" : state.variant + "-"}${layout}-${state.preset || "custom"}${state.style !== "flat" ? "-" + state.style : ""}`;
+  if (fmt === "svg") { save(new Blob([svg], { type: "image/svg+xml" }), name + ".svg"); toast("SVG diunduh"); return; }
+  const img = new Image();
+  const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+  img.onload = () => {
+    const w = 2048, h = Math.round((img.height / img.width) * w);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    c.getContext("2d").drawImage(img, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+    c.toBlob((b) => { save(b, name + ".png"); toast("PNG diunduh"); }, "image/png");
+  };
+  img.src = url;
+}
+$("#copyCss").onclick = async () => { try { await navigator.clipboard.writeText($("#css").textContent); toast("CSS disalin"); } catch { toast("Tidak bisa menyalin"); } };
+render();
+</script>
+</body>
+</html>
