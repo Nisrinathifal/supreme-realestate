@@ -64,11 +64,11 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           })
         : null;
 
-      // The arrival and the deck (owner, 2026-10-07). The band has slid up over the held night hero (HeroScroll);
-      // once it has covered it, the band's root is pinned: the title and the deck rise in together, as one piece
-      // (a strong ease-out, no ease-in on an entrance); with the cards fully in place the title leaves, quicker than
-      // it came, and the stack plays. Same on every width. Without JS / reduced motion: the title heads the list
-      // and the cards follow one another.
+      // The arrival and the deck (owner, 2026-10-07). The band slides up over the held night hero (HeroScroll) with
+      // its title and its cards already on it, so they simply come up with the page (nothing replays on its own);
+      // the title fades as the band closes over the hero and is gone the moment it fills the view, leaving only the
+      // cards; the band's root is then pinned and, after a short rest, the stack plays. Same on every width.
+      // Without JS / reduced motion: the title heads the list and the cards follow one another.
       mm.add(MQ.full, () => {
         if (!band) return;
         const q = gsap.utils.selector(root);
@@ -81,8 +81,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
         const peek = () => cssPx(deck, "--peek", 48);
         const DEPTH = 34; // px of depth per step down the stack (the deck has perspective)
-        const HAND = 1.2; // the arrival's share of the pinned timeline, in card steps
-        const enter = "expo.out"; // the strong ease-out of an entrance (≈ cubic-bezier(.23, 1, .32, 1))
+        const HAND = 0.35; // a short rest on the full stack before the first card lifts, in card steps
 
         // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
         // pin begins exactly as the band has covered the hero
@@ -113,14 +112,14 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             invalidateOnRefresh: true,
           },
         });
-        // Title and deck come up together from below, the deck a breath behind the title, and settle
-        const rise = () => window.innerHeight * 0.55;
-        tl.fromTo(deck, { y: rise, opacity: 0 }, { y: 0, opacity: 1, duration: HAND * 0.72, ease: enter }, 0.04);
-        if (lead) {
-          tl.fromTo(lead, { y: rise, yPercent: -50, opacity: 0 }, { y: 0, yPercent: -50, opacity: 1, duration: HAND * 0.68, ease: enter }, 0)
-            // ... and once the cards are fully in place it leaves, up and out, quicker than it came
-            .to(lead, { y: -24, opacity: 0, duration: HAND * 0.22, ease: "power2.in" }, HAND * 0.76);
-        }
+        // The title rides up on the band and fades as the band closes over the hero: gone when it fills the view
+        const fade = lead
+          ? gsap.fromTo(
+              lead,
+              { opacity: 1, y: 0, yPercent: -50 },
+              { opacity: 0, y: -32, yPercent: -50, ease: "power1.in", scrollTrigger: { trigger: band, start: "top 48%", end: "top 2%", scrub: true, invalidateOnRefresh: true } },
+            )
+          : null;
 
         for (let i = 0; i < n; i++) {
           const at = HAND + i;
@@ -158,6 +157,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         return () => {
           tl.scrollTrigger?.kill();
           tl.kill();
+          fade?.scrollTrigger?.kill();
+          fade?.kill();
           root.removeAttribute("data-handoff");
           deck.removeAttribute("data-deck");
           gsap.set(band, { clearProps: "paddingTop" });

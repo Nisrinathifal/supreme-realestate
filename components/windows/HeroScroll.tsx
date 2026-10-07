@@ -49,6 +49,9 @@ export function HeroScroll() {
       // The projects band right after the hero is pulled up by the hero's height, so it rises over the held hero
       // during the pin's last viewport (COVER) and has covered it exactly as the pin lets go
       const band = document.querySelector<HTMLElement>("[data-work]");
+      const veil = document.createElement("div");
+      veil.setAttribute("aria-hidden", "true");
+      Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "6", pointerEvents: "none", background: "var(--inv-bg)", opacity: "0" });
       const overlap = () => {
         if (band) band.style.marginTop = `${-hero.offsetHeight}px`;
       };
@@ -70,6 +73,7 @@ export function HeroScroll() {
           nightFilm.load();
         }
         if (band) gsap.set(band, { position: "relative", zIndex: 2 });
+        hero.append(veil);
         overlap();
         ScrollTrigger.addEventListener("refreshInit", overlap);
         tl = gsap.timeline({
@@ -114,8 +118,11 @@ export function HeroScroll() {
         if (canvas) tl.to(canvas, { opacity: 0, duration: 0.5, ease: "none" }, 0.2);
         if (spots) tl.to(spots, { opacity: 1, duration: 0.4, ease: "none" }, 0.55);
         tl.to(boxes, { opacity: 1, duration: 0.3, stagger: 0.06, ease: "none" }, 0.6);
-        // Dusk takes the timeline's first unit; the cover part of the pin holds the night as it is
+        // Dusk takes the timeline's first unit. Over the cover part the night steps back under the rising band, like
+        // a page under a sheet: the view eases a little away and dims (a veil of Canal ink over the whole hero)
         tl.to({}, { duration: COVER / DUSK }, 1);
+        tl.to(targets, { scale: ZOOM * 0.94, duration: COVER / DUSK, ease: "power1.in" }, 1);
+        tl.fromTo(veil, { opacity: 0 }, { opacity: 0.6, duration: COVER / DUSK, ease: "power1.in" }, 1);
         ScrollTrigger.refresh();
       };
       const start = () => {
@@ -128,6 +135,7 @@ export function HeroScroll() {
         cancelAnimationFrame(raf);
         headerTheme(false);
         ScrollTrigger.removeEventListener("refreshInit", overlap);
+        veil.remove();
         if (band) gsap.set(band, { clearProps: "marginTop,position,zIndex" });
         dark?.kill();
         tl?.scrollTrigger?.kill();
