@@ -10,9 +10,8 @@ const WIDE = "(min-width: 981px)"; // the two-column story (AboutStory.module.cs
  * The About story's motion. The title's words rise out of their masks. On wide screens the photograph is held
  * (CSS sticky) while the chapters pass: the chapter at the reading line is at full strength and its stop marked, and
  * the room renews under a seam from the works to the finished kitchen across the chapters, so the last chapter
- * lands on the delivered room. On phones the room renews as the photograph itself passes. The identity card is
- * handed over (it turns up from lying back) and its fields are written in one after another. Start states are set here; reduced motion and no-JS show the finished
- * room, every chapter in full and the register in place.
+ * lands on the delivered room. On phones the room renews as the photograph itself passes. Start states are set here; reduced motion and no-JS show the finished
+ * room, and every chapter in full.
  */
 export function AboutStoryMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -47,30 +46,10 @@ export function AboutStoryMotion({ children }: { children: React.ReactNode }) {
           scrollTrigger: { trigger: section, start: "top 85%", end: "top 35%", scrub: 0.8, invalidateOnRefresh: true },
         });
 
-        // The register: the identity card is handed over (it turns up from lying back), its fields are written in
-        // one after another, then the rest follows
-        const wrap = q<HTMLElement>("[data-register-card]")[0];
-        const stage = wrap?.querySelector<HTMLElement>("[data-id-stage]") ?? null;
-        const rows = wrap ? Array.from(wrap.querySelectorAll<HTMLElement>("[data-id-card] dl > div")) : [];
-        const after = wrap ? Array.from(wrap.children).filter((el) => el !== stage) : [];
-        if (stage) gsap.set(stage, { transformPerspective: 1200, transformOrigin: "50% 100%", rotationX: 38, y: 60, opacity: 0 });
-        gsap.set(rows, { clipPath: "inset(0% 100% 0% 0%)" });
-        gsap.set(after, { opacity: 0, y: 12 });
-        const reg = wrap
-          ? gsap
-              .timeline({ scrollTrigger: { trigger: wrap, start: "top 90%", end: "top 35%", scrub: 0.8, invalidateOnRefresh: true } })
-              .to(stage, { rotationX: 0, y: 0, opacity: 1, duration: 0.6, ease: ease.out }, 0)
-              .to(rows, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.35, ease: ease.inOut, stagger: 0.1 }, 0.35)
-              .to(after, { opacity: 1, y: 0, duration: 0.3, ease: ease.out, stagger: 0.08 }, ">-0.1")
-          : null;
-
         return () => {
           title.scrollTrigger?.kill();
           title.kill();
-          reg?.scrollTrigger?.kill();
-          reg?.kill();
-          gsap.set([...words, ...rows, ...after], { clearProps: "transform,opacity,clipPath" });
-          if (stage) gsap.set(stage, { clearProps: "transform,opacity" });
+          gsap.set(words, { clearProps: "transform" });
         };
       });
 

@@ -41,19 +41,15 @@ export type Copy = {
     /** Tags on the photograph that renews as the story is read. */
     frame: { before: string; after: string };
   };
+  /** Company details band: the letter that comes out of the envelope. */
   register: {
     label: string;
+    salutation: string;
     lead: string;
-    proofKvk: string;
-    proofOffice: (city: string) => string;
-    proofTeam: string;
-    /** The card's head, as on a register extract. */
-    extract: string;
     verify: string;
     documents: string;
+    signoff: string;
     pending: string;
-    /** The identity card: short field labels and the two values derived from the legal name and the brief. */
-    card: { name: string; form: string; formValue: string; activity: string; activityValue: string; kvk: string; vat: string; office: string; country: string; label: string };
   };
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };

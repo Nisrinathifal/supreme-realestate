@@ -70,16 +70,14 @@ export const nl: Copy = {
   },
   register: {
     label: draft("Bedrijf"),
+    salutation: draft("Aan wie het aangaat,"),
     lead: draft("Supreme Real Estate B.V. is ingeschreven bij de Kamer van Koophandel. Alle gegevens hieronder komen overeen met die inschrijving en kunt u daar zelf controleren."),
-    proofKvk: draft("Ingeschreven bij de KvK"),
-    proofOffice: (city) => draft(`Kantoor in ${city}`),
-    proofTeam: draft("Eigen bouw- en designteam"),
-    extract: draft("Uittreksel"),
     verify: draft("Controleer in het KvK-register"),
     documents: draft("Documenten"),
+    signoff: draft("Met vriendelijke groet,"),
     pending: "Placeholder: KvK-nummer, BTW-nummer, vestigingsadres en contactgegevens volgen uit het KvK-uittreksel.",
-    card: { name: draft("Naam"), form: draft("Rechtsvorm"), formValue: draft("Besloten vennootschap"), activity: draft("Activiteit"), activityValue: draft("Vastgoed"), kvk: "KvK", vat: draft("BTW"), office: draft("Vestiging"), country: draft("Nederland"), label: draft("Identiteitskaart van Supreme Real Estate B.V.") },
   },
+
   // Steps: owner concept 2026-10-01, NL draft until approved.
   steps: {
     label: draft("Waarde opnieuw bekeken"),

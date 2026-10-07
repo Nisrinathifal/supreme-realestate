@@ -1,0 +1,101 @@
+/* Company details as a letter, on the page's one dark ground. Static (no JS / reduced motion): title and letter in
+   the flow. Live ([data-live], CompanyLetterMotion): one pinned viewport with the envelope at its foot. */
+.band:global(.inverse) { --bg: var(--band-dark); }
+.band {
+  --kraft: color-mix(in srgb, var(--window-light) 52%, var(--alt));
+  --kraft-deep: color-mix(in srgb, var(--kraft) 84%, var(--inv-bg));
+  --env-w: min(760px, 88vw);
+  --env-h: calc(var(--env-w) * 0.6);
+  --letter-w: calc(var(--env-w) * 0.88);
+  position: relative; color: var(--ink);
+}
+
+.stage { display: flex; flex-direction: column; align-items: center; gap: var(--s-8); padding: var(--section-y) var(--gutter); }
+.head { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
+.label { color: var(--muted); }
+.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: 1; letter-spacing: -0.03em; }
+.icons, .envelope, .pocket { display: none; }
+.packet { display: contents; }
+
+/* ---------- the letter ---------- */
+.letter {
+  position: relative; width: min(100%, 640px); display: flex; flex-direction: column; gap: var(--s-5);
+  padding: var(--s-8) var(--s-8) var(--s-7); color: var(--ink); background: var(--bg); box-shadow: var(--shadow);
+}
+.letterhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-5); padding-bottom: var(--s-5); border-bottom: 1px solid var(--line); }
+.letterhead > span { color: var(--muted); }
+.salutation { margin: var(--s-2) 0 0; font-family: var(--font-display); font-size: var(--fs-h3); line-height: 1.15; letter-spacing: -0.01em; }
+.lead { margin: 0; max-width: 52ch; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); }
+.details { font-variant-numeric: tabular-nums; }
+.verify {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-5);
+  border-radius: var(--r-pill); box-shadow: inset 0 0 0 1px var(--ink); font-size: var(--fs-ui); font-weight: 500;
+  transition: background-color 200ms var(--ease), color 200ms var(--ease);
+}
+.verify:hover { background: var(--ink); color: var(--bg); }
+.pending { margin: 0; }
+.docs { display: flex; flex-direction: column; gap: var(--s-2); }
+.docs > span:first-child { color: var(--muted); }
+.docList { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+.docList a { font-size: var(--fs-ui); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.docList a:hover { text-decoration-thickness: 2px; }
+.sign { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.5; color: var(--muted); }
+.sign strong { color: var(--ink); font-weight: 500; }
+.seal { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); --mark-2: var(--on-accent); }
+
+/* ---------- live: the pinned view with the envelope ---------- */
+.band[data-live] .stage { position: relative; display: block; height: 100svh; padding: 0; overflow: hidden; }
+.band[data-live]::after { content: ""; display: block; height: 28svh; background: linear-gradient(180deg, var(--band-dark), var(--inv-ink)); }
+.band[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-8)); padding: 0 var(--gutter); }
+
+.band[data-live] .packet { display: block; position: absolute; inset: 0; }
+.band[data-live] .icons { display: block; position: absolute; inset: 0; pointer-events: none; }
+.icon { position: absolute; width: clamp(84px, 10vw, 156px); }
+.icon img { display: block; width: 100%; height: auto; }
+.iconA { left: 7%; top: 16%; rotate: -12deg; }
+.iconB { right: 8%; top: 13%; rotate: 10deg; }
+.iconC { left: 10%; bottom: 16%; rotate: 14deg; }
+.iconD { right: 7%; bottom: 20%; rotate: -9deg; }
+
+/* The envelope: its open back (with the flap up) behind the letter, its pocket in front of it */
+.band[data-live] .envelope, .band[data-live] .pocket {
+  display: block; position: absolute; left: 50%; width: var(--env-w); margin-left: calc(var(--env-w) / -2); bottom: calc(var(--env-h) * -0.34);
+}
+.band[data-live] .envelope { height: var(--env-h); z-index: 1; }
+.back { position: absolute; inset: 0; border-radius: calc(var(--r-sm) / 3); background: var(--kraft-deep); }
+.flap {
+  position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); height: calc(var(--env-h) * 0.36);
+  background: var(--kraft-deep); clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+.band[data-live] .letter {
+  position: absolute; z-index: 2; left: 50%; width: var(--letter-w); margin-left: calc(var(--letter-w) / -2);
+  top: calc(var(--header-h) + var(--s-6));
+}
+.band[data-live] .pocket { height: calc(var(--env-h) * 0.78); z-index: 3; }
+.pocket {
+  border-radius: calc(var(--r-sm) / 3); background: var(--kraft);
+  box-shadow: 0 -18px 40px -24px color-mix(in srgb, var(--inv-bg) 60%, transparent);
+}
+/* The folds of the pocket: two lines from the top corners to the middle */
+.fold {
+  position: absolute; inset: 0 0 64% 0;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 1px), color-mix(in srgb, var(--inv-bg) 16%, transparent) 50%, transparent calc(50% + 1px)) left / 50% 100% no-repeat,
+    linear-gradient(to top left, transparent calc(50% - 1px), color-mix(in srgb, var(--inv-bg) 16%, transparent) 50%, transparent calc(50% + 1px)) right / 50% 100% no-repeat;
+}
+.pocketSeal {
+  position: absolute; left: 50%; top: 36%; display: grid; place-items: center; width: 64px; height: 64px; margin: -32px 0 0 -32px;
+  border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); --mark-2: var(--on-accent);
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--inv-bg) 70%, transparent);
+}
+.band .pocketSeal svg, .band .seal svg { --mark-2: var(--on-accent); } /* beats Mark's own `.inverse .mark` rule */
+
+@media (max-width: 767px) {
+  .band { --env-w: 94vw; --env-h: calc(var(--env-w) * 0.7); --letter-w: calc(var(--env-w) * 0.92); }
+  .letter { padding: var(--s-6) var(--s-5) var(--s-5); }
+  .letterhead { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  .iconB, .iconC { display: none; }
+  .icon { width: 72px; }
+  .iconA { left: 5%; top: 34%; }
+  .iconD { right: 5%; top: 30%; bottom: auto; }
+}

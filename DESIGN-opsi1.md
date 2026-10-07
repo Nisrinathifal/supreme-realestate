@@ -138,15 +138,14 @@ The project page follows the same system: a Paper body (no Stone), its dark band
 `--fs-h3`, text at lead size.
 Homepage About (2026-10-07), under the collaboration ring, on Paper: the brand promise as title; the company story in
 five chapters beside one held photograph (Prinsen Bolwerk's kitchen) that renews under a seam from the works to the
-finished room as the chapters are read, the chapter at the reading line at full strength; then the company details as
-a register extract (rows written in from the left), proof lines that show only with verified data, a link to the KvK
-register once the number exists, the legal pages. `#about` points to it (the shelf is `#potential`).
-The company details lead with an **identity card** (owner, 2026-10-07): ID-1 proportions on Canal ink, the light
-lockup, the lime chip (a signal on dark), a canal-house drawing in the roof frame as portrait, only verified fields
-(legal form and activity derived), the columns as security print, the S mark as watermark and a machine-readable zone.
-It turns towards the pointer in 3D with a holographic sheen and a spring back (`IdentityTilt`): an owner-requested
-exception to REFERENCE-MOTION §9's "no tilt", for fine pointers with motion on only; touch and reduced motion get the
-flat card.
+finished room as the chapters are read, the chapter at the reading line at full strength; then the company details
+(below). `#about` points to it (the shelf is `#potential`); `#company` to the letter band.
+The company details follow in their own dark band as a **letter in an envelope** (owner, 2026-10-07, after the
+"open letter" band of illoca.unseen.co): title at the top, the shelf's four 3D icons around, a kraft envelope (Stone
+mixed with the window light, a lime seal with the S mark) at the foot of the view. Pinned, the letter rises out of the
+envelope over the title and the envelope drops away; a long letter reads on upwards. The letter: letterhead, "Aan wie
+het aangaat", the registration line, the verified details, the KvK link, the legal pages, a sign-off with the S seal.
+Without motion: the title and the letter. (The 3D identity card tried before it was dropped.)
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 
