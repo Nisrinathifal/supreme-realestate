@@ -7,17 +7,12 @@ import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 import styles from "./Work.module.css";
 
 /**
- * Handoff (desktop, 2026-10-05): as the band scrolls in under the night hero, each of the film's four window boxes
- * travels to its card's place in the stack and turns into the card on the way: the lime dot and dashes give way,
- * the corners round, the card's own tone fills it, and the real card crossfades in under it, so the box becomes
- * the card with no gap and no outline left standing. The motion follows the scroll through a short damping, so it
- * glides rather than steps. Phones (no windows on screen): the deck rises in as one. Then the
- * deck after the reference, on every width:
- * the deck is then pinned one viewport tall; the cards still to come wait as strips below the active card (each one a
- * little narrower), and each next card rises to the top and grows to full width over the current one while its
- * photographs slide in from the right and its note settles, scrubbed. On a fine pointer the card's pill follows the
- * pointer anywhere on the card and returns to the photographs when it leaves. Start states live here; without this the
- * CSS lists the cards (reduced motion, no JS).
+ * The projects band (2026-10-07, owner): it slides up over the held night hero; the film's windows stay on it as lime
+ * frames; the title comes up; the frames travel to their cards and become them; the title goes; then the deck after
+ * the reference, on every width: pinned one viewport tall, the cards still to come waiting as strips beneath the
+ * active card, each next card rising to the front as the one above lifts away, its photographs sliding in and its
+ * note settling, scrubbed. On a fine pointer the card's pill follows the pointer. The band's tone fades to Paper
+ * before the next band. Start states live here; without this the CSS lists the cards (reduced motion, no JS).
  */
 export function WorkMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -69,141 +64,35 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           })
         : null;
 
-      // Phones: arrival. The deck rises and comes up as one as the band scrolls in
-      mm.add(`${MQ.full} and (max-width: 767px)`, () => {
-        const section = root.closest("[data-work]") as HTMLElement | null;
-        const q = gsap.utils.selector(root);
-        const deck = q<HTMLElement>("[data-work-deck]")[0];
-        const first = q<HTMLElement>("[data-work-card]")[0];
-        if (!section || !deck || !first) return;
-        const firstPhotos = first.querySelector<HTMLElement>("[data-work-photos]");
-        gsap.set(deck, { opacity: 0, y: 80 });
-        if (firstPhotos) gsap.set(firstPhotos, { xPercent: 8 });
-        const tl = gsap.timeline({
-          defaults: { ease: "power2.out" },
-          scrollTrigger: { trigger: section, start: "top 92%", end: "top 30%", scrub: 1, invalidateOnRefresh: true },
-        });
-        tl.to(deck, { opacity: 1, y: 0, duration: 1 }, 0).to(firstPhotos, { xPercent: 0, duration: 0.8 }, 0.2);
-        return () => {
-          tl.scrollTrigger?.kill();
-          tl.kill();
-          gsap.set([deck, firstPhotos], { clearProps: "transform,opacity" });
-        };
-      });
-
-      // Desktop: the handoff from the film's windows to the cards
-      mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
-        const section = root.closest("[data-work]") as HTMLElement | null;
+      // The handoff and the deck (owner, 2026-10-07). The band has slid up over the held night hero (HeroScroll); the
+      // windows stay on it, alone, as lime frames (plates in a fixed layer, so the band never hides them). Once it
+      // has covered the hero, the band's root is pinned: the title comes up at the top, the frames travel to their
+      // cards (solid in the card's tone early, one after another), the deck appears beneath them as they land and
+      // they fade, so the cards' contents appear in place; the title goes as the stack shows; then the stack plays.
+      // Phones (no windows on screen): the title, then the deck rises in. Without JS / reduced motion: the title
+      // heads the list and the cards follow one another.
+      mm.add({ full: MQ.full, desktop: MQ.desktop }, (ctx) => {
+        if (!ctx.conditions?.full || !band) return;
         const q = gsap.utils.selector(root);
         const deck = q<HTMLElement>("[data-work-deck]")[0];
         const cards = q<HTMLElement>("[data-work-card]");
-        const boxes = cards.map((card) => document.querySelector<HTMLElement>(`[data-window="${card.dataset.project}"]`));
-        if (!section || !deck || !cards.length || boxes.some((b) => !b)) return;
-        const docEl = document.documentElement;
-        const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
-        const radius = cssPx(docEl, "--r-md", 18);
-        const clamp = (v: number) => Math.min(1, Math.max(0, v));
-
-        // One ghost per window, built from the card's own tone
-        const layer = document.createElement("div");
-        layer.setAttribute("aria-hidden", "true");
-        const n = cards.length;
-        const ghosts = cards.map((card, i) => {
-          const g = document.createElement("div");
-          g.className = styles.ghost;
-          g.style.zIndex = String(n - i);
-          const fill = document.createElement("span");
-          fill.className = styles.ghostFill;
-          fill.style.background = getComputedStyle(card).backgroundColor;
-          const tint = document.createElement("span");
-          tint.className = styles.ghostTint;
-          const line = document.createElement("span");
-          line.className = styles.ghostLine;
-          const dot = document.createElement("span");
-          dot.className = styles.ghostDot;
-          g.append(fill, tint, line, dot);
-          layer.append(g);
-          return { g, fill, tint, line, dot };
-        });
-        document.body.append(layer);
-        gsap.set(deck, { opacity: 0 }); // the deck comes up as one, so no card ever shows through another
-        gsap.set(layer, { autoAlpha: 0 });
-
-        // Shares of the scroll (2026-10-07, smoother): the boxes leave one after another (the bottom of the stack
-        // first) and turn solid early, in their card's tone, so no plate is ever see-through over another; the dashes,
-        // the lime wash and the dot are gone within the first third of the flight. Only once every plate has landed
-        // on its card does the real deck come up beneath them (invisibly: same place, same tone), and then the
-        // plates fade, so the cards' contents appear in place
-        const TRAVEL = 0.62;
-        const STAGGER = 0.07;
-        const LANDED = (n - 1) * STAGGER + TRAVEL;
-        const glideEase = gsap.parseEase("power3.inOut");
-        const update = (p: number) => {
-          gsap.set(deck, { opacity: p >= LANDED - 0.02 ? 1 : 0 });
-          const out = 1 - clamp((p - LANDED) / (1 - LANDED));
-          gsap.set(layer, { autoAlpha: p > 0.001 && p < 0.999 ? out : 0 });
-          cards.forEach((card, i) => {
-            const box = boxes[i]!;
-            const { g, fill, tint, line, dot } = ghosts[i];
-            const q = clamp((p - (n - 1 - i) * STAGGER) / TRAVEL); // this box's own travel
-            const e = glideEase(q);
-            // From the window where it is now (the hero is scrolling away) to the card where it is now (the deck
-            // is scrolling in): both ends move with the page, so a landed plate rides with its card
-            const from = box.getBoundingClientRect();
-            const to = card.getBoundingClientRect();
-            gsap.set(g, {
-              left: from.left + (to.left - from.left) * e,
-              top: from.top + (to.top - from.top) * e,
-              width: from.width + (to.width - from.width) * e,
-              height: from.height + (to.height - from.height) * e,
-              borderRadius: 2 + (radius - 2) * e,
-            });
-            gsap.set(dot, { opacity: 1 - clamp(q / 0.12) });
-            gsap.set(tint, { opacity: 1 - clamp(q / 0.25) });
-            gsap.set(line, { opacity: 1 - clamp((q - 0.04) / 0.24) });
-            gsap.set(fill, { opacity: clamp((q - 0.04) / 0.26) });
-            // The film's own box steps aside while its plate travels
-            box.style.visibility = p > 0.01 && p < 0.999 ? "hidden" : "";
-          });
-        };
-        // Damping: the drawn progress eases after the scroll's, so the plates glide instead of stepping
-        const shown = { p: 0 };
-        const glide = (target: number, now = false) =>
-          now
-            ? (gsap.killTweensOf(shown), (shown.p = target), update(target))
-            : gsap.to(shown, { p: target, duration: 0.7, ease: "power3.out", overwrite: true, onUpdate: () => update(shown.p) });
-        const st = ScrollTrigger.create({
-          trigger: section,
-          start: "top bottom",
-          end: () => `top ${top()}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => glide(self.progress),
-          onRefresh: (self) => glide(self.progress, true),
-        });
-        return () => {
-          st.kill();
-          gsap.killTweensOf(shown);
-          layer.remove();
-          boxes.forEach((b) => b && (b.style.visibility = ""));
-          gsap.set(deck, { clearProps: "opacity" });
-        };
-      });
-
-      mm.add(MQ.full, () => {
-        const q = gsap.utils.selector(root);
-        const deck = q<HTMLElement>("[data-work-deck]")[0];
-        const cards = q<HTMLElement>("[data-work-card]");
+        const lead = q<HTMLElement>("[data-work-lead]")[0];
         const n = cards.length;
         if (!deck || n < 2) return;
-
-        deck.setAttribute("data-deck", "");
-        const peek = () => cssPx(deck, "--peek", 48);
-        // --stack-top is a calc() in the CSS (the header veil's height), which cannot be read as a number: same sum here
         const docEl = document.documentElement;
         const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
+        const peek = () => cssPx(deck, "--peek", 48);
+        const radius = cssPx(docEl, "--r-md", 18);
+        const clamp = (v: number) => Math.min(1, Math.max(0, v));
         const DEPTH = 34; // px of depth per step down the stack (the deck has perspective)
-        // The stack as in the reference: the first card on top, the ones to come beneath it, each a step lower and a
-        // step deeper, so they show as strips under its foot
+        const HAND = 1.6; // the handoff's share of the pinned timeline, in card steps
+
+        // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
+        // pin begins exactly as the band has covered the hero
+        root.setAttribute("data-handoff", "");
+        gsap.set(band, { paddingTop: () => top() });
+
+        deck.setAttribute("data-deck", "");
         gsap.set(deck, { perspective: 1400 });
         cards.forEach((card, i) => {
           gsap.set(card, { zIndex: n - i, y: () => i * peek(), z: -DEPTH * i, transformOrigin: "50% 100%", force3D: true });
@@ -214,19 +103,117 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           gsap.set(card.querySelector("[data-work-photos]"), { xPercent: 12 });
           gsap.set(card.querySelector("[data-work-note]"), { y: 24, opacity: 0 });
         });
+        if (lead) gsap.set(lead, { opacity: 0, yPercent: -20 });
 
+        /* ---------- the plates (desktop: the film's windows are on screen) ---------- */
+        const boxes = ctx.conditions.desktop ? cards.map((card) => document.querySelector<HTMLElement>(`[data-window="${card.dataset.project}"]`)) : [];
+        const withPlates = boxes.length === n && boxes.every(Boolean);
+        const layer = document.createElement("div");
+        layer.setAttribute("aria-hidden", "true");
+        const ghosts = withPlates
+          ? cards.map((card, i) => {
+              const g = document.createElement("div");
+              g.className = styles.ghost;
+              g.style.zIndex = String(n - i);
+              const fill = document.createElement("span");
+              fill.className = styles.ghostFill;
+              fill.style.background = getComputedStyle(card).backgroundColor;
+              const tint = document.createElement("span");
+              tint.className = styles.ghostTint;
+              const line = document.createElement("span");
+              line.className = styles.ghostLine;
+              const dot = document.createElement("span");
+              dot.className = styles.ghostDot;
+              g.append(fill, tint, line, dot);
+              layer.append(g);
+              return { g, fill, tint, line, dot };
+            })
+          : [];
+        if (withPlates) document.body.append(layer);
+        gsap.set(layer, { autoAlpha: 0 });
+        if (withPlates) gsap.set(deck, { opacity: 0 });
+
+        // Where the windows are: the hero is held until the pin below begins, then scrolls away under the band, so
+        // a window's place is its place at that moment (measured now, less the distance scrolled since)
+        let pinStart = 0;
+        const fromRect = (box: HTMLElement) => {
+          const r = box.getBoundingClientRect();
+          const drift = Math.max(0, window.scrollY - pinStart);
+          return { left: r.left, top: r.top + drift, width: r.width, height: r.height };
+        };
+        const TRAVEL = 0.62;
+        const STAGGER = 0.07;
+        const LANDED = (n - 1) * STAGGER + TRAVEL;
+        const glideEase = gsap.parseEase("power3.inOut");
+        let covering = false;
+        let hand = 0; // 0..1 through the handoff
+        const draw = () => {
+          if (!withPlates) return;
+          const flying = hand > 0 && hand < 1;
+          const show = covering || flying;
+          gsap.set(layer, { autoAlpha: show ? 1 - clamp((hand - LANDED) / (1 - LANDED)) : 0 });
+          gsap.set(deck, { opacity: hand >= LANDED - 0.02 ? 1 : 0 });
+          boxes.forEach((box) => box && (box.style.visibility = show ? "hidden" : ""));
+          if (!show) return;
+          cards.forEach((card, i) => {
+            const { g, fill, tint, line, dot } = ghosts[i];
+            const qn = clamp((hand - (n - 1 - i) * STAGGER) / TRAVEL); // this box's own travel
+            const e = glideEase(qn);
+            const from = fromRect(boxes[i]!);
+            const to = card.getBoundingClientRect();
+            gsap.set(g, {
+              left: from.left + (to.left - from.left) * e,
+              top: from.top + (to.top - from.top) * e,
+              width: from.width + (to.width - from.width) * e,
+              height: from.height + (to.height - from.height) * e,
+              borderRadius: 2 + (radius - 2) * e,
+            });
+            gsap.set(dot, { opacity: 1 - clamp(qn / 0.12) });
+            gsap.set(tint, { opacity: 1 - clamp(qn / 0.25) });
+            gsap.set(line, { opacity: 1 - clamp((qn - 0.04) / 0.24) });
+            gsap.set(fill, { opacity: clamp((qn - 0.04) / 0.26) });
+          });
+        };
+        // While the band slides up over the held hero, the windows stand on it as plates
+        const cover = ScrollTrigger.create({
+          trigger: band,
+          start: "top bottom",
+          end: "top top",
+          invalidateOnRefresh: true,
+          onToggle: (self) => {
+            covering = self.isActive;
+            draw();
+          },
+          onUpdate: () => draw(),
+        });
+
+        /* ---------- the pinned timeline: handoff, then the stack ---------- */
+        const proxy = { p: 0 };
         const tl = gsap.timeline({
           defaults: { ease: ease.inOut },
           scrollTrigger: {
-            trigger: deck,
+            trigger: root,
             start: () => `top ${top()}`,
-            end: () => `+=${n * window.innerHeight * 0.85}`,
+            end: () => `+=${(n + HAND) * window.innerHeight * 0.85}`,
             pin: true,
             scrub: 0.8,
             invalidateOnRefresh: true,
+            onRefresh: (self) => {
+              pinStart = self.start;
+              draw();
+            },
           },
         });
+        // The handoff: title in, the plates fly and land (or, on phones, the deck rises in), title out
+        tl.to(proxy, { p: 1, duration: HAND, ease: "none", onUpdate: () => ((hand = proxy.p), draw()) }, 0);
+        if (lead) {
+          // ... and it stays over the flight and the landing, and goes as the stack has shown
+          tl.to(lead, { opacity: 1, yPercent: -50, duration: 0.3, ease: "power2.out" }, 0).to(lead, { opacity: 0, yPercent: -80, duration: 0.35, ease: "power2.in" }, HAND - 0.05);
+        }
+        if (!withPlates) tl.fromTo(deck, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: HAND * 0.6, ease: "power2.out" }, HAND * 0.35);
+
         for (let i = 0; i < n; i++) {
+          const at = HAND + i;
           // The card on top is lifted away like a sheet of paper: it tips back first (about 30°, still low), then
           // flies up, and settles to a lighter tilt as it leaves; its contents bend a little more than the card
           const h = () => deck.clientHeight;
@@ -242,30 +229,35 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
               duration: 1,
               ease: "none",
             },
-            i,
+            at,
           );
           const inner = cards[i].querySelector<HTMLElement>("article");
-          if (inner) tl.to(inner, { rotationX: 14, y: -28, duration: 0.5, ease: "power1.out" }, i);
+          if (inner) tl.to(inner, { rotationX: 14, y: -28, duration: 0.5, ease: "power1.out" }, at);
           // ... while the stack beneath stays where it is (fixed at the foot, owner): the cards only come forward
           // one step in depth, the next one to the front
           for (let j = i + 1; j < n; j++) {
             const step = j - i - 1;
-            tl.to(cards[j], { z: -DEPTH * step, duration: 1, ease: "power1.inOut" }, i);
+            tl.to(cards[j], { z: -DEPTH * step, duration: 1, ease: "power1.inOut" }, at);
           }
           const next = cards[i + 1];
           if (next) {
-            tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, i + 0.4)
-              .to(next.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, i + 0.5);
+            tl.to(next.querySelector("[data-work-photos]"), { xPercent: 0, duration: 0.6 }, at + 0.4).to(next.querySelector("[data-work-note]"), { y: 0, opacity: 1, duration: 0.5 }, at + 0.5);
           }
         }
 
         return () => {
+          cover.kill();
           tl.scrollTrigger?.kill();
           tl.kill();
+          layer.remove();
+          boxes.forEach((b) => b && (b.style.visibility = ""));
+          root.removeAttribute("data-handoff");
           deck.removeAttribute("data-deck");
+          gsap.set(band, { clearProps: "paddingTop" });
           gsap.set(cards, { clearProps: "transform,zIndex,transformOrigin" }); // not "all": the cards carry inline custom properties
           gsap.set(q("[data-work-card] article"), { clearProps: "transform,transformOrigin" });
-          gsap.set(deck, { clearProps: "perspective" });
+          gsap.set(deck, { clearProps: "perspective,opacity,transform" });
+          if (lead) gsap.set(lead, { clearProps: "opacity,transform" });
           gsap.set(q("[data-work-photos], [data-work-note]"), { clearProps: "transform,opacity" });
           ScrollTrigger.refresh();
         };
@@ -311,7 +303,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div ref={scope} data-work-motion>
+    <div ref={scope} className={styles.motion} data-work-motion>
       {children}
     </div>
   );

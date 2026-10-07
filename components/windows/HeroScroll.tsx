@@ -9,10 +9,14 @@ import { gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 const HOLD_AT = 0.7;
 /** How far the facades come forward over the scroll, around the houses' centre. */
 const ZOOM = 1.22;
+/** The hero's pin, in viewports: dusk first, then the projects band slides up over the held hero (owner, 2026-10-07). */
+const DUSK = 1.2;
+const COVER = 1;
 
 /**
- * Nightfall on scroll (concept 2026-10-05). On desktop the hero holds (pinned) for a little over one viewport of
- * scroll while the scroll scrubs dusk: the copy leaves, the night film (same view, windows lit, a boat passing)
+ * Nightfall on scroll (concept 2026-10-05). The hero holds (pinned) for a little over one viewport of scroll while
+ * the scroll scrubs dusk, then one viewport more while the projects band slides up over it (owner, 2026-10-07; the
+ * band's windows-to-cards handoff is WorkMotion's). During dusk: the copy leaves, the night film (same view, windows lit, a boat passing)
  * comes up over the day film and the boat canvas goes with the day, the whole view eases forward to ZOOM around
  * the houses; once it is dark the film finishes its crossing and rests on its last frame (which meets its first, so
  * nothing jumps), and the spotlight settles on the four project windows (the facades around them step back, their
@@ -42,6 +46,12 @@ export function HeroScroll() {
       if (spots) gsap.set(spots, { opacity: 0 });
       let tl: gsap.core.Timeline | null = null;
       let dark: ScrollTrigger | null = null;
+      // The projects band right after the hero is pulled up by the hero's height, so it rises over the held hero
+      // during the pin's last viewport (COVER) and has covered it exactly as the pin lets go
+      const band = document.querySelector<HTMLElement>("[data-work]");
+      const overlap = () => {
+        if (band) band.style.marginTop = `${-hero.offsetHeight}px`;
+      };
       let raf = 0;
       let live = false;
       let isDark = false;
@@ -59,35 +69,42 @@ export function HeroScroll() {
           nightFilm.preload = "auto";
           nightFilm.load();
         }
+        if (band) gsap.set(band, { position: "relative", zIndex: 2 });
+        overlap();
+        ScrollTrigger.addEventListener("refreshInit", overlap);
         tl = gsap.timeline({
           scrollTrigger: {
             trigger: hero,
             start: "top top",
-            end: "+=120%",
+            end: `+=${(DUSK + COVER) * 100}%`,
             pin: true,
             scrub: 1.2,
             anticipatePin: 1,
+            refreshPriority: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              if (self.progress > 0.58) live = true;
-              else if (self.progress < 0.46) live = false;
+              // Progress through the dusk part of the pin (the rest is the band covering the hero)
+              const dusk = Math.min(1, (self.progress * (DUSK + COVER)) / DUSK);
+              if (dusk > 0.58) live = true;
+              else if (dusk < 0.46) live = false;
               layer.dataset.shown = live ? "true" : "false";
               if (!nightFilm) return;
               // The night film runs while it can be seen; once night has fallen it stops looping and rests on its
               // last frame (ended), and a scroll back up lets it loop and resume (its last frame meets its first)
-              nightFilm.loop = self.progress < HOLD_AT;
-              const seen = self.progress > 0.01;
+              nightFilm.loop = dusk < HOLD_AT;
+              const seen = dusk > 0.01 && self.progress < 0.999;
               if (!seen) {
                 if (!nightFilm.paused) nightFilm.pause();
               } else if (nightFilm.paused && (nightFilm.loop || !nightFilm.ended)) nightFilm.play().catch(() => undefined);
             },
           },
         });
-        // The bar turns to Paper once the sky has gone dark, and stays so until the hero's foot passes it
+        // The bar turns to Paper once the sky has gone dark, and stays so until the band has covered the hero (the
+        // band, also dark, takes it from there)
         const pin = tl.scrollTrigger!;
         dark = ScrollTrigger.create({
-          start: () => pin.start + 0.45 * (pin.end - pin.start),
-          end: () => pin.end + hero.offsetHeight - 120,
+          start: () => pin.start + 0.45 * ((pin.end - pin.start) * DUSK) / (DUSK + COVER),
+          end: () => pin.end + 10,
           onToggle: (self) => headerTheme(self.isActive),
           onRefresh: (self) => headerTheme(self.isActive),
         });
@@ -97,6 +114,9 @@ export function HeroScroll() {
         if (canvas) tl.to(canvas, { opacity: 0, duration: 0.5, ease: "none" }, 0.2);
         if (spots) tl.to(spots, { opacity: 1, duration: 0.4, ease: "none" }, 0.55);
         tl.to(boxes, { opacity: 1, duration: 0.3, stagger: 0.06, ease: "none" }, 0.6);
+        // Dusk takes the timeline's first unit; the cover part of the pin holds the night as it is
+        tl.to({}, { duration: COVER / DUSK }, 1);
+        ScrollTrigger.refresh();
       };
       const start = () => {
         raf = requestAnimationFrame(build);
@@ -107,6 +127,8 @@ export function HeroScroll() {
         document.removeEventListener(HERO_LIVE, start);
         cancelAnimationFrame(raf);
         headerTheme(false);
+        ScrollTrigger.removeEventListener("refreshInit", overlap);
+        if (band) gsap.set(band, { clearProps: "marginTop,position,zIndex" });
         dark?.kill();
         tl?.scrollTrigger?.kill();
         tl?.kill();

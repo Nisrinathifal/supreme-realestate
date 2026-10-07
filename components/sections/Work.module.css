@@ -9,6 +9,22 @@
 .ghostDot { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; translate: -50% -50%; border-radius: 50%; background: var(--accent); }
 .ghostFill { position: absolute; inset: 0; border-radius: inherit; opacity: 0; box-shadow: inset 0 0 0 1px var(--glass-line); }
 
+/* The title over the windows during the handoff: in the static layout it heads the list; with the handoff running
+   (WorkMotion sets data-handoff on its root, which is pinned) it floats in the upper part of the view */
+.lead { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); padding: var(--s-8) var(--gutter) var(--s-7); text-align: center; }
+.leadLabel { color: var(--muted); }
+.leadTitle {
+  margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: 1; letter-spacing: -0.02em;
+  max-width: 16ch; text-wrap: balance; color: var(--ink);
+}
+.motion[data-handoff] > .lead {
+  /* in the room between the bar and the top of the stack, so the landing cards never cover it */
+  position: absolute; z-index: 95; left: 0; right: 0; top: calc((var(--header-h) - var(--stack-top)) / 2); padding: 0 var(--gutter);
+  gap: var(--s-2); transform: translateY(-50%); pointer-events: none;
+}
+.motion[data-handoff] > .lead .leadTitle { font-size: clamp(26px, 2.6vw, 40px); max-width: none; }
+.motion[data-handoff] { position: relative; }
+
 /* Static layout: the cards one after another. The deck is about three quarters of the frame (owner), not the container */
 /* The shelf's columns in the band's foot (WorkColumns): one viewport plus the foot, behind the deck, running on into the wall */
 .columns { position: absolute; left: 0; right: 0; bottom: 0; height: calc(100svh + var(--section-y) * 2); z-index: 0; pointer-events: none; }

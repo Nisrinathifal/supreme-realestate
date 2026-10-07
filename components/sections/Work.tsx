@@ -36,6 +36,12 @@ export function Work({ lang }: { lang: Lang }) {
       </h2>
       <WorkColumns />
       <WorkMotion>
+        {/* The title over the windows while they turn into the cards (owner, 2026-10-07); gone once the stack shows.
+            Without JS it simply heads the list. The h2 above carries the same words for assistive tech. */}
+        <div className={styles.lead} data-work-lead aria-hidden="true">
+          <p className={`t-micro ${styles.leadLabel}`}>{c.work.label}</p>
+          <p className={styles.leadTitle}>{c.work.title}</p>
+        </div>
         <ol className={styles.deck} data-work-deck style={{ "--count": n } as CSSProperties}>
           {c.work.items.map((item, i) => {
             const media = workCases[i];
