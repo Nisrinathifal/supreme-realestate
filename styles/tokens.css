@@ -48,6 +48,18 @@
   --inv-btn-fg:    #1A201D;
   --inv-focus:     #CFEA7C;
 
+  /* Supreme navy & cyan (owner, 2026-10-07): the existing logo's colours (wordmark navy, the cyan bar and cube),
+     for the projects band and its cards, which continue the night hero's blue sky instead of green.
+     Pairs (AA): night-muted on night 7.8, cyan-light on night 6.0 / on night-surface 5.0, cyan-deep on sky mist 4.7
+     and on cyan-mist 4.7. brand-cyan itself is for marks and lines, not small text. */
+  --night:         #101C28; /* Supreme navy */
+  --night-surface: #1C2C3E;
+  --night-muted:   #9FB0C3;
+  --brand-cyan:    #00989C; /* Supreme cyan */
+  --cyan-light:    #1AA9AD; /* cyan for small text on navy */
+  --cyan-deep:     #00767A; /* cyan for small text on light */
+  --cyan-mist:     #DFF1F1;
+
   /* semantic (DESIGN §3.2) */
   --error:         #B3261E;
 
