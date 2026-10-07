@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
-import { Mark } from "@/components/brand/Mark";
+import { RoofMark } from "@/components/brand/RoofMark";
 import { AlphaImage } from "@/components/ui/AlphaImage";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { Placeholder } from "@/components/ui/Placeholder";
@@ -27,7 +27,7 @@ const icons = [
  * drops away; a long letter then reads on upwards. The letter is the proof: Supreme's letterhead, "to whom it may
  * concern", the registration line, the verified company details (company.json, empty rows hidden; a development
  * placeholder names what the KvK extract must supply), the link to the KvK register, the legal pages and a sign-off
- * with the S mark as seal. Reduced motion and no-JS: the title and the letter, no envelope.
+ * with the roof-S mark (the site logo's) as seal. Reduced motion and no-JS: the title and the letter, no envelope.
  */
 export function CompanyLetter({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
@@ -87,7 +87,7 @@ export function CompanyLetter({ lang }: { lang: Lang }) {
             </div>
             <footer className={styles.sign}>
               <span className={styles.seal} aria-hidden="true">
-                <Mark size={28} decorative />
+                <RoofMark size={26} decorative />
               </span>
               <span>
                 {r.signoff}
@@ -100,7 +100,7 @@ export function CompanyLetter({ lang }: { lang: Lang }) {
           <div className={styles.pocket} data-letter-pocket aria-hidden="true">
             <span className={styles.fold} />
             <span className={styles.pocketSeal}>
-              <Mark size={34} decorative />
+              <RoofMark size={32} decorative />
             </span>
           </div>
           </div>

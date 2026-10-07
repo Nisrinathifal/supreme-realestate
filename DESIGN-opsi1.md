@@ -142,9 +142,9 @@ finished room as the chapters are read, the chapter at the reading line at full 
 (below). `#about` points to it (the shelf is `#potential`); `#company` to the letter band.
 The company details follow in their own dark band as a **letter in an envelope** (owner, 2026-10-07, after the
 "open letter" band of illoca.unseen.co): title at the top, the shelf's four 3D icons around, a kraft envelope (Stone
-mixed with the window light, a lime seal with the S mark) at the foot of the view. Pinned, the letter rises out of the
+mixed with the window light, a lime seal with the site logo's roof-S mark) at the foot of the view. Pinned, the letter rises out of the
 envelope over the title and the envelope drops away; a long letter reads on upwards. The letter: letterhead, "Aan wie
-het aangaat", the registration line, the verified details, the KvK link, the legal pages, a sign-off with the S seal.
+het aangaat", the registration line, the verified details, the KvK link, the legal pages, a sign-off with the roof-S seal.
 Without motion: the title and the letter. (The 3D identity card tried before it was dropped.)
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)

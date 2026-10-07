@@ -41,7 +41,7 @@
 .docList a:hover { text-decoration-thickness: 2px; }
 .sign { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.5; color: var(--muted); }
 .sign strong { color: var(--ink); font-weight: 500; }
-.seal { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); --mark-2: var(--on-accent); }
+.seal { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); }
 
 /* ---------- live: the pinned view with the envelope ---------- */
 .band[data-live] .stage { position: relative; display: block; height: 100svh; padding: 0; overflow: hidden; }
@@ -85,10 +85,9 @@
 }
 .pocketSeal {
   position: absolute; left: 50%; top: 36%; display: grid; place-items: center; width: 64px; height: 64px; margin: -32px 0 0 -32px;
-  border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); --mark-2: var(--on-accent);
+  border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent);
   box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--inv-bg) 70%, transparent);
 }
-.band .pocketSeal svg, .band .seal svg { --mark-2: var(--on-accent); } /* beats Mark's own `.inverse .mark` rule */
 
 @media (max-width: 767px) {
   .band { --env-w: 94vw; --env-h: calc(var(--env-w) * 0.7); --letter-w: calc(var(--env-w) * 0.92); }
