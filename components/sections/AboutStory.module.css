@@ -1,0 +1,99 @@
+/* About + company details: Paper, as the band above settles into it and the contact band below continues it */
+.about { position: relative; color: var(--ink); background: var(--bg); }
+.inner { display: flex; flex-direction: column; padding-top: var(--section-y); padding-bottom: var(--section-y); }
+
+/* ---------- head: the brand promise, large, in word masks ---------- */
+.head { display: flex; flex-direction: column; gap: var(--s-5); margin-bottom: var(--s-9); }
+.label { color: var(--muted); }
+.title {
+  margin: 0; max-width: 12ch; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: 1;
+  letter-spacing: -0.03em; text-wrap: balance;
+}
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; margin-right: 0.24em; }
+.mask:last-child { margin-right: 0; }
+.mask > span { display: inline-block; }
+
+/* ---------- the story: one photograph held while the chapters pass ---------- */
+.story { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; }
+.aside { grid-column: 1 / 7; align-self: stretch; }
+.sticky { position: sticky; top: calc(var(--header-h) + var(--s-6)); display: flex; flex-direction: column; gap: var(--s-5); }
+.chapters { grid-column: 8 / 13; display: flex; flex-direction: column; }
+
+/* --wipe 0–100: how much of the finished room shows (100 without motion; AboutStoryMotion scrubs it) */
+.frame { --wipe: 100; position: relative; margin: 0; width: min(100%, 64svh); aspect-ratio: 1; overflow: hidden; background: var(--alt); }
+.layer { position: absolute; inset: 0; }
+.after { clip-path: inset(0 calc(100% - var(--wipe) * 1%) 0 0); }
+.seam {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--wipe) * 1%); width: 2px; margin-left: -1px;
+  background: var(--on-media); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.frame:not([data-phase]) .seam { display: none; } /* no seam on the finished room at rest */
+.tags { position: absolute; left: var(--s-4); bottom: var(--s-4); }
+.tags > span {
+  display: inline-block; padding: var(--s-1) var(--s-3); border-radius: var(--r-pill); font-size: var(--fs-micro); font-weight: 500;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--on-media); background: color-mix(in srgb, var(--inv-bg) 55%, transparent);
+  -webkit-backdrop-filter: blur(var(--blur)); backdrop-filter: blur(var(--blur));
+}
+.tags > .tagBefore { display: none; }
+.frame[data-phase="before"] .tags > .tagBefore { display: inline-block; }
+.frame[data-phase="before"] .tags > .tagAfter { display: none; }
+
+/* The chapters as stops under the photograph: the one being read in ink */
+.rail { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); width: min(100%, 64svh); }
+.stop { font-size: var(--fs-ui); color: var(--muted); transition: color 300ms var(--ease); }
+.stop::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: var(--s-2); border-radius: var(--r-pill); background: var(--line); vertical-align: 0.15em; transition: background-color 300ms var(--ease); }
+.stop[data-active] { color: var(--ink); }
+.stop[data-active]::before { background: var(--ink); }
+
+.chapter { display: flex; flex-direction: column; justify-content: center; gap: var(--s-4); min-height: 52svh; transition: opacity 400ms var(--ease); }
+.chapterName { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: 1.1; letter-spacing: -0.02em; }
+.chapterBody { margin: 0; max-width: 40ch; font-size: var(--fs-lead); line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+/* With the story running (desktop, motion on) only the chapter being read is at full strength */
+.about[data-story-live] .chapter { opacity: 0.3; }
+.about[data-story-live] .chapter[data-active] { opacity: 1; }
+.close { margin: var(--s-7) 0 0; max-width: 40ch; padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: var(--fs-body); line-height: 1.6; color: var(--ink); }
+
+/* ---------- the register: the story's proof ---------- */
+.register {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start;
+  margin-top: var(--s-10); padding-top: var(--s-9); border-top: 1px solid var(--line);
+}
+.registerText { grid-column: 1 / 6; display: flex; flex-direction: column; gap: var(--s-4); }
+.registerTitle { margin: var(--s-1) 0 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-statement); line-height: 1.05; letter-spacing: -0.02em; }
+.registerLead { margin: 0; max-width: 40ch; font-size: var(--fs-body); line-height: 1.6; color: var(--muted); }
+.proofs { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-2); }
+.proof { display: flex; align-items: center; gap: var(--s-3); font-size: var(--fs-ui); color: var(--ink); }
+
+.card {
+  grid-column: 7 / 13; display: flex; flex-direction: column; gap: var(--s-6); padding: var(--s-7);
+  border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--shadow-soft);
+  font-variant-numeric: tabular-nums;
+}
+.cardHead { display: flex; flex-direction: column; gap: var(--s-2); }
+.cardHead > span:first-child { color: var(--muted); }
+.cardName { font-family: var(--font-display); font-size: var(--fs-h3); line-height: 1.1; letter-spacing: -0.01em; }
+.cardList { gap: var(--s-4); }
+.verify {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-5);
+  border-radius: var(--r-pill); box-shadow: inset 0 0 0 1px var(--ink); font-size: var(--fs-ui); font-weight: 500;
+  transition: background-color 200ms var(--ease), color 200ms var(--ease);
+}
+.verify:hover { background: var(--ink); color: var(--bg); }
+.pending { margin: 0; }
+.docs { display: flex; flex-direction: column; gap: var(--s-2); padding-top: var(--s-5); border-top: 1px solid var(--line); }
+.docs > span:first-child { color: var(--muted); }
+.docList { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+.docList a { font-size: var(--fs-ui); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.docList a:hover { text-decoration-thickness: 2px; }
+
+@media (max-width: 980px) {
+  .head { margin-bottom: var(--s-7); }
+  .aside, .chapters, .registerText, .card { grid-column: 1 / -1; }
+  .sticky { position: static; }
+  .frame, .rail { width: 100%; }
+  .rail { display: none; }
+  .chapters { margin-top: var(--s-7); gap: var(--s-7); }
+  .chapter { min-height: 0; }
+  .register { margin-top: var(--s-9); padding-top: var(--s-8); row-gap: var(--s-7); }
+  .card { padding: var(--s-6) var(--s-5); }
+}

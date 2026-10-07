@@ -54,6 +54,31 @@ export const en: Copy = {
   shelf: {
     parts: [draft("We unlock the potential of existing"), { icon: "bulb" }, draft("properties, transforming"), { icon: "hammer" }, draft("them into thoughtfully designed homes and continuing to manage"), { icon: "clipboard" }, draft("their value over time"), { icon: "chart" }],
   },
+  // About + company details (owner, 2026-10-07; copy from the section-drafts doc, rewritten from supremerealestate.nl/over-ons).
+  aboutStory: {
+    label: "About",
+    title: "From old to valuable.",
+    chapters: [
+      { name: draft("Why"), body: draft("The Netherlands needs homes, and the Amsterdam region is full of buildings that could be more. Supreme Real Estate closes that gap: not by building new, but by giving existing property a second life.") },
+      { name: draft("What we do"), body: draft("We acquire buildings that have seen better days: old offices, large houses, properties with overdue maintenance. We redevelop them into independent, turnkey homes in good locations in and around Amsterdam.") },
+      { name: draft("Design"), body: draft("Every design starts with the future resident. A home should feel warm, be full of light and last. 3D visualisations show a space before it is built; good proportions, durable materials and clean lines do the rest.") },
+      { name: draft("Realisation"), body: draft("We build with a fixed contractor and a fixed design and build team. That brings calm in a tight construction market: short lines, a tight but flexible schedule and involvement from the first sketch to the final finish.") },
+      { name: draft("Delivery"), body: draft("From purchase, design and permit to installation and finishing: every step in our own hands. After a few weeks of building work a turnkey apartment stands ready, and the region gains one more home.") },
+    ],
+    close: draft("We are open to working with professionals, brokers and municipalities who share the same ambition."),
+    frame: { before: draft("During the works"), after: draft("Delivered") },
+  },
+  register: {
+    label: draft("Company"),
+    lead: draft("Supreme Real Estate B.V. is registered with the Netherlands Chamber of Commerce. All details below match that registration, and you can check them there yourself."),
+    proofKvk: draft("Registered with the KvK"),
+    proofOffice: (city) => draft(`Office in ${city}`),
+    proofTeam: draft("Our own build and design team"),
+    extract: draft("Extract"),
+    verify: draft("Check in the KvK register"),
+    documents: draft("Documents"),
+    pending: "Placeholder: KvK number, VAT number, visiting address and contact details to follow from the KvK extract.",
+  },
   // Steps: owner concept 2026-10-01 (three steps verbatim from the owner's mock-up; headline lines draft).
   steps: {
     label: draft("Reimagining value"),

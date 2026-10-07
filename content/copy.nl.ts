@@ -54,6 +54,31 @@ export const nl: Copy = {
   shelf: {
     parts: [draft("Wij zien de mogelijkheden van bestaande"), { icon: "bulb" }, draft("panden, vernieuwen"), { icon: "hammer" }, draft("ze tot zorgvuldig ontworpen woningen en blijven"), { icon: "clipboard" }, draft("hun waarde beheren, jaar na jaar"), { icon: "chart" }],
   },
+  // About + company details (owner, 2026-10-07; copy from the section-drafts doc, rewritten from supremerealestate.nl/over-ons).
+  aboutStory: {
+    label: "Over ons",
+    title: "Van oud naar waardevol.",
+    chapters: [
+      { name: draft("Waarom"), body: draft("Nederland heeft woningen nodig, en de regio Amsterdam staat vol gebouwen die meer kunnen zijn. Supreme Real Estate maakt dat verschil: niet door nieuw te bouwen, maar door bestaand vastgoed een tweede leven te geven.") },
+      { name: draft("Wat we doen"), body: draft("We kopen panden die hun beste tijd achter zich hebben: oude kantoren, grote woningen, gebouwen met achterstallig onderhoud. Die ontwikkelen we opnieuw tot zelfstandige, sleutelklare woningen op goede plekken in en rond Amsterdam.") },
+      { name: draft("Ontwerp"), body: draft("Elk ontwerp begint bij de toekomstige bewoner. Een huis moet warm voelen, licht zijn en lang meegaan. Met 3D-visualisaties zien we vooraf hoe een ruimte wordt; goede verhoudingen, duurzame materialen en strakke lijnen doen de rest.") },
+      { name: draft("Realisatie"), body: draft("We bouwen met een vaste aannemer en een vast design- en bouwteam. Dat geeft rust in een krappe bouwmarkt: korte lijnen, een strakke maar flexibele planning en betrokkenheid van de eerste schets tot de laatste afwerking.") },
+      { name: draft("Oplevering"), body: draft("Van aankoop, ontwerp en vergunning tot installatie en afbouw: elke stap in eigen hand. Na enkele weken verbouwen staat er een sleutelklaar appartement, en zo krijgt de regio er steeds weer een woning bij.") },
+    ],
+    close: draft("We staan open voor samenwerking met vakmensen, makelaars en gemeenten die dezelfde ambitie delen."),
+    frame: { before: draft("Tijdens de verbouwing"), after: draft("Opgeleverd") },
+  },
+  register: {
+    label: draft("Bedrijf"),
+    lead: draft("Supreme Real Estate B.V. is ingeschreven bij de Kamer van Koophandel. Alle gegevens hieronder komen overeen met die inschrijving en kunt u daar zelf controleren."),
+    proofKvk: draft("Ingeschreven bij de KvK"),
+    proofOffice: (city) => draft(`Kantoor in ${city}`),
+    proofTeam: draft("Eigen bouw- en designteam"),
+    extract: draft("Uittreksel"),
+    verify: draft("Controleer in het KvK-register"),
+    documents: draft("Documenten"),
+    pending: "Placeholder: KvK-nummer, BTW-nummer, vestigingsadres en contactgegevens volgen uit het KvK-uittreksel.",
+  },
   // Steps: owner concept 2026-10-01, NL draft until approved.
   steps: {
     label: draft("Waarde opnieuw bekeken"),

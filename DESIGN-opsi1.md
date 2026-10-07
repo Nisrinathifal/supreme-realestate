@@ -136,6 +136,11 @@ softly over the dark band's foot (Shelf `[data-dawn]`) and dusk falls at the wal
 The project page follows the same system: a Paper body (no Stone), its dark bands (before/after, other projects) on
 `--band-dark`; a chapter under a statement (the outcome, our approach) is the clear second level: hairline, name at
 `--fs-h3`, text at lead size.
+Homepage About (2026-10-07), under the collaboration ring, on Paper: the brand promise as title; the company story in
+five chapters beside one held photograph (Prinsen Bolwerk's kitchen) that renews under a seam from the works to the
+finished room as the chapters are read, the chapter at the reading line at full strength; then the company details as
+a register extract (rows written in from the left), proof lines that show only with verified data, a link to the KvK
+register once the number exists, the legal pages. `#about` points to it (the shelf is `#potential`).
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 

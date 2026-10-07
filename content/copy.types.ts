@@ -32,6 +32,27 @@ export type Copy = {
   statement: { label: string; text: string; aside: string };
   /** Shelf section: one statement whose inline icons fly into the shelf. `parts` alternate text and icon keys. */
   shelf: { parts: (string | { icon: ShelfIcon })[] };
+  /** About + company details band under the collaboration ring: the company story in chapters, then the register. */
+  aboutStory: {
+    label: string;
+    title: string;
+    chapters: { name: string; body: string }[];
+    close: string;
+    /** Tags on the photograph that renews as the story is read. */
+    frame: { before: string; after: string };
+  };
+  register: {
+    label: string;
+    lead: string;
+    proofKvk: string;
+    proofOffice: (city: string) => string;
+    proofTeam: string;
+    /** The card's head, as on a register extract. */
+    extract: string;
+    verify: string;
+    documents: string;
+    pending: string;
+  };
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   /**

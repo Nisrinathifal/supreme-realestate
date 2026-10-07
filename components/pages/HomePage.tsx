@@ -1,3 +1,4 @@
+import { AboutStory } from "@/components/sections/AboutStory";
 import { Hero } from "@/components/sections/Hero";
 import { Shelf } from "@/components/sections/Shelf";
 import { Steps } from "@/components/sections/Steps";
@@ -9,7 +10,9 @@ import type { Lang } from "@/content/routes";
  * Homepage: the hero film opens the page (no intro since 2026-10-05), the projects deck follows it at once (owner,
  * 2026-10-05: the way in for anyone who never hovers the facades, and on phones), then the shelf statement, the three
  * steps and, back since 2026-10-07 (owner), the collaboration ring (WorkIntro: the cards and mascots turning around
- * "See what we've transformed"), sliding up over the held steps strip as it was designed to. The sky band is parked.
+ * "See what we've transformed"), sliding up over the held steps strip as it was designed to, and under it (owner,
+ * 2026-10-07) About: the company story beside a room that renews as it is read, ending in the company details. The
+ * sky band is parked.
  */
 export function HomePage({ lang }: { lang: Lang }) {
   return (
@@ -19,6 +22,7 @@ export function HomePage({ lang }: { lang: Lang }) {
       <Shelf lang={lang} />
       <Steps lang={lang} />
       <WorkIntro lang={lang} />
+      <AboutStory lang={lang} />
       {/* Sky band (components/sections/Sky) parked on 2026-10-01 until its layout is reworked */}
     </>
   );
