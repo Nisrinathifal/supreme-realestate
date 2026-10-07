@@ -32,6 +32,8 @@ export type Copy = {
   statement: { label: string; text: string; aside: string };
   /** Shelf section: one statement whose inline icons fly into the shelf. `parts` alternate text and icon keys. */
   shelf: { parts: (string | { icon: ShelfIcon })[] };
+  /** Homepage About band: label, the brand promise as its title, a lead and a body; the principles follow from `principles`. */
+  homeAbout: { label: string; title: string; lead: string; body: string; principlesLabel: string };
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   /**

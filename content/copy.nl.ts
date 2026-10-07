@@ -54,6 +54,14 @@ export const nl: Copy = {
   shelf: {
     parts: [draft("Wij zien de mogelijkheden van bestaande"), { icon: "bulb" }, draft("panden, vernieuwen"), { icon: "hammer" }, draft("ze tot zorgvuldig ontworpen woningen en blijven"), { icon: "clipboard" }, draft("hun waarde beheren, jaar na jaar"), { icon: "chart" }],
   },
+  // Homepage About band (draft 2026-10-07, from the section-drafts doc; built on supremerealestate.nl). Title = the brand promise.
+  homeAbout: {
+    label: "Over ons",
+    title: "Van oud naar waardevol.",
+    lead: draft("Supreme Real Estate geeft bestaande gebouwen in de regio Amsterdam een nieuwe toekomst. We kopen panden die hun beste tijd achter zich hebben, ontwerpen ze opnieuw en maken er zelfstandige, sleutelklare woningen van."),
+    body: draft("Elk ontwerp begint bij de mensen die er gaan wonen: comfort, licht, goede verhoudingen en duurzame materialen. We werken met een vast bouw- en designteam, van de eerste schets tot de laatste afwerking. En als het werk klaar is, blijven we betrokken: we houden en beheren wat we maken, voor de lange termijn."),
+    principlesLabel: draft("Waar wij voor staan"),
+  },
   // Steps: owner concept 2026-10-01, NL draft until approved.
   steps: {
     label: draft("Waarde opnieuw bekeken"),

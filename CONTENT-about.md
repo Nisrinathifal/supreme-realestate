@@ -133,7 +133,7 @@ Add near it one short trust line (draft):
 | 1 | Hero film | built | First impression, brand |
 | 2 | Projects deck (four featured) | built | "Properties" |
 | 3 | Shelf statement | built | What we unlock |
-| 4 | **About** (§3) | to build | "What we really do", "ideal landlord" |
+| 4 | **About** (§3) | built 2026-10-07 (`components/sections/About.tsx`), copy in `draft()` | "What we really do", "ideal landlord" |
 | 5 | Steps / How we work | built (or §3 list) | Process |
 | 6 | **For residents** (§4) | needs owner facts | "How we treat tenants" |
 | 7 | Collaboration ring | built | Partners: architects, builders, designers |

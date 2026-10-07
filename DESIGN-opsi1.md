@@ -136,6 +136,9 @@ softly over the dark band's foot (Shelf `[data-dawn]`) and dusk falls at the wal
 The project page follows the same system: a Paper body (no Stone), its dark bands (before/after, other projects) on
 `--band-dark`; a chapter under a statement (the outcome, our approach) is the clear second level: hairline, name at
 `--fs-h3`, text at lead size.
+Homepage About band (2026-10-07), between the shelf and the steps, on the same Paper: label → brand promise as the
+title (`--fs-h2`) → lead in ink (`--fs-h3`) → body in muted, beside one portrait interior of a featured project; then
+the three principles on hairlines. It carries the dusk into the steps band; `#about` points to it.
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 
