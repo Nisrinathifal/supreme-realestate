@@ -351,7 +351,7 @@ export const nl: Copy = {
     linkedin: "LinkedIn",
     // Contactband: DESIGN §10.1 (7. Contact) letterlijk
     cta: { label: "Contact", title: "Neem contact op", body: "Voor samenwerking, pers of andere vragen: we reageren persoonlijk.", button: "Neem contact op" },
-    callUs: draft("Bel ons"),
+    mailUs: draft("Mail ons"),
     backToTop: draft("Naar boven"),
   },
   notFound: { title: "Deze pagina bestaat niet (meer)", home: draft("Terug naar de homepage") },

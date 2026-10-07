@@ -353,7 +353,7 @@ export const en: Copy = {
     linkedin: "LinkedIn",
     // Contact band: DESIGN §10.1 (7. Contact) verbatim
     cta: { label: "Contact", title: "Get in touch", body: "For partnerships, press or other questions: we reply personally.", button: "Get in touch" },
-    callUs: draft("Call us"),
+    mailUs: draft("Email us"),
     backToTop: draft("Back to top"),
   },
   notFound: { title: "This page does not exist (anymore)", home: draft("Back to the homepage") },

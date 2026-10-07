@@ -121,7 +121,7 @@ export type Copy = {
     vat: string;
     linkedin: string;
     cta: { label: string; title: string; body: string; button: string };
-    callUs: string;
+    mailUs: string;
     backToTop: string;
   };
   notFound: { title: string; home: string };

@@ -3,7 +3,7 @@ import { Lockup } from "@/components/brand/Lockup";
 import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MicroLabel } from "@/components/ui/MicroLabel";
-import { company, has, telHref } from "@/content/company";
+import { company, has } from "@/content/company";
 import { footerSketches } from "@/content/media";
 import { getCopy } from "@/content/copy";
 import { pathFor, type Lang } from "@/content/routes";
@@ -30,16 +30,14 @@ export function ContactBand({ lang }: { lang: Lang }) {
 
 /**
  * Footer after the reference: revealed from under the page (sticky). Top row: section links · lockup with the
- * legal line · social links (placeholders until verified). Bottom row: phone · back to top · legal pages. Two ink line
- * drawings sit along the bottom edge. Company values come from company.json and hide while unverified;
- * the phone shows the fictional stand-in from the copy until then (no tel: link).
+ * legal line · social links (placeholders until verified). Bottom row: e-mail · back to top · legal pages. Two ink line
+ * drawings sit along the bottom edge. Company values come from company.json and hide while unverified (owner,
+ * 2026-10-07: the e-mail, not the phone).
  */
 export function Footer({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const year = new Date().getFullYear();
   const home = pathFor("home", lang);
-  const phone = has(company.phone) ? company.phone : c.placeholders.phone;
-  const phoneHref = has(company.phone) ? telHref(company.phone) : "";
   const legalParts = [company.legalName, has(company.kvk) ? `${c.footer.kvk} ${company.kvk}` : null].filter(Boolean);
 
   return (
@@ -91,10 +89,13 @@ export function Footer({ lang }: { lang: Lang }) {
         </div>
 
         <div className={styles.bottom}>
-          <p className={`t-legal ${styles.call}`}>
-            <span className={styles.muted}>{c.footer.callUs}</span>{" "}
-            {phoneHref ? <a href={phoneHref}>{phone}</a> : <span>{phone}</span>}
-          </p>
+          {has(company.email) ? (
+            <p className={`t-legal ${styles.call}`}>
+              <span className={styles.muted}>{c.footer.mailUs}</span> <a href={`mailto:${company.email}`}>{company.email}</a>
+            </p>
+          ) : (
+            <span />
+          )}
           <a href="#main" className={`t-micro ${styles.toTop}`}>
             {c.footer.backToTop}
           </a>
