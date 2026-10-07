@@ -1,5 +1,5 @@
 /* Canal-ink band right after the night hero, no heading: just the deck of cards */
-.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ padding-top: var(--s-6); padding-bottom: calc(var(--section-y) * 2); background: var(--inv-bg); } /* the room at the foot is where the band fades to the next one's Stone */
+.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ position: relative; padding-top: var(--s-6); padding-bottom: calc(var(--section-y) * 2); background: var(--inv-bg); } /* the room at the foot is where the band fades to the next one's Stone */
 
 /* Handoff ghosts (WorkMotion, desktop): a window box from the film on its way to being a card. Fixed, under the
    header; WorkMotion sets its box, radius and the opacities of its parts as the scroll moves */
@@ -10,7 +10,9 @@
 .ghostFill { position: absolute; inset: 0; border-radius: inherit; opacity: 0; box-shadow: inset 0 0 0 1px var(--glass-line); }
 
 /* Static layout: the cards one after another. The deck is about three quarters of the frame (owner), not the container */
-.deck { --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(960px, 76vw)); display: flex; flex-direction: column; gap: var(--s-4); }
+/* The shelf's columns in the band's foot (WorkColumns): one viewport plus the foot, behind the deck, running on into the wall */
+.columns { position: absolute; left: 0; right: 0; bottom: 0; height: calc(100svh + var(--section-y) * 2); z-index: 0; pointer-events: none; }
+.deck { position: relative; z-index: 1; --card-pad: clamp(24px, 2.6vw, 40px); list-style: none; margin: 0 auto; padding: 0 var(--frame); width: min(100%, max(960px, 76vw)); display: flex; flex-direction: column; gap: var(--s-4); }
 /* Card: a tight radius, one flat tone, a glass hairline (the header pill's language) */
 .card {
   position: relative; isolation: isolate; border-radius: var(--r-md); overflow: hidden; background: var(--bg); color: var(--ink);

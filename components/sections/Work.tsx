@@ -5,6 +5,7 @@ import { workCases } from "@/content/media";
 import { projects } from "@/content/projects";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
+import { WorkColumns } from "./WorkColumns";
 import { WorkEnter } from "./WorkEnter";
 import { WorkMotion } from "./WorkMotion";
 import styles from "./Work.module.css";
@@ -33,6 +34,7 @@ export function Work({ lang }: { lang: Lang }) {
       <h2 id="work-title" className="visually-hidden">
         {c.work.title}
       </h2>
+      <WorkColumns />
       <WorkMotion>
         <ol className={styles.deck} data-work-deck style={{ "--count": n } as CSSProperties}>
           {c.work.items.map((item, i) => {
