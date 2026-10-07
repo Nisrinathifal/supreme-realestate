@@ -10,11 +10,16 @@
   max-width: 16ch; text-wrap: balance; color: var(--ink);
 }
 .motion[data-handoff] > .lead {
-  /* centred in the room between the bar and the top of the stack (WorkMotion keeps it at yPercent -50) */
-  position: absolute; z-index: 2; left: 0; right: 0; top: calc((var(--header-h) - var(--stack-top)) / 2 + var(--s-3)); padding: 0 var(--gutter);
-  gap: var(--s-2); pointer-events: none;
+  /* alone on the band while it covers the hero: a little below the band's top, so it is in view from the start */
+  position: absolute; z-index: 2; left: 0; right: 0; top: calc(22svh - var(--stack-top)); padding: 0 var(--gutter);
+  gap: var(--s-4); pointer-events: none;
 }
-.motion[data-handoff] > .lead .leadTitle { font-size: clamp(28px, 2.8vw, 44px); max-width: none; }
+.motion[data-handoff] > .lead .leadTitle { font-size: var(--fs-h2); max-width: 14ch; }
+/* each word in its own mask, so it can rise into view and out of it (WorkMotion) */
+.leadWord { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.leadWord > span { display: inline-block; }
+.leadTitle .leadWord { margin-right: 0.24em; }
+.leadTitle .leadWord:last-child { margin-right: 0; }
 .motion[data-handoff] { position: relative; }
 
 /* Static layout: the cards one after another. The deck is about three quarters of the frame (owner), not the container */

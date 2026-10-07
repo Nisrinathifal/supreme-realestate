@@ -65,9 +65,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         : null;
 
       // The arrival and the deck (owner, 2026-10-07). The band slides up over the held night hero (HeroScroll) with
-      // its title and its cards already on it, so they simply come up with the page (nothing replays on its own);
-      // the title fades as the band closes over the hero and is gone the moment it fills the view, leaving only the
-      // cards; the band's root is then pinned and, after a short rest, the stack plays. Same on every width.
+      // only its title on it, word by word; the title is gone the moment the band fills the view; the band's root is
+      // then pinned, the cards rise in and, after a short rest, the stack plays. Same on every width.
       // Without JS / reduced motion: the title heads the list and the cards follow one another.
       mm.add(MQ.full, () => {
         if (!band) return;
@@ -81,7 +80,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
         const peek = () => cssPx(deck, "--peek", 48);
         const DEPTH = 34; // px of depth per step down the stack (the deck has perspective)
-        const HAND = 0.35; // a short rest on the full stack before the first card lifts, in card steps
+        const HAND = 0.9; // the cards' arrival (and a short rest) before the first card lifts, in card steps
 
         // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
         // pin begins exactly as the band has covered the hero
@@ -112,14 +111,20 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
             invalidateOnRefresh: true,
           },
         });
-        // The title rides up on the band and fades as the band closes over the hero: gone when it fills the view
-        const fade = lead
-          ? gsap.fromTo(
-              lead,
-              { opacity: 1, y: 0, yPercent: -50 },
-              { opacity: 0, y: -32, yPercent: -50, ease: "power1.in", scrollTrigger: { trigger: band, start: "top 48%", end: "top 2%", scrub: true, invalidateOnRefresh: true } },
-            )
+        // While the band covers the hero it carries only its title: the words rise into view one after another out of
+        // their masks as the band comes up, then leave the same way, upwards, one after another, the last gone the
+        // moment the band fills the view. No cards until then.
+        gsap.set(deck, { autoAlpha: 0 });
+        const words = lead ? Array.from(lead.querySelectorAll<HTMLElement>("[data-lead-word]")) : [];
+        const title = words.length
+          ? gsap
+              .timeline({ scrollTrigger: { trigger: band, start: "top 94%", end: "top 1%", scrub: 0.6, invalidateOnRefresh: true } })
+              .fromTo(words, { yPercent: 115, rotate: 6, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 0.3, stagger: 0.05, ease: "power3.out" }, 0)
+              .to(words, { yPercent: -115, rotate: -4, opacity: 0, duration: 0.24, stagger: 0.035, ease: "power2.in" }, 0.62)
           : null;
+
+        // Then the cards rise in, as one stack, with a strong ease-out, and rest a moment before the first lifts
+        tl.fromTo(deck, { autoAlpha: 0, y: () => window.innerHeight * 0.5 }, { autoAlpha: 1, y: 0, duration: HAND * 0.7, ease: "expo.out", immediateRender: false }, 0);
 
         for (let i = 0; i < n; i++) {
           const at = HAND + i;
@@ -157,14 +162,15 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         return () => {
           tl.scrollTrigger?.kill();
           tl.kill();
-          fade?.scrollTrigger?.kill();
-          fade?.kill();
+          title?.scrollTrigger?.kill();
+          title?.kill();
+          gsap.set(words, { clearProps: "transform,opacity" });
           root.removeAttribute("data-handoff");
           deck.removeAttribute("data-deck");
           gsap.set(band, { clearProps: "paddingTop" });
           gsap.set(cards, { clearProps: "transform,zIndex,transformOrigin" }); // not "all": the cards carry inline custom properties
           gsap.set(q("[data-work-card] article"), { clearProps: "transform,transformOrigin" });
-          gsap.set(deck, { clearProps: "perspective,opacity,transform" });
+          gsap.set(deck, { clearProps: "perspective,opacity,visibility,transform" });
           if (lead) gsap.set(lead, { clearProps: "opacity,transform" });
           gsap.set(q("[data-work-photos], [data-work-note]"), { clearProps: "transform,opacity" });
           ScrollTrigger.refresh();

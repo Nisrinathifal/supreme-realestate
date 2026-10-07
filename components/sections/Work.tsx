@@ -37,8 +37,18 @@ export function Work({ lang }: { lang: Lang }) {
         {/* The title over the windows while they turn into the cards (owner, 2026-10-07); gone once the stack shows.
             Without JS it simply heads the list. The h2 above carries the same words for assistive tech. */}
         <div className={styles.lead} data-work-lead aria-hidden="true">
-          <p className={`t-micro ${styles.leadLabel}`}>{c.work.label}</p>
-          <p className={styles.leadTitle}>{c.work.title}</p>
+          <p className={`t-micro ${styles.leadLabel}`}>
+            <span className={styles.leadWord}>
+              <span data-lead-word>{c.work.label}</span>
+            </span>
+          </p>
+          <p className={styles.leadTitle}>
+            {c.work.title.split(" ").map((word, i) => (
+              <span key={i} className={styles.leadWord}>
+                <span data-lead-word>{word}</span>
+              </span>
+            ))}
+          </p>
         </div>
         <ol className={styles.deck} data-work-deck style={{ "--count": n } as CSSProperties}>
           {c.work.items.map((item, i) => {
