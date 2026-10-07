@@ -152,8 +152,9 @@ export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", Shelf
 /**
  * Steps section: one looping clip per step (supplied 2026-10-02, 4 s, a canal house on a flat ground).
  * The ground was keyed to transparency offline (scripts/film-frames.swift → scripts/key-clips.mjs: background model,
- * shadow kept as a multiply layer), the keyed frames stacked into colour + matte video (scripts/film-stack.swift),
- * then raised from 24 to 60 fps with motion interpolation (scripts/film-interpolate.swift), matte and colour together.
+ * shadow kept as a multiply layer) and the keyed frames stacked into colour + matte video (scripts/film-stack.swift).
+ * Kept at their own 24 fps: raised to 60 fps by motion interpolation, the robot's quick moves and the renewal sweep
+ * came out ghosted (two robots, a smeared band), so the clips play their source frames only.
  */
 const stepClip = (n: string, nl: string, en: string): AlphaVideoAsset => ({
   mp4: `/media/step-clip-${n}.mp4`,
