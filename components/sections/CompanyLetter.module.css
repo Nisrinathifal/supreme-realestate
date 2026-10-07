@@ -34,11 +34,6 @@
 }
 .verify:hover { background: var(--ink); color: var(--bg); }
 .pending { margin: 0; }
-.docs { display: flex; flex-direction: column; gap: var(--s-2); }
-.docs > span:first-child { color: var(--muted); }
-.docList { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
-.docList a { font-size: var(--fs-ui); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-.docList a:hover { text-decoration-thickness: 2px; }
 .sign { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.5; color: var(--muted); }
 .sign strong { color: var(--ink); font-weight: 500; }
 .seal { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); }

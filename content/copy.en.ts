@@ -81,7 +81,6 @@ export const en: Copy = {
     // owner's wording (2026-10-07)
     lead: "Supreme Real Estate B.V. is registered with the Dutch Chamber of Commerce (KvK). The details below correspond with its official business registration.",
     verify: draft("Check in the KvK register"),
-    documents: draft("Documents"),
     signoff: draft("Kind regards,"),
     pending: "Placeholder: KvK number, VAT number, visiting address and contact details to follow from the KvK extract.",
   },

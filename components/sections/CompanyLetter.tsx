@@ -7,7 +7,7 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { company, has } from "@/content/company";
 import { getCopy } from "@/content/copy";
 import { shelfIcons } from "@/content/media";
-import { pathFor, type Lang, type PageKey } from "@/content/routes";
+import type { Lang } from "@/content/routes";
 import { CompanyDetailsList } from "./CompanyDetailsList";
 import { CompanyLetterMotion } from "./CompanyLetterMotion";
 import styles from "./CompanyLetter.module.css";
@@ -26,13 +26,12 @@ const icons = [
  * page scrolls (CompanyLetterMotion, pinned) the letter rises out of the envelope over the title and the envelope
  * drops away; a long letter then reads on upwards. The letter is the proof: Supreme's letterhead, "to whom it may
  * concern", the registration line, the verified company details (company.json, empty rows hidden; a development
- * placeholder names what the KvK extract must supply), the link to the KvK register, the legal pages and a sign-off
+ * placeholder names what the KvK extract must supply), the link to the KvK register and a sign-off
  * with the roof-S mark (the site logo's) as seal. Reduced motion and no-JS: the title and the letter, no envelope.
  */
 export function CompanyLetter({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const r = c.register;
-  const docs = c.footer.links.map((l) => ({ ...l, href: pathFor(l.key as PageKey, lang) }));
 
   return (
     <section id="company" className={`inverse ${styles.band}`} data-letter data-header-theme="dark" aria-labelledby="company-title">
@@ -75,16 +74,6 @@ export function CompanyLetter({ lang }: { lang: Lang }) {
             ) : (
               <Placeholder note={r.pending} className={styles.pending} />
             )}
-            <div className={styles.docs}>
-              <span className="t-micro">{r.documents}</span>
-              <ul className={styles.docList}>
-                {docs.map((d) => (
-                  <li key={d.key}>
-                    <a href={d.href}>{d.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
             <footer className={styles.sign}>
               <span className={styles.seal} aria-hidden="true">
                 <RoofMark size={26} decorative />

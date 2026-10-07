@@ -80,7 +80,6 @@ export const nl: Copy = {
     salutation: draft("Aan wie het aangaat,"),
     lead: draft("Supreme Real Estate B.V. is ingeschreven bij de Kamer van Koophandel (KvK). De onderstaande gegevens komen overeen met de officiële inschrijving in het Handelsregister."),
     verify: draft("Controleer in het KvK-register"),
-    documents: draft("Documenten"),
     signoff: draft("Met vriendelijke groet,"),
     pending: "Placeholder: KvK-nummer, BTW-nummer, vestigingsadres en contactgegevens volgen uit het KvK-uittreksel.",
   },

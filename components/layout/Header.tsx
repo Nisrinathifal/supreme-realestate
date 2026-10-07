@@ -32,10 +32,8 @@ export type HeaderStrings = {
   contactUs: string;
   contact: string;
   sections: { id: string; label: string }[];
-  keys: { address: string; phone: string; email: string };
+  keys: { address: string; email: string };
   addressLines: string[];
-  phone: string;
-  phoneHref: string;
   email: string;
 };
 
@@ -45,7 +43,7 @@ type Props = { lang: Lang; strings: HeaderStrings };
  * Header (concept 2026-10-05, after the owner's reference): the lockup left; right, a small round language button
  * showing the current language's code (hover brings the flags: the current one half aside and dimmed, the other
  * language's behind it, with the hint "Switch to English" beside it) and a nine-dot menu button that opens the glass panel (DESIGN §9.4) on hover (mouse)
- * or click/keyboard with the homepage sections, the contact page and the company address and phone. No contact
+ * or click/keyboard with the homepage sections, the contact page and the company address and e-mail. No contact
  * button. A soft Paper veil behind the bar keeps it legible over every band. On the homepage the bar waits out of
  * sight until the headline comes in (HeroBoat says when) and then arrives; elsewhere it is simply there.
  * Fixed over the hero; without JavaScript it sits absolutely at the top, visible, and the panel stays closed.
@@ -288,8 +286,8 @@ export function Header({ lang, strings }: Props) {
                       </li>
                     </ul>
                   </nav>
-                  {/* Address and phone: verified values from company.json (PRD §7), or the fictional stand-ins from the
-                      copy until then (the layout decides; a stand-in phone has no tel: link). */}
+                  {/* Address and e-mail (owner, 2026-10-07: e-mail instead of the phone): verified values from
+                      company.json (PRD §7); the layout decides. */}
                   <dl className={styles.details}>
                     <div className={styles.row}>
                       <dt className="t-micro">{strings.keys.address}</dt>
@@ -298,10 +296,6 @@ export function Header({ lang, strings }: Props) {
                           <span key={l}>{l}</span>
                         ))}
                       </dd>
-                    </div>
-                    <div className={styles.row}>
-                      <dt className="t-micro">{strings.keys.phone}</dt>
-                      <dd className={styles.value}>{strings.phoneHref ? <a href={strings.phoneHref}>{strings.phone}</a> : <span>{strings.phone}</span>}</dd>
                     </div>
                     {strings.email ? (
                       <div className={styles.row}>

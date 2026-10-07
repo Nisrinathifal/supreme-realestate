@@ -47,7 +47,6 @@ export type Copy = {
     salutation: string;
     lead: string;
     verify: string;
-    documents: string;
     signoff: string;
     pending: string;
   };
