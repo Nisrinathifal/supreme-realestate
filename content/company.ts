@@ -32,6 +32,10 @@ export const hasAddress = (a: Address) => has(a.street) && has(a.city);
 export const formatAddressLines = (a: Address): string[] =>
   hasAddress(a) ? [a.street, [a.postalCode, a.city].filter(has).join(" ")].filter(has) : [];
 
+/** The country of an address, written out per language (only the countries Supreme is registered in). */
+const COUNTRIES: Record<string, Record<Lang, string>> = { NL: { nl: "Nederland", en: "Netherlands" } };
+export const countryName = (code: string, lang: Lang) => COUNTRIES[code]?.[lang] ?? "";
+
 /** Phone number as a tel: href (digits and leading plus only). */
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 

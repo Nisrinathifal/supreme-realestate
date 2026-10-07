@@ -1,4 +1,4 @@
-import { company, formatAddressLines, has, hasAddress, postalDiffers, telHref } from "@/content/company";
+import { company, countryName, formatAddressLines, has, hasAddress, postalDiffers, telHref } from "@/content/company";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
 import styles from "./CompanyDetailsList.module.css";
@@ -21,7 +21,7 @@ export function CompanyDetailsList({ lang, showManagement = true, exclude = [], 
     rows.push({
       id: "visitingAddress",
       key: k.visitingAddress,
-      value: formatAddressLines(company.visitingAddress).map((l, i) => (
+      value: [...formatAddressLines(company.visitingAddress), countryName(company.visitingAddress.country, lang)].filter(has).map((l, i) => (
         <span key={i} className={styles.line}>
           {l}
         </span>

@@ -78,7 +78,8 @@ export const en: Copy = {
   register: {
     label: draft("Company"),
     salutation: draft("To whom it may concern,"),
-    lead: draft("Supreme Real Estate B.V. is registered with the Netherlands Chamber of Commerce. All details below match that registration, and you can check them there yourself."),
+    // owner's wording (2026-10-07)
+    lead: "Supreme Real Estate B.V. is registered with the Dutch Chamber of Commerce (KvK). The details below correspond with its official business registration.",
     verify: draft("Check in the KvK register"),
     documents: draft("Documents"),
     signoff: draft("Kind regards,"),
@@ -277,7 +278,7 @@ export const en: Copy = {
   companyKeys: {
     legalName: draft("Legal name"),
     tradeName: draft("Trade name"),
-    kvk: draft("Chamber of Commerce (KvK) number"),
+    kvk: "KvK number", // owner, 2026-10-07
     visitingAddress: draft("Visiting address"),
     postalAddress: draft("Postal address"),
     vat: draft("VAT number"),
