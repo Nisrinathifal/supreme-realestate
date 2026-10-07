@@ -37,7 +37,8 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
   const root = useRef<HTMLElement>(null);
   const [state] = useState(createSceneState); // one mutable state object, tweened by GSAP, read by the scene
   const [live, setLive] = useState(false);
-  const [active, setActive] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const invalidate = useRef<() => void>(() => undefined);
 
   useEffect(() => {
     const mq = window.matchMedia(LIVE);
@@ -47,13 +48,25 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
     return () => mq.removeEventListener("change", check);
   }, []);
 
-  // render the scene only while the band is (nearly) on screen
+  // The scene (its chunk, the WebGL context, the shaders) is set up off the page's start: when the browser is idle
+  // well after load, or once the band is within a viewport, whichever comes first; it stays mounted from then on
   useEffect(() => {
-    if (!live || !root.current) return;
-    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), { rootMargin: "300px 0px" });
+    if (!live || !root.current || mounted) return;
+    const mount = () => setMounted(true);
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && mount(), { rootMargin: "100% 0px" });
     io.observe(root.current);
-    return () => io.disconnect();
-  }, [live]);
+    // not in the page's first seconds (the hero's film and headline are running then): six seconds after load, then idle
+    let idle = 0;
+    const timer = window.setTimeout(() => {
+      idle = typeof window.requestIdleCallback === "function" ? window.requestIdleCallback(mount, { timeout: 4000 }) : window.setTimeout(mount, 0);
+    }, 6000);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(timer);
+      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
+    };
+  }, [live, mounted]);
 
   useGSAP(
     () => {
@@ -96,6 +109,7 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
           scrub: 1,
           invalidateOnRefresh: true,
           onUpdate: () => {
+            invalidate.current(); // one frame of the scene for this scroll position
             const t = tl.time();
             const d = t > END - 0.06;
             if (d !== dark) header((dark = d));
@@ -152,7 +166,17 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
         </header>
 
         <div className={styles.view} data-film-view>
-          {live ? <ArchitecturalScene state={state} active={active} /> : <Elevation />}
+          {live && mounted ? (
+            <ArchitecturalScene
+              state={state}
+              onReady={(inv) => {
+                invalidate.current = inv;
+                inv();
+              }}
+            />
+          ) : (
+            <Elevation />
+          )}
         </div>
 
         <TransformationTimeline stages={stages} close={close} />

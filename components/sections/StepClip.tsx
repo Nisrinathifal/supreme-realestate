@@ -26,7 +26,7 @@ export function StepClip({ clip, lang }: { clip: AlphaVideoAsset; lang: Lang }) 
 
     // The source video sits in the document (hidden) so every browser keeps decoding it for the canvas
     const video = document.createElement("video");
-    video.muted = true; video.loop = true; video.playsInline = true; video.preload = "auto";
+    video.muted = true; video.loop = true; video.playsInline = true; video.preload = "none"; // nothing fetched (Chrome fetches the whole file for "metadata"); the file once the clip is near (warm, below)
     video.setAttribute("aria-hidden", "true"); video.tabIndex = -1; video.className = styles.clipSource;
     video.src = (window.matchMedia("(max-width: 980px)").matches && clip.mp4Mobile) || clip.mp4;
     el.appendChild(video);
@@ -82,7 +82,13 @@ export function StepClip({ clip, lang }: { clip: AlphaVideoAsset; lang: Lang }) 
       { threshold: 0.15 },
     );
     io.observe(el);
-    return () => { io.disconnect(); visible = false; stop(); video.removeAttribute("src"); video.load(); video.remove(); };
+    // Fetch the clip (1.6 MB) only once it is within a viewport and a half, not with the page
+    const warm = new IntersectionObserver(
+      ([e]) => { if (!e.isIntersecting) return; video.preload = "auto"; video.load(); warm.disconnect(); },
+      { rootMargin: "150% 0px" },
+    );
+    warm.observe(el);
+    return () => { io.disconnect(); warm.disconnect(); visible = false; stop(); video.removeAttribute("src"); video.load(); video.remove(); };
   }, [clip.mp4, clip.mp4Mobile, clip.width, clip.gap]);
 
   return (

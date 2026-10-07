@@ -56,6 +56,8 @@ export function HeroScroll() {
         if (band) band.style.marginTop = `${-hero.offsetHeight}px`;
       };
       let raf = 0;
+      const warmTimerRef = { t: 0 };
+      const warmNightRef = { f: () => undefined as void };
       let live = false;
       let isDark = false;
       const headerTheme = (toDark: boolean) => {
@@ -67,11 +69,24 @@ export function HeroScroll() {
         // The night film (HeroNightFilm) is client-only, so it is looked up here, a frame after the hero goes live;
         // unseen at opacity 0 first, and it starts loading now
         const nightFilm = hero.querySelector<HTMLVideoElement>("[data-hero-night-film]");
-        if (nightFilm) {
-          gsap.set(nightFilm, { opacity: 0 });
+        const dayFilm = hero.querySelector<HTMLVideoElement>("video:not([data-hero-night-film])");
+        // The night film (6 MB) is fetched once the day film has had its moment, or at the first scroll, whichever
+        // comes first, so the two never compete at the start
+        let warmed = false;
+        const warmNight = () => {
+          if (warmed || !nightFilm) return;
+          warmed = true;
           nightFilm.preload = "auto";
           nightFilm.load();
-        }
+        };
+        warmNightRef.f = warmNight;
+        if (nightFilm) gsap.set(nightFilm, { opacity: 0 });
+        warmTimerRef.t = window.setTimeout(warmNight, 1500);
+        window.addEventListener("scroll", warmNight, { once: true, passive: true }); // (ScrollTrigger's own refresh is not a scroll)
+        // The day film stops decoding once the band has covered the hero (60 fps 1080p, otherwise for the whole
+        // page), and resumes on the way back up, unless the user stopped it (HeroFilm)
+        const dayPause = () => dayFilm && !dayFilm.paused && dayFilm.pause();
+        const dayResume = () => dayFilm && dayFilm.paused && !("userPaused" in dayFilm.dataset) && dayFilm.play().catch(() => undefined);
         if (band) gsap.set(band, { position: "relative", zIndex: 2 });
         hero.append(veil);
         overlap();
@@ -86,6 +101,8 @@ export function HeroScroll() {
             anticipatePin: 1,
             refreshPriority: 1,
             invalidateOnRefresh: true,
+            onLeave: dayPause,
+            onEnterBack: dayResume,
             onUpdate: (self) => {
               // Progress through the dusk part of the pin (the rest is the band covering the hero)
               const dusk = Math.min(1, (self.progress * (DUSK + COVER)) / DUSK);
@@ -133,6 +150,8 @@ export function HeroScroll() {
       return () => {
         document.removeEventListener(HERO_LIVE, start);
         cancelAnimationFrame(raf);
+        window.clearTimeout(warmTimerRef.t);
+        window.removeEventListener("scroll", warmNightRef.f);
         headerTheme(false);
         ScrollTrigger.removeEventListener("refreshInit", overlap);
         veil.remove();

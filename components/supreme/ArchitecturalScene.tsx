@@ -67,22 +67,23 @@ function Table() {
 
 /**
  * The About band's 3D model (SCENE-3D.md): a canal house on a developer's worktable, with its drawings, plan and
- * samples, all procedural, driven by the scene state (scroll). Rendered only while `active` (the band on screen).
+ * samples, all procedural, driven by the scene state (scroll). Rendered on demand (SupremeHero invalidates on scroll).
  */
-export default function ArchitecturalScene({ state, active }: { state: SceneState; active: boolean }) {
+export default function ArchitecturalScene({ state, onReady }: { state: SceneState; onReady?: (invalidate: () => void) => void }) {
   return (
     <Canvas
       shadows="percentage"
-      dpr={[1, 1.75]}
-      frameloop={active ? "always" : "never"}
+      dpr={[1, 1.5]}
+      frameloop="demand"
       gl={{ antialias: true, powerPreference: "high-performance", toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.02 }}
       camera={{ fov: 26, near: 1, far: 260, position: [30, 27, 40] }}
       aria-hidden="true"
-      onCreated={({ scene }) => {
+      onCreated={({ scene, invalidate }) => {
         // the page's own Paper as the ground colour, fading the far table into it
         const paper = color("--bg");
         scene.background = paper;
         scene.fog = new Fog(paper, 70, 175);
+        onReady?.(invalidate); // frames are rendered on demand: the band asks for one whenever the scroll moves it
       }}
     >
       <Atmosphere state={state} />

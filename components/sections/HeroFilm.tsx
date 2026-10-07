@@ -72,8 +72,12 @@ export function HeroFilm({ film, labels }: Props) {
     if (!v) return;
     if (v.paused) {
       if (v.ended) v.currentTime = 0;
+      delete v.dataset.userPaused;
       v.play().catch(() => undefined);
-    } else v.pause();
+    } else {
+      v.dataset.userPaused = ""; // HeroScroll never resumes a film the user stopped
+      v.pause();
+    }
   };
 
   return (
