@@ -47,8 +47,8 @@
   100% { transform: translateY(18px); opacity: 0; }
 }
 
-/* ---------- the Stone body: label left, text right ---------- */
-.page .body { background: var(--alt); }
+/* ---------- the Paper body (as the homepage wall: clean, so the photographs carry the colour): label left, text right ---------- */
+.page .body { background: var(--bg); }
 .split {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); row-gap: var(--s-5);
   padding: var(--section-y) var(--gutter); max-width: calc(var(--maxw) + 2 * var(--gutter)); margin: 0 auto;
@@ -65,8 +65,9 @@
   letter-spacing: -0.02em; color: var(--ink); max-width: 24ch; text-wrap: pretty;
 }
 .details .splitMain { grid-column: 4 / 13; }
-.chapter { display: flex; flex-direction: column; gap: var(--s-2); max-width: 62ch; }
-.chapterLabel { font-size: var(--fs-ui); font-weight: 500; color: var(--ink); }
+/* A chapter (the outcome, our approach) is the second level under a statement: a hairline, its name at lead size, the text */
+.chapter { display: flex; flex-direction: column; gap: var(--s-3); max-width: 62ch; padding-top: var(--s-5); border-top: 1px solid var(--line); }
+.chapterLabel { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 400; line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); }
 .chapterText { font-size: var(--fs-lead); line-height: 1.6; color: var(--muted); }
 .credits { margin: var(--s-5) 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-7); }
 .credit { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-4); padding: var(--s-3) 0; border-top: 1px solid var(--line); }
@@ -109,8 +110,9 @@
 /* The site footer closes the page here in the flow (not sticky: the hero above is see-through) */
 .footerSlot > footer { position: relative; z-index: auto; }
 
-/* ---------- before and after, on Canal ink ---------- */
+/* ---------- before and after, on the site's one dark ground (as the homepage bands) ---------- */
 .compareBand { padding: var(--section-y) 0; }
+.compareBand:global(.inverse), .others:global(.inverse) { --bg: var(--band-dark); }
 .compare { display: flex; flex-direction: column; gap: var(--s-6); }
 .compareHead { padding: 0 var(--gutter); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--s-5); }
 .bandTitle { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: 1; letter-spacing: -0.02em; }

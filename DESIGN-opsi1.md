@@ -133,6 +133,9 @@ One dark ground on the page: the steps band uses `--band-dark` too, its inverse 
 Between dark and light bands the colour never fades as a whole (that passes through grey): with motion on, Paper rises
 softly over the dark band's foot (Shelf `[data-dawn]`) and dusk falls at the wall's foot into the steps band
 (`[data-dusk]`); the last project card stays and leaves with the page. Without motion the bands simply meet.
+The project page follows the same system: a Paper body (no Stone), its dark bands (before/after, other projects) on
+`--band-dark`; a chapter under a statement (the outcome, our approach) is the clear second level: hairline, name at
+`--fs-h3`, text at lead size.
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 

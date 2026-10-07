@@ -29,9 +29,9 @@
   position: relative; isolation: isolate; border-radius: var(--r-md); overflow: hidden; background: var(--bg); color: var(--ink);
   transform-origin: 50% 0; box-shadow: inset 0 0 0 1px var(--line), var(--shadow-soft);
 }
-.toneInk { background: var(--inv-bg); box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: rgba(250,250,247,.16); }
+.toneInk { background: var(--inv-bg); box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: var(--inv-line); }
 .toneSky { background: var(--panel-sky); }
-.toneMoss { background: var(--inv-surface); --surface: var(--inv-bg); box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: rgba(250,250,247,.14); }
+.toneMoss { background: var(--inv-surface); --surface: var(--inv-bg); box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-soft); --glass-line: var(--inv-line); }
 .toneLime { background: var(--tint); }
 .inner { display: flex; flex-direction: column; gap: var(--s-5); height: 100%; padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) * 0.8); }
 .head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-5); }
