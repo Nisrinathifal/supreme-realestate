@@ -5,9 +5,8 @@ import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * The columns behind the wall simply stand: they have already risen, full height, in the projects band's foot
- * (WorkColumns; owner, 2026-10-07: "langsung full keatas", no second rise, no seam) and run straight on into this
- * band. The icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
+ * The columns behind the wall rise with the ones in the projects band's foot, column by column, once that band has
+ * turned Paper (WorkColumns drives both, so they read as one column; owner, 2026-10-07). The icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
  * simply scrolls on). Start states are set here: the shelf copies of the icons are hidden and the inline icons
  * visible; each inline icon then travels (x, y, scale) onto its compartment and hands over to the shelf copy.
  * Under prefers-reduced-motion nothing runs and both the sentence icons and the filled shelf are shown.

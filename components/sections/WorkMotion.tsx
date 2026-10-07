@@ -103,7 +103,6 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const top = () => (cssPx(docEl, "--header-h", 64) + cssPx(docEl, "--s-5", 24)) * 1.9;
         const radius = cssPx(docEl, "--r-md", 18);
         const clamp = (v: number) => Math.min(1, Math.max(0, v));
-        const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
         // One ghost per window, built from the card's own tone
         const layer = document.createElement("div");
@@ -130,22 +129,26 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         gsap.set(deck, { opacity: 0 }); // the deck comes up as one, so no card ever shows through another
         gsap.set(layer, { autoAlpha: 0 });
 
-        // Shares of the scroll: the boxes travel almost together (the bottom of the stack first), filling with
-        // their card's tone on the way; the real deck crossfades in under them as they arrive
+        // Shares of the scroll (2026-10-07, smoother): the boxes leave one after another (the bottom of the stack
+        // first) and turn solid early, in their card's tone, so no plate is ever see-through over another; the dashes,
+        // the lime wash and the dot are gone within the first third of the flight. Only once every plate has landed
+        // on its card does the real deck come up beneath them (invisibly: same place, same tone), and then the
+        // plates fade, so the cards' contents appear in place
         const TRAVEL = 0.62;
-        const STAGGER = 0.04;
+        const STAGGER = 0.07;
+        const LANDED = (n - 1) * STAGGER + TRAVEL;
+        const glideEase = gsap.parseEase("power3.inOut");
         const update = (p: number) => {
-          gsap.set(deck, { opacity: clamp((p - 0.62) / 0.26) });
-          // The plates hand over to the cards as one layer, so a lower plate never shows through the top one
-          const out = 1 - clamp((p - 0.7) / 0.26);
+          gsap.set(deck, { opacity: p >= LANDED - 0.02 ? 1 : 0 });
+          const out = 1 - clamp((p - LANDED) / (1 - LANDED));
           gsap.set(layer, { autoAlpha: p > 0.001 && p < 0.999 ? out : 0 });
           cards.forEach((card, i) => {
             const box = boxes[i]!;
             const { g, fill, tint, line, dot } = ghosts[i];
             const q = clamp((p - (n - 1 - i) * STAGGER) / TRAVEL); // this box's own travel
-            const e = easeInOut(q);
+            const e = glideEase(q);
             // From the window where it is now (the hero is scrolling away) to the card where it is now (the deck
-            // is scrolling in): both ends move with the page, so an arrived plate rides with its card
+            // is scrolling in): both ends move with the page, so a landed plate rides with its card
             const from = box.getBoundingClientRect();
             const to = card.getBoundingClientRect();
             gsap.set(g, {
@@ -155,10 +158,10 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
               height: from.height + (to.height - from.height) * e,
               borderRadius: 2 + (radius - 2) * e,
             });
-            gsap.set(dot, { opacity: 1 - clamp(q / 0.15) });
-            gsap.set(tint, { opacity: 1 - clamp(q / 0.3) });
-            gsap.set(line, { opacity: 1 - clamp((q - 0.2) / 0.5) });
-            gsap.set(fill, { opacity: clamp((q - 0.3) / 0.6) });
+            gsap.set(dot, { opacity: 1 - clamp(q / 0.12) });
+            gsap.set(tint, { opacity: 1 - clamp(q / 0.25) });
+            gsap.set(line, { opacity: 1 - clamp((q - 0.04) / 0.24) });
+            gsap.set(fill, { opacity: clamp((q - 0.04) / 0.26) });
             // The film's own box steps aside while its plate travels
             box.style.visibility = p > 0.01 && p < 0.999 ? "hidden" : "";
           });
@@ -168,7 +171,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const glide = (target: number, now = false) =>
           now
             ? (gsap.killTweensOf(shown), (shown.p = target), update(target))
-            : gsap.to(shown, { p: target, duration: 0.55, ease: "power3.out", overwrite: true, onUpdate: () => update(shown.p) });
+            : gsap.to(shown, { p: target, duration: 0.7, ease: "power3.out", overwrite: true, onUpdate: () => update(shown.p) });
         const st = ScrollTrigger.create({
           trigger: section,
           start: "top bottom",
