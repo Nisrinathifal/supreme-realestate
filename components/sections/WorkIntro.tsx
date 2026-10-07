@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { type CSSProperties, Fragment } from "react";
 import { AlphaImage } from "@/components/ui/AlphaImage";
 import { mascots, orbitCards } from "@/content/media";
 import { getCopy } from "@/content/copy";
@@ -59,14 +59,20 @@ export function WorkIntro({ lang }: { lang: Lang }) {
           })}
         </div>
         <h2 id="work-intro-title" className={styles.title} data-orbit-title>
+          {/* real spaces between words and lines, so the heading reads as a sentence (not "Builttogether…") */}
           {c.work.intro.map((line, i) => (
-            <span key={i} className={styles.line} data-orbit-line>
-              {line.split(" ").map((word, j) => (
-                <span key={j} className={styles.word} data-orbit-word>
-                  {word}
-                </span>
-              ))}
-            </span>
+            <Fragment key={i}>
+              <span className={styles.line} data-orbit-line>
+                {line.split(" ").map((word, j, words) => (
+                  <Fragment key={j}>
+                    <span className={styles.word} data-orbit-word>
+                      {word}
+                    </span>
+                    {j < words.length - 1 ? " " : null}
+                  </Fragment>
+                ))}
+              </span>{" "}
+            </Fragment>
           ))}
         </h2>
       </WorkIntroMotion>

@@ -97,7 +97,8 @@ export const nl: Copy = {
   },
   // Projects: concept 2026-10-02, anonymised cases, all NL draft until approved.
   work: {
-    intro: [draft("Bekijk wat"), draft("wij hebben"), draft("getransformeerd.")],
+    // the collaboration ring's headline (owner, 2026-10-07: about the partners on the cards, not the projects)
+    intro: [draft("Samen gebouwd"), draft("met mensen"), draft("die we vertrouwen.")],
     label: draft("Wat wij opleveren"),
     title: draft("Een selectie, van oud naar waardevol."),
     cta: draft("Vraag de documentatie aan"),

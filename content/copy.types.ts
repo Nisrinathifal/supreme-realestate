@@ -54,7 +54,7 @@ export type Copy = {
   /** Steps section (after the reference "in years" band): label, three headline lines, three steps. */
   steps: { label: string; lines: string[]; items: { index: string; title: string; body: string }[] };
   /**
-   * Projects: `intro` is the headline among the mascots, one entry per line (each line reveals on scroll); then a two-line heading (`label` muted, `title` ink) over four
+   * Projects: `intro` is the collaboration ring's headline among the cards and mascots, one entry per line (each line reveals on scroll); then a two-line heading (`label` muted, `title` ink) over four
    * stacking cards. Each card: index, title, body, a `note` saying what its photographs show, and one link (`cta`).
    */
   work: { intro: string[]; label: string; title: string; cta: string; items: { index: string; title: string; body: string; note: string }[] };

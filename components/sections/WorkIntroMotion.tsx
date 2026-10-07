@@ -7,8 +7,8 @@ import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 const RX = 0.39; // ring radii as a share of the stage, same as the CSS placement
 const RY = 0.37;
 const PIN = 1.4; // viewports the band stays pinned
-const REVOLUTION = 80; // seconds for one turn of the ring on its own
-const SCROLL_TURN = 0.0016; // radians per scrolled pixel: the turn follows the scrolling pace
+/** The ring's size over the pin (owner, 2026-10-07: no turning): it spreads out first, then draws in close. */
+const SPREAD = { wide: 1.2, close: 0.88, turn: 0.38 }; // turn = share of the pin where it stops widening
 const RING = { near: 0.68, far: 1 }; // ring size with the pointer on the headline (closer) and at rest
 const BLOOM = { ring: 0.06, size: 0.3, title: 0.3 }; // as the band comes in: the ring, the items and the headline start from here
 const SMOOTH = 0.08; // per-frame lerp of the driven values (on top of Lenis)
@@ -19,10 +19,9 @@ const LAG = [0.24, 0.14, 0.28, 0.17, 0.26, 0.12, 0.21];
 /**
  * After the reference recordings. As the band comes in, its tone moves from white to Sky mist and the ring blooms out
  * of the centre: the items start small and tight behind the dim headline and open out to the ring, growing, while the
- * headline comes up to its grey. The items are always a ring around the headline. Left alone the ring turns
- * slowly on its own, each mascot leaning a little as it goes round; while the page scrolls the turn follows the
- * scrolling pace (so much turn per scrolled pixel, smoothed on top of Lenis); while pinned the headline turns to ink
- * one line per scroll step; with the pointer on the headline the ring draws closer, still turning slowly. After the pin each mascot lags behind at its own
+ * headline comes up to its grey. The items are always a ring around the headline. It does not turn (owner,
+ * 2026-10-07): while pinned it spreads out wide, then draws in close around the headline, with the scroll; the
+ * headline turns to ink one line per scroll step; with the pointer on the headline the ring draws closer still. After the pin each mascot lags behind at its own
  * depth as the band scrolls on. One ticker places everything (transforms only). Reduced motion: the still ring and
  * the ink headline. On a fine pointer a mascot also tilts towards the cursor.
  */
@@ -93,7 +92,6 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         // After the pin: how far the band has scrolled on (the lag)
         const lagST = ScrollTrigger.create({ trigger: section, start: () => pinST.end, end: () => pinST.end + window.innerHeight, invalidateOnRefresh: true });
 
-        let t = 0;
         let rx = 0;
         let ry = 0;
         let h = 0;
@@ -103,38 +101,34 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
           h = stage.clientHeight;
         };
         measure();
-        let scrolled = 0; // turn added by the scrolling, in radians
-        let velocity = 0; // smoothed scroll speed, px per frame
-        let lastY = window.scrollY;
+        let spread = 0; // smoothed pin progress, for the spread
         let near = 0; // 1 with the pointer on the headline
         let nearTarget = 0;
         let enter = 0; // smoothed arrival, 0 → 1 as the band slides in
         let lag = 0;
         const easeOut = (p: number) => 1 - Math.pow(1 - p, 3);
+        const easeInOut = (p: number) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+        const spreadAt = (p: number) =>
+          p < SPREAD.turn ? 1 + (SPREAD.wide - 1) * easeInOut(p / SPREAD.turn) : SPREAD.wide + (SPREAD.close - SPREAD.wide) * easeInOut((p - SPREAD.turn) / (1 - SPREAD.turn));
         const place = () => {
-          const turn = (t / REVOLUTION) * Math.PI * 2 + scrolled;
           const bloom = easeOut(enter);
-          const ring = (BLOOM.ring + (1 - BLOOM.ring) * bloom) * (RING.far + (RING.near - RING.far) * near);
+          const ring = (BLOOM.ring + (1 - BLOOM.ring) * bloom) * (RING.far + (RING.near - RING.far) * near) * spreadAt(spread);
           const size = BLOOM.size + (1 - BLOOM.size) * bloom;
           items.forEach((el, i) => {
             const { a, k } = base[i];
             gsap.set(el, {
-              x: (Math.cos(a + turn) * ring - Math.cos(a)) * rx * k,
-              y: (Math.sin(a + turn) * ring - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
+              x: (Math.cos(a) * ring - Math.cos(a)) * rx * k,
+              y: (Math.sin(a) * ring - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
               // and fades as it lags, so nothing is left hanging over the About band that comes up under it
               autoAlpha: Math.max(0, 1 - lag * 1.8),
             });
-            // a slight lean as it goes round, each item out of phase
-            gsap.set(inners[i], { scale: size, rotation: 7 * Math.sin(turn * 1.5 + i * 0.9) });
+            // a slight lean of its own, each item differently (it no longer goes round)
+            gsap.set(inners[i], { scale: size, rotation: 7 * Math.sin(i * 0.9) });
           });
           if (title) gsap.set(title, { opacity: BLOOM.title + (1 - BLOOM.title) * bloom });
         };
-        const tick = (_time: number, dt: number) => {
-          t += dt / 1000;
-          const y = window.scrollY;
-          velocity += (y - lastY - velocity) * SMOOTH * 2;
-          lastY = y;
-          scrolled += velocity * SCROLL_TURN;
+        const tick = () => {
+          spread += (pinST.progress - spread) * SMOOTH * 1.5;
           near += (nearTarget - near) * SMOOTH;
           enter += (enterST.progress - enter) * SMOOTH * 1.5;
           lag += (lagST.progress - lag) * SMOOTH;
@@ -147,7 +141,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
           onToggle: (self) => (self.isActive ? gsap.ticker.add(tick) : gsap.ticker.remove(tick)),
           onRefresh: () => {
             measure();
-            lastY = window.scrollY;
+            spread = pinST.progress;
             lag = lagST.progress;
             enter = enterST.progress;
             place();
@@ -155,6 +149,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         });
         lag = lagST.progress;
         enter = enterST.progress;
+        spread = pinST.progress;
         place();
         if (visible.isActive) gsap.ticker.add(tick);
 

@@ -98,7 +98,8 @@ export const en: Copy = {
   // Sky band: owner concept 2026-10-01 (drafts until approved). The seventh card completes the arc.
   // Projects: concept 2026-10-02, anonymised cases, all EN draft until approved.
   work: {
-    intro: [draft("See what"), draft("we've"), draft("transformed.")],
+    // the collaboration ring's headline (owner, 2026-10-07: about the partners on the cards, not the projects)
+    intro: [draft("Built together"), draft("with people"), draft("we trust.")],
     label: draft("What we deliver"),
     title: draft("A selection, from old to valuable."),
     cta: draft("Request the documentation"),

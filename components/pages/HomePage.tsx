@@ -11,7 +11,7 @@ import type { Lang } from "@/content/routes";
  * Homepage: the hero film opens the page (no intro since 2026-10-05), the projects deck follows it at once (owner,
  * 2026-10-05: the way in for anyone who never hovers the facades, and on phones), then the shelf statement, the three
  * steps and, back since 2026-10-07 (owner), the collaboration ring (WorkIntro: the cards and mascots turning around
- * "See what we've transformed"), sliding up over the held steps strip as it was designed to, and under it (owner,
+ * "Built together with people we trust"), sliding up over the held steps strip as it was designed to, and under it (owner,
  * 2026-10-07) About: the company story beside a room that renews as it is read, then the company details as a letter
  * that comes out of an envelope (CompanyLetter). The sky band is parked.
  */

@@ -19,8 +19,7 @@
   font-size: var(--fs-h2); line-height: 1.02;
 }
 .line { display: block; }
-.word { display: inline-block; margin-right: 0.22em; }
-.word:last-child { margin-right: 0; }
+.word { display: inline-block; } /* the gaps are real spaces in the markup */
 
 @media (max-width: 767px) {
   .intro { min-height: 86svh; }
