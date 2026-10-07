@@ -59,8 +59,9 @@ export function AboutStory({ lang }: { lang: Lang }) {
                 </div>
               ))}
             </div>
-            <span className={styles.dusk} data-film-dusk />
           </div>
+
+          <span className={styles.dusk} data-film-dusk aria-hidden="true" />
 
           <ol className={styles.chapters}>
             {s.chapters.map((ch, i) => (

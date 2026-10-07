@@ -1,6 +1,6 @@
 /* About: a continuous camera. Static (phones, reduced motion, no JS): title, the frame (its last scene, the finished
    kitchen, on top), the chapters in a grid. Live ([data-live], wide screens with motion): one pinned viewport. */
-.about { --dock: 34vw; position: relative; z-index: 3; color: var(--ink); background: var(--bg); } /* above the collaboration ring (z 2), so its lagging cards pass under it */
+.about { --dock: 34vw; --bar: calc(var(--header-h) + var(--s-3)); position: relative; z-index: 3; color: var(--ink); background: var(--bg); } /* above the collaboration ring (z 2), so its lagging cards pass under it */
 
 .stage { display: flex; flex-direction: column; gap: var(--s-8); padding: var(--section-y) var(--gutter); max-width: calc(var(--maxw) + 2 * var(--gutter)); margin: 0 auto; }
 .head { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
@@ -31,9 +31,10 @@
 /* ---------- live: the camera run ---------- */
 .about[data-live] .stage { position: relative; display: block; max-width: none; height: 100svh; padding: 0; overflow: hidden; }
 .about[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-5)); padding: 0 var(--gutter); z-index: 2; }
-.about[data-live] .frame { position: absolute; inset: 0; aspect-ratio: auto; z-index: 1; will-change: clip-path; }
-.about[data-live] .camera { will-change: transform; }
-.about[data-live] .dusk { display: block; }
+.about[data-live] .frame { position: absolute; left: 0; right: 0; top: var(--bar); bottom: 0; aspect-ratio: auto; z-index: 1; will-change: transform; }
+/* everything moves by transform only (no clip-path), so the run composites without repainting the photographs */
+.about[data-live] .camera, .about[data-live] .scene { will-change: transform, opacity; }
+.about[data-live] .dusk { display: block; z-index: 3; }
 .about[data-live] .chapters { display: block; }
 .about[data-live] .chapter {
   position: absolute; top: 0; bottom: 0; width: calc(var(--dock) - 2 * var(--gutter)); max-width: 440px; justify-content: center; z-index: 2; gap: var(--s-4);
