@@ -104,27 +104,27 @@ export const nl: Copy = {
     items: [
       {
         index: "01",
-        title: draft("Een woning, opnieuw ingedeeld rond het licht"),
-        body: draft("Een bestaande woning waarvan de plattegrond niet meer paste bij hoe er gewoond wordt. Wij hebben de indeling herzien rond een lichte woonkeuken en elke ruimte een duidelijke functie gegeven."),
-        note: draft("Woonkeuken met kookeiland, slaapkamer onder een dakraam, badkamer met zwarte wastafels."),
+        title: draft("Een boerderij in de polder, opnieuw bedacht"),
+        body: draft("Een voormalige veehouderij aan het water, aan de rand van Amsterdam, in het open polderlandschap. Het plan: een landelijke woning die de rust van het landschap eromheen bewaart."),
+        note: draft("Een render van de woonkamer die komt; het perceel en de polder van bovenaf."),
       },
       {
         index: "02",
-        title: draft("Donker hout en warm licht op een compacte plattegrond"),
-        body: draft("Een compacte woning waarin elke centimeter telt. Een hoge keukenwand in donker hout, messing details en een rustige badkamer maken van weinig ruimte een volwassen woning."),
-        note: draft("Keuken met houten bar, messing kraan bij een ronde spiegel, woonkamer met brede ramen."),
+        title: draft("Een herenhuis in het hart van Haarlem"),
+        body: draft("Een karakteristiek herenhuis met achterhuis, met zorg gerestaureerd: hoge kamers, houten vloeren en het licht van hoge ramen, klaar voor de lange termijn."),
+        note: draft("Een hoge woonkamer met kroonluchter; de woon- en eetverdieping onder een dakraam."),
       },
       {
         index: "03",
-        title: draft("Steen, messing en een slaapkamer onder het dak"),
-        body: draft("Een pand waarin de zolder jarenlang ongebruikt bleef. De verdieping is bij de woning getrokken en afgewerkt in natuursteen en messing: materialen die mooier worden met de tijd."),
-        note: draft("Keuken met marmeren werkblad, badkamer in natuursteen, slaapkamer onder het dak."),
+        title: draft("Wonen boven de winkel, onder één vernieuwd dak"),
+        body: draft("Een pand met gemengde functie in Haarlem, herontwikkeld tot zelfstandige appartementen boven een winkel. Lichte keukens, eiken vloeren en rustige badkamers, gemaakt om lang mee te gaan."),
+        note: draft("Keuken met kookeiland, woonkamer met glas-in-loodramen, badkamer met ronde spiegel."),
       },
       {
         index: "04",
         title: draft("Ruimte om te ademen, van casco tot instapklaar"),
         body: draft("Royale kamers die hun maat terugkregen. Een open keuken aan de woonkamer, een rustige badkamer en een slaapkamer met uitzicht, turnkey opgeleverd als een plek om te wonen."),
-        note: draft("Woonkamer met open keuken, badkamer met ronde spiegel, slaapkamer met uitzicht."),
+        note: draft("Keuken met messing kraan, badkamer met zwarte wastafel, slaapkamer met groot raam."),
       },
     ],
   },
@@ -177,12 +177,12 @@ export const nl: Copy = {
     // concept: bewust algemeen (geen feiten naast naam, stad en categorie) tot de eigenaar ze schrijft.
     items: {
       durgerdammergouw: {
-        title: draft("Woningrenovatie — Amsterdam"),
-        lede: draft("Een bestaand huis, vernieuwd tot rustige, eigentijdse woningen."),
-        opportunity: draft("In Amsterdam: een bestaand huis met een goede basis en een gedateerd interieur. Het behouden waard, klaar voor een nieuw hoofdstuk."),
-        approach: draft("Supreme nam de herontwikkeling op zich: een helder plan voor de indeling, de juiste vakmensen voor elk onderdeel en een renovatie tot een hoog, eigentijds niveau."),
-        outcome: draft("Opgeleverd als hoogwaardige woningen en behouden in de door Supreme beheerde portefeuille — voor de lange termijn."),
-        why: draft("Rustig, zorgvuldig werk: het juiste pand, goed vernieuwd en jarenlang met aandacht beheerd."),
+        title: draft("Landelijke woning — Amsterdam"),
+        lede: draft("Een voormalige veehouderij in de polder, opnieuw bedacht als woning."),
+        opportunity: draft("Aan de rand van Amsterdam, een voormalige veehouderij in het open polderlandschap: een zeldzaam perceel aan het water, met ruimte om iets blijvends te maken."),
+        approach: draft("Supreme leidt de herontwikkeling: een plan voor een landelijke woning die past in het landschap, gemaakt met de juiste architecten en specialisten."),
+        outcome: draft("Een woning ontworpen rond haar omgeving en voor de lange termijn behouden binnen de beheerde portefeuille van Supreme."),
+        why: draft("Het juiste perceel, met zorg behandeld: een nieuwe woning die thuishoort in het landschap waarin ze staat."),
       },
       "prinsen-bolwerk": {
         title: draft("Historisch herenhuis — Haarlem"),

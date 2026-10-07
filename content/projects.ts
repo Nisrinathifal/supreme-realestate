@@ -39,8 +39,8 @@ export type Project = {
 
 /**
  * The four featured projects (owner, 2026-10-05; PRD §6.1), each on a window of a different house in the film.
- * Their stories live in copy.*.ts under `projects.items`. Only the first room (Durgerdammergouw, the owner's render)
- * is the project's own; the rest of the imagery is archive stand-ins (`placeholder`) until each project's set arrives.
+ * Their stories live in copy.*.ts under `projects.items`. Every photograph is the project's own (2026-10-07, matched
+ * to the project pages of the owner's old site); Durgerdammergouw has the owner's render and the plot from the air.
  */
 export const projects: Project[] = [
   {
@@ -52,7 +52,6 @@ export const projects: Project[] = [
     interior: interiorLiving,
     gallery: [interiorLiving, ...caseImages.a],
     compare: [],
-    placeholder: true,
     // Middle house, second floor, right window (frame at 1003–1055 × 583–683 film px)
     credits: unknown,
     window: { x: 52.2, y: 54, w: 2.75, h: 9.3 },
@@ -65,11 +64,7 @@ export const projects: Project[] = [
     preview: caseImages.b[0],
     interior: caseImages.b[0],
     gallery: caseImages.b,
-    compare: [
-      { room: "kitchen", before: beforeImages.b[0], after: caseImages.b[1] },
-      { room: "living", before: beforeImages.b[1], after: caseImages.b[0] },
-    ],
-    placeholder: true,
+    compare: [], // no photographs of it before the works
     // Dark house on the left, second row, middle window (471–520 × 628–710)
     credits: unknown,
     window: { x: 24.5, y: 58.1, w: 2.55, h: 7.6 },
@@ -82,11 +77,7 @@ export const projects: Project[] = [
     preview: caseImages.c[0],
     interior: caseImages.c[0],
     gallery: caseImages.c,
-    compare: [
-      { room: "attic", before: beforeImages.c[0], after: caseImages.c[0] },
-      { room: "roof", before: beforeImages.c[1], after: caseImages.c[1] },
-    ],
-    placeholder: true,
+    compare: [{ room: "kitchen", before: beforeImages.c[0], after: caseImages.c[0] }],
     // Brown house, lower row, the lit window (696–745 × 671–758)
     credits: unknown,
     window: { x: 36.25, y: 62.1, w: 2.55, h: 8.1 },

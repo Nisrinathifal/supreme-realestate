@@ -196,82 +196,31 @@ export const orbitCards: ImageAsset[] = [
   card("card-designers-01", 941, 1004, "Kaart: ontwerpers bij een scherm", "Card: designers at a screen"),
 ];
 
-/**
- * Projects (concept 2026-10-02): four anonymised cases, three interiors each from the owner's archive under neutral
- * names (work-a..d). Interiors only: no facades, names, addresses or figures (PRD §6.2). Alt text says what is visible.
- */
-const work = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
-export const workCases: { id: string; photos: ImageAsset[] }[] = [
-  {
-    id: "a",
-    photos: [
-      work("work-a-01", 3000, 2000, "Lichte woonkeuken met kookeiland", "A bright kitchen with an island"),
-      work("work-a-02", 3000, 2000, "Slaapkamer met dakraam", "A bedroom under a skylight"),
-      work("work-a-03", 1333, 2000, "Badkamer met zwarte wastafels", "A bathroom with black basins"),
-    ],
-  },
-  {
-    id: "b",
-    photos: [
-      work("work-b-01", 3000, 2000, "Donkere keuken met houten bar", "A dark kitchen with a wooden bar"),
-      work("work-b-02", 1333, 2000, "Messing kraan bij een ronde spiegel", "A brass tap by a round mirror"),
-      work("work-b-03", 3000, 2000, "Woonkamer met brede ramen", "A living room with wide windows"),
-    ],
-  },
-  {
-    id: "c",
-    photos: [
-      work("work-c-01", 2160, 1440, "Keuken met marmeren werkblad", "A kitchen with a marble worktop"),
-      work("work-c-02", 2160, 1440, "Badkamer in natuursteen", "A bathroom in natural stone"),
-      work("work-c-03", 2160, 1440, "Slaapkamer onder het dak", "A bedroom under the roof"),
-    ],
-  },
-  {
-    id: "d",
-    photos: [
-      work("work-d-01", 2160, 1440, "Woonkamer met open keuken", "A living room with an open kitchen"),
-      work("work-d-02", 2158, 1440, "Badkamer met ronde spiegel", "A bathroom with a round mirror"),
-      work("work-d-03", 2158, 1440, "Slaapkamer met uitzicht", "A bedroom with a view"),
-    ],
-  },
-];
+
+
 
 /**
  * Project pages (2026-10-06): the photographs and before/after pairs of the four featured projects, under neutral
  * names (case-<a..d>-NN, before-<b|c>-NN; a = Durgerdammergouw, b = Prinsen Bolwerk, c = Schoterweg,
  * d = Bezaanjachtplein). Interiors and works in progress only: no facades, no street, no faces (PRD §6.2).
- * From the owner's archive (old site): d is Bezaanjachtplein's own set; a–c are stand-ins until each project's own
- * set arrives (content/projects.ts flags them `placeholder`). One face in before-b-02 is blurred. Alt text says what is visible.
+ * Each project's own photographs from the owner's old site (2026-10-07: matched to the projects' own pages there,
+ * replacing stand-ins from other projects). Interiors only (no facades, no street, no faces, no shop signage); for
+ * Durgerdammergouw, which has no interiors yet, the plot from the air. Alt text says what is visible.
  */
 const room = (src: string, width: number, height: number, nl: string, en: string): ImageAsset => ({ src, width, height, alt: { nl, en } });
 export const caseImages = {
-  a: [
-    room("case-a-01", 2160, 1440, "Eethoek met botanisch behang", "A dining area with botanical wallpaper"),
-    room("case-a-02", 2160, 1440, "Keukeneiland in gemarmerd steen", "A kitchen island in marbled stone"),
-    room("case-a-03", 2160, 1440, "Badkamer met een marmeren wand", "A bathroom with a marble wall"),
-    room("case-a-04", 2160, 1440, "Eettafel met roze stoelen bij de keuken", "A dining table with pink chairs by the kitchen"),
-    room("case-a-05", 2160, 1440, "Lange witte keuken met spots", "A long white kitchen with spotlights"),
-    room("case-a-06", 2160, 1440, "Slaapkamer met een roze sprei", "A bedroom with a pink bedspread"),
-    room("case-a-07", 2160, 1440, "Gang met visgraatvloer", "A hallway with a herringbone floor"),
-  ],
+  // Durgerdammergouw: a former livestock farm in the polder; no interiors exist yet, so the plot from the air
+  a: [room("case-a-01", 2160, 1440, "De polder van bovenaf, met sloten en weilanden langs het water", "The polder from the air, with ditches and meadows along the water")],
   b: [
-    room("case-b-01", 2157, 1440, "Woonkamer met hoge ramen en glas-in-lood", "A living room with tall stained-glass windows"),
-    room("case-b-02", 2160, 1440, "Witte keuken met kookeiland", "A white kitchen with an island"),
-    room("case-b-03", 2156, 1440, "Eettafel met roze stoelen bij de keuken", "A dining table with pink chairs by the kitchen"),
-    room("case-b-04", 2158, 1440, "Lichte woonkamer met bank en hoge ramen", "A bright living room with a sofa and tall windows"),
-    room("case-b-05", 2160, 1440, "Woonkamer met cognac bank en open keuken", "A living room with a cognac sofa and an open kitchen"),
-    room("case-b-06", 2155, 1440, "Woon- en eethoek bij een glas-in-loodraam", "A living and dining corner by a stained-glass window"),
-    room("case-b-07", 2156, 1440, "Slaapkamer met tweepersoonsbed", "A bedroom with a double bed"),
-    room("case-b-08", 2158, 1440, "Badkamer met ronde spiegel en ligbad", "A bathroom with a round mirror and a bath"),
+    room("case-b-01", 2157, 1440, "Hoge woonkamer met kroonluchter, houten vloer en twee hoge ramen", "A tall living room with a chandelier, wooden floor and two tall windows"),
+    room("case-b-02", 2156, 1440, "Woon- en eetverdieping met balkenplafond en dakraam", "A living and dining floor with a beamed ceiling and a skylight"),
   ],
   c: [
-    room("case-c-01", 2160, 1440, "Keuken onder de kap met blauwe barkrukken", "A kitchen under the roof with blue bar stools"),
-    room("case-c-02", 2157, 1440, "Keukeneiland en eethoek bij de balkondeur", "A kitchen island and dining area by the balcony door"),
-    room("case-c-03", 2156, 1440, "Keuken met zwart werkblad en uitzicht", "A kitchen with a black worktop and a view"),
-    room("case-c-04", 2157, 1440, "Woonkamer met grijze hoekbank", "A living room with a grey corner sofa"),
-    room("case-c-05", 2160, 1440, "Trap met houten treden", "A staircase with wooden treads"),
-    room("case-c-06", 2157, 1440, "Badkamer met ronde spiegel en natuursteen", "A bathroom with a round mirror and natural stone"),
-    room("case-c-07", 2160, 1440, "Balkon met uitzicht over het groen", "A balcony looking out over greenery"),
+    room("case-c-01", 2160, 1440, "Witte keuken met kookeiland en hoge ramen", "A white kitchen with an island and tall windows"),
+    room("case-c-02", 2157, 1440, "Woonkamer met glas-in-loodramen en open keuken", "A living room with stained-glass windows and an open kitchen"),
+    room("case-c-03", 2157, 1440, "Woonkamer met blauwe hoekbank en eiken schuifdeur", "A living room with a blue corner sofa and an oak sliding door"),
+    room("case-c-04", 2155, 1440, "Eethoek en keuken onder een dakraam", "A dining area and kitchen under a skylight"),
+    room("case-c-05", 2158, 1440, "Badkamer met ronde spiegel en ligbad", "A bathroom with a round mirror and a bath"),
   ],
   d: [
     room("case-d-01", 2400, 1600, "Woonkamer met eettafel en keuken", "A living room with a dining table and kitchen"),
@@ -287,15 +236,19 @@ export const caseImages = {
 };
 /** The same rooms during the works (3:2 crops, to sit under their finished photos in the before/after frame). */
 export const beforeImages = {
-  b: [
-    room("before-b-01", 2400, 1600, "Dezelfde keuken tijdens de verbouwing", "The same kitchen during the renovation"),
-    room("before-b-02", 2400, 1600, "De woonverdieping gestript, voor de verbouwing", "The living floor stripped back, before the renovation"),
-  ],
-  c: [
-    room("before-c-01", 2400, 1600, "De zolder gestript, voor de verbouwing", "The roof space stripped back, before the renovation"),
-    room("before-c-02", 2400, 1600, "De nieuwe kapconstructie in aanbouw", "The new roof structure going up"),
-  ],
-};
+  c: [room("before-c-01", 2400, 1600, "Dezelfde keuken tijdens de verbouwing", "The same kitchen during the renovation")],
+}
+
+/**
+ * The homepage project cards (2026-10-07): up to three photographs from each project's own set (caseImages above,
+ * plus Durgerdammergouw's render), so a card shows the project it names.
+ */
+export const workCases: { id: string; photos: ImageAsset[] }[] = [
+  { id: "a", photos: [interiorLiving, caseImages.a[0]] },
+  { id: "b", photos: [caseImages.b[0], caseImages.b[1]] },
+  { id: "c", photos: [caseImages.c[0], caseImages.c[1], caseImages.c[4]] },
+  { id: "d", photos: [caseImages.d[2], caseImages.d[6], caseImages.d[8]] },
+];
 
 /** Line drawings cut from the owner's concept image (2026-10-01): white lines on transparent, for dark bands. */
 export const stepsSketches: { left: MediaSlot; right: MediaSlot } = {

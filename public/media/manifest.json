@@ -119,54 +119,6 @@
     "width": 960,
     "height": 719
   },
-  "work-a-01": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-a-02": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-a-03": {
-    "width": 1333,
-    "height": 2000
-  },
-  "work-b-01": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-b-02": {
-    "width": 1333,
-    "height": 2000
-  },
-  "work-b-03": {
-    "width": 3000,
-    "height": 2000
-  },
-  "work-c-01": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-c-02": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-c-03": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-d-01": {
-    "width": 2160,
-    "height": 1440
-  },
-  "work-d-02": {
-    "width": 2158,
-    "height": 1440
-  },
-  "work-d-03": {
-    "width": 2158,
-    "height": 1440
-  },
   "mascot-bulb-01": {
     "width": 1024,
     "height": 1024
@@ -219,47 +171,11 @@
     "width": 1672,
     "height": 941
   },
-  "before-b-01": {
-    "width": 2400,
-    "height": 1600
-  },
-  "before-b-02": {
-    "width": 2400,
-    "height": 1600
-  },
   "before-c-01": {
     "width": 2400,
     "height": 1600
   },
-  "before-c-02": {
-    "width": 2400,
-    "height": 1600
-  },
   "case-a-01": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-a-02": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-a-03": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-a-04": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-a-05": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-a-06": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-a-07": {
     "width": 2160,
     "height": 1440
   },
@@ -268,31 +184,7 @@
     "height": 1440
   },
   "case-b-02": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-b-03": {
     "width": 2156,
-    "height": 1440
-  },
-  "case-b-04": {
-    "width": 2158,
-    "height": 1440
-  },
-  "case-b-05": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-b-06": {
-    "width": 2155,
-    "height": 1440
-  },
-  "case-b-07": {
-    "width": 2156,
-    "height": 1440
-  },
-  "case-b-08": {
-    "width": 2158,
     "height": 1440
   },
   "case-c-01": {
@@ -304,23 +196,15 @@
     "height": 1440
   },
   "case-c-03": {
-    "width": 2156,
+    "width": 2157,
     "height": 1440
   },
   "case-c-04": {
-    "width": 2157,
+    "width": 2155,
     "height": 1440
   },
   "case-c-05": {
-    "width": 2160,
-    "height": 1440
-  },
-  "case-c-06": {
-    "width": 2157,
-    "height": 1440
-  },
-  "case-c-07": {
-    "width": 2160,
+    "width": 2158,
     "height": 1440
   },
   "case-d-01": {

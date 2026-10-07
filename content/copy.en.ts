@@ -106,27 +106,27 @@ export const en: Copy = {
     items: [
       {
         index: "01",
-        title: draft("A home re-planned around the light"),
-        body: draft("An existing home whose plan no longer matched the way people live. We rethought the layout around a bright kitchen and gave every room a clear purpose."),
-        note: draft("Kitchen with an island, bedroom under a skylight, bathroom with black basins."),
+        title: draft("A farmstead in the polder, reimagined"),
+        body: draft("A former livestock farm by the water on the edge of Amsterdam, in open polder land. The plan: a country home that keeps the calm of the landscape around it."),
+        note: draft("A render of the living room to come; the plot and the polder from the air."),
       },
       {
         index: "02",
-        title: draft("Dark wood and warm light on a compact plan"),
-        body: draft("A compact home where every centimetre counts. A tall kitchen wall in dark wood, brass details and a calm bathroom turn little space into a grown-up home."),
-        note: draft("Kitchen with a wooden bar, brass tap by a round mirror, living room with wide windows."),
+        title: draft("A townhouse in the heart of Haarlem"),
+        body: draft("A characterful townhouse with a rear coach house, restored with care: tall rooms, wooden floors and the light of tall windows, made ready for the long term."),
+        note: draft("A tall living room with a chandelier; the living and dining floor under a skylight."),
       },
       {
         index: "03",
-        title: draft("Stone, brass and a bedroom under the roof"),
-        body: draft("A building whose attic stayed unused for years. The floor was brought into the home and finished in natural stone and brass: materials that improve with time."),
-        note: draft("Kitchen with a marble worktop, bathroom in natural stone, bedroom under the roof."),
+        title: draft("Homes above the shop, under one renewed roof"),
+        body: draft("A mixed-use building in Haarlem, redeveloped into independent apartments above a shop. Bright kitchens, oak floors and calm bathrooms, finished to last."),
+        note: draft("Kitchen with an island, living room with stained-glass windows, bathroom with a round mirror."),
       },
       {
         index: "04",
         title: draft("Room to breathe, from shell to turnkey"),
         body: draft("Generous rooms given back their proportions. An open kitchen on the living room, a calm bathroom and a bedroom with a view, delivered turnkey as a place to live."),
-        note: draft("Living room with an open kitchen, bathroom with a round mirror, bedroom with a view."),
+        note: draft("Kitchen with a brass tap, bathroom with a black basin, bedroom with a large window."),
       },
     ],
   },
@@ -179,12 +179,12 @@ export const en: Copy = {
     // generic on purpose (no facts beyond name, city and category) until the owner writes them.
     items: {
       durgerdammergouw: {
-        title: draft("Residential renewal — Amsterdam"),
-        lede: draft("An existing house renewed into calm, contemporary homes."),
-        opportunity: draft("In Amsterdam, an existing house with good bones and a dated interior: worth keeping, ready for a new chapter."),
-        approach: draft("Supreme took on the redevelopment: a clear plan for the layout, the right specialists on every trade, and a renovation to a high, contemporary standard."),
-        outcome: draft("Delivered as high-quality homes and retained within Supreme's managed portfolio — held for the long term."),
-        why: draft("Quiet, careful work: the right property, renewed properly, and looked after for years to come."),
+        title: draft("Country home — Amsterdam"),
+        lede: draft("A former livestock farm in the polder, reimagined as a home."),
+        opportunity: draft("On the edge of Amsterdam, a former livestock farm in open polder land: a rare plot by the water, with room to make something lasting."),
+        approach: draft("Supreme leads the redevelopment: a plan for a country home that fits the landscape, made with the right architects and specialists."),
+        outcome: draft("A home designed around its setting and held for the long term within Supreme's managed portfolio."),
+        why: draft("The right plot, treated with care: a new home that belongs to the landscape it stands in."),
       },
       "prinsen-bolwerk": {
         title: draft("Historic townhouse — Haarlem"),
