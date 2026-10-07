@@ -48,8 +48,8 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         gsap.set(items, { force3D: true });
         gsap.set(inners, { force3D: true, transformOrigin: "50% 50%" });
 
-        // The band tone, shared with the projects band through --band-tone on body: white as this band slides in, Sky
-        // mist once it has arrived (WorkMotion fades it back to white inside the projects band, so there is no seam)
+        // The band tone (--band-tone on body): white as this band slides in, Sky mist once it has arrived, and back to
+        // Paper as it scrolls on into the contact band (owner, 2026-10-07: no seam), see toneOut below
         const tokens = getComputedStyle(document.documentElement);
         const tone = gsap.fromTo(
           document.body,
@@ -75,6 +75,17 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         gsap.set(lines, { color: from });
         tl.to(lines, { color: ink, duration: 0.16, stagger: 0.2, ease: ease.out }, 0.06);
         const pinST = tl.scrollTrigger!;
+        const toneOut = gsap.fromTo(
+          document.body,
+          { "--band-tone": tokens.getPropertyValue("--panel-sky").trim() },
+          {
+            "--band-tone": tokens.getPropertyValue("--bg").trim(),
+            ease: "none",
+            immediateRender: false,
+            // fades over the last of the pin, so the contact band below already meets Paper
+            scrollTrigger: { trigger: section, start: () => pinST.end - window.innerHeight * 0.6, end: () => pinST.end + window.innerHeight * 0.15, scrub: true, invalidateOnRefresh: true },
+          },
+        );
 
         // The bloom: the band's arrival (it slides up over the held steps strip)
         const enterST = ScrollTrigger.create({ trigger: section, start: "top bottom", end: "top top", invalidateOnRefresh: true });
@@ -191,6 +202,8 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
         return () => {
           tone.scrollTrigger?.kill();
           tone.kill();
+          toneOut.scrollTrigger?.kill();
+          toneOut.kill();
           gsap.set(document.body, { clearProps: "--band-tone" });
           gsap.ticker.remove(tick);
           visible.kill();

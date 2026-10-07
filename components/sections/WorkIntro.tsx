@@ -35,7 +35,7 @@ const orbit = ring.map((_, i) => (i % 2 === 0 ? { kind: "card" as const, image: 
 export function WorkIntro({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   return (
-    <section id="work" className={styles.intro} data-work-intro data-overlap aria-labelledby="work-intro-title">
+    <section id="collaboration" className={styles.intro} data-work-intro data-overlap aria-labelledby="work-intro-title">
       <WorkIntroMotion>
         <div className={styles.stage} data-orbit aria-hidden="true">
           {orbit.map((o, i) => {
