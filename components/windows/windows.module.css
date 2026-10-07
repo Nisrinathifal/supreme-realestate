@@ -2,7 +2,10 @@
    has the film's drawn size (object-fit cover anchored top centre, exactly like the video), so hotspots placed in
    percent of the film stay on their windows at every viewport. Above the copy and the boat, below the pause control. */
 .layer { position: absolute; inset: 0; z-index: 4; container-type: size; pointer-events: none; }
-.film { position: absolute; top: 0; left: 50%; translate: -50% 0; width: max(100cqw, calc(100cqh * 16 / 9)); height: max(100cqh, calc(100cqw * 9 / 16)); }
+.film {
+  --film-w: max(100cqw, calc(100cqh * 16 / 9));
+  position: absolute; top: 0; left: calc((100cqw - var(--film-w)) * var(--pan, 0.5)); width: var(--film-w); height: max(100cqh, calc(100cqw * 9 / 16));
+} /* left: anchored like the video's object-position (centre, or wherever HeroScroll has walked a portrait screen) */
 .film > * { pointer-events: auto; }
 
 /* Spotlight (after dusk, HeroScroll fades it in): Canal ink over the facades, masked away in a soft pool around each
@@ -103,7 +106,3 @@
 }
 .back:focus-visible { outline: 2px solid var(--on-media); outline-offset: 3px; }
 
-@media (max-width: 767px) {
-  /* The film's windows: off screen in the phone crop, so the projects deck under the hero takes over */
-  .layer { display: none; }
-}

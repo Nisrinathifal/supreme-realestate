@@ -71,11 +71,11 @@ function Table() {
  * with its drawings, plan and samples (procedural) and the mascot (the site's own art), driven by the scene state
  * (scroll). Rendered on demand (SupremeHero invalidates on scroll).
  */
-export default function ArchitecturalScene({ state, onReady }: { state: SceneState; onReady?: (invalidate: () => void) => void }) {
+export default function ArchitecturalScene({ state, lite = false, onReady }: { state: SceneState; lite?: boolean; onReady?: (invalidate: () => void) => void }) {
   return (
     <Canvas
       shadows="percentage"
-      dpr={[1, 1.5]}
+      dpr={lite ? [1, 1.25] : [1, 1.5]}
       frameloop="demand"
       gl={{ antialias: true, powerPreference: "high-performance", toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.02 }}
       camera={{ fov: 26, near: 1, far: 260, position: [30, 27, 40] }}
@@ -91,7 +91,7 @@ export default function ArchitecturalScene({ state, onReady }: { state: SceneSta
       <Atmosphere state={state} />
       <Table />
       <FloorPlan state={state} />
-      <SupremeBuilding state={state} />
+      <SupremeBuilding state={state} lite={lite} />
       <ArchitecturalDrawing state={state} />
       <MaterialSamples state={state} />
       <Suspense fallback={null}>

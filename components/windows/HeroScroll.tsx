@@ -12,6 +12,13 @@ const ZOOM = 1.22;
 /** The hero's pin, in viewports: dusk first, then the projects band slides up over the held hero (owner, 2026-10-07). */
 const DUSK = 1.2;
 const COVER = 1;
+/**
+ * Portrait screens (phones): the crop shows a few facades only, so once night has fallen the view walks along the
+ * canal (the films' and the windows' horizontal anchor, `--pan`, 0 = left edge of the film, 1 = right) past all four
+ * project windows, for this many viewports more, before the band covers it. Wide screens see all four at once.
+ */
+const WALK = 1.6;
+const FILM = 16 / 9;
 
 /**
  * Nightfall on scroll (concept 2026-10-05). The hero holds (pinned) for a little over one viewport of scroll while
@@ -21,8 +28,8 @@ const COVER = 1;
  * the houses; once it is dark the film finishes its crossing and rests on its last frame (which meets its first, so
  * nothing jumps), and the spotlight settles on the four project windows (the facades around them step back, their
  * frames come on) and they become live. A slow scrub and a little hysteresis on the live state keep it steady under
- * a nervous wheel. Phones get the same dusk (their windows are off screen, so the projects deck under the hero is
- * the way in). Reduced motion: no pin, no night, the windows are simply there. The hotspot layer carries `data-shown`; its CSS keeps the windows out of sight and out of the
+ * a nervous wheel. Phones get the same dusk (their crop shows only some windows, so the projects deck under the hero is
+ * the way in, and they walk along the canal past every window, WALK). Reduced motion: no pin, no night, the windows are simply there. The hotspot layer carries `data-shown`; its CSS keeps the windows out of sight and out of the
  * tab order until then. Built once the hero is live (HeroFilm), so the tweens record its settled state.
  */
 export function HeroScroll() {
@@ -37,6 +44,11 @@ export function HeroScroll() {
     const copy = hero.querySelector<HTMLElement>("[data-hero-copy]");
     const spots = layer.querySelector<HTMLElement>("[data-spots]");
     const boxes = Array.from(layer.querySelectorAll<HTMLElement>("[data-window]"));
+    // The windows' centres across the film (0–1), left to right, read from the hotspots' own percent boxes
+    const centres = boxes
+      .map((b) => (parseFloat(b.style.left) + parseFloat(b.style.width) / 2) / 100)
+      .filter(Number.isFinite)
+      .sort((a, b) => a - b);
     const mm = gsap.matchMedia();
 
     mm.add(MQ.full, () => {
@@ -66,6 +78,13 @@ export function HeroScroll() {
         document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: toDark ? "dark" : "light" }));
       };
       const build = () => {
+        // A portrait screen walks the canal after dusk; `--pan` puts a window's centre (0–1 of the film) mid-screen
+        const walk = window.innerWidth / window.innerHeight < 1 && centres.length > 0 ? WALK : 0;
+        const panTo = (c: number) => () => {
+          const W = hero.offsetWidth, F = Math.max(W, hero.offsetHeight * FILM);
+          return F > W ? Math.min(1, Math.max(0, (c * F - W / 2) / (F - W))) : 0.5;
+        };
+        gsap.set(hero, { "--pan": 0.5 });
         // The night film (HeroNightFilm) is client-only, so it is looked up here, a frame after the hero goes live;
         // unseen at opacity 0 first, and it starts loading now
         const nightFilm = hero.querySelector<HTMLVideoElement>("[data-hero-night-film]");
@@ -95,7 +114,7 @@ export function HeroScroll() {
           scrollTrigger: {
             trigger: hero,
             start: "top top",
-            end: `+=${(DUSK + COVER) * 100}%`,
+            end: `+=${(DUSK + walk + COVER) * 100}%`,
             pin: true,
             scrub: 1.2,
             anticipatePin: 1,
@@ -105,7 +124,7 @@ export function HeroScroll() {
             onEnterBack: dayResume,
             onUpdate: (self) => {
               // Progress through the dusk part of the pin (the rest is the band covering the hero)
-              const dusk = Math.min(1, (self.progress * (DUSK + COVER)) / DUSK);
+              const dusk = Math.min(1, (self.progress * (DUSK + walk + COVER)) / DUSK);
               if (dusk > 0.58) live = true;
               else if (dusk < 0.46) live = false;
               layer.dataset.shown = live ? "true" : "false";
@@ -124,7 +143,7 @@ export function HeroScroll() {
         // band, also dark, takes it from there)
         const pin = tl.scrollTrigger!;
         dark = ScrollTrigger.create({
-          start: () => pin.start + 0.45 * ((pin.end - pin.start) * DUSK) / (DUSK + COVER),
+          start: () => pin.start + 0.45 * ((pin.end - pin.start) * DUSK) / (DUSK + walk + COVER),
           end: () => pin.end + 10,
           onToggle: (self) => headerTheme(self.isActive),
           onRefresh: (self) => headerTheme(self.isActive),
@@ -137,9 +156,16 @@ export function HeroScroll() {
         tl.to(boxes, { opacity: 1, duration: 0.3, stagger: 0.06, ease: "none" }, 0.6);
         // Dusk takes the timeline's first unit. Over the cover part the night steps back under the rising band, like
         // a page under a sheet: the view eases a little away and dims (a veil of the band's obsidian over the whole hero)
-        tl.to({}, { duration: COVER / DUSK }, 1);
-        tl.to(targets, { scale: ZOOM * 0.94, duration: COVER / DUSK, ease: "power1.in" }, 1);
-        tl.fromTo(veil, { opacity: 0 }, { opacity: 0.6, duration: COVER / DUSK, ease: "power1.in" }, 1);
+        // Portrait: the walk along the canal, first to the leftmost window, then right past the others to the last
+        const after = 1 + walk / DUSK;
+        if (walk) {
+          const w = walk / DUSK;
+          tl.to(hero, { "--pan": panTo(centres[0]), duration: w * 0.3, ease: "power1.inOut" }, 1)
+            .to(hero, { "--pan": panTo(centres[centres.length - 1]), duration: w * 0.55, ease: "power1.inOut" }, 1 + w * 0.38);
+        }
+        tl.to({}, { duration: COVER / DUSK }, after);
+        tl.to(targets, { scale: ZOOM * 0.94, duration: COVER / DUSK, ease: "power1.in" }, after);
+        tl.fromTo(veil, { opacity: 0 }, { opacity: 0.6, duration: COVER / DUSK, ease: "power1.in" }, after);
         ScrollTrigger.refresh();
       };
       const start = () => {
@@ -155,6 +181,7 @@ export function HeroScroll() {
         headerTheme(false);
         ScrollTrigger.removeEventListener("refreshInit", overlap);
         veil.remove();
+        hero.style.removeProperty("--pan");
         if (band) gsap.set(band, { clearProps: "marginTop,position,zIndex" });
         dark?.kill();
         tl?.scrollTrigger?.kill();

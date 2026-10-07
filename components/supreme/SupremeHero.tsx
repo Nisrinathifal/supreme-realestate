@@ -6,14 +6,16 @@ import { useEffect, useRef, useState } from "react";
 import { HEADER_THEME } from "@/components/layout/Header";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { buildSceneTimeline, createSceneState, FINALE, STAGES } from "@/lib/supreme/sceneTimeline";
-import { ease, gsap, MQ, setupGsap } from "@/lib/motion";
+import { ease, gsap, MQ, saveData, setupGsap } from "@/lib/motion";
 import { Elevation, Finale, type StageCopy, TransformationTimeline } from "./TransformationTimeline";
 import styles from "./SupremeHero.module.css";
 
-// The WebGL scene (three + R3F) is loaded only when it will run: wide screens, motion on, WebGL available
+// The WebGL scene (three + R3F) is loaded only when it will run: motion on, WebGL available, no Save-Data. Every
+// screen size gets it; phones and tablets in a portrait layout (stage text under the model) and a lighter scene.
 const ArchitecturalScene = dynamic(() => import("./ArchitecturalScene"), { ssr: false });
 
-const LIVE = `${MQ.full} and (min-width: 981px)`;
+const LIVE = MQ.full;
+const LITE = "(max-width: 980px), (pointer: coarse)";
 const END = 1.12; // the transformation runs 0–1; the rest is the hold and the darkening into the letter band
 const SCROLL = 9; // viewports of scroll for the whole run
 
@@ -32,18 +34,23 @@ const hasWebGL = () => {
  * scrubbed by the scroll (GSAP + ScrollTrigger, Lenis smoothing): one building → potential → eight apartments →
  * eight homes → one property, eight homes; the stage text on alternate sides, the mascot alongside, the closing line
  * over the pulled-back model, and at the end the view darkens into the letter band below.
- * Server and fallback render the title, a procedural SVG elevation, the five stages as a list and the closing line.
+ * Server and fallback (reduced motion, no WebGL, Save-Data, no JS) render the title, a procedural SVG elevation, the
+ * five stages as a list and the closing line.
  */
 export function SupremeHero({ label, title, stages, close, finale }: { label: string; title: string; stages: StageCopy[]; close: string; finale: { title: string; body: string } }) {
   const root = useRef<HTMLElement>(null);
   const [state] = useState(createSceneState); // one mutable state object, tweened by GSAP, read by the scene
   const [live, setLive] = useState(false);
+  const [lite, setLite] = useState(false);
   const [mounted, setMounted] = useState(false);
   const invalidate = useRef<() => void>(() => undefined);
 
   useEffect(() => {
     const mq = window.matchMedia(LIVE);
-    const check = () => setLive(mq.matches && hasWebGL());
+    const check = () => {
+      setLive(mq.matches && hasWebGL() && !saveData());
+      setLite(window.matchMedia(LITE).matches);
+    };
     check();
     mq.addEventListener("change", check);
     return () => mq.removeEventListener("change", check);
@@ -137,9 +144,10 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
       tl.to(head, { y: () => -window.innerHeight * 0.3, opacity: 0, duration: 0.06, ease: "power2.in" }, 0.005).to(view, { y: 0, scale: 1, duration: 0.07, ease: "power2.inOut" }, 0.005);
       // each stage's text, in at its state, out before the next
       texts.forEach((el, i) => {
-        const at = i === 0 ? 0.05 : STAGES[i] - 0.05;
+        // in just before its state, out just before the next one's comes in (on phones they share one spot)
+        const at = i === 0 ? 0.04 : STAGES[i] - 0.03;
         tl.to(el, { opacity: 1, y: 0, duration: 0.035, ease: "power2.out" }, at);
-        const out = i < texts.length - 1 ? STAGES[i + 1] - 0.08 : FINALE - 0.025;
+        const out = i < texts.length - 1 ? STAGES[i + 1] - 0.06 : FINALE - 0.025;
         tl.to(el, { opacity: 0, y: -24, duration: 0.03, ease: "power2.in" }, out);
       });
       // the closing line over the pulled-back building
@@ -179,6 +187,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
           {live && mounted ? (
             <ArchitecturalScene
               state={state}
+              lite={lite}
               onReady={(inv) => {
                 invalidate.current = inv;
                 inv();

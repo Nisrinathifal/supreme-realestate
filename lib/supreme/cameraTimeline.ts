@@ -36,7 +36,7 @@ function segment(p: number) {
  * A scalar between neighbouring keys, eased. `window` limits the change to part of the segment: the side the model
  * is framed on holds, then swaps while the stage text swaps (≈ two thirds in).
  */
-const SWAP: [number, number] = [0.5, 0.82];
+const SWAP: [number, number] = [0.62, 0.95];
 function scalar(p: number, pick: (k: Key) => number, window: [number, number] = [0, 1]) {
   const { i, f } = segment(p);
   const w = Math.min(1, Math.max(0, (f - window[0]) / (window[1] - window[0])));

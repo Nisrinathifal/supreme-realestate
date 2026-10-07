@@ -78,5 +78,5 @@
   .note { padding-bottom: 0; }
   .gallery { margin-right: calc(-1 * var(--s-5)); }
   .photo { flex-basis: 46vw; }
-  .pill { display: none; }
+  .pill { left: calc(50% - var(--s-5) / 2); } /* centred on the visible photographs (the strip runs past the card's edge) */
 }

@@ -45,34 +45,38 @@
 .clipSource { position: absolute; inset: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .panelBody { margin: 0; font-size: var(--fs-body); line-height: 1.6; max-width: 36ch; color: var(--muted); }
 
-@media (min-width: 768px) {
-  /* Desktop geometry used by StepsMotion: panels side by side, each one viewport tall, 72vw wide */
-  .strip[data-row] {
-    flex-direction: row; align-items: stretch; padding: 0;
-    position: absolute; inset: 0; height: 100svh; width: max-content;
-  }
-  .strip[data-row] .panel { width: 72vw; height: 100svh; border-radius: 0; padding: calc(var(--header-h) + var(--s-6)) var(--s-9) var(--s-8); }
-  .strip[data-row] .panelMedia { max-height: 54svh; }
+/* Geometry used by StepsMotion: panels side by side, each one viewport tall, 72vw wide (86vw on phones, so the next
+   one still shows at the edge) */
+.strip[data-row] {
+  flex-direction: row; align-items: stretch; padding: 0;
+  position: absolute; inset: 0; height: 100svh; width: max-content;
 }
+.strip[data-row] .panel { width: 72vw; height: 100svh; border-radius: 0; padding: calc(var(--header-h) + var(--s-6)) var(--s-9) var(--s-8); }
+.strip[data-row] .panelMedia { max-height: 54svh; }
 
 @media (max-width: 980px) {
-  .stage { grid-template-columns: 1fr; padding-top: calc(var(--header-h) + var(--s-6)); }
-  .sketch { display: none; }
+  .stage { grid-template-columns: 1fr; justify-items: center; align-content: center; padding-top: calc(var(--header-h) + var(--s-6)); }
+  /* the two drawings above and below the headline instead of beside it */
+  .sketch, .sketch:last-of-type { justify-self: center; width: min(30vw, 20svh, 200px); }
 }
 @media (max-width: 767px) {
-  /* static reading order on phones: a compact headline block, then the stacked panels */
-  .stage { min-height: 0; padding-bottom: var(--s-7); }
+  .strip[data-row] .panel { width: 86vw; padding: calc(var(--header-h) + var(--s-5)) var(--s-5) var(--s-6); }
+  .strip[data-row] .panelMedia { max-height: 50svh; }
+}
+/* Without the motion (reduced motion, no JS) on phones: a compact headline block, then the panels as a card stack */
+@media (max-width: 767px) {
+  .steps:not(:has([data-row])) .stage { min-height: 0; padding-bottom: var(--s-7); }
   .title { font-size: clamp(26px, 6vw, 40px); }
   .panel { padding: var(--s-6) var(--s-5) var(--s-5); border-radius: var(--r-lg); }
   .panelTitle { font-size: clamp(32px, 8vw, 48px); }
   /* Card stack: each panel sticks under the bar; the next one slides over it and leaves only its number row
      (padding + label = --peek) showing. Pure CSS, so it reads the same with reduced motion. */
-  .steps { overflow: visible; } /* the band's clip (for the sideways strip) would stop the panels sticking */
+  .steps:not(:has([data-row])) { overflow: visible; } /* the band's clip (for the sideways strip) would stop the panels sticking */
   .strip { --peek: calc(var(--s-6) + var(--s-5)); --stack-top: calc(var(--header-h) + var(--s-3)); }
-  .panel { position: sticky; top: calc(var(--stack-top) + var(--peek) * var(--i, 0)); min-height: calc(100svh - var(--stack-top) - var(--peek) * var(--i, 0) - var(--frame)); }
+  .strip:not([data-row]) .panel { position: sticky; top: calc(var(--stack-top) + var(--peek) * var(--i, 0)); min-height: calc(100svh - var(--stack-top) - var(--peek) * var(--i, 0) - var(--frame)); }
   .panel:nth-child(2) { --i: 1; }
   .panel:nth-child(3) { --i: 2; }
   /* in the stack the clip follows the title (so a covered card still shows its house); the body sits at the foot */
-  .panelMedia { flex: 0 0 auto; }
+  .strip:not([data-row]) .panelMedia { flex: 0 0 auto; }
   .panelBody { margin-top: auto; }
 }

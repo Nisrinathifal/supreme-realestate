@@ -5,7 +5,7 @@
 .stage { display: flex; flex-direction: column; gap: var(--s-8); padding: var(--section-y) var(--gutter); max-width: calc(var(--maxw) + 2 * var(--gutter)); margin: 0 auto; }
 .head { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
 .label { color: var(--muted); }
-.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display); line-height: 0.95; letter-spacing: -0.035em; text-wrap: balance; }
+.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: 1; /* owner, 2026-10-07: smaller than the display size */ letter-spacing: -0.035em; text-wrap: balance; }
 .mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; margin-right: 0.22em; }
 .mask:last-child { margin-right: 0; }
 .mask > span { display: inline-block; }
@@ -65,11 +65,27 @@
 .dot[data-active]::before { background: var(--ink); }
 .band[data-live] .finale { position: absolute; left: 0; right: 0; top: calc(var(--bar) + var(--s-5)); z-index: 2; padding: 0 var(--gutter); pointer-events: none; }
 .band[data-live] .finale::before { content: ""; position: absolute; left: 0; right: 0; top: calc(-1 * var(--s-8)); height: calc(100% + 2 * var(--s-8)); z-index: -1; background: radial-gradient(ellipse 60% 70% at 50% 40%, color-mix(in srgb, var(--bg) 92%, transparent) 0%, color-mix(in srgb, var(--bg) 70%, transparent) 55%, transparent 100%); }
-.band[data-live] .finaleTitle { font-size: clamp(44px, 5.2vw, 92px); }
+.band[data-live] .finaleTitle { font-size: clamp(36px, 4.2vw, 68px); }
 .band[data-live] .dusk { display: block; position: absolute; inset: 0; z-index: 3; background: var(--band-dark); pointer-events: none; }
 
+/* portrait (phones, tablets upright): the model centred above, each stage's text in a panel along the foot */
 @media (max-width: 980px) {
-  .title { font-size: var(--fs-h2); }
+  .band[data-live] .left, .band[data-live] .right { left: var(--gutter); right: var(--gutter); width: auto; top: auto; bottom: calc(var(--s-6) + var(--s-8)); justify-content: flex-end; gap: var(--s-3); }
+  .band[data-live] .left::before, .band[data-live] .right::before {
+    left: calc(-1 * var(--gutter)); right: calc(-1 * var(--gutter)); width: auto; top: calc(-1 * var(--s-8)); bottom: calc(-1 * (var(--s-6) + var(--s-8)));
+    background: linear-gradient(0deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 90%, transparent) 62%, transparent 100%);
+  }
+  .band[data-live] .stageTitle { font-size: clamp(26px, 6.6vw, 40px); }
+  .band[data-live] .stageBody { font-size: var(--fs-body); line-height: 1.5; }
+  .band[data-live] .rail { gap: var(--s-3); }
+  .band[data-live] .finaleTitle { font-size: clamp(30px, 8vw, 48px); }
+  .band[data-live] .finaleBody { font-size: var(--fs-body); }
+}
+@media (max-width: 600px) {
+  .band[data-live] .dot span { display: none; } /* dots only: five labels do not fit a phone */
+}
+@media (max-width: 980px) {
+  .title { font-size: var(--fs-statement); }
   .view { aspect-ratio: 4 / 5; }
   .elevation { height: 88%; }
 }

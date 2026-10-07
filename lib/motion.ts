@@ -10,6 +10,8 @@ let registered = false;
 export function setupGsap() {
   if (registered || typeof window === "undefined") return;
   gsap.registerPlugin(ScrollTrigger, CustomEase);
+  // phones: the address bar showing and hiding resizes the viewport; that must not re-measure every pin mid-scroll
+  ScrollTrigger.config({ ignoreMobileResize: true });
   CustomEase.create("brand", ".2,.7,.2,1"); // --ease
   CustomEase.create("precise", ".65,0,.35,1"); // --ease-precise
   registered = true;

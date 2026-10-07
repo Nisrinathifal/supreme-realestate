@@ -88,8 +88,10 @@
   .band { --env-w: 94vw; --env-h: calc(var(--env-w) * 0.7); --letter-w: calc(var(--env-w) * 0.92); }
   .letter { padding: var(--s-6) var(--s-5) var(--s-5); }
   .letterhead { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
-  .iconB, .iconC { display: none; }
-  .icon { width: 72px; }
-  .iconA { left: 5%; top: 34%; }
-  .iconD { right: 5%; top: 30%; bottom: auto; }
+  /* all four icons, as on wide screens, smaller and out at the corners clear of the title and the envelope */
+  .icon { width: 60px; }
+  .iconA { left: 3%; top: 9%; }
+  .iconB { right: 3%; top: 7%; }
+  .iconC { left: 4%; bottom: 6%; }
+  .iconD { right: 3%; bottom: 9%; }
 }

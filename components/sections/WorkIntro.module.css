@@ -16,7 +16,7 @@
 .title {
   position: relative; z-index: 2; margin: 0; padding: 0 var(--gutter); text-align: center;
   font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking);
-  font-size: var(--fs-h2); line-height: 1.02;
+  font-size: var(--fs-statement); line-height: 1.06; /* owner, 2026-10-07: smaller, the cards around it carry the band */
 }
 .line { display: block; }
 .word { display: inline-block; } /* the gaps are real spaces in the markup */
@@ -25,5 +25,5 @@
   .intro { min-height: 86svh; }
   .card { --size: clamp(72px, 19vw, 96px); }
   .mascot { --size: clamp(52px, 13vw, 68px); }
-  .title { font-size: clamp(28px, 7.6vw, 44px); }
+  .title { font-size: clamp(26px, 6.6vw, 36px); }
 }

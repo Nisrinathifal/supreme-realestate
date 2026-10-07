@@ -5,10 +5,10 @@ import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * Desktop choreography after the reference: the headline lines rise in as the band comes up; the band is then pinned for ~5 viewports;
+ * Choreography after the reference, on every screen size (phones too, with narrower panels): the headline lines rise in as the band comes up; the band is then pinned for ~5 viewports;
  * the strip of panels (laid out as one row by `data-row`) starts tiny at the bottom right, grows to the full
  * viewport while the headline fades, then slides sideways so panels 02 and 03 pass through, and holds.
- * All start states are set here; without this (phones, reduced motion, no JS) the CSS stacks everything.
+ * All start states are set here; without this (reduced motion, no JS) the CSS stacks everything.
  */
 export function StepsMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -18,7 +18,7 @@ export function StepsMotion({ children }: { children: React.ReactNode }) {
       setupGsap();
       const root = scope.current!;
       const mm = gsap.matchMedia();
-      mm.add(`${MQ.full} and ${MQ.desktop}`, () => {
+      mm.add(MQ.full, () => {
         const section = root.closest("[data-steps]") as HTMLElement | null;
         const q = gsap.utils.selector(root);
         const stage = q<HTMLElement>("[data-steps-stage]")[0];

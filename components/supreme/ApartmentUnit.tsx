@@ -97,7 +97,7 @@ function grow(mesh: Mesh | undefined, it: Item, k: number) {
  * building (value). Position, opacity, scale, materials, light and reveal are all read from the scene state, each
  * unit a little after the one before (01 → 08).
  */
-export function ApartmentUnit({ apartment, state }: { apartment: Apartment; state: SceneState }) {
+export function ApartmentUnit({ apartment, state, lite = false }: { apartment: Apartment; state: SceneState; lite?: boolean }) {
   const { index, side, base, apart, floor } = apartment;
   const root = useRef<Group>(null);
   const volume = useRef<Mesh>(null);
@@ -149,7 +149,7 @@ export function ApartmentUnit({ apartment, state }: { apartment: Apartment; stat
     (Object.keys(k.items) as Kind[]).forEach((kind) => k.items[kind].color.lerpColors(k.ghost, k.real[kind], inside));
 
     // warm light
-    const glow = light * (0.1 + 0.12 * s.warm);
+    const glow = light * (lite ? 0.18 + 0.16 * s.warm : 0.1 + 0.12 * s.warm); // without lamps (lite) the surfaces carry more of it
     k.floor.emissiveIntensity = glow;
     k.items.white.emissiveIntensity = glow;
     k.items.oak.emissiveIntensity = glow * 0.6;
@@ -189,7 +189,7 @@ export function ApartmentUnit({ apartment, state }: { apartment: Apartment; stat
         <mesh ref={pendant} position={[-0.7, S + H - 0.65, 0.4]} material={u.pendant}>
           <sphereGeometry args={[0.15, 16, 12]} />
         </mesh>
-        <pointLight ref={lamp} position={[-0.7, S + H - 0.9, 0.6]} color={u.warm} intensity={0} distance={7.5} decay={1.6} />
+        {lite ? null : <pointLight ref={lamp} position={[-0.7, S + H - 0.9, 0.6]} color={u.warm} intensity={0} distance={7.5} decay={1.6} />}
       </group>
 
       {/* its number, on the front between its two windows */}

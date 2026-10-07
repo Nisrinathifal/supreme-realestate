@@ -72,15 +72,15 @@ export function BuildingStructure({ state }: { state: SceneState }) {
 
 /**
  * The building of the About band (SCENE-3D.md §2): the existing shell, the shared structure and the eight apartments,
- * each its own object so each can be animated on its own.
+ * each its own object so each can be animated on its own. `lite` (phones, tablets): the homes glow without a lamp each.
  */
-export function SupremeBuilding({ state }: { state: SceneState }) {
+export function SupremeBuilding({ state, lite = false }: { state: SceneState; lite?: boolean }) {
   return (
     <group>
       <ExistingBuilding state={state} />
       <BuildingStructure state={state} />
       {APARTMENTS.map((a) => (
-        <ApartmentUnit key={a.index} apartment={a} state={state} />
+        <ApartmentUnit key={a.index} apartment={a} state={state} lite={lite} />
       ))}
     </group>
   );
