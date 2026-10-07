@@ -1,16 +1,16 @@
-/* A wall: Stone (--alt) lit from the top left (--daylight), slightly darker towards the floor */
+/* One clean Paper field (owner, 2026-10-07: the Stone wall and its gradients read as dirty), the same Paper the
+   projects band above fades into, so there is no seam. The columns are not boxed in by the section: they stand up
+   past its top into the band's foot (--reach) and dissolve upwards there, so they simply run on (no sectioning) */
 .shelf {
-  position: relative; min-height: 100svh; overflow: hidden; color: var(--ink);
-  background: linear-gradient(180deg, var(--alt) 0%, var(--alt) 70%, var(--line) 100%);
-}
-/* Daylight from the top left; the top starts in Paper, the colour the projects band above fades into (WorkMotion), and
-   settles into the wall further down, so the two bands meet in one colour */
-.shelf::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, var(--bg) 0, color-mix(in srgb, var(--bg) 0%, transparent) 45svh), var(--daylight);
+  --reach: 70svh;
+  position: relative; z-index: 3; min-height: 100svh; overflow-x: clip; color: var(--ink); background: var(--bg);
 }
 .shelf > * { position: relative; }
 .shelf > svg { position: absolute; }
+.shelf > .columns {
+  top: calc(-1 * var(--reach)); bottom: auto; height: calc(100% + var(--reach)); /* an svg will not stretch between top and bottom */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, var(--ink) var(--reach)); mask-image: linear-gradient(180deg, transparent 0, var(--ink) var(--reach));
+}
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */
 .inner { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s-9); }
 .stage { min-height: 72svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; } /* the statement comes straight in (owner, 2026-10-07) */
