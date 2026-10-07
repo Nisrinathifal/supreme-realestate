@@ -10,7 +10,8 @@ import { WorkMotion } from "./WorkMotion";
 import styles from "./Work.module.css";
 
 /** Card surfaces, alternating dark and light: Canal ink, Sky mist, the inverse surface, Lime mist (DESIGN §3). */
-const tones = [`inverse ${styles.toneInk}`, `light ${styles.toneSky}`, `inverse ${styles.toneMoss}`, `light ${styles.toneLime}`];
+// Light first, then dark, by turns: the dark cards never land straight on the dark band, so the colours never meet (owner)
+const tones = [`light ${styles.toneSky}`, `inverse ${styles.toneInk}`, `light ${styles.toneLime}`, `inverse ${styles.toneMoss}`];
 
 /**
  * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a label and a heading, then four cases as

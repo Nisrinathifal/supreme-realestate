@@ -126,9 +126,9 @@ These rules apply to every page, image, caption, file and piece of metadata.
 }
 ```
 
-**Projects band (owner, 2026-10-07).** The band is `--band-dark` #131416 (obsidian: dark, neither blue nor green;
-Paper 17.6:1). Its cards keep the brand's own tones: Canal ink, Sky mist, Moss (inv-surface), Lime mist; project line,
-index and the band's label in the quiet text colour. Supreme navy and cyan were tried and dropped (owner).
+**Projects band (owner, 2026-10-07).** The band is `--band-dark` #0C100E (a deeper Canal ink, one step below the
+dark cards in the same hue, so nothing clashes; Paper 18.4:1). Its cards keep the brand's own tones, light first: Sky mist,
+Canal ink, Lime mist, Moss (inv-surface); project line, index and the band's label in the quiet text colour. Supreme navy and cyan were tried and dropped (owner).
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 

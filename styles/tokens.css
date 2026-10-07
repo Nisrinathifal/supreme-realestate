@@ -48,8 +48,9 @@
   --inv-btn-fg:    #1A201D;
   --inv-focus:     #CFEA7C;
 
-  /* The projects band (owner, 2026-10-07: dark, not blue): obsidian under the brand's own card tones. Paper on it 17.6 */
-  --band-dark:     #131416;
+  /* The projects band (owner, 2026-10-07: dark, not blue): a deeper Canal ink, one step below the dark cards (ink,
+     moss) in the same hue, so they lift off it instead of clashing. Paper on it 18.4 */
+  --band-dark:     #0C100E;
 
   /* semantic (DESIGN §3.2) */
   --error:         #B3261E;
