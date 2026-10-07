@@ -26,7 +26,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       const next = band?.nextElementSibling as HTMLElement | null;
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "work", dark } }));
 
-      // The band's tone (after the earlier projects intro): Supreme navy while the deck plays, then, over the last
+      // The band's tone (after the earlier projects intro): obsidian while the deck plays, then, over the last
       // viewport before the next band shows, it fades to Paper, where that band's wall begins, so they meet in one colour.
       // The header reads it as dark until the fade is half way.
       let fading = false;
@@ -36,7 +36,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         const tokens = getComputedStyle(document.documentElement);
         const tone = gsap.fromTo(
           band,
-          { backgroundColor: tokens.getPropertyValue("--night").trim() },
+          { backgroundColor: tokens.getPropertyValue("--band-dark").trim() },
           {
             backgroundColor: tokens.getPropertyValue("--bg").trim(),
             ease: "none",

@@ -1,5 +1,5 @@
 /* Canal-ink band right after the night hero, no heading: just the deck of cards */
-.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ position: relative; padding-top: var(--s-6); padding-bottom: calc(var(--section-y) * 2); background: var(--night); box-shadow: 0 -32px 64px -24px color-mix(in srgb, var(--night) 70%, transparent); } /* Supreme navy: the night sky carried on, not green */ /* the room at the foot is where the band fades to the next one's Stone */
+.work { --peek: var(--s-7); --stack-top: calc((var(--header-h) + var(--s-5)) * 1.9); /* exactly the header veil's height (Header.module.css), so the pinned card sits under no veil */ position: relative; padding-top: var(--s-6); padding-bottom: calc(var(--section-y) * 2); background: var(--band-dark); box-shadow: 0 -32px 64px -24px color-mix(in srgb, var(--band-dark) 70%, transparent); } /* obsidian: dark, neither blue nor green, so the cards carry the colour */ /* the room at the foot is where the band fades to the next one's Stone */
 
 /* The title of the band: in the static layout it heads the list; with the arrival running (WorkMotion sets
    data-handoff on its root, which is pinned) it sits just above the stack and rises in with the cards */

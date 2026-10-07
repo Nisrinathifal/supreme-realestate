@@ -53,6 +53,7 @@
      Navy made a little clearer and more saturated (owner: "lebih modern"). Pairs (AA): night-muted on night 8.3 and
      on night-surface 5.6, cyan-light on night 6.8 / night-surface 4.6 / inv-surface 5.0, cyan-deep on sky mist 4.7,
      on cyan-mist 4.7 and on lime mist 4.9. brand-cyan itself is for marks and lines, not small text. */
+  --band-dark:     #131416; /* obsidian: the projects band (owner, 2026-10-07: dark, not blue); paper 17.6, cyan-light 7.6 */
   --night:         #0B1F3A; /* Supreme navy, modern */
   --night-surface: #173C6B; /* cobalt */
   --night-muted:   #A8BAD0;

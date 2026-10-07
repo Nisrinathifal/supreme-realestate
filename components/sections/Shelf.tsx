@@ -28,7 +28,7 @@ export function Shelf({ lang }: { lang: Lang }) {
   const order: ShelfIcon[] = [];
   return (
     <section id="about" className={styles.shelf} data-shelf aria-labelledby="shelf-title">
-      <Columns tone="paper" single className={styles.columns} data-shelf-columns="" />
+      <Columns tone="paper" className={styles.columns} data-shelf-columns="" />
       <ShelfMotion>
         <div className={`container ${styles.inner}`}>
           <div className={styles.stage}>

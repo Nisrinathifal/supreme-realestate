@@ -5,8 +5,8 @@ import { useRef } from "react";
 import { ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 
 /**
- * The wall's columns (one register, full height) rise one at a time once the band above has faded to Paper, behind
- * the statement, which comes straight in (owner, 2026-10-07). The icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
+ * The wall's columns, in two registers that break between the statement and the shelf (owner, 2026-10-07), rise one
+ * at a time once the band above has faded to Paper, behind the statement, which comes straight in. The icons fly from the sentence into the shelf, scrubbed by scroll as the shelf comes into view (no pin: the page
  * simply scrolls on). Start states are set here: the shelf copies of the icons are hidden and the inline icons
  * visible; each inline icon then travels (x, y, scale) onto its compartment and hands over to the shelf copy.
  * Under prefers-reduced-motion nothing runs and both the sentence icons and the filled shelf are shown.
@@ -19,12 +19,37 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
       setupGsap();
       const root = scope.current!;
       const mm = gsap.matchMedia();
+
+      // The two registers of columns (as in the reference) break between the statement and the shelf: the tall upper
+      // register runs down from above the band to there, the offset lower one, with its rounded tops, starts there.
+      // Measured, so the break sits between the two on every screen (also without motion).
+      const wall = root.closest<HTMLElement>("[data-shelf]");
+      const svg = wall?.querySelector<SVGSVGElement>("[data-shelf-columns]");
+      const statement = root.querySelector<HTMLElement>("[data-shelf-statement]");
+      const rackEl = root.querySelector<HTMLElement>("[data-shelf-rack]");
+      const place = () => {
+        if (!svg || !statement || !rackEl) return;
+        const box = svg.getBoundingClientRect();
+        if (!box.height) return;
+        const at = (statement.getBoundingClientRect().bottom + rackEl.getBoundingClientRect().top) / 2 - box.top;
+        const b = Math.max(0, Math.min(900, (at / box.height) * 900)); // in the svg's own units (viewBox height 900)
+        svg.querySelectorAll<SVGRectElement>('rect[data-register="upper"]').forEach((r) => r.setAttribute("height", String(b + 6)));
+        svg.querySelectorAll<SVGRectElement>('rect[data-register="lower"]').forEach((r) => {
+          r.setAttribute("y", String(b));
+          r.setAttribute("height", String(900 - b));
+        });
+        gsap.set(svg.querySelectorAll("rect"), { transformOrigin: "50% 100%" }); // the rise grows each from its new foot
+      };
+      place();
+      const ro = new ResizeObserver(place);
+      if (wall) ro.observe(wall);
+
       mm.add(MQ.full, () => {
         const section = root.closest<HTMLElement>("[data-shelf]");
         const columns = section?.querySelector<SVGSVGElement>("[data-shelf-columns]");
         if (!section || !columns) return;
-        // Every band, both registers, left to right by its place on the wall; they wait for the band above to have
-        // faded to Paper (WorkMotion), then rise one at a time to their full height
+        // Every band, both registers, left to right by its place on the wall (the registers interleave); they wait for
+        // the band above to have faded to Paper (WorkMotion), then rise one at a time to their full height
         const bands = Array.from(columns.querySelectorAll<SVGRectElement>("rect")).sort((a, b) => Number(a.getAttribute("x")) - Number(b.getAttribute("x")));
         gsap.set(bands, { scaleY: 0, transformOrigin: "50% 100%" });
         const rise = gsap.to(bands, {
@@ -84,7 +109,10 @@ export function ShelfMotion({ children }: { children: React.ReactNode }) {
           ScrollTrigger.refresh();
         };
       });
-      return () => mm.revert();
+      return () => {
+        ro.disconnect();
+        mm.revert();
+      };
     },
     { scope },
   );

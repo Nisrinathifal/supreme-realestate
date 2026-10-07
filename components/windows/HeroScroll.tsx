@@ -51,7 +51,7 @@ export function HeroScroll() {
       const band = document.querySelector<HTMLElement>("[data-work]");
       const veil = document.createElement("div");
       veil.setAttribute("aria-hidden", "true");
-      Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "6", pointerEvents: "none", background: "var(--night)", opacity: "0" });
+      Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "6", pointerEvents: "none", background: "var(--band-dark)", opacity: "0" });
       const overlap = () => {
         if (band) band.style.marginTop = `${-hero.offsetHeight}px`;
       };
@@ -119,7 +119,7 @@ export function HeroScroll() {
         if (spots) tl.to(spots, { opacity: 1, duration: 0.4, ease: "none" }, 0.55);
         tl.to(boxes, { opacity: 1, duration: 0.3, stagger: 0.06, ease: "none" }, 0.6);
         // Dusk takes the timeline's first unit. Over the cover part the night steps back under the rising band, like
-        // a page under a sheet: the view eases a little away and dims (a veil of Supreme navy over the whole hero)
+        // a page under a sheet: the view eases a little away and dims (a veil of the band's obsidian over the whole hero)
         tl.to({}, { duration: COVER / DUSK }, 1);
         tl.to(targets, { scale: ZOOM * 0.94, duration: COVER / DUSK, ease: "power1.in" }, 1);
         tl.fromTo(veil, { opacity: 0 }, { opacity: 0.6, duration: COVER / DUSK, ease: "power1.in" }, 1);
