@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AlphaVideoAsset } from "@/content/media";
 import type { Lang } from "@/content/routes";
 import { MediaFrame } from "@/components/ui/MediaFrame";
+import { filmSource } from "@/lib/film";
 import { prefersReducedMotion, saveData } from "@/lib/motion";
 import styles from "./Steps.module.css";
 
@@ -28,7 +29,7 @@ export function StepClip({ clip, lang }: { clip: AlphaVideoAsset; lang: Lang }) 
     const video = document.createElement("video");
     video.muted = true; video.loop = true; video.playsInline = true; video.preload = "none"; // nothing fetched (Chrome fetches the whole file for "metadata"); the file once the clip is near (warm, below)
     video.setAttribute("aria-hidden", "true"); video.tabIndex = -1; video.className = styles.clipSource;
-    video.src = (window.matchMedia("(max-width: 980px)").matches && clip.mp4Mobile) || clip.mp4;
+    video.src = filmSource(clip) ?? clip.mp4;
     el.appendChild(video);
 
     // Full-screen quad; the fragment reads the colour from the top half and the alpha from the matte below the gap
@@ -89,7 +90,7 @@ export function StepClip({ clip, lang }: { clip: AlphaVideoAsset; lang: Lang }) 
     );
     warm.observe(el);
     return () => { io.disconnect(); warm.disconnect(); visible = false; stop(); video.removeAttribute("src"); video.load(); video.remove(); };
-  }, [clip.mp4, clip.mp4Mobile, clip.width, clip.gap]);
+  }, [clip]);
 
   return (
     <div ref={wrap} className={styles.clip} style={{ aspectRatio: `${clip.width} / ${clip.height}` }} data-ready={ready ? "true" : "false"}>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "@phosphor-icons/react/dist/ssr";
 import type { VideoAsset } from "@/content/media";
+import { filmSource } from "@/lib/film";
 import { prefersReducedMotion, saveData } from "@/lib/motion";
 import styles from "./Hero.module.css";
 
@@ -23,7 +24,7 @@ export const markHeroLive = () => {
 
 /**
  * Hero film over the still: starts (muted) as soon as it can, then either loops or plays
- * once and holds its last frame (`film.loop`). Its first frame matches the still. Reduced motion / Save-Data: no playback, the still stays. Pause control per
+ * once and holds its last frame (`film.loop`). Its first frame matches the still. Reduced motion / Save-Data / no JS: no playback, the still stays. Pause control per
  * WCAG 2.2.2, visible on keyboard focus only.
  */
 export function HeroFilm({ film, labels }: Props) {
@@ -37,9 +38,8 @@ export function HeroFilm({ film, labels }: Props) {
       markHeroLive();
       return;
     }
-    // One source, chosen once (a <source media> pair makes the browser reload and reset on breakpoint changes)
-    const mobile = window.matchMedia("(max-width: 980px)").matches;
-    const chosen = (mobile && film.mp4Mobile) || film.mp4 || film.webm;
+    // One source, chosen here (lib/film): the server sends none, so a phone never starts on the full-size file
+    const chosen = filmSource(film);
     if (chosen && !v.currentSrc.endsWith(chosen)) {
       v.src = chosen;
       v.load();
@@ -65,7 +65,7 @@ export function HeroFilm({ film, labels }: Props) {
       v.removeEventListener("canplay", start);
       v.removeEventListener("loadeddata", reveal);
     };
-  }, [film.mp4, film.mp4Mobile, film.webm, film.rate]);
+  }, [film]);
 
   const toggle = () => {
     const v = videoRef.current;
@@ -89,7 +89,7 @@ export function HeroFilm({ film, labels }: Props) {
         muted
         loop={film.loop}
         playsInline
-        preload="auto"
+        preload="none"
         aria-hidden="true"
         tabIndex={-1}
         onPlaying={() => {
@@ -98,10 +98,7 @@ export function HeroFilm({ film, labels }: Props) {
           markHeroLive();
         }}
         onPause={() => setPlaying(false)}
-      >
-        {film.webm ? <source src={film.webm} type="video/webm" /> : null}
-        {film.mp4 ? <source src={film.mp4} type="video/mp4" /> : null}
-      </video>
+      />
       <button type="button" className={styles.control} onClick={toggle} aria-pressed={playing}>
         {playing ? <Pause size={18} weight="light" aria-hidden="true" /> : <Play size={18} weight="light" aria-hidden="true" />}
         <span>{playing ? labels.pause : labels.play}</span>

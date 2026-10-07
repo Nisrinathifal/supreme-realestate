@@ -35,7 +35,7 @@ for (const file of files) {
     const base = sharp(join(srcDir, file)).rotate().resize({ width: target, withoutEnlargement: true });
     await base.clone().avif({ quality: 55, effort: 4 }).toFile(join(outDir, `${name}-${width}.avif`));
     await base.clone().webp({ quality: 78 }).toFile(join(outDir, `${name}-${width}.webp`));
-    if (alpha) await base.clone().png({ compressionLevel: 9, palette: false }).toFile(join(outDir, `${name}-${width}.png`));
+    if (alpha) await base.clone().png({ compressionLevel: 9, palette: true, quality: 92, effort: 10, dither: 1 }).toFile(join(outDir, `${name}-${width}.png`));
     else await base.clone().jpeg({ quality: 80, mozjpeg: true, progressive: true }).toFile(join(outDir, `${name}-${width}.jpg`));
   }
   console.log(`${name}: ${w}×${h}${alpha ? " (alpha)" : ""} → ${widths.length * 3} files`);

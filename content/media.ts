@@ -21,6 +21,9 @@ export type VideoAsset = {
   mp4: string | null;
   /** ≤980px source (720p), optional. */
   mp4Mobile: string | null;
+  /** The same films in HEVC (scripts/film-export.swift, FILM_CODEC=hevc), played where the browser decodes it (lib/film). */
+  hevc?: string;
+  hevcMobile?: string;
   poster: ImageAsset | null;
   /** Play once and hold the last frame (a story film), or loop. */
   loop: boolean;
@@ -44,6 +47,9 @@ export type AlphaVideoAsset = {
   mp4: string;
   /** ≤980px version, optional. */
   mp4Mobile: string | null;
+  /** HEVC encodes of both, played where the browser decodes it (lib/film). */
+  hevc?: string;
+  hevcMobile?: string;
   /** Size of one frame (the file is twice as tall plus the gap). */
   width: number;
   height: number;
@@ -95,13 +101,15 @@ export const introSequence: ImageAsset[] = [
  * Hero film (concept 3, supplied 2026-10-05): fixed camera on the canal houses, boats passing, loops. Trimmed to
  * 0.083–9.333 s (retimed to 24 fps from zero), where the second boat stands exactly where the first one starts,
  * so the loop has no seam; then raised to 60 fps with motion interpolation (scripts/film-interpolate.swift).
- * Re-encoded without metadata or audio by scripts/film-export.swift (hero-film-02, the house renewal, also at 60 fps, stays
- * for concept 2). WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
+ * Re-encoded without metadata or audio by scripts/film-export.swift (the concept-2 films, hero-film-01/02, live on the
+ * hero-concept-2 branch only). WebM pending (no ffmpeg on the build machine). Note: generated render; DESIGN §12 asks for real film.
  */
 export const heroFilm: VideoAsset = {
   webm: null,
   mp4: "/media/hero-film-03.mp4",
   mp4Mobile: "/media/hero-film-03-720.mp4",
+  hevc: "/media/hero-film-hevc-03.mp4",
+  hevcMobile: "/media/hero-film-hevc-03-720.mp4",
   poster: heroStill,
   loop: true,
   rate: 0.65, // a canal boat's own pace (owner, 2026-10-07: slower, realistic); the night film keeps the same pace
@@ -119,6 +127,8 @@ export const heroNightFilm: VideoAsset = {
   webm: null,
   mp4: "/media/hero-film-04.mp4",
   mp4Mobile: "/media/hero-film-04-720.mp4",
+  hevc: "/media/hero-film-hevc-04.mp4",
+  hevcMobile: "/media/hero-film-hevc-04-720.mp4",
   poster: heroStill,
   loop: true,
   rate: 0.65,
@@ -159,6 +169,8 @@ export const shelfIcons: Record<"bulb" | "hammer" | "clipboard" | "chart", Shelf
 const stepClip = (n: string, nl: string, en: string): AlphaVideoAsset => ({
   mp4: `/media/step-clip-${n}.mp4`,
   mp4Mobile: `/media/step-clip-${n}-720.mp4`,
+  hevc: `/media/step-clip-hevc-${n}.mp4`,
+  hevcMobile: `/media/step-clip-hevc-${n}-720.mp4`,
   width: 960,
   height: 719,
   gap: 8,

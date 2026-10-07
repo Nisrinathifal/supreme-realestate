@@ -1,6 +1,8 @@
 // Re-encodes a film with AVFoundation (AVAssetReader/Writer): H.264 at a target bitrate, no audio,
 // all metadata dropped (PRD §6.2). Usage: xcrun swift scripts/film-export.swift <in> <out.mp4> <width> <kbps> [start end]
 // Optional start/end (seconds) trim the film, e.g. to a span whose last frame meets its first for a seamless loop.
+// FILM_CODEC=hevc writes HEVC (hvc1) instead: about half the bytes at the same look, for browsers that decode it
+// (the page picks it with canPlayType and falls back to the H.264 file).
 import AVFoundation
 import Foundation
 let a = CommandLine.arguments
@@ -24,13 +26,14 @@ let frameDuration = CMTime(value: 1, timescale: CMTimeScale(track.nominalFrameRa
 let writer = try! AVAssetWriter(outputURL: output, fileType: .mp4)
 writer.metadata = []
 writer.shouldOptimizeForNetworkUse = true
+let hevc = ProcessInfo.processInfo.environment["FILM_CODEC"] == "hevc"
 let settings: [String: Any] = [
-  AVVideoCodecKey: AVVideoCodecType.h264,
+  AVVideoCodecKey: hevc ? AVVideoCodecType.hevc : AVVideoCodecType.h264,
   AVVideoWidthKey: outW, AVVideoHeightKey: outH,
   AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
   AVVideoCompressionPropertiesKey: [
     AVVideoAverageBitRateKey: kbps * 1000,
-    AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel,
+    AVVideoProfileLevelKey: hevc ? "HEVC_Main_AutoLevel" : AVVideoProfileLevelH264HighAutoLevel,
     AVVideoMaxKeyFrameIntervalKey: 48,
     AVVideoAllowFrameReorderingKey: true,
   ],
