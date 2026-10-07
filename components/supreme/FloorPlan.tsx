@@ -1,14 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { HOUSE, WINDOW } from "@/lib/supreme/buildingStates";
+import { HOUSE, UNIT, WINDOW } from "@/lib/supreme/buildingStates";
 import { color, paperTexture } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
 import { DrawnLine, Label, type V3 } from "./parts";
 
 const { width: W, depth: D, wall: T } = HOUSE;
+const C = UNIT.core / 2; // the core's half-width
 
-/** A door swing: the leaf and its quarter arc, in plan (x, z), hinge at (hx, hz), opening towards (dx, dz). */
+/** A door swing: the leaf and its quarter arc, in plan (x, z), hinge at (hx, hz). */
 function door(hx: number, hz: number, r: number, start: number): V3[] {
   const pts: V3[] = [[hx, 0, hz]];
   for (let i = 0; i <= 10; i++) {
@@ -20,35 +21,48 @@ function door(hx: number, hz: number, r: number, start: number): V3[] {
 }
 
 /**
- * The floor plan of a typical upper floor (03 redevelop), drawn on a sheet on the table to the left of the house, and
- * the house's footprint with a quay line drawn on the site plan around it. Walls, the new partitions, door swings,
- * window ticks and a light grid draw on with the state; at the end only a trace of them stays.
+ * The plan of a typical floor (03 redevelop), drawn on a sheet on the table to the left of the building: the outer
+ * walls, the core between the two apartments, each apartment's bathroom and bedroom wall, the entrance doors, window
+ * ticks and the two apartments' numbers; and the building's footprint on the site plan around it. Everything draws on
+ * with the state; at the end only a trace stays.
  */
 export function FloorPlan({ state }: { state: SceneState }) {
-  const sheet = { x: -15.5, z: 4, w: 8.4, h: 10.6, rot: 0.1 };
-  const k = 0.95; // plan scale on the sheet
+  const sheet = { x: -16.2, z: 3.6, w: 9, h: 10.6, rot: 0.1 };
+  const k = 0.62; // plan scale on the sheet
   const p = (x: number, z: number): V3 => [x * k, 0, z * k];
   const draw = () => state.plan;
   const paper = useMemo(() => ({ map: paperTexture(), color: color("--bg") }), []);
 
-  const outer: V3[] = [p(-W / 2, -D / 2), p(W / 2, -D / 2), p(W / 2, D / 2), p(-W / 2, D / 2), p(-W / 2, -D / 2)];
-  const inner: V3[] = [p(-W / 2 + T, -D / 2 + T), p(W / 2 - T, -D / 2 + T), p(W / 2 - T, D / 2 - T), p(-W / 2 + T, D / 2 - T), p(-W / 2 + T, -D / 2 + T)];
-  const walls: V3[][] = [
-    [p(0.9, -D / 2 + T), p(0.9, -0.1)],
-    [p(0.8, 0), p(W / 2 - T, 0)],
+  const rect = (x0: number, z0: number, x1: number, z1: number): V3[] => [p(x0, z0), p(x1, z0), p(x1, z1), p(x0, z1), p(x0, z0)];
+  const outer = rect(-W / 2, -D / 2, W / 2, D / 2);
+  const inner = rect(-W / 2 + T, -D / 2 + T, W / 2 - T, D / 2 - T);
+  const zi = D / 2 - T;
+  // the apartments' party walls either side of the core, the shaft, and per apartment (mirrored) bathroom and bedroom wall
+  const core: V3[][] = [
+    [p(-C, -zi), p(-C, zi)],
+    [p(C, -zi), p(C, zi)],
+    rect(-C + 0.1, -zi, C - 0.1, -zi + 3.4),
   ];
-  const doors = [door(0.9 * k, -0.1 * k, 0.8 * k, Math.PI / 2), door(-W / 2 * k + T * k + 0.1, D / 2 * k - T * k, 0.8 * k, -Math.PI / 2)];
+  const perSide = (s: 1 | -1): V3[][] => {
+    const x = (v: number) => s * v; // v measured outwards from the core
+    return [
+      rect(x(C), -2.05, x(C + 1.9), 0.25), // bathroom
+      [p(x(C + 2.25), -2.4), p(x(W / 2 - T), -2.4)], // bedroom wall
+    ];
+  };
+  const walls = [...core, ...perSide(-1), ...perSide(1)];
+  const doors = [door(-C * k, 3.2 * k, 0.8 * k, Math.PI / 2), door(C * k, 3.2 * k, 0.8 * k, 0)]; // each entrance off the landing
   const ticks: V3[][] = WINDOW.columns.flatMap((x) => [
     [p(x - WINDOW.width / 2, D / 2 - T / 2), p(x + WINDOW.width / 2, D / 2 - T / 2)],
     [p(x - WINDOW.width / 2, -D / 2 + T / 2), p(x + WINDOW.width / 2, -D / 2 + T / 2)],
   ]);
-  const grid: V3[][] = [-2, 0, 2].map((x) => [p(x, -D / 2 - 0.8), p(x, D / 2 + 0.8)]);
+  const grid: V3[][] = [-C - UNIT.width / 2, 0, C + UNIT.width / 2].map((x) => [p(x, -D / 2 - 0.9), p(x, D / 2 + 0.9)]);
 
-  // on the site plan around the house: its footprint, the quay, the canal edge
+  // on the site plan around the building: its footprint
   const foot: V3[] = [[-W / 2 - 0.25, 0, -D / 2 - 0.25], [W / 2 + 0.25, 0, -D / 2 - 0.25], [W / 2 + 0.25, 0, D / 2 + 0.25], [-W / 2 - 0.25, 0, D / 2 + 0.25], [-W / 2 - 0.25, 0, -D / 2 - 0.25]];
-  const quay: V3[] = [[-24, 0, D / 2 + 4.2], [24, 0, D / 2 + 4.2]];
 
   const all = [outer, inner, ...walls, ...doors, ...ticks];
+  const unitLabel = (s: 1 | -1) => p(s * (C + UNIT.width / 2), 1.6);
   return (
     <group>
       <group position={[sheet.x, 0.02, sheet.z]} rotation={[0, sheet.rot, 0]}>
@@ -63,12 +77,13 @@ export function FloorPlan({ state }: { state: SceneState }) {
           {all.map((pts, i) => (
             <DrawnLine key={i} points={pts} draw={() => Math.min(1, Math.max(0, (state.plan - (i / all.length) * 0.5) / 0.5))} width={i < 2 ? 1.6 : 1} />
           ))}
-          <Label text="2e verdieping 1:50" position={[0, 0, sheet.h / 2 - 0.8]} rotation={[-Math.PI / 2, 0, 0]} size={0.36} show={() => state.plan} />
+          <Label text="03" position={unitLabel(-1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.plan * 2 - 1)} />
+          <Label text="04" position={unitLabel(1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.plan * 2 - 1)} />
+          <Label text="1e verdieping 1:100" position={[0, 0, sheet.h / 2 - 0.8]} rotation={[-Math.PI / 2, 0, 0]} size={0.36} show={() => state.plan} />
         </group>
       </group>
       <group position={[0, 0.03, 0]}>
         <DrawnLine points={foot} tone="--scene-teal" draw={draw} fade={() => 0.4 + 0.6 * state.overlays} width={1} />
-        <DrawnLine points={quay} draw={() => Math.max(state.plan, 1 - state.overlays)} fade={() => 0.55} width={1.2} />
       </group>
     </group>
   );

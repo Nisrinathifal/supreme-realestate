@@ -38,8 +38,10 @@ export type Copy = {
     title: string;
     chapters: { name: string; body: string }[];
     close: string;
-    /** The six states of the 3D model (SCENE-3D.md): a short label, the line, and which chapter's body goes with it. */
+    /** The five stages of the 3D model (SCENE-3D.md): a short label, the line, and which chapter's body goes with it. */
     stages: { label: string; title: string; chapter: number | null }[];
+    /** The closing line over the finished building, and the sentence under it. */
+    finale: { title: string; body: string };
   };
   /** Company details band: the letter that comes out of the envelope. */
   register: {

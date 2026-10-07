@@ -5,9 +5,9 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { HEADER_THEME } from "@/components/layout/Header";
 import { MicroLabel } from "@/components/ui/MicroLabel";
-import { buildSceneTimeline, createSceneState, STAGES } from "@/lib/supreme/sceneTimeline";
+import { buildSceneTimeline, createSceneState, FINALE, STAGES } from "@/lib/supreme/sceneTimeline";
 import { ease, gsap, MQ, setupGsap } from "@/lib/motion";
-import { Elevation, type StageCopy, TransformationTimeline } from "./TransformationTimeline";
+import { Elevation, Finale, type StageCopy, TransformationTimeline } from "./TransformationTimeline";
 import styles from "./SupremeHero.module.css";
 
 // The WebGL scene (three + R3F) is loaded only when it will run: wide screens, motion on, WebGL available
@@ -15,7 +15,7 @@ const ArchitecturalScene = dynamic(() => import("./ArchitecturalScene"), { ssr: 
 
 const LIVE = `${MQ.full} and (min-width: 981px)`;
 const END = 1.12; // the transformation runs 0–1; the rest is the hold and the darkening into the letter band
-const SCROLL = 8; // viewports of scroll for the whole run
+const SCROLL = 9; // viewports of scroll for the whole run
 
 const hasWebGL = () => {
   try {
@@ -28,12 +28,13 @@ const hasWebGL = () => {
 
 /**
  * The About band as a procedural 3D model (SCENE-3D.md; owner, 2026-10-07, after illoca.unseen.co): the promise as a
- * large title over the model, then, pinned, six states of one canal house on a developer's worktable, scrubbed by
- * the scroll (GSAP + ScrollTrigger, Lenis smoothing): existing → potential → redevelop → design → realisation →
- * delivery, the stage text on alternate sides, and at the end the view darkens into the letter band below.
- * Server and fallback render the title, a procedural SVG elevation and the six stages as a list.
+ * large title over the model, then, pinned, one existing building on a developer's worktable becoming eight homes,
+ * scrubbed by the scroll (GSAP + ScrollTrigger, Lenis smoothing): one building → potential → eight apartments →
+ * eight homes → one property, eight homes; the stage text on alternate sides, the mascot alongside, the closing line
+ * over the pulled-back model, and at the end the view darkens into the letter band below.
+ * Server and fallback render the title, a procedural SVG elevation, the five stages as a list and the closing line.
  */
-export function SupremeHero({ label, title, stages, close }: { label: string; title: string; stages: StageCopy[]; close: string }) {
+export function SupremeHero({ label, title, stages, close, finale }: { label: string; title: string; stages: StageCopy[]; close: string; finale: { title: string; body: string } }) {
   const root = useRef<HTMLElement>(null);
   const [state] = useState(createSceneState); // one mutable state object, tweened by GSAP, read by the scene
   const [live, setLive] = useState(false);
@@ -81,7 +82,10 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
       const words = q<HTMLElement>("[data-film-word]");
       const texts = q<HTMLElement>("[data-film-stage-text]");
       const dots = q<HTMLElement>("[data-film-dot]");
-      if (!stage || !head || !view || !dusk) return;
+      const end = q<HTMLElement>("[data-film-finale]")[0];
+      const endLines = q<HTMLElement>("[data-film-finale-line]");
+      const endBody = q<HTMLElement>("[data-film-finale-body]");
+      if (!stage || !head || !view || !dusk || !end) return;
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "about", dark } }));
 
       // the model opens as a wide view under the title, then fills the band
@@ -90,6 +94,9 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
       gsap.set(view, { y: heroY, scale: 0.9, transformOrigin: "50% 0%" });
       gsap.set(texts, { opacity: 0, y: 36 });
       gsap.set(dusk, { opacity: 0 });
+      gsap.set(end, { autoAlpha: 0 });
+      gsap.set(endLines, { yPercent: 110 });
+      gsap.set(endBody, { opacity: 0, y: 20 });
 
       const arrive = gsap.to(words, {
         yPercent: 0,
@@ -132,10 +139,13 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
       texts.forEach((el, i) => {
         const at = i === 0 ? 0.05 : STAGES[i] - 0.05;
         tl.to(el, { opacity: 1, y: 0, duration: 0.035, ease: "power2.out" }, at);
-        const out = i < texts.length - 1 ? STAGES[i + 1] - 0.08 : END - 0.07;
+        const out = i < texts.length - 1 ? STAGES[i + 1] - 0.08 : FINALE - 0.025;
         tl.to(el, { opacity: 0, y: -24, duration: 0.03, ease: "power2.in" }, out);
       });
-      // the end: a hold on the delivered home, then the darkening into the letter band
+      // the closing line over the pulled-back building
+      tl.to(end, { autoAlpha: 1, duration: 0.02, ease: "none" }, FINALE - 0.005);
+      tl.to(endLines, { yPercent: 0, duration: 0.04, ease: "power3.out", stagger: 0.012 }, FINALE).to(endBody, { opacity: 1, y: 0, duration: 0.035, ease: "power2.out" }, FINALE + 0.025);
+      // the end: a hold on the finished building, then the darkening into the letter band
       tl.to(dusk, { opacity: 1, duration: 0.07, ease: "none" }, END - 0.08).to({}, { duration: 0.01 }, END - 0.01);
 
       return () => {
@@ -144,7 +154,7 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
         tl.scrollTrigger?.kill();
         tl.kill();
         if (dark) header(false);
-        gsap.set([...words, head, view, dusk, ...texts], { clearProps: "transform,opacity" });
+        gsap.set([...words, head, view, dusk, ...texts, end, ...endLines, ...endBody], { clearProps: "transform,opacity,visibility" });
         dots.forEach((dot) => dot.removeAttribute("data-active"));
       };
     },
@@ -180,6 +190,7 @@ export function SupremeHero({ label, title, stages, close }: { label: string; ti
         </div>
 
         <TransformationTimeline stages={stages} close={close} />
+        <Finale title={finale.title} body={finale.body} />
         <span className={styles.dusk} data-film-dusk aria-hidden="true" />
       </div>
     </section>

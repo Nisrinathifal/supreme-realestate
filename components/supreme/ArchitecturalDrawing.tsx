@@ -14,7 +14,7 @@ const HALF = W / 2;
 const stagger = (get: () => number, i: number, n: number, spread = 0.5) => () => Math.min(1, Math.max(0, (get() - (i / n) * spread) / (1 - spread)));
 
 /**
- * The analysis of the existing house (02 potential), in two places: around the house itself (its outline, a line at
+ * The analysis of the existing building (02 potential), in two places: around the building itself (its outline, a line at
  * every floor level, the heights and the width dimensioned, the axis) and on an elevation sheet on the table (the
  * façade drawn in lines, its windows, a height dimension). Everything draws on with the state and fades with the
  * overlays at delivery.
@@ -29,7 +29,7 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
   const outline: V3[] = useMemo(() => [[-HALF, 0, zf], ...gable.map(([x, y]) => [x, y, zf] as V3), [HALF, 0, zf], [-HALF, 0, zf]], [gable, zf]);
 
   // the elevation sheet: the façade at 1:2 on a sheet lying on the table to the right of the house
-  const sheet = { x: 15.5, z: 3.5, w: 7.2, h: 9.4, rot: -0.12 };
+  const sheet = { x: 16.2, z: 3.2, w: 7.2, h: 10, rot: -0.12 };
   const k = 0.42; // drawing scale
   const oy = -sheet.h / 2 + 1.2; // façade foot on the sheet
   const toSheet = (x: number, y: number): V3 => [x * k, 0, -(oy + y * k)];
@@ -75,7 +75,7 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
           {levels.map((y, i) => (
             <DrawnLine key={y} points={[toSheet(-HALF - 0.6, y), toSheet(HALF + 0.6, y)]} draw={stagger(() => state.elevation, i, levels.length)} width={0.6} fade={() => 0.5} />
           ))}
-          <Label text="Voorgevel 1:50" position={[0, 0, sheet.h / 2 - 0.8]} rotation={[-Math.PI / 2, 0, 0]} size={0.36} show={() => state.elevation} />
+          <Label text="Voorgevel 1:100" position={[0, 0, sheet.h / 2 - 0.8]} rotation={[-Math.PI / 2, 0, 0]} size={0.36} show={() => state.elevation} />
         </group>
       </group>
     </group>

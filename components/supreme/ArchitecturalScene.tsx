@@ -1,14 +1,15 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import { ACESFilmicToneMapping, type DirectionalLight, Fog, type HemisphereLight } from "three";
 import { color, paperTexture } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
 import { ArchitecturalDrawing } from "./ArchitecturalDrawing";
 import { CameraRig } from "./CameraRig";
-import { ExistingBuilding } from "./ExistingBuilding";
+import { SupremeBuilding } from "./BuildingStructure";
 import { FloorPlan } from "./FloorPlan";
+import { Mascot } from "./Mascot";
 import { MaterialSamples } from "./MaterialSamples";
 
 /** Paper ground and fog in the page's own Paper, a soft sky light and one sun that warms at delivery. */
@@ -35,10 +36,10 @@ function Atmosphere({ state }: { state: SceneState }) {
         intensity={2.5}
         castShadow
         shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-26}
-        shadow-camera-right={26}
-        shadow-camera-top={26}
-        shadow-camera-bottom={-26}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={30}
+        shadow-camera-bottom={-30}
         shadow-camera-near={10}
         shadow-camera-far={110}
         shadow-bias={-0.0004}
@@ -58,7 +59,7 @@ function Table() {
         <meshStandardMaterial map={t.map} color={t.stone} roughness={1} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0.02]} position={[0, 0.01, 2.5]} receiveShadow>
-        <planeGeometry args={[30, 24]} />
+        <planeGeometry args={[34, 26]} />
         <meshStandardMaterial map={t.map} color={t.paper} roughness={1} />
       </mesh>
     </group>
@@ -66,8 +67,9 @@ function Table() {
 }
 
 /**
- * The About band's 3D model (SCENE-3D.md): a canal house on a developer's worktable, with its drawings, plan and
- * samples, all procedural, driven by the scene state (scroll). Rendered on demand (SupremeHero invalidates on scroll).
+ * The About band's 3D model (SCENE-3D.md): one existing building on a developer's worktable that becomes eight homes,
+ * with its drawings, plan and samples (procedural) and the mascot (the site's own art), driven by the scene state
+ * (scroll). Rendered on demand (SupremeHero invalidates on scroll).
  */
 export default function ArchitecturalScene({ state, onReady }: { state: SceneState; onReady?: (invalidate: () => void) => void }) {
   return (
@@ -89,9 +91,12 @@ export default function ArchitecturalScene({ state, onReady }: { state: SceneSta
       <Atmosphere state={state} />
       <Table />
       <FloorPlan state={state} />
-      <ExistingBuilding state={state} />
+      <SupremeBuilding state={state} />
       <ArchitecturalDrawing state={state} />
       <MaterialSamples state={state} />
+      <Suspense fallback={null}>
+        <Mascot state={state} />
+      </Suspense>
       <CameraRig state={state} />
     </Canvas>
   );

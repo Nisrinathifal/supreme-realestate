@@ -66,14 +66,15 @@ export const nl: Copy = {
       { name: draft("Oplevering"), body: draft("Van aankoop, ontwerp en vergunning tot installatie en afbouw: elke stap in eigen hand. Na enkele weken verbouwen staat er een sleutelklaar appartement, en zo krijgt de regio er steeds weer een woning bij.") },
     ],
     close: draft("We staan open voor samenwerking met vakmensen, makelaars en gemeenten die dezelfde ambitie delen."),
+    // stage lines and finale: translated from the user's 1 building → 8 homes brief (2026-10-07)
     stages: [
-      { label: draft("Bestaand"), title: draft("Bestaand vastgoed."), chapter: 0 },
-      { label: draft("Potentie"), title: draft("Potentie, klaar om ontsloten te worden."), chapter: 1 },
-      { label: draft("Herontwikkeling"), title: draft("Zorgvuldig getransformeerd."), chapter: null },
-      { label: draft("Ontwerp"), title: draft("Ontworpen rond de toekomstige bewoner."), chapter: 2 },
-      { label: draft("Realisatie"), title: draft("Van eerste schets tot laatste afwerking."), chapter: 3 },
-      { label: draft("Oplevering"), title: draft("Weer een woning erbij in de regio."), chapter: 4 },
+      { label: draft("Bestaand"), title: draft("Eén gebouw."), chapter: 0 },
+      { label: draft("Potentie"), title: draft("Meer potentie dan je ziet."), chapter: 1 },
+      { label: draft("Herontwikkeling"), title: draft("Acht zelfstandige appartementen."), chapter: 2 },
+      { label: draft("Woningen"), title: draft("Acht nieuwe woningen."), chapter: 3 },
+      { label: draft("Waarde"), title: draft("Bestaand vastgoed een tweede leven geven."), chapter: null },
     ],
+    finale: { title: draft("Eén pand. Acht woningen."), body: draft("We ontsluiten de potentie van bestaand vastgoed en transformeren het zorgvuldig tot woningen die blijven.") },
   },
   register: {
     label: draft("Bedrijf"),

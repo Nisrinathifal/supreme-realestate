@@ -66,14 +66,15 @@ export const en: Copy = {
       { name: draft("Delivery"), body: draft("From purchase, design and permit to installation and finishing: every step in our own hands. After a few weeks of building work a turnkey apartment stands ready, and the region gains one more home.") },
     ],
     close: draft("We are open to working with professionals, brokers and municipalities who share the same ambition."),
+    // stage lines and finale: the user's 1 building → 8 homes brief (2026-10-07), verbatim where it gives them
     stages: [
-      { label: draft("Existing"), title: draft("Existing property."), chapter: 0 },
-      { label: draft("Potential"), title: draft("Potential, waiting to be unlocked."), chapter: 1 },
-      { label: draft("Redevelop"), title: draft("Thoughtfully transformed."), chapter: null },
-      { label: draft("Design"), title: draft("Designed around the future resident."), chapter: 2 },
-      { label: draft("Realisation"), title: draft("From first sketch to final finish."), chapter: 3 },
-      { label: draft("Delivery"), title: draft("One more home in the region."), chapter: 4 },
+      { label: draft("Existing"), title: "One building.", chapter: 0 },
+      { label: draft("Potential"), title: "More potential than meets the eye.", chapter: 1 },
+      { label: draft("Redevelop"), title: draft("Eight independent apartments."), chapter: 2 },
+      { label: draft("Homes"), title: draft("Eight new homes."), chapter: 3 },
+      { label: draft("Value"), title: "Giving existing property a second life.", chapter: null },
     ],
+    finale: { title: "One property. Eight homes.", body: "We unlock the potential of existing properties, thoughtfully transforming them into lasting homes." },
   },
   register: {
     label: draft("Company"),

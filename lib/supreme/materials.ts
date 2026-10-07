@@ -221,3 +221,16 @@ export function labelTexture(text: string, colorToken: Token = "--scene-graphite
   cache.set(key, tex);
   return { texture: tex as Texture, aspect: w / h };
 }
+
+/** A soft round contact shadow (black, fading out), for a cut-out standing on the table. */
+export const contactShadowTexture = () =>
+  once("contact", () =>
+    canvas(128, (g, s) => {
+      const grad = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+      grad.addColorStop(0, "rgba(0,0,0,0.55)");
+      grad.addColorStop(0.55, "rgba(0,0,0,0.18)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = grad;
+      g.fillRect(0, 0, s, s);
+    }),
+  );

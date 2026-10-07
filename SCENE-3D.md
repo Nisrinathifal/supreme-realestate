@@ -1,8 +1,28 @@
-# Procedural 3D scene: the About band (2026-10-07)
+# Procedural 3D scene: the About band (2026-10-07; 1 building → 8 homes, same day)
 
 Replaces the photo frame of the homepage About band ("Van oud naar waardevol") with a real-time, procedural 3D
 architectural model on a worktable. No external models, images or fonts: geometry, textures and labels are generated
 in code. Owner choices: `three` + `@react-three/fiber` + `@react-three/drei`; it lives in the About band.
+
+## 0. Current concept: one building → eight homes (supersedes the canal house below where they differ)
+
+The user's brief (2026-10-07): Supreme's value shown as the number of homes one existing property becomes.
+
+| Progress | Stage (text) | Building | Mascot |
+|---|---|---|---|
+| 0.00 | 01 "One building." | Double-fronted, 12 × 10, 4 floors, stepped gable, aged brick | Walks in (idea pose), looks it over |
+| 0.15 | 02 "More potential than meets the eye." | Analysis lines + elevation sheet; shell turns see-through; core rises; 8 ghost units with teal outlines | On the elevation sheet (plan pose) |
+| 0.38 | 03 "Eight independent apartments." | Front folds down, shell opens; the 8 units separate around the core as solid blocks, numbered 01–08; floor plan (2 units + core) draws | Beside the units (drill pose) |
+| 0.60 | 04 "Eight new homes." | Unit by unit: volume dissolves into oak floor, bathroom + kitchen volumes, bedroom wall, front windows, furniture, warm light | By the homes (roller pose) |
+| 0.85 | 05 "Giving existing property a second life." | Units return; shell closes (front stays down: a cutaway); clean brick, new windows; teal links up the core to each number | Beside the building (tools pose), a quiet hop |
+| 0.95 | Finale "One property. Eight homes." + sentence | Camera pulls back, model centred under the line | — |
+
+Components: `SupremeBuilding` (in BuildingStructure.tsx) = `ExistingBuilding` (shell) + `BuildingStructure` (core, landings,
+links) + 8 × `ApartmentUnit` (one reusable component; position, opacity, scale, materials, light, reveal and number
+from the state, staggered 01 → 08). `Mascot` = the site's mascot art (`public/media/mascot-*-640.webp`) as camera-facing
+cut-outs with a contact shadow, crossfading poses between spots; kept about a storey tall (the building is the hero).
+Fallback SVG: the elevation with the core and the eight units numbered. Copy: EN lines from the brief verbatim, labels
+and NL in `draft()`.
 
 ## 1. Reference analysis (illoca.unseen.co, "Design at the speed of thought")
 

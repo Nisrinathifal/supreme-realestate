@@ -1,12 +1,12 @@
-import { gableOutline, HEIGHT, HOUSE, WINDOW, windowSlots } from "@/lib/supreme/buildingStates";
+import { APARTMENTS, gableOutline, HEIGHT, HOUSE, UNIT, WINDOW, windowSlots } from "@/lib/supreme/buildingStates";
 import styles from "./SupremeHero.module.css";
 
 export type StageCopy = { label: string; title: string; body: string | null };
 
 /**
- * The six stages as text (SCENE-3D.md §3): index, label, the line, and the chapter's body where one belongs. With the
+ * The five stages as text (SCENE-3D.md §3): index, label, the line, and the chapter's body where one belongs. With the
  * scene running they are panels that SupremeHero brings in one at a time, on alternate sides (the model is framed on
- * the other); without it they are a plain list. A six-dot rail marks the stage reached.
+ * the other); without it they are a plain list. A dot rail marks the stage reached.
  */
 export function TransformationTimeline({ stages, close }: { stages: StageCopy[]; close: string }) {
   return (
@@ -35,8 +35,30 @@ export function TransformationTimeline({ stages, close }: { stages: StageCopy[];
 }
 
 /**
- * The fallback picture (phones, reduced motion, no WebGL, no JS): the same canal house as the 3D model, drawn as an
- * elevation in SVG from the same data, with its floor levels and height dimensioned.
+ * The closing line ("One property. Eight homes."), a sentence a line, and the sentence under it. Live, it rises in over
+ * the pulled-back building at the end of the run; otherwise it closes the list.
+ */
+export function Finale({ title, body }: { title: string; body: string }) {
+  const lines = title.split(/(?<=\.)\s+/);
+  return (
+    <div className={styles.finale} data-film-finale>
+      <h3 className={styles.finaleTitle}>
+        {lines.map((line, i) => (
+          <span key={i} className={styles.finaleMask}>
+            <span data-film-finale-line>{line}</span>
+          </span>
+        ))}
+      </h3>
+      <p className={styles.finaleBody} data-film-finale-body>
+        {body}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The fallback picture (phones, reduced motion, no WebGL, no JS): the same building as the 3D model, drawn as an
+ * elevation in SVG from the same data, with its floor levels, the core and the eight apartments numbered behind it.
  */
 export function Elevation() {
   const pad = 2.5;
@@ -47,6 +69,7 @@ export function Elevation() {
   const outline = [[-half, 0], ...gableOutline(), [half, 0]].map(([a, b]) => `${a},${y(b)}`).join(" ");
   const windows = windowSlots().filter((s) => s.face === "front");
   const levels = Array.from({ length: HOUSE.floors + 1 }, (_, f) => f * HOUSE.floorHeight);
+  const c = UNIT.core / 2;
   return (
     <svg className={styles.elevation} viewBox={vb} role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
       <g fill="none" strokeLinejoin="round" vectorEffect="non-scaling-stroke">
@@ -54,6 +77,9 @@ export function Elevation() {
           <line key={l} x1={-half - 1.2} x2={half + 1.2} y1={y(l)} y2={y(l)} className={styles.svgLevel} />
         ))}
         <polygon points={outline} className={styles.svgWall} />
+        {[-c, c].map((x) => (
+          <line key={x} x1={x} x2={x} y1={0} y2={y(HEIGHT)} className={styles.svgLevel} />
+        ))}
         {windows.map((w, i) => (
           <rect key={i} x={w.x - WINDOW.width / 2} y={y(w.y + w.h / 2)} width={WINDOW.width} height={w.h} className={styles.svgWindow} />
         ))}
@@ -62,6 +88,11 @@ export function Elevation() {
         <line x1={half + 1.3} x2={half + 1.9} y1={y(HEIGHT)} y2={y(HEIGHT)} className={styles.svgDim} />
         <line x1={-half - pad} x2={half + pad} y1={0} y2={0} className={styles.svgGround} />
       </g>
+      {APARTMENTS.map((a) => (
+        <text key={a.index} x={a.base[0] + a.side * -0.15} y={y(a.floor * HOUSE.floorHeight + 1.55)} className={styles.svgNumber} textAnchor="middle" dominantBaseline="middle">
+          {String(a.index + 1).padStart(2, "0")}
+        </text>
+      ))}
     </svg>
   );
 }

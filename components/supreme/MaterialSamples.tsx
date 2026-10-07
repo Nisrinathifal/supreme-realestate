@@ -7,15 +7,15 @@ import { HOUSE } from "@/lib/supreme/buildingStates";
 import { brickTexture, color, concreteTexture, documentTexture, rulerTexture, woodTexture } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
 
-/** Three street trees on the quay: trunk and a low-poly crown; they grow in at delivery. */
+/** Three street trees beside the building: trunk and a low-poly crown; they grow in at delivery. */
 const TREES: [number, number, number][] = [
-  [-12, 0, HOUSE.depth / 2 + 5.4],
-  [-7.5, 0, HOUSE.depth / 2 + 5.6],
-  [9, 0, HOUSE.depth / 2 + 5.3],
-]; // on the quay beside the house, clear of the front when it is folded down
+  [-12.5, 0, HOUSE.depth / 2 + 5.4],
+  [-8.8, 0, HOUSE.depth / 2 + 5.9],
+  [14.6, 0, HOUSE.depth / 2 + 6.4],
+]; // on the quay beside the building, clear of the front when it is folded down and of the mascot's spots
 
 /**
- * The developer's desk around the model: the canal in front of the quay, material samples (brick, oak, concrete,
+ * The developer's desk around the model: the canal beyond the folded-down front, material samples (brick, oak, concrete,
  * teal), a pencil, a ruler and a stack of documents, and the street trees. Static, except the trees, which grow to
  * full size at delivery.
  */
@@ -51,17 +51,17 @@ export function MaterialSamples({ state }: { state: SceneState }) {
   });
 
   const samples: { pos: [number, number, number]; map: Texture | null; col: Color }[] = [
-    { pos: [6.2, 0, 12.8], map: t.brick, col: t.c.brick },
-    { pos: [8.1, 0, 13.1], map: t.oak, col: t.c.oak },
-    { pos: [10.0, 0, 12.9], map: t.concrete, col: t.c.concrete },
-    { pos: [11.9, 0, 13.2], map: null, col: t.c.teal },
+    { pos: [11.4, 0, 14.6], map: t.brick, col: t.c.brick },
+    { pos: [13.3, 0, 14.9], map: t.oak, col: t.c.oak },
+    { pos: [15.2, 0, 14.7], map: t.concrete, col: t.c.concrete },
+    { pos: [17.1, 0, 15.0], map: null, col: t.c.teal },
   ];
 
   return (
     <group>
       {/* the canal in front of the quay: a band of water tone drawn on the site plan */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, HOUSE.depth / 2 + 9]} receiveShadow>
-        <planeGeometry args={[48, 8]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, HOUSE.depth / 2 + 21]} receiveShadow>
+        <planeGeometry args={[60, 8]} />
         <meshStandardMaterial color={t.c.teal} transparent opacity={0.16} roughness={0.6} />
       </mesh>
 
@@ -73,7 +73,7 @@ export function MaterialSamples({ state }: { state: SceneState }) {
       ))}
 
       {/* pencil: graphite hexagon body, sharpened tip */}
-      <group position={[3.6, 0.13, 14.6]} rotation={[0, 0.5, 0]}>
+      <group position={[10.4, 0.13, 17.6]} rotation={[0, 0.5, 0]}>
         <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
           <cylinderGeometry args={[0.13, 0.13, 5.2, 6]} />
           <meshStandardMaterial color={t.c.graphite} roughness={0.6} />
@@ -85,7 +85,7 @@ export function MaterialSamples({ state }: { state: SceneState }) {
       </group>
 
       {/* ruler */}
-      <mesh position={[-7.5, 0.04, 13.6]} rotation={[0, -0.08, 0]} castShadow receiveShadow>
+      <mesh position={[-13, 0.04, 14.2]} rotation={[0, -0.08, 0]} castShadow receiveShadow>
         <boxGeometry args={[9, 0.08, 1.1]} />
         <meshStandardMaterial map={t.ruler} roughness={0.5} />
       </mesh>
