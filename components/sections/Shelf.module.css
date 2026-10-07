@@ -1,7 +1,6 @@
 /* A wall: Stone (--alt) lit from the top left (--daylight), slightly darker towards the floor */
 .shelf {
-  --reach: calc(100svh + var(--section-y) * 2); /* how far the columns stand up into the projects band's empty foot */
-  position: relative; z-index: 3; min-height: 100svh; overflow-x: clip; color: var(--ink);
+  position: relative; min-height: 100svh; overflow: hidden; color: var(--ink);
   background: linear-gradient(180deg, var(--alt) 0%, var(--alt) 70%, var(--line) 100%);
 }
 /* Daylight from the top left; the top starts in Paper, the colour the projects band above fades into (WorkMotion), and
@@ -12,11 +11,9 @@
 }
 .shelf > * { position: relative; }
 .shelf > svg { position: absolute; }
-/* The wall's columns stand tall: up through the projects band's foot (owner, 2026-10-07), over its Paper */
-.shelf > .columns { top: calc(-1 * var(--reach)); bottom: auto; height: calc(100% + var(--reach)); }
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */
 .inner { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s-9); }
-.stage { min-height: 100svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; }
+.stage { min-height: 72svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; } /* the statement comes straight in (owner, 2026-10-07) */
 .statement {
   font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.3;
   font-size: clamp(26px, 3.1vw, 44px); text-align: center; text-wrap: balance; max-width: 30em;

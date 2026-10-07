@@ -1,6 +1,12 @@
 import styles from "./Columns.module.css";
 
-type Props = { tone?: "paper" | "stone"; className?: string; [key: `data-${string}`]: string | undefined };
+type Props = {
+  tone?: "paper" | "stone";
+  /** One register of full-height columns (rounded tops) instead of the reference's two offset registers. */
+  single?: boolean;
+  className?: string;
+  [key: `data-${string}`]: string | undefined;
+};
 
 /**
  * Two registers of vertical bands of one width on one period, as in the reference: from about 46% down the
@@ -18,7 +24,7 @@ const lower = Array.from({ length: 9 }, (_, k) => k * PERIOD);
  * One tone darker than the surface it sits on (Paper → Stone, Stone → line), very low contrast, no gradient.
  * Decorative, behind all content, scales with the band.
  */
-export function Columns({ tone = "paper", className, ...rest }: Props) {
+export function Columns({ tone = "paper", single = false, className, ...rest }: Props) {
   return (
     <svg
       className={[styles.columns, tone === "stone" ? styles.stone : styles.paper, className].filter(Boolean).join(" ")}
@@ -29,12 +35,15 @@ export function Columns({ tone = "paper", className, ...rest }: Props) {
       {...rest}
     >
       {/* Each band carries its register, so a band's motion can raise them from the floor one by one */}
-      {upper.map((cx) => (
+      {single
+        ? upper.map((cx) => <rect key={`s${cx}`} x={cx - BAND / 2} y={0} width={BAND} height={900 + 14} rx={14} data-register="single" />)
+        : null}
+      {single ? null : upper.map((cx) => (
         <rect key={`u${cx}`} x={cx - BAND / 2} y={0} width={BAND} height={BREAK + 6} data-register="upper" />
       ))}
-      {lower.map((cx) => (
-        <rect key={`l${cx}`} x={cx - BAND / 2} y={BREAK} width={BAND} height={900 - BREAK} rx={14} data-register="lower" />
-      ))}
+      {single
+        ? null
+        : lower.map((cx) => <rect key={`l${cx}`} x={cx - BAND / 2} y={BREAK} width={BAND} height={900 - BREAK} rx={14} data-register="lower" />)}
     </svg>
   );
 }

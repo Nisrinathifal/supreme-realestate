@@ -85,7 +85,8 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
         // pin begins exactly as the band has covered the hero
         root.setAttribute("data-handoff", "");
-        gsap.set(band, { paddingTop: () => top() });
+        // ... and a short foot: the next band (and its statement) follows the last card straight away
+        gsap.set(band, { paddingTop: () => top(), paddingBottom: () => cssPx(docEl, "--s-9", 96) });
 
         deck.setAttribute("data-deck", "");
         gsap.set(deck, { perspective: 1400 });
@@ -167,7 +168,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
           gsap.set(words, { clearProps: "transform,opacity" });
           root.removeAttribute("data-handoff");
           deck.removeAttribute("data-deck");
-          gsap.set(band, { clearProps: "paddingTop" });
+          gsap.set(band, { clearProps: "paddingTop,paddingBottom" });
           gsap.set(cards, { clearProps: "transform,zIndex,transformOrigin" }); // not "all": the cards carry inline custom properties
           gsap.set(q("[data-work-card] article"), { clearProps: "transform,transformOrigin" });
           gsap.set(deck, { clearProps: "perspective,opacity,visibility,transform" });

@@ -10,7 +10,8 @@ import { WorkMotion } from "./WorkMotion";
 import styles from "./Work.module.css";
 
 /** Card surfaces, alternating dark and light: Canal ink, Sky mist, the inverse surface, Lime mist (DESIGN §3). */
-const tones = [`inverse ${styles.toneInk}`, `light ${styles.toneSky}`, `inverse ${styles.toneMoss}`, `light ${styles.toneLime}`];
+// Green from the earlier brand system and the modern blue, by turns, so the first card stands off the navy band (owner)
+const tones = [`inverse ${styles.toneMoss}`, `light ${styles.toneSky}`, `inverse ${styles.toneBlue}`, `light ${styles.toneLime}`];
 
 /**
  * Projects (concept 2026-10-02, after the reference's "what we ship" deck): a label and a heading, then four cases as

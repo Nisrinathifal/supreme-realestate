@@ -127,11 +127,13 @@ These rules apply to every page, image, caption, file and piece of metadata.
 ```
 
 **Supreme navy & cyan (owner, 2026-10-07).** The projects band after the night hero and its cards take the existing
-logo's colours instead of Canal ink, so the night sky's blue carries on and the band is not green: `--night` #101C28
-(Supreme navy, band and dark cards), `--night-surface` #1C2C3E, `--night-muted` #9FB0C3 (quiet text on navy, 7.8:1),
-`--brand-cyan` #00989C (Supreme cyan: marks and lines only), `--cyan-light` #1AA9AD (small text on navy, 6.0:1 / 5.0:1
-on night-surface), `--cyan-deep` #00767A (small text on light, 4.7:1 on sky mist and cyan mist), `--cyan-mist` #DFF1F1
-(light card). Cyan is a touch, not a field: the band's label, each card's project line and index.
+logo's navy (made clearer, more saturated: "modern") instead of Canal ink, so the night sky's blue carries on:
+`--night` #0B1F3A (band), `--night-surface` #173C6B (cobalt card), `--night-muted` #A8BAD0 (quiet text on blue, 8.3:1 /
+5.6:1), `--brand-cyan` #00989C (Supreme cyan: marks and lines only), `--cyan-light` #2BB8BB (small text on the dark
+cards: 6.8 / 4.6 / 5.0:1 on navy, cobalt, moss), `--cyan-deep` #00767A (small text on light cards, ≥ 4.7:1),
+`--cyan-mist` #DFF1F1 (spare light tone). The cards alternate the earlier brand's green with the blue so the first
+card stands off the navy band: moss (inv-surface), sky mist, cobalt, lime mist. Cyan is a touch, not a field: the
+band's label, each card's project line and index.
 
 ### 3.2 Colour rules (contrast checked, WCAG 2.x formula)
 
