@@ -54,14 +54,6 @@ export const en: Copy = {
   shelf: {
     parts: [draft("We unlock the potential of existing"), { icon: "bulb" }, draft("properties, transforming"), { icon: "hammer" }, draft("them into thoughtfully designed homes and continuing to manage"), { icon: "clipboard" }, draft("their value over time"), { icon: "chart" }],
   },
-  // Homepage About band (draft 2026-10-07, from the section-drafts doc; built on supremerealestate.nl). Title = the brand promise.
-  homeAbout: {
-    label: "About",
-    title: "From old to valuable.",
-    lead: draft("Supreme Real Estate gives existing buildings in the Amsterdam region a new future. We acquire properties that have seen better days, redesign them and turn them into independent, turnkey homes."),
-    body: draft("Every design starts with the people who will live there: comfort, light, good proportions and durable materials. We work with a fixed build and design team, from the first sketch to the final finish. And when the work is done, we stay involved: we keep and manage what we make, for the long term."),
-    principlesLabel: draft("What we stand for"),
-  },
   // Steps: owner concept 2026-10-01 (three steps verbatim from the owner's mock-up; headline lines draft).
   steps: {
     label: draft("Reimagining value"),
