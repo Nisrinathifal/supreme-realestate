@@ -47,7 +47,7 @@ type Props = { lang: Lang; strings: HeaderStrings };
  * showing the current language's code (hover brings the flags: the current one half aside and dimmed, the other
  * language's behind it, with the hint "Switch to English" beside it) and a nine-dot menu button that opens the glass panel (DESIGN §9.4) on hover (mouse)
  * or click/keyboard with the homepage sections, the contact page and the company address and e-mail. No contact
- * button. A soft Paper veil behind the bar keeps it legible over every band. On the homepage the bar waits out of
+ * button. No veil behind it: it changes colour with the page's tone (owner, 2026-10-08). On the homepage the bar waits out of
  * sight until the headline comes in (HeroBoat says when) and then arrives; elsewhere it is simply there.
  * Fixed over the hero; without JavaScript it sits absolutely at the top, visible, and the panel stays closed.
  */
@@ -69,7 +69,6 @@ export function Header({ lang, strings }: Props) {
   };
   const [hidden, setHidden] = useState(false);
   const [project, setProject] = useState<number | null>(null); // a project page open over the homepage
-  const [veil, setVeil] = useState(true);
 
   // The bar leaves once the page has scrolled away over the footer (the sticky footer itself cannot be
   // measured, so the trigger is the end of <main>: from the moment its bottom passes 60% of the viewport)
@@ -87,7 +86,7 @@ export function Header({ lang, strings }: Props) {
     return () => t.kill();
   }, [pathname]);
 
-  // Bands marked data-header-theme="dark" switch the bar to Paper on a dark veil while they sit under it
+  // Bands marked data-header-theme="dark" switch the bar to Paper while they sit under it
   useEffect(() => {
     setupGsap();
     const bands = Array.from(document.querySelectorAll<HTMLElement>('[data-header-theme="dark"]'));
@@ -125,30 +124,6 @@ export function Header({ lang, strings }: Props) {
       triggers.forEach((t) => t.kill());
       bands.forEach((_, i) => darkSources.delete(`band-${i}`));
       setTheme(darkSources.size ? "dark" : "light");
-    };
-  }, [pathname]);
-
-  // A band marked data-header-veil="off" (the sky hero, which carries its own copy right under the bar) drops the
-  // light veil while it sits under the bar, so the veil never washes out that copy
-  useEffect(() => {
-    setupGsap();
-    const band = document.querySelector<HTMLElement>('[data-header-veil="off"]');
-    if (!band) return;
-    // The band may be pinned by its own motion (the hero's window stops): then its range is the pin's plus its height
-    const pinOf = () => ScrollTrigger.getAll().find((t) => t.pin === band);
-    const t = ScrollTrigger.create({
-      trigger: band,
-      start: "top bottom",
-      end: () => {
-        const pin = pinOf();
-        return (pin ? pin.end + band.offsetHeight : band.getBoundingClientRect().bottom + window.scrollY) - 120;
-      },
-      refreshPriority: -1,
-      onToggle: (self) => setVeil(!self.isActive),
-    });
-    return () => {
-      t.kill();
-      setVeil(true);
     };
   }, [pathname]);
 
@@ -262,7 +237,7 @@ export function Header({ lang, strings }: Props) {
   const otherHref = (current ? pathFor(current.page, other) : pathFor("home", other)) + (project ? `?project=${project}` : "");
 
   return (
-    <header ref={headerRef} className={styles.header} data-header data-theme={theme} data-veil={veil ? "on" : "off"} data-hidden={hidden && !project ? "true" : "false"}>
+    <header ref={headerRef} className={styles.header} data-header data-theme={theme} data-hidden={hidden && !project ? "true" : "false"}>
       <div className={`container ${styles.bar}`}>
         <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={40} tone={theme === "dark" ? "light" : "ink"} />
 

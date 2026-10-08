@@ -1,6 +1,6 @@
 /* Clipped at the top and the sides (nothing of the ring ever draws over the band before, nor past the page); open at the foot, where the items lag into the next band.
    Viewport in the shared band tone (--band-tone on body, tweened white → Sky mist → white across this band and the next; Sky mist without JS) */
-.intro { position: relative; min-height: 100svh; overflow: visible; clip-path: inset(0 0 -100svh 0); display: grid; place-items: center; background: var(--band-tone, var(--panel-sky)); color: var(--ink); }
+.intro { position: relative; min-height: 112svh; overflow: visible; clip-path: inset(0 0 -100svh 0); display: grid; place-items: center; background: var(--band-tone, var(--panel-sky)); color: var(--ink); }
 .intro > * { grid-area: 1 / 1; }
 .stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
 /* each item: centred on its point of the ring; size scales with the viewport (cards a little larger than mascots) */

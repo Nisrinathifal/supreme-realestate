@@ -120,7 +120,7 @@ export function WorkIntroMotion({ children }: { children: React.ReactNode }) {
               x: (Math.cos(a) * ring - Math.cos(a)) * rx * k,
               y: (Math.sin(a) * ring - Math.sin(a)) * ry * k + LAG[i % LAG.length] * h * lag,
               // and fades as it lags, so nothing is left hanging over the About band that comes up under it
-              autoAlpha: Math.max(0, 1 - lag * 1.8),
+              autoAlpha: Math.max(0, 1 - lag * 3), // gone before the About band reaches them (no card cut by its edge)
             });
             // a slight lean of its own, each item differently (it no longer goes round)
             gsap.set(inners[i], { scale: size, rotation: 7 * Math.sin(i * 0.9) });

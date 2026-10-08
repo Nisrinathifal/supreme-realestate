@@ -96,7 +96,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "about", dark } }));
 
       // the model opens as a wide view under the title, then fills the band
-      const heroY = () => head.offsetTop + head.offsetHeight + 36 - view.offsetTop;
+      const heroY = () => head.offsetTop + head.offsetHeight + 64 - view.offsetTop; // the model opens a clear step under the title
       gsap.set(words, { yPercent: 110 });
       gsap.set(view, { y: heroY, scale: 0.9, transformOrigin: "50% 0%" });
       gsap.set(texts, { opacity: 0, y: 36 });

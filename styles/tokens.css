@@ -32,8 +32,6 @@
   --flag-nl-red:   #AE1C28; --flag-nl-blue: #21468B; --flag-white: #FFFFFF; --flag-uk-blue: #012169; --flag-uk-red: #C8102E; /* the warm light of a lit window in the hero film: the chosen project window's frame */
   --glass:         rgba(250,250,247,.74);
   --glass-soft:    rgba(250,250,247,.38); /* header pill and menu panel: more see-through than a glass panel */
-  --header-scrim:  linear-gradient(180deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,.55) 45%, rgba(250,250,247,0) 100%); /* light veil behind the fixed header, keeps it legible over any band */
-  --header-scrim-dark: linear-gradient(180deg, rgba(26,32,29,.78) 0%, rgba(26,32,29,.4) 45%, rgba(26,32,29,0) 100%); /* same veil over an inverse band (header switches to Paper there) */
   --glass-fg:      #1A201D;
   --glass-line:    rgba(255,255,255,.6);
 

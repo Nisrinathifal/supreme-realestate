@@ -2,20 +2,13 @@
   position: fixed; inset: 0 0 auto 0; z-index: 100;
   padding-top: env(safe-area-inset-top);
   color: var(--ink);
-  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+  /* the bar simply changes colour with the page's tone (owner, 2026-10-08: no veil, no gradient behind it) */
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease), color var(--dur-tone) var(--ease-tone);
 }
 /* Gone while the footer is on screen */
 .header[data-hidden="true"] { opacity: 0; transform: translateY(-12px); pointer-events: none; }
 /* Over an inverse band (sections with data-header-theme="dark") the bar turns to Paper on the dark veil */
 .header[data-theme="dark"] { color: var(--on-media); }
-.header[data-theme="dark"]::before { background: var(--header-scrim-dark); }
-.header::before { transition: opacity 300ms var(--ease); }
-.header[data-veil="off"]::before { opacity: 0; }
-/* Light veil behind the bar, fading out below it; pointer-events off so the page stays clickable */
-.header::before {
-  content: ""; position: absolute; inset: 0 0 auto 0; height: calc((var(--header-h) + var(--s-5)) * 1.9); z-index: -1;
-  background: var(--header-scrim); pointer-events: none;
-}
 /* While the bar arrives on the homepage (a tween), its own transitions step aside */
 .header[data-arriving="true"] { transition: none; }
 /* Two columns: the lockup left, the language button and the menu right */

@@ -23,7 +23,7 @@ export function Hero({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const hasFilm = Boolean(heroFilm.mp4 || heroFilm.webm);
   return (
-    <section id="home" className={styles.hero} data-hero data-tone="dark" data-header-veil="off" aria-labelledby="hero-title">
+    <section id="home" className={styles.hero} data-hero data-tone="dark" aria-labelledby="hero-title">
       <div className={styles.frame} data-hero-frame>
         <MediaFrame image={heroStill} ratio="fill" lang={lang} radius="none" priority className={styles.still} />
         {hasFilm ? <HeroFilm film={heroFilm} labels={{ pause: c.hero.pause, play: c.hero.play }} /> : null}
