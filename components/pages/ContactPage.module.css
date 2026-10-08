@@ -1,0 +1,2 @@
+.block { display: grid; gap: var(--s-6); }
+.title { margin: 0; }

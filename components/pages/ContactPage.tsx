@@ -1,17 +1,30 @@
 import { PageIntro } from "@/components/sections/PageIntro";
 import { CompanyDetailsList } from "@/components/sections/CompanyDetailsList";
+import { ContactForm } from "@/components/sections/ContactForm";
 import { getCopy } from "@/content/copy";
 import type { Lang } from "@/content/routes";
+import styles from "./ContactPage.module.css";
 
-/** M1 shell. Contact methods and form (DESIGN §9.11) land in M3. */
+/** Contact (DESIGN §10, §9.11): the ways to reach the company from company.json, then the form. */
 export function ContactPage({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   return (
     <>
       <PageIntro title={c.contactPage.title} lead={c.contactPage.lead} />
-      <section className="section">
-        <div className="container">
+      <section className="section" aria-labelledby="contact-methods">
+        <div className={`container ${styles.block}`}>
+          <h2 id="contact-methods" className={`t-h3 ${styles.title}`}>
+            {c.contactPage.methodsTitle}
+          </h2>
           <CompanyDetailsList lang={lang} showManagement={false} />
+        </div>
+      </section>
+      <section className="section" aria-labelledby="contact-form">
+        <div className={`container ${styles.block}`}>
+          <h2 id="contact-form" className={`t-h3 ${styles.title}`}>
+            {c.contactPage.formTitle}
+          </h2>
+          <ContactForm lang={lang} />
         </div>
       </section>
     </>

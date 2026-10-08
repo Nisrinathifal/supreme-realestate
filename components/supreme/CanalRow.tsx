@@ -1,7 +1,7 @@
 "use client";
 
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { BoxGeometry, EdgesGeometry, ExtrudeGeometry, type Group, type InstancedMesh, Object3D, Shape } from "three";
 import { HOUSE } from "@/lib/supreme/buildingStates";
 import { brickTexture, color, edgeMaterial, toon } from "@/lib/supreme/materials";
@@ -87,11 +87,11 @@ const getKit = () => (kit ??= makeKit());
 export function CanalRow({ state }: { state: SceneState }) {
   const groups = useRef<(Group | null)[]>([]);
   const panes = useRef<(InstancedMesh | null)[]>([]);
-  const k = useMemo(getKit, []);
+  const k = getKit();
 
   useFrame(() => {
     const { houses, dummy, glass } = getKit();
-    houses.forEach(({ h, windows }, i) => {
+    houses.forEach(({ windows }, i) => {
       const order = i % 5; // distance from the building, either side
       const t = clamp01(state.row * 1.8 - order * 0.2);
       const g = groups.current[i];
