@@ -23,7 +23,8 @@ select.control { appearance: none; -webkit-appearance: none; padding-right: calc
 .error { display: flex; align-items: flex-start; gap: var(--s-2); margin: 0; font-size: 14px; line-height: 1.4; color: var(--error); }
 .error svg { flex: none; margin-top: 1px; }
 /* consent: a native checkbox in Ink, the sentence beside it */
-.consent { display: flex; align-items: flex-start; gap: var(--s-3); font-size: var(--fs-body); line-height: 1.5; color: var(--ink); }
+/* the whole sentence is the target (≥ 44px tall), not the 18px box */
+.consent { display: flex; align-items: flex-start; gap: var(--s-3); min-height: 44px; padding: var(--s-2) 0; cursor: pointer; font-size: var(--fs-body); line-height: 1.5; color: var(--ink); }
 .consent input { flex: none; width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--ink); }
 .consent a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .actions { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); padding-top: var(--s-2); }
