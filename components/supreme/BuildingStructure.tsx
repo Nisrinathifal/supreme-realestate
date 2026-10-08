@@ -62,9 +62,9 @@ export function BuildingStructure({ state }: { state: SceneState }) {
           </mesh>
         ))}
       </group>
-      <DrawnLine points={spine} tone="--scene-draw" draw={() => state.connect} width={1.4} />
+      <DrawnLine points={spine} tone="--scene-teal" draw={() => state.connect} width={1.4} />
       {links.map((pts, i) => (
-        <DrawnLine key={i} points={pts} tone="--scene-draw" draw={() => Math.min(1, Math.max(0, state.connect * 1.6 - 0.3 - Math.floor(i / 2) * 0.08))} width={1.4} />
+        <DrawnLine key={i} points={pts} tone="--scene-teal" draw={() => Math.min(1, Math.max(0, state.connect * 1.6 - 0.3 - Math.floor(i / 2) * 0.08))} width={1.4} />
       ))}
     </group>
   );

@@ -35,7 +35,7 @@ export function MaterialSamples({ state }: { state: SceneState }) {
         teal: color("--scene-teal"),
         ink: color("--ink"),
         paper: color("--bg"),
-        leaf: color("--scene-draw"),
+        leaf: color("--scene-teal"),
         graphite: color("--scene-graphite"),
       },
     }),

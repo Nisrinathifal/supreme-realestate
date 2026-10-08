@@ -65,7 +65,7 @@ function makeUnitKit() {
     real,
     oak: color("--scene-oak"),
     volume: toon({ color: color("--bg"), transparent: true, opacity: 0, depthWrite: false }),
-    edges: new LineBasicMaterial({ color: color("--scene-draw"), transparent: true, opacity: 0, depthWrite: false }),
+    edges: new LineBasicMaterial({ color: color("--scene-teal"), transparent: true, opacity: 0, depthWrite: false }),
     floor: toon({ map: wood, color: ghost.clone(), emissive: warm, emissiveIntensity: 0 }),
     items: { white: item("white"), ink: item("ink"), teal: item("teal"), oak: item("oak") } as Record<Kind, SceneMaterial>,
     frame: toon({ color: color("--bg") }),

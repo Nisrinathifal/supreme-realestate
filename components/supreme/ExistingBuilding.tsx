@@ -72,7 +72,7 @@ function makeKit() {
     brick: color("--scene-brick"),
     facade: toon({ map: brickFace, color: color("--scene-brick-old"), transparent: true }),
     side: toon({ map: brickSide, color: color("--scene-brick-old"), transparent: true }),
-    roof: toon({ color: color("--scene-draw"), transparent: true }),
+    roof: toon({ color: color("--scene-teal"), transparent: true }),
     slab: toon({ map: concreteTexture(), color: color("--scene-concrete"), transparent: true }),
     oldPane: toon({ color: color("--scene-graphite"), transparent: true }),
     frame: toon({ color: color("--bg") }),

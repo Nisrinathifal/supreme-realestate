@@ -18,7 +18,7 @@ import { MaterialSamples } from "./MaterialSamples";
 function Atmosphere({ state }: { state: SceneState }) {
   const sun = useRef<DirectionalLight>(null);
   const sky = useRef<HemisphereLight>(null);
-  const c = useMemo(() => ({ paper: color("--bg"), white: color("--bg"), warm: color("--window-light"), draw: color("--scene-draw") }), []);
+  const c = useMemo(() => ({ paper: color("--bg"), white: color("--bg"), warm: color("--window-light"), draw: color("--scene-teal") }), []);
 
   useFrame(() => {
     const w = state.warm;

@@ -49,17 +49,17 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
   return (
     <group name="elevation">
       {/* around the house */}
-      <DrawnLine points={outline} tone="--scene-draw" draw={() => state.lines} fade={fade} width={2.2} />
+      <DrawnLine points={outline} tone="--scene-teal" draw={() => state.lines} fade={fade} width={2.2} />
       {levels.map((y, i) => (
-        <DrawnLine key={y} points={[[-HALF - 1.2, y, zf], [HALF + 1.2, y, zf]]} tone="--scene-draw" draw={stagger(() => state.lines, i, levels.length)} fade={fade} />
+        <DrawnLine key={y} points={[[-HALF - 1.2, y, zf], [HALF + 1.2, y, zf]]} tone="--scene-teal" draw={stagger(() => state.lines, i, levels.length)} fade={fade} />
       ))}
       {levels.slice(1).map((y, i) => (
-        <Label key={y} text={`+${y.toFixed(2)}`} position={[-HALF - 2.6, y + 0.05, zf]} size={0.6} tone="--scene-draw" show={() => Math.max(0, state.dims * 1.3 - i * 0.15) * fade()} />
+        <Label key={y} text={`+${y.toFixed(2)}`} position={[-HALF - 2.6, y + 0.05, zf]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.dims * 1.3 - i * 0.15) * fade()} />
       ))}
       <Dimension from={[HALF + 1.6, 0, zf]} to={[HALF + 1.6, HEIGHT, zf]} label={`${HEIGHT.toFixed(2)}`} normal={[1, 0, 0]} labelOffset={[0.9, 0, 0]} draw={() => state.dims} fade={fade} />
       <Dimension from={[-HALF, -0.01, zf + 1.4]} to={[HALF, -0.01, zf + 1.4]} label={`${W.toFixed(2)}`} normal={[0, 0, 1]} labelOffset={[0, 0.02, 0.7]} labelRotation={[-Math.PI / 2, 0, 0]} draw={() => state.dims} fade={fade} />
       <Dimension from={[HALF + 1.4, -0.01, -D / 2]} to={[HALF + 1.4, -0.01, D / 2]} label={`${D.toFixed(2)}`} normal={[1, 0, 0]} labelOffset={[0.8, 0.02, 0]} labelRotation={[-Math.PI / 2, 0, -Math.PI / 2]} draw={() => state.dims} fade={fade} />
-      <DrawnLine points={[[0, 0, zf], [0, HEIGHT + HOUSE.gableHeight + 1.2, zf]]} tone="--scene-draw" draw={() => state.lines} fade={() => fade() * 0.6} />
+      <DrawnLine points={[[0, 0, zf], [0, HEIGHT + HOUSE.gableHeight + 1.2, zf]]} tone="--scene-teal" draw={() => state.lines} fade={() => fade() * 0.6} />
 
       {/* the elevation sheet */}
       <group position={[sheet.x, 0.02, sheet.z]} rotation={[0, sheet.rot, 0]}>

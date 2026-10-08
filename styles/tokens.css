@@ -56,7 +56,7 @@
   --scene-oak:      #B98E62; /* natural oak */
   --scene-teal:     #3F6E6A; /* muted teal: analysis lines, one sample */
   --scene-concrete: #CFCBC2;
-  --scene-draw:     #19665F; /* the drawing's second colour (owner, 2026-10-08, after illoca's cobalt): shade, shadows, lines, roof, trees; About band only */
+  --scene-draw:     #7FA8A3; /* the drawing's ground (owner, 2026-10-08, after illoca; softened the same day): the desk, canvas and the About band's tone; Ink on it ≥ 4.5:1. The deep teal (--scene-teal) draws the shade, shadows and lines */
   --scene-graphite: #4A4F4C; /* drawing lines */
 
   /* semantic (DESIGN §3.2) */

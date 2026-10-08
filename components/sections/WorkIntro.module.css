@@ -3,10 +3,7 @@
 .intro { position: relative; min-height: 112svh; overflow: visible; clip-path: inset(0 0 -100svh 0); display: grid; place-items: center; background: var(--band-tone, var(--panel-sky)); color: var(--ink); }
 /* the About band below takes the page's tone to its desk's sand as it enters (BgShift): this band goes with it, so the
    two meet with no edge (its own tint is back at Paper by then) */
-:global(html[data-page-tone="desk"]) .intro { background: var(--tone-now); color: var(--on-media); --ink: var(--on-media); --muted: var(--inv-muted); }
-.intro { transition: color var(--dur-tone) var(--ease-tone); }
-/* the headline's lines carry an inline colour from their fill-in tween (WorkIntroMotion); under the drawing's tone they turn to Paper with the band */
-:global(html[data-page-tone="desk"]) .line { color: var(--on-media) !important; transition: color var(--dur-tone) var(--ease-tone); }
+:global(html[data-page-tone="desk"]) .intro { background: var(--tone-now); }
 .intro > * { grid-area: 1 / 1; }
 .stage { position: absolute; inset: 0; margin: auto; width: min(100%, 1600px); height: 100%; pointer-events: none; }
 /* each item: centred on its point of the ring; size scales with the viewport (cards a little larger than mascots) */

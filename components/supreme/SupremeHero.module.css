@@ -16,10 +16,10 @@
 .elevation { width: auto; height: 86%; max-width: 90%; }
 .svgWall { stroke: var(--scene-graphite); stroke-width: 0.09; fill: color-mix(in srgb, var(--scene-brick) 14%, transparent); }
 .svgWindow { stroke: var(--scene-graphite); stroke-width: 0.06; fill: var(--bg); }
-.svgLevel { stroke: var(--scene-draw); stroke-width: 0.03; stroke-dasharray: 0.25 0.2; }
-.svgDim { stroke: var(--scene-draw); stroke-width: 0.05; }
+.svgLevel { stroke: var(--scene-teal); stroke-width: 0.03; stroke-dasharray: 0.25 0.2; }
+.svgDim { stroke: var(--scene-teal); stroke-width: 0.05; }
 .svgGround { stroke: var(--scene-graphite); stroke-width: 0.08; }
-.svgNumber { fill: var(--scene-draw); font-family: var(--font-text); font-size: 0.62px; font-weight: 500; letter-spacing: 0.02em; }
+.svgNumber { fill: var(--scene-teal); font-family: var(--font-text); font-size: 0.62px; font-weight: 500; letter-spacing: 0.02em; }
 
 /* the closing line: after the list (static), over the pulled-back building (live) */
 .finale { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); text-align: center; }
@@ -40,7 +40,7 @@
 .band[data-live] .stage { position: relative; display: block; max-width: none; height: 100svh; padding: 0; overflow: hidden; }
 .band[data-live] { padding-top: var(--section-y); } /* room after the collaboration ring, whose cards trail into it (owner, 2026-10-08) */
 .band[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-8)); padding: 0 var(--gutter); z-index: 2; }
-.band[data-live] { --desk: var(--scene-draw); } /* live: the band is `inverse` (Paper text) on the drawing's colour */
+.band[data-live] { --desk: var(--scene-draw); --muted: color-mix(in srgb, var(--ink) 90%, var(--scene-draw)); } /* live: Ink text on the drawing's soft ground; the muted step darker, so it keeps 4.5:1 there */
 .band[data-live] .view { position: absolute; inset: 0; aspect-ratio: auto; display: block; background: var(--desk); z-index: 1; }
 .band[data-live] .label { color: var(--muted); } /* edge to edge, under the bar */
 /* a paper grain over the drawing (illoca): a fine noise, multiplied, barely there */

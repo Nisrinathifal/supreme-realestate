@@ -172,20 +172,6 @@ export function Header({ lang, strings }: Props) {
     };
   }, []);
 
-  // The page's tone (BgShift): over the About band's drawing colour (tone "desk", deep) the bar is Paper
-  useEffect(() => {
-    const root = document.documentElement;
-    const read = () => setDark("tone", root.dataset.pageTone === "desk");
-    read();
-    const mo = new MutationObserver(read);
-    mo.observe(root, { attributes: true, attributeFilter: ["data-page-tone"] });
-    return () => {
-      mo.disconnect();
-      darkSources.delete("tone");
-      setTheme(darkSources.size ? "dark" : "light");
-    };
-  }, []);
-
   // Over a project page the bar always shows, and the language button keeps the project (?project=n)
   useEffect(() => {
     const onProject = (e: Event) => setProject((e as CustomEvent<number | null>).detail);
