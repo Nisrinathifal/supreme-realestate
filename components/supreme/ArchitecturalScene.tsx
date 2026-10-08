@@ -12,29 +12,30 @@ import { FloorPlan } from "./FloorPlan";
 import { Mascot } from "./Mascot";
 import { MaterialSamples } from "./MaterialSamples";
 
-/** Paper ground and fog in the page's own Paper; a sky light whose underside is the scene teal (the two-tone shade of a
-    drawn illustration, after illoca) and one low sun that casts long, hard shadows and warms at delivery. */
+/** The desk's sand all round (background and fog); a teal sky light, so everything the sun does not reach (the shaded
+    sides, the cast shadows) is tinted teal, the coloured shadow of a two-tone drawn illustration (illoca's are cobalt);
+    and one low sun of plain daylight that casts long, hard shadows and warms at delivery. */
 function Atmosphere({ state }: { state: SceneState }) {
   const sun = useRef<DirectionalLight>(null);
   const sky = useRef<HemisphereLight>(null);
-  const c = useMemo(() => ({ paper: color("--bg"), white: color("--bg"), warm: color("--window-light"), stone: color("--alt"), ground: color("--scene-teal") }), []);
+  const c = useMemo(() => ({ paper: color("--bg"), white: color("--bg"), warm: color("--window-light"), teal: color("--scene-teal") }), []);
 
   useFrame(() => {
     const w = state.warm;
     if (sun.current) {
       sun.current.color.lerpColors(c.white, c.warm, w * 0.55);
-      sun.current.intensity = 2.6 + 0.3 * w;
+      sun.current.intensity = 3.0 + 0.3 * w;
     }
-    if (sky.current) sky.current.intensity = 1.1 - 0.2 * w;
+    if (sky.current) sky.current.intensity = 1.6 - 0.3 * w;
   });
 
   return (
     <>
-      <hemisphereLight ref={sky} args={[c.white, c.ground, 1.1]} />
+      <hemisphereLight ref={sky} args={[c.teal, c.teal, 1.6]} />
       <directionalLight
         ref={sun}
         position={[-34, 26, 16]}
-        intensity={2.6}
+        intensity={3.0}
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-30}

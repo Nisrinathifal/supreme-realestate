@@ -27,7 +27,7 @@ function door(hx: number, hz: number, r: number, start: number): V3[] {
  * with the state; at the end only a trace stays.
  */
 export function FloorPlan({ state }: { state: SceneState }) {
-  const sheet = { x: -16.2, z: 3.6, w: 9, h: 10.6, rot: 0.1 };
+  const sheet = { x: -14.6, z: 1.8, w: 9, h: 10.6, rot: 0.1 };
   const k = 0.62; // plan scale on the sheet
   const p = (x: number, z: number): V3 => [x * k, 0, z * k];
   const draw = () => state.plan;

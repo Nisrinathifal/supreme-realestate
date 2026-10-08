@@ -101,9 +101,15 @@ Every group in the scene is named (`table`, `shell`, `core`, `unit-01`…`unit-0
 traverse the live graph instead of reading screenshots. Checked at the six stages on desktop (1440×900), tablet
 (768×1024) and phone (390×844): every solid surface is `MeshToonMaterial` (the only other materials are the drawn
 lines and the unlit label and mascot planes, by design); every visible mesh of the building, the eight units, the
-core, the plan, the elevation and the mascot projects inside the frame at every stage and size; of the desk objects,
-9–16 of 17 are in frame per stage (the documents and the canal lie outside the close framings on purpose), and the
+core, the plan, the elevation, the mascot and every desk object (samples, pencil, ruler and documents now behind the
+building, trees beside it; the unseen canal removed) projects inside the frame at every stage and size, and the
 280 × 220 table always runs past the frame's edges.
+
+Style, measured the same way on our frames and on illoca's (recorded from the site by wheel scroll): luminance
+peaks (shading steps) ours 2–3 vs illoca 4–5, share of pixels in the four fullest tones ours 63–76% vs 52–55% (ours is
+the flatter), strong-edge pixels ours 5–11% vs 6.5–10% (the drawn lines, alike), mean chroma ours 17–31 vs 64–75.
+The last is a palette decision, not a gap: illoca draws in cobalt, Supreme's tokens are muted (DESIGN §3); the shade
+and the cast shadows are tinted teal (the sky light), which is as far as the palette goes.
 
 ## 5. Performance and fallback
 
