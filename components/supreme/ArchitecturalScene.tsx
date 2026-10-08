@@ -50,14 +50,14 @@ function Atmosphere({ state }: { state: SceneState }) {
   );
 }
 
-/** The worktable: a large sheet of paper, and the site plan sheet the model stands on. */
+/** The worktable: a warm sand desk that fills the frame to its edges (illoca), and the Paper site-plan sheet the model stands on. */
 function Table() {
-  const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), stone: color("--alt") }), []);
+  const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), desk: color("--scene-desk") }), []);
   return (
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[280, 220]} />
-        <meshToonMaterial gradientMap={toonSteps()} map={t.map} color={t.stone} />
+        <meshToonMaterial gradientMap={toonSteps()} map={t.map} color={t.desk} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0.02]} position={[0, 0.01, 2.5]} receiveShadow>
         <planeGeometry args={[34, 26]} />
@@ -85,7 +85,7 @@ export default function ArchitecturalScene({ state, lite = false, onReady }: { s
         // the page's own Paper as the ground colour, fading the far table into it
         const paper = color("--bg");
         scene.background = paper;
-        scene.fog = new Fog(paper, 60, 150);
+        scene.fog = new Fog(paper, 110, 240); // the desk reaches the frame's edges; only its far end melts into the page
         onReady?.(invalidate); // frames are rendered on demand: the band asks for one whenever the scroll moves it
       }}
     >
