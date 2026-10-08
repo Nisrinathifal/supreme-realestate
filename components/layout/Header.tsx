@@ -16,6 +16,8 @@ import styles from "./Header.module.css";
  * { key, dark } for any other source (the projects band, which fades to light as the page moves on).
  */
 export const HEADER_THEME = "supreme:header-theme";
+/** Fired on <document> by the project overlay (components/windows): detail = the open project's number (1–4) or null. */
+export const PROJECT_STATE = "supreme:project-state";
 /** Dark sources on screen (dark bands, the hero at night): the bar is Paper while any of them is active. */
 const darkSources = new Set<string>();
 
@@ -65,6 +67,7 @@ export function Header({ lang, strings }: Props) {
     setTheme(darkSources.size ? "dark" : "light");
   };
   const [hidden, setHidden] = useState(false);
+  const [project, setProject] = useState<number | null>(null); // a project page open over the homepage
   const [veil, setVeil] = useState(true);
 
   // The bar leaves once the page has scrolled away over the footer (the sticky footer itself cannot be
@@ -184,6 +187,13 @@ export function Header({ lang, strings }: Props) {
     };
   }, []);
 
+  // Over a project page the bar always shows, and the language button keeps the project (?project=n)
+  useEffect(() => {
+    const onProject = (e: Event) => setProject((e as CustomEvent<number | null>).detail);
+    document.addEventListener(PROJECT_STATE, onProject);
+    return () => document.removeEventListener(PROJECT_STATE, onProject);
+  }, []);
+
   // Close on Escape and on a click outside; return focus to the pill when closed via keyboard
   useEffect(() => {
     if (!open) return;
@@ -239,10 +249,10 @@ export function Header({ lang, strings }: Props) {
   // The language button leads to the same page in the other language
   const other = langs.find((l) => l !== lang) ?? lang;
   const current = pageForPath(pathname);
-  const otherHref = current ? pathFor(current.page, other) : pathFor("home", other);
+  const otherHref = (current ? pathFor(current.page, other) : pathFor("home", other)) + (project ? `?project=${project}` : "");
 
   return (
-    <header ref={headerRef} className={styles.header} data-header data-theme={theme} data-veil={veil ? "on" : "off"} data-hidden={hidden ? "true" : "false"}>
+    <header ref={headerRef} className={styles.header} data-header data-theme={theme} data-veil={veil ? "on" : "off"} data-hidden={hidden && !project ? "true" : "false"}>
       <div className={`container ${styles.bar}`}>
         <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={40} tone={theme === "dark" ? "light" : "ink"} />
 

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExter
 import { createPortal } from "react-dom";
 import Lenis from "lenis";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { HEADER_THEME, PROJECT_STATE } from "@/components/layout/Header";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import type { Lang } from "@/content/routes";
 import { gsap, MQ, prefersReducedMotion, ScrollTrigger, setupGsap } from "@/lib/motion";
@@ -26,6 +27,10 @@ type Phase = "idle" | "entering" | "open" | "leaving";
 const CARD_GAP = 1.4;
 const CARD_FLIP_AT = 62;
 const HIDE_DELAY = 160;
+
+/** The project page's address: `?project=n` (its number, 1–4, never its name) on the homepage, so it can be linked to and
+ *  the header's language button lands on the same project in the other language. */
+const PARAM = "project";
 
 /** Fired on <document> by another way in (the phone's project strip): detail { id, from } enters from that element. */
 export const ENTER_PROJECT = "supreme:enter-project";
@@ -50,7 +55,8 @@ const useDebugFlag = () =>
  * (HeroScroll sets `data-shown` once dusk has fallen and the spotlight, a masked dark layer with a hole at each
  * window, is on). Hover or keyboard focus lights a window and shows a small preview beside it: the room, the project's
  * name and its city (not on touch, where a tap goes straight in); click, tap or Enter goes in: the through-the-window
- * timeline (motion.ts) into a fixed overlay (portalled to <body>, above the header) with the interior, the
+ * timeline (motion.ts) into a fixed overlay (portalled to <body>, under the header, which stays for the menu and the
+ * language) with the interior, the
  * project's name, then the project page (ProjectPage: story, before/after, photos, next) and the index of all four, and a way
  * back that plays the timeline in reverse. `?debug=windows` outlines the film box and every hotspot in lime, for
  * tuning against the footage (the numbers are in content/projects.ts). UI state (active, open, phase) lives in React; the timelines read it.
@@ -194,24 +200,60 @@ export function Windows({ lang, projects, strings, footer }: Props) {
     const overlay = overlayRef.current;
     const hotspot = returnTo.current;
     const exterior = exteriorParts();
-    if (!overlay || !hotspot || !exterior.length) {
+    if (!overlay) {
       setPhase("open");
       return;
     }
     document.documentElement.setAttribute("data-project-open", "");
     toTop();
     lenisRef.current?.start();
+    // Opened from its address (?project=n) there is no window to come through: the page simply fades in
+    const direct = !hotspot || !exterior.length;
     tl.current = enterTimeline({
       overlay,
-      rect: hotspot.getBoundingClientRect(),
+      rect: hotspot?.getBoundingClientRect() ?? new DOMRect(window.innerWidth / 2, window.innerHeight / 2, 0, 0),
       exterior,
-      reduced: prefersReducedMotion(),
+      reduced: prefersReducedMotion() || direct,
       onComplete: () => {
         setPhase("open");
         overlay.querySelector<HTMLElement>("[data-project-focus]")?.focus({ preventScroll: true });
       },
     });
   }, [phase, open]);
+
+  /* ---------- the address: open from ?project=n, keep it while open, tell the header ---------- */
+  useEffect(() => {
+    if (!mounted) return;
+    const n = Number(new URLSearchParams(window.location.search).get(PARAM));
+    const p = Number.isInteger(n) ? projects[n - 1] : undefined;
+    if (!p?.interior) return;
+    returnTo.current = null;
+    setWarmed((w) => (w.includes(p.id) ? w : [...w, p.id]));
+    setOpen(p.id);
+    setPhase("entering");
+  }, [mounted, projects]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const n = open && phase !== "idle" ? projects.findIndex((p) => p.id === open) + 1 : 0;
+    const url = new URL(window.location.href);
+    if (n) url.searchParams.set(PARAM, String(n));
+    else url.searchParams.delete(PARAM);
+    if (url.href !== window.location.href) window.history.replaceState(window.history.state, "", url);
+    document.dispatchEvent(new CustomEvent(PROJECT_STATE, { detail: n || null }));
+    // The bar reads Paper over the project's photograph and Ink once the page below it (Paper) has come up; ProjectPage
+    // marks that moment on the overlay (data-past-hero)
+    const overlay = overlayRef.current;
+    const theme = () => {
+      const dark = Boolean(n) && overlay?.dataset.pastHero !== "true";
+      document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "project", dark } }));
+    };
+    theme();
+    if (!n || !overlay) return;
+    const watch = new MutationObserver(theme);
+    watch.observe(overlay, { attributes: true, attributeFilter: ["data-past-hero"] });
+    return () => watch.disconnect();
+  }, [mounted, open, phase, projects]);
 
   const close = useCallback(() => {
     if (phase !== "open") return;
@@ -258,9 +300,19 @@ export function Windows({ lang, projects, strings, footer }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
+    // A link in the bar's menu (a section of the homepage, another page) leaves the project where it stands, like the
+    // footer's; the language button keeps it (its address carries ?project=n)
+    const onBar = (e: MouseEvent) => {
+      const a = (e.target as Element | null)?.closest("[data-header] a");
+      if (a && !a.hasAttribute("hreflang")) closeNow();
+    };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [phase, close]);
+    document.addEventListener("click", onBar, true);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("click", onBar, true);
+    };
+  }, [phase, close, closeNow]);
 
   useEffect(
     () => () => {

@@ -83,7 +83,7 @@
 
 /* Back: a round glass icon, top left; hover or focus opens it out to its label. Out of sight over the project's
    hero (the scroll badge holds the top there), in once the page has moved on (data-past-hero, set by ProjectPage). */
-.backWrap { position: absolute; z-index: 3; top: calc(var(--s-4) + env(safe-area-inset-top)); left: var(--gutter); }
+.backWrap { position: absolute; z-index: 3; top: calc(var(--header-h) + var(--s-3) + env(safe-area-inset-top)); left: var(--gutter); } /* under the bar, which stays over the project */
 .back {
   display: inline-flex; align-items: center; height: 48px; padding: 0; border-radius: var(--r-pill);
   border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--inv-bg) 55%, transparent); color: var(--on-media);

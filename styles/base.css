@@ -17,7 +17,7 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 /* A project is open over the page (components/windows): the page holds still and the header steps aside */
 html[data-project-open] { overflow: hidden; }
-html[data-project-open] [data-header] { opacity: 0; pointer-events: none; }
+html[data-project-open] [data-header] { z-index: 160; } /* the bar stays over a project page (above its overlay, z 150): menu and language */
 
 body {
   margin: 0;
