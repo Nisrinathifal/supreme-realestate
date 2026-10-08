@@ -27,7 +27,8 @@ function limited(ip: string): boolean {
 export async function POST(req: Request) {
   const type = req.headers.get("content-type") ?? "";
   const asForm = !type.includes("application/json");
-  const lang = resolveLang(req.headers.get("x-lang") ?? new URL(req.url).searchParams.get("lang") ?? "nl");
+  // the language: a header (the script), else the form's own field, else the query, else Dutch
+  let lang = resolveLang(req.headers.get("x-lang") ?? new URL(req.url).searchParams.get("lang") ?? "nl");
   const back = (q: string) => NextResponse.redirect(new URL(`${pathFor("contact", lang)}?${q}`, req.url), 303);
   const answer = (status: number, body: Record<string, unknown>, q: string) => (asForm ? back(q) : NextResponse.json(body, { status }));
 
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
   } catch {
     return answer(400, { ok: false, error: "failed" }, "error=failed");
   }
+  if (!req.headers.get("x-lang") && typeof data.lang === "string") lang = resolveLang(data.lang);
   const input = readInput(data);
   // a bot filled the field people never see: say nothing, send nothing
   if (input.website) return answer(200, { ok: true }, "sent=1");
