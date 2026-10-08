@@ -12,6 +12,7 @@ export default defineConfig({
   use: { baseURL, trace: "off" },
   webServer: {
     command: `npx next start -p ${port}`,
+    env: { MAIL_PROVIDER: "mock", MAIL_ALLOW_MOCK: "1" }, // the contact tests send through the mock, which logs
     url: baseURL,
     reuseExistingServer: true,
     timeout: 60_000,

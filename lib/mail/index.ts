@@ -37,7 +37,7 @@ export function compose(input: ContactInput, lang: string, receivedAt: Date): Ma
 export async function send(mail: Mail & { replyTo: string }): Promise<void> {
   const provider = process.env.MAIL_PROVIDER || "mock";
   if (provider === "mock") {
-    if (process.env.NODE_ENV === "production") throw new Error("MAIL_PROVIDER=mock is not allowed in production");
+    if (process.env.NODE_ENV === "production" && process.env.MAIL_ALLOW_MOCK !== "1") throw new Error("MAIL_PROVIDER=mock is not allowed in production");
     console.log(`[mail:mock] to ${mail.to} (reply-to ${mail.replyTo})\n${mail.subject}\n${mail.text}`);
     return;
   }
