@@ -2,6 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
+import { toneLine } from "@/components/motion/BgShift";
 import { HEADER_THEME } from "@/components/layout/Header";
 import { cssPx, ease, gsap, MQ, ScrollTrigger, setupGsap } from "@/lib/motion";
 import styles from "./Work.module.css";
@@ -11,8 +12,8 @@ import styles from "./Work.module.css";
  * frames; the title comes up; the frames travel to their cards and become them; the title goes; then the deck after
  * the reference, on every width: pinned one viewport tall, the cards still to come waiting as strips beneath the
  * active card, each next card rising to the front as the one above lifts away, its photographs sliding in and its
- * note settling, scrubbed. On a fine pointer the card's pill follows the pointer. The next band's daylight rises
- * over the band's foot. Start states live here; without this the CSS lists the cards (reduced motion, no JS).
+ * note settling, scrubbed. On a fine pointer the card's pill follows the pointer. The page's tone turns to Paper
+ * as the next band comes up (BgShift). Start states live here; without this the CSS lists the cards (reduced motion, no JS).
  */
 export function WorkMotion({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -26,25 +27,13 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
       const next = band?.nextElementSibling as HTMLElement | null;
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "work", dark } }));
 
-      // The band stays dark to its foot; the next band brings daylight up over it as a long soft rise of Paper
-      // (Shelf.module.css, [data-dawn]) instead of the whole band fading through grey, so the last card leaves on
-      // the dark ground and no edge ever shows between the two. Only with motion: without it the bands simply meet.
-      let fading = false;
-      mm.add(MQ.full, () => {
-        if (!band || !next) return;
-        fading = true;
-        next.setAttribute("data-dawn", "");
-        return () => {
-          fading = false;
-          next.removeAttribute("data-dawn");
-        };
-      });
       const dark = band
         ? ScrollTrigger.create({
             trigger: band,
             start: "top 48px",
             endTrigger: next ?? band,
-            end: () => (fading && next ? "top 40%" : next ? "top 48px" : "bottom 48px"), // light once the rise is behind the header
+            // the page's tone turns to Paper as the next band crosses the tone line (BgShift): the bar turns with it
+            end: () => (next ? `top ${toneLine(next) * 100}%` : "bottom 48px"),
             invalidateOnRefresh: true,
             refreshPriority: -1,
             onToggle: (self) => header(self.isActive),
@@ -72,8 +61,7 @@ export function WorkMotion({ children }: { children: React.ReactNode }) {
         // The root is what is pinned (title and deck together); the band's top room equals the stack's top, so the
         // pin begins exactly as the band has covered the hero
         root.setAttribute("data-handoff", "");
-        // ... and a foot as tall as most of the next band's daylight rise, so the last card (which stays and scrolls
-        // away with the page) is never washed by it, and the light comes up just behind it
+        // ... and a foot of room under the last card (which stays and scrolls away with the page) before the next band
         gsap.set(band, { paddingTop: () => top(), paddingBottom: () => window.innerHeight * 0.56 });
 
         deck.setAttribute("data-deck", "");

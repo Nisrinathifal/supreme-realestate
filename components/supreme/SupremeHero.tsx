@@ -134,6 +134,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
             }
           },
           onLeaveBack: () => dark && header((dark = false)),
+          onLeave: () => dark && header((dark = false)), // past the band: the letter band below has the bar from here
         },
       });
 

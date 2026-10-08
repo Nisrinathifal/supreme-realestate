@@ -34,7 +34,7 @@ export function CompanyLetter({ lang }: { lang: Lang }) {
   const r = c.register;
 
   return (
-    <section id="company" className={`inverse ${styles.band}`} data-letter data-header-theme="dark" aria-labelledby="company-title">
+    <section id="company" className={`inverse ${styles.band}`} data-letter data-tone="dark" data-tone-fill data-tone-lead="0.4" data-header-theme="dark" aria-labelledby="company-title">
       <CompanyLetterMotion>
         <div className={styles.stage} data-letter-stage>
           <div className={styles.icons} aria-hidden="true">

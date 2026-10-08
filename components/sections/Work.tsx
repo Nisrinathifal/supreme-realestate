@@ -29,7 +29,7 @@ export function Work({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   const n = c.work.items.length;
   return (
-    <section id="work" className={`section inverse ${styles.work}`} data-work aria-labelledby="work-title">
+    <section id="work" className={`section inverse ${styles.work}`} data-work data-tone="dark" data-tone-fill aria-labelledby="work-title">
       {/* No heading in sight (owner, 2026-10-05): the band continues the night hero; the name stays for assistive tech */}
       <h2 id="work-title" className="visually-hidden">
         {c.work.title}

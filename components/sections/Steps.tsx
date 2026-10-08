@@ -17,7 +17,7 @@ import styles from "./Steps.module.css";
 export function Steps({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   return (
-    <section id="approach" className={`inverse ${styles.steps}`} data-steps data-header-theme="dark" aria-labelledby="steps-title">
+    <section id="approach" className={`inverse ${styles.steps}`} data-steps data-tone="dark" data-tone-fill data-header-theme="dark" aria-labelledby="steps-title">
       <StepsMotion>
         <div className={styles.stage} data-steps-stage>
           <div className={styles.sketch} data-steps-sketch="left" aria-hidden="true">

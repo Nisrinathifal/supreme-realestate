@@ -98,6 +98,8 @@
   --section-y: clamp(96px, 12vw, 176px);
 
   --ease: cubic-bezier(.2,.7,.2,1);
+  --ease-tone: cubic-bezier(.36,.33,0,1); /* the page's tone changing between bands (BgShift, after brandappart.com) */
+  --dur-tone: 640ms;
   --ease-precise: cubic-bezier(.65,0,.35,1);
 
   /* spacing scale, 4-pt base */
@@ -131,3 +133,11 @@
 @media (max-width: 560px) {
   :root { --grid-gap: 16px; }
 }
+
+/* The page's tone (components/motion/BgShift): one registered colour the root eases between the two tones, painted by
+   every band that fills with it, so the whole screen changes together instead of one band fading into the next.
+   initial-value = Paper (--bg); unregistered browsers simply switch. */
+@property --tone-now { syntax: "<color>"; inherits: true; initial-value: #FAFAF7; }
+html[data-bg-shift] { --tone-now: var(--bg); transition: --tone-now var(--dur-tone) var(--ease-tone); }
+html[data-bg-shift][data-page-tone="dark"] { --tone-now: var(--band-dark); }
+html[data-bg-shift] [data-tone-fill] { background-color: var(--tone-now); box-shadow: none; }

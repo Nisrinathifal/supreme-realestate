@@ -40,7 +40,7 @@
 
 /* ---------- live: the pinned view with the envelope ---------- */
 .band[data-live] .stage { position: relative; display: block; height: 100svh; padding: 0; overflow: hidden; }
-.band[data-live]::after { content: ""; display: block; height: 28svh; background: linear-gradient(180deg, var(--band-dark), var(--inv-ink)); }
+.band[data-live]::after { content: ""; display: block; height: 28svh; } /* room before the contact band; the page's tone turns to Paper there (BgShift) */
 .band[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-8)); padding: 0 var(--gutter); }
 
 .band[data-live] .packet { display: block; position: absolute; inset: 0; }

@@ -13,7 +13,7 @@ import styles from "./Footer.module.css";
 export function ContactBand({ lang }: { lang: Lang }) {
   const c = getCopy(lang);
   return (
-    <section className={styles.band} data-contact-band aria-labelledby="contact-band-title">
+    <section className={styles.band} data-contact-band data-tone="paper" data-tone-fill aria-labelledby="contact-band-title">
       <div className={`container ${styles.bandInner}`}>
         <MicroLabel>{c.footer.cta.label}</MicroLabel>
         <h2 id="contact-band-title" className={styles.bandTitle}>

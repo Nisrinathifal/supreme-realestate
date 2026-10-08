@@ -1,30 +1,13 @@
-/* One clean Paper field (owner, 2026-10-07: the Stone wall and its gradients read as dirty). With motion its daylight
-   rises softly over the dark projects band's foot and dusk falls at its own foot into the dark steps band, so no edge
-   shows. The columns are then not boxed in by the section: they stand up past its top into the rising light (--reach)
-   and dissolve there, so they simply run on (no sectioning) */
+/* One clean Paper field (owner, 2026-10-07: the Stone wall and its gradients read as dirty). Between it and the dark
+   bands above and below the page's tone changes as a whole (BgShift, owner 2026-10-08: no gradients) */
 .shelf {
-  --reach: 70svh;
   position: relative; z-index: 3; min-height: 100svh; overflow-x: clip; color: var(--ink); background: var(--bg);
 }
 .shelf > * { position: relative; }
-/* Daylight rising over the dark band above (set by WorkMotion with motion on): a long soft rise of Paper, no edge */
-.shelf[data-dawn]::before {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: var(--reach); pointer-events: none;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 0%, transparent) 0%, color-mix(in srgb, var(--bg) 18%, transparent) 30%, color-mix(in srgb, var(--bg) 62%, transparent) 62%, var(--bg) 100%);
-}
-/* ... and dusk at its foot (ShelfMotion, motion on): the wall darkens softly into the dark steps band below */
-.shelf[data-dusk] { padding-bottom: var(--dusk); --dusk: 36svh; }
-.shelf[data-dusk]::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: var(--dusk); pointer-events: none;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--band-dark) 0%, transparent) 0%, color-mix(in srgb, var(--band-dark) 22%, transparent) 38%, color-mix(in srgb, var(--band-dark) 70%, transparent) 72%, var(--band-dark) 100%);
-}
 .shelf > svg { position: absolute; }
-.shelf > .columns { top: 0; bottom: auto; height: 100%; } /* an svg will not stretch between top and bottom */
-/* with the daylight rising (motion on) the columns run up into it and dissolve there; without it they stay on the wall */
-.shelf[data-dawn] > .columns {
-  top: calc(-1 * var(--reach)); height: calc(100% + var(--reach));
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, var(--ink) var(--reach)); mask-image: linear-gradient(180deg, transparent 0, var(--ink) var(--reach));
-}
+.shelf > .columns { top: 0; bottom: auto; height: 100%; transition: opacity var(--dur-tone) var(--ease-tone); } /* an svg will not stretch between top and bottom */
+/* the Paper columns belong to the daylight: they go with it when the page's tone turns dark (BgShift) */
+:global(html[data-page-tone="dark"]) .shelf > .columns { opacity: 0; }
 /* Scrollable: the statement owns the first viewport (centred), the shelf follows below it at full width */
 .inner { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s-9); }
 .stage { min-height: 72svh; display: grid; place-items: center; padding-top: var(--header-h); width: 100%; } /* the statement comes straight in (owner, 2026-10-07) */

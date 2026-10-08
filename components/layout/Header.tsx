@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { DotsNine } from "@phosphor-icons/react/dist/ssr";
 import { Lockup } from "@/components/brand/Lockup";
+import { toneLine } from "@/components/motion/BgShift";
 import { Flag } from "./Flag";
 import { HEADLINE_IN } from "@/components/sections/HeroFilm";
 import { langs, pageForPath, pathFor, type Lang } from "@/content/routes";
@@ -94,18 +95,27 @@ export function Header({ lang, strings }: Props) {
     // A band may be pinned by its own motion: then its scroll range is the pin's range plus the band's height.
     // Evaluated after the pins refresh (priority -1), so the pin's start/end are final.
     const pinOf = (band: HTMLElement) => ScrollTrigger.getAll().find((t) => t.pin === band);
+    // Between two bands that both fill with the page's tone (BgShift) the whole screen changes colour at the tone line,
+    // so the bar turns there too, not when the seam reaches it
+    const tones = Array.from(document.querySelectorAll<HTMLElement>("[data-tone]"));
+    const fills = (el: Element | null | undefined) => Boolean(el?.hasAttribute("data-tone-fill"));
+    const outer = (band: HTMLElement) => (band.parentElement?.classList.contains("pin-spacer") ? band.parentElement : band);
+    const prevOf = (band: HTMLElement) => outer(band).previousElementSibling;
+    const nextOf = (band: HTMLElement) => outer(band).nextElementSibling ?? tones[tones.indexOf(band) + 1] ?? null;
+    // the seam's tone line: where the later of the two bands takes over
+    const at = (band: HTMLElement, neighbour: Element | null, later: Element | null) => (fills(band) && fills(neighbour) ? window.innerHeight * toneLine(later) : 48);
     const triggers = bands.map((band, i) =>
       ScrollTrigger.create({
         trigger: band,
         start: () => {
           const pin = pinOf(band);
-          return (pin ? pin.start : band.getBoundingClientRect().top + window.scrollY) - 48;
+          return (pin ? pin.start : band.getBoundingClientRect().top + window.scrollY) - (band.dataset.toneLead && fills(band) ? window.innerHeight * toneLine(band) : at(band, prevOf(band), band)); // a band that leads (the letter after the About band's dusk) takes the bar when it takes the tone
         },
         end: () => {
           const pin = pinOf(band);
           // A following band marked data-overlap slides up over the held band one viewport early
-          const overlap = band.nextElementSibling?.hasAttribute("data-overlap") ? window.innerHeight : 0;
-          return (pin ? pin.end + band.offsetHeight - overlap : band.getBoundingClientRect().bottom + window.scrollY) - 48;
+          const overlap = outer(band).nextElementSibling?.hasAttribute("data-overlap") ? window.innerHeight : 0;
+          return (pin ? pin.end + band.offsetHeight - overlap : band.getBoundingClientRect().bottom + window.scrollY) - at(band, nextOf(band), nextOf(band));
         },
         refreshPriority: -1,
         onToggle: (self) => setDark(`band-${i}`, self.isActive),
