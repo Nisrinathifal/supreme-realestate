@@ -243,7 +243,7 @@ export const contactShadowTexture = () =>
 let steps: DataTexture | null = null;
 export function toonSteps() {
   if (steps) return steps;
-  const data = new Uint8Array([70, 150, 255]); // shade, half-light, light
+  const data = new Uint8Array([40, 140, 255]); // shade (the teal sky light alone), half-light, light
   steps = new DataTexture(data, 3, 1, RedFormat);
   steps.minFilter = steps.magFilter = NearestFilter;
   steps.generateMipmaps = false;

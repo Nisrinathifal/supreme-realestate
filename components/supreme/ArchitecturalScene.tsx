@@ -24,18 +24,18 @@ function Atmosphere({ state }: { state: SceneState }) {
     const w = state.warm;
     if (sun.current) {
       sun.current.color.lerpColors(c.white, c.warm, w * 0.55);
-      sun.current.intensity = 3.0 + 0.3 * w;
+      sun.current.intensity = 3.4 + 0.3 * w;
     }
-    if (sky.current) sky.current.intensity = 1.6 - 0.3 * w;
+    if (sky.current) sky.current.intensity = 2.6 - 0.4 * w;
   });
 
   return (
     <>
-      <hemisphereLight ref={sky} args={[c.teal, c.teal, 1.6]} />
+      <hemisphereLight ref={sky} args={[c.teal, c.teal, 2.6]} />
       <directionalLight
         ref={sun}
         position={[-34, 26, 16]}
-        intensity={3.0}
+        intensity={3.4}
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-30}
