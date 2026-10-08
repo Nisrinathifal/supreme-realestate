@@ -2,3 +2,8 @@
 .label { margin-bottom: var(--s-5); }
 .title { max-width: 14ch; }
 .lead { margin-top: var(--s-6); color: var(--muted); }
+/* centred: one column, title and lead on the axis */
+.center { text-align: center; }
+.center .title, .center .lead { margin-left: auto; margin-right: auto; }
+.center .title { max-width: 18ch; }
+.center .lead { max-width: 44ch; }

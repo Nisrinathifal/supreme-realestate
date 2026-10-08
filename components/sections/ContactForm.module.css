@@ -1,6 +1,6 @@
 /* The contact form (DESIGN §9.11): labels above, 52px fields on Surface with a 1px line, errors under the field with
    an icon. Plain: no cards, no shadows, no glow. */
-.form { display: grid; gap: var(--s-6); max-width: 720px; }
+.form { display: grid; gap: var(--s-6); width: 100%; }
 .row { display: grid; gap: var(--s-6); }
 @media (min-width: 768px) { .row { grid-template-columns: 1fr 1fr; } }
 .field { display: grid; gap: var(--s-2); }
@@ -26,9 +26,9 @@ select.control { appearance: none; -webkit-appearance: none; padding-right: calc
 .consent { display: flex; align-items: flex-start; gap: var(--s-3); font-size: var(--fs-body); line-height: 1.5; color: var(--ink); }
 .consent input { flex: none; width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--ink); }
 .consent a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4); }
+.actions { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); padding-top: var(--s-2); }
 /* outcome: one sentence, as plain as the rest; the failure also shows the address as a way out */
-.notice { display: flex; align-items: flex-start; gap: var(--s-2); margin: 0; font-size: var(--fs-body); line-height: 1.5; color: var(--ink); }
+.notice { display: flex; align-items: flex-start; gap: var(--s-2); margin: 0; font-size: var(--fs-body); line-height: 1.5; color: var(--ink); text-align: center; }
 .notice[data-kind="error"] { color: var(--error); }
 .notice svg { flex: none; margin-top: 3px; }
 /* the honeypot: not for people (off screen, out of the tab order, no autofill) */

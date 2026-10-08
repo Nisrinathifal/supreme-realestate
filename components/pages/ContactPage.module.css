@@ -1,2 +1,4 @@
-.block { display: grid; gap: var(--s-6); }
-.title { margin: 0; }
+/* The contact page as one centred column (owner, 2026-10-08): 640px, the width of a comfortable form */
+.section { padding-top: 0; }
+.column { display: grid; gap: var(--s-7); max-width: calc(640px + 2 * var(--gutter)); } /* the container's gutters on top of the 640px */
+.title { margin: 0; text-align: center; }
