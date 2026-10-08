@@ -82,17 +82,12 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
 
 - The canvas fills the band edge to edge from the start; the title sits over it and lifts away; the camera keys are
   close, so the model spans most of the view at every stage (portrait: centred, the text under it).
-- The worktable is a warm sand desk (`--scene-desk`) that runs to the frame's edges (fog only at its far end), the
-  site-plan sheet Paper on it, the camera low, and the canvas's background and fog the same sand, so there is no
-  horizon of page: the picture fills its frame as illoca's does. The page's tone (BgShift) turns to the sand as the
-  band enters (`data-tone="desk"`), the ring band above going with it, so the two meet with no edge. Measured (share
-  of the view that is drawing, not page) over all six stages: desktop 89–94%, tablet 88–94%, phone 90–96%; illoca's
-  frames 66–94%.
-- Drawn illustration, not a render: every surface is `MeshToonMaterial` with one shared three-step gradient map
-  (`toon()` in lib/supreme/materials.ts), no tone mapping (tokens render exact), hard shadows (`shadows="basic"`,
-  2048 map) from one low sun at the left, a sky light whose underside is the scene teal (the two-tone shade), thin
-  graphite edge lines (`EdgesGeometry`, `edgeMaterial()`) on the shell's parts and each unit's slab, teal tree crowns,
-  and a faint paper grain multiplied over the view (CSS, SupremeHero.module.css).
+- The drawing's second colour, `--scene-draw` (a deep teal; owner, 2026-10-08, after illoca's cobalt): the desk, the
+  canvas's background and fog, the shade and cast shadows (the sky light), the lines, the roof and the trees; the
+  sheets Paper on it, the building in its own brick. The band is `inverse` while live (Paper text), the page's tone
+  turns to the drawing colour as the band enters (`data-tone="desk"`, BgShift), the ring band above and the bar going
+  with it, so the two meet with no edge. The picture fills its frame as illoca's does: measured over all six stages,
+  88–96% of the view is drawing at every size (desktop, tablet, phone); mean chroma 46–60 against illoca's 64–75.
 
 ## 4c. Per-asset check (2026-10-08)
 
@@ -107,9 +102,8 @@ building, trees beside it; the unseen canal removed) projects inside the frame a
 
 Style, measured the same way on our frames and on illoca's (recorded from the site by wheel scroll): luminance
 peaks (shading steps) ours 2–3 vs illoca 4–5, share of pixels in the four fullest tones ours 63–76% vs 52–55% (ours is
-the flatter), strong-edge pixels ours 5–11% vs 6.5–10% (the drawn lines, alike), mean chroma ours 17–31 vs 64–75.
-The last is a palette decision, not a gap: illoca draws in cobalt, Supreme's tokens are muted (DESIGN §3); the shade
-and the cast shadows are tinted teal (the sky light), which is as far as the palette goes.
+the flatter), strong-edge pixels ours 5–11% vs 6.5–10% (the drawn lines, alike), mean chroma ours 46–60 vs 64–75
+(with the drawing colour approved by the owner; 17–31 before it).
 
 ## 5. Performance and fallback
 

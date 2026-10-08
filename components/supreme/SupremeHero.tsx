@@ -3,7 +3,6 @@
 import { useGSAP } from "@gsap/react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { HEADER_THEME } from "@/components/layout/Header";
 import { MicroLabel } from "@/components/ui/MicroLabel";
 import { buildSceneTimeline, createSceneState, FINALE, STAGES } from "@/lib/supreme/sceneTimeline";
 import { ease, gsap, MQ, saveData, setupGsap } from "@/lib/motion";
@@ -93,7 +92,6 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
       const endLines = q<HTMLElement>("[data-film-finale-line]");
       const endBody = q<HTMLElement>("[data-film-finale-body]");
       if (!stage || !head || !view || !dusk || !end) return;
-      const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "about", dark } }));
 
       // the model fills the band from the start (owner, 2026-10-08, after illoca); the title sits over it and lifts away
       gsap.set(words, { yPercent: 110 });
@@ -110,7 +108,6 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
         scrollTrigger: { trigger: section, start: "top 80%", end: "top 15%", scrub: 0.8, invalidateOnRefresh: true },
       });
 
-      let dark = false;
       let reached = -1;
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -122,17 +119,12 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
           invalidateOnRefresh: true,
           onUpdate: () => {
             invalidate.current(); // one frame of the scene for this scroll position
-            const t = tl.time();
-            const d = t > END - 0.06;
-            if (d !== dark) header((dark = d));
             const r = STAGES.reduce<number>((acc, s, i) => (state.progress >= s - 0.04 ? i : acc), 0);
             if (r !== reached) {
               reached = r;
               dots.forEach((dot, i) => dot.toggleAttribute("data-active", i === r));
             }
           },
-          onLeaveBack: () => dark && header((dark = false)),
-          onLeave: () => dark && header((dark = false)), // past the band: the letter band below has the bar from here
         },
       });
 
@@ -160,7 +152,6 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
         arrive.kill();
         tl.scrollTrigger?.kill();
         tl.kill();
-        if (dark) header(false);
         gsap.set([...words, head, dusk, ...texts, end, ...endLines, ...endBody], { clearProps: "transform,opacity,visibility" });
         dots.forEach((dot) => dot.removeAttribute("data-active"));
       };
@@ -169,7 +160,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
   );
 
   return (
-    <section ref={root} id="about" className={styles.band} data-about-film data-live={live ? "" : undefined} data-tone={live ? "desk" : "paper"} data-tone-fill data-tone-lead="0.4" aria-labelledby="about-title">
+    <section ref={root} id="about" className={`${styles.band}${live ? " inverse" : ""}`} data-about-film data-live={live ? "" : undefined} data-tone={live ? "desk" : "paper"} data-tone-fill data-tone-lead="0.4" aria-labelledby="about-title">
       <div className={styles.stage} data-film-stage>
         <header className={styles.head} data-film-head>
           <MicroLabel className={styles.label}>{label}</MicroLabel>

@@ -56,7 +56,7 @@ export function Label({ text, position, rotation = [0, 0, 0], size = 0.5, tone =
 }
 
 /** A dimension line with end ticks and a label in the middle, all drawn on together. */
-export function Dimension({ from, to, label, tick = 0.35, normal = [0, 0, 1], labelOffset = [0, 0, 0], labelRotation, draw, fade, tone = "--scene-teal" }: { from: V3; to: V3; label: string; tick?: number; normal?: V3; labelOffset?: V3; labelRotation?: V3; draw: () => number; fade?: () => number; tone?: Token }) {
+export function Dimension({ from, to, label, tick = 0.35, normal = [0, 0, 1], labelOffset = [0, 0, 0], labelRotation, draw, fade, tone = "--scene-draw" }: { from: V3; to: V3; label: string; tick?: number; normal?: V3; labelOffset?: V3; labelRotation?: V3; draw: () => number; fade?: () => number; tone?: Token }) {
   const t = (p: V3): [V3, V3] => [
     [p[0] - normal[0] * tick, p[1] - normal[1] * tick, p[2] - normal[2] * tick],
     [p[0] + normal[0] * tick, p[1] + normal[1] * tick, p[2] + normal[2] * tick],

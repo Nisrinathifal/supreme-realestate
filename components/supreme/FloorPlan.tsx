@@ -72,18 +72,18 @@ export function FloorPlan({ state }: { state: SceneState }) {
         </mesh>
         <group position={[0, 0.012, 0]}>
           {grid.map((g, i) => (
-            <DrawnLine key={`g${i}`} points={g} tone="--scene-teal" draw={draw} fade={() => 0.45} width={0.6} />
+            <DrawnLine key={`g${i}`} points={g} tone="--scene-draw" draw={draw} fade={() => 0.45} width={0.6} />
           ))}
           {all.map((pts, i) => (
             <DrawnLine key={i} points={pts} draw={() => Math.min(1, Math.max(0, (state.plan - (i / all.length) * 0.5) / 0.5))} width={i < 2 ? 1.6 : 1} />
           ))}
-          <Label text="03" position={unitLabel(-1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.plan * 2 - 1)} />
-          <Label text="04" position={unitLabel(1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.plan * 2 - 1)} />
+          <Label text="03" position={unitLabel(-1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-draw" show={() => Math.max(0, state.plan * 2 - 1)} />
+          <Label text="04" position={unitLabel(1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-draw" show={() => Math.max(0, state.plan * 2 - 1)} />
           <Label text="1e verdieping 1:100" position={[0, 0, sheet.h / 2 - 0.8]} rotation={[-Math.PI / 2, 0, 0]} size={0.36} show={() => state.plan} />
         </group>
       </group>
       <group position={[0, 0.03, 0]}>
-        <DrawnLine points={foot} tone="--scene-teal" draw={draw} fade={() => 0.4 + 0.6 * state.overlays} width={1} />
+        <DrawnLine points={foot} tone="--scene-draw" draw={draw} fade={() => 0.4 + 0.6 * state.overlays} width={1} />
       </group>
     </group>
   );

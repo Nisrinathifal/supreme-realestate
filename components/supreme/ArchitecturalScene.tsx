@@ -12,13 +12,13 @@ import { FloorPlan } from "./FloorPlan";
 import { Mascot } from "./Mascot";
 import { MaterialSamples } from "./MaterialSamples";
 
-/** The desk's sand all round (background and fog); a teal sky light, so everything the sun does not reach (the shaded
+/** The drawing's colour all round (background and fog); a sky light of the same colour, so everything the sun does not reach (the shaded
     sides, the cast shadows) is tinted teal, the coloured shadow of a two-tone drawn illustration (illoca's are cobalt);
     and one low sun of plain daylight that casts long, hard shadows and warms at delivery. */
 function Atmosphere({ state }: { state: SceneState }) {
   const sun = useRef<DirectionalLight>(null);
   const sky = useRef<HemisphereLight>(null);
-  const c = useMemo(() => ({ paper: color("--bg"), white: color("--bg"), warm: color("--window-light"), teal: color("--scene-teal") }), []);
+  const c = useMemo(() => ({ paper: color("--bg"), white: color("--bg"), warm: color("--window-light"), draw: color("--scene-draw") }), []);
 
   useFrame(() => {
     const w = state.warm;
@@ -31,10 +31,10 @@ function Atmosphere({ state }: { state: SceneState }) {
 
   return (
     <>
-      <hemisphereLight ref={sky} args={[c.teal, c.teal, 2.6]} />
+      <hemisphereLight ref={sky} args={[c.draw, c.draw, 2.6]} />
       <directionalLight
         ref={sun}
-        position={[-34, 26, 16]}
+        position={[-36, 20, 14]}
         intensity={3.4}
         castShadow
         shadow-mapSize={[2048, 2048]}
@@ -51,9 +51,9 @@ function Atmosphere({ state }: { state: SceneState }) {
   );
 }
 
-/** The worktable: a warm sand desk that fills the frame to its edges (illoca), and the Paper site-plan sheet the model stands on. */
+/** The worktable in the drawing's colour, filling the frame to its edges (illoca's cobalt), and the Paper site-plan sheet the model stands on. */
 function Table() {
-  const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), desk: color("--scene-desk") }), []);
+  const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), desk: color("--scene-draw") }), []);
   return (
     <group name="table">
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -83,8 +83,8 @@ export default function ArchitecturalScene({ state, lite = false, onReady }: { s
       camera={{ fov: 26, near: 1, far: 260, position: [30, 27, 40] }}
       aria-hidden="true"
       onCreated={({ scene, camera, invalidate }) => {
-        // the desk's sand everywhere (illoca: the picture fills its frame, no horizon): the far desk melts into it
-        const desk = color("--scene-desk");
+        // the drawing's colour everywhere (illoca: the picture fills its frame, no horizon): the far desk melts into it
+        const desk = color("--scene-draw");
         scene.background = desk;
         scene.fog = new Fog(desk, 90, 200);
         onReady?.(invalidate); // frames are rendered on demand: the band asks for one whenever the scroll moves it
