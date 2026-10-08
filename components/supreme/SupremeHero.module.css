@@ -40,7 +40,7 @@
 .band[data-live] .stage { position: relative; display: block; max-width: none; height: 100svh; padding: 0; overflow: hidden; }
 .band[data-live] { padding-top: var(--section-y); } /* room after the collaboration ring, whose cards trail into it (owner, 2026-10-08) */
 .band[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-8)); padding: 0 var(--gutter); z-index: 2; }
-.band[data-live] { --desk: var(--scene-draw); --muted: color-mix(in srgb, var(--ink) 90%, var(--scene-draw)); } /* live: Ink text on the drawing's soft ground; the muted step darker, so it keeps 4.5:1 there */
+.band[data-live] { --desk: var(--scene-desk); --muted: color-mix(in srgb, var(--ink) 85%, var(--scene-desk)); } /* live: Ink text on the sand; the muted step darker, so it keeps 4.5:1 there */
 .band[data-live] .view { position: absolute; inset: 0; aspect-ratio: auto; display: block; background: var(--desk); z-index: 1; }
 .band[data-live] .label { color: var(--muted); } /* edge to edge, under the bar */
 /* a paper grain over the drawing (illoca): a fine noise, multiplied, barely there */

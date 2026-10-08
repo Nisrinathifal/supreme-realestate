@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import type { Group, MeshToonMaterial } from "three";
 import { gableOutline, HEIGHT, HOUSE, WINDOW, windowSlots } from "@/lib/supreme/buildingStates";
 import { paperTexture, toonSteps } from "@/lib/supreme/materials";
 import { color } from "@/lib/supreme/materials";
@@ -45,6 +47,13 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
   const paper = useMemo(() => ({ map: paperTexture(), color: color("--bg") }), []);
+  // the sheet leaves the desk at the end (state.sheets), before the canal row rises where it lay
+  const sheetMat = useRef<MeshToonMaterial>(null);
+  const sheetMesh = useRef<Group>(null);
+  useFrame(() => {
+    if (sheetMat.current) sheetMat.current.opacity = state.sheets;
+    if (sheetMesh.current) sheetMesh.current.visible = state.sheets > 0.01;
+  });
 
   return (
     <group name="elevation">
@@ -63,9 +72,9 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
 
       {/* the elevation sheet */}
       <group position={[sheet.x, 0.02, sheet.z]} rotation={[0, sheet.rot, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <mesh ref={sheetMesh} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[sheet.w, sheet.h]} />
-          <meshToonMaterial gradientMap={toonSteps()} map={paper.map} color={paper.color} />
+          <meshToonMaterial ref={sheetMat} gradientMap={toonSteps()} map={paper.map} color={paper.color} transparent />
         </mesh>
         <group position={[0, 0.012, 0]}>
           <DrawnLine points={elevation} draw={() => state.elevation} width={1.2} />

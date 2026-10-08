@@ -82,13 +82,16 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
 
 - The canvas fills the band edge to edge from the start; the title sits over it and lifts away; the camera keys are
   close, so the model spans most of the view at every stage (portrait: centred, the text under it).
-- The drawing's ground, `--scene-draw` (a soft teal; owner, 2026-10-08, after illoca's cobalt, softened the same day
-  on review): the desk, the canvas's background and fog, and the About band's tone. The deep `--scene-teal` draws the
-  shade and cast shadows (the sky light), the lines, the roof and the trees; the sheets Paper; the building its brick;
-  the text Ink (≥ 4.5:1 on the ground, the muted step darkened there). The page's tone turns to the ground as the band
-  enters (`data-tone="desk"`, BgShift), the ring band above going with it, so the two meet with no edge. The picture
-  fills its frame as illoca's does: over all six stages 88–96% of the view is drawing at every size (desktop, tablet,
-  phone); mean chroma 32–38 (deep version 53–66, muted version 17–31) against illoca's 64–75.
+- The worktable is warm sand (`--scene-desk`; the owner tried a teal ground on 2026-10-08 and preferred the sand),
+  the canvas's background and fog the same, so there is no horizon of page; the sheets Paper on it; the deep
+  `--scene-teal` draws the shade and cast shadows (the sky light), the lines, the roof and the trees; the text Ink
+  (the muted step darkened on the sand to keep 4.5:1). The page's tone turns to the sand as the band enters
+  (`data-tone="desk"`, BgShift), the ring band above going with it. Over all six stages 88–96% of the view is drawing
+  at every size; mean chroma 32–38 against illoca's 64–75 (a palette choice the owner made).
+- The canal row (owner, 2026-10-08): at 05 value the drawing sheets leave the desk and six neighbours rise beside the
+  building, three a side, each its own width, floors, gable (stepped, neck, bell) and brick tone, with drawn edges and
+  windows that warm with the building's light (`CanalRow`, `state.row`): the one property among its street, as on an
+  Amsterdam canal.
 
 ## 4c. Per-asset check (2026-10-08)
 
@@ -104,7 +107,7 @@ building, trees beside it; the unseen canal removed) projects inside the frame a
 Style, measured the same way on our frames and on illoca's (recorded from the site by wheel scroll): luminance
 peaks (shading steps) ours 2–3 vs illoca 4–5, share of pixels in the four fullest tones ours 63–76% vs 52–55% (ours is
 the flatter), strong-edge pixels ours 5–11% vs 6.5–10% (the drawn lines, alike), mean chroma ours 32–38 vs 64–75
-(the soft ground the owner settled on; 53–66 with the deep one, 17–31 with none). The toon gradient has five steps; the histogram
+(the sand ground with teal shade the owner settled on; 53–66 with a deep teal ground, which the owner rejected). The toon gradient has five steps; the histogram
 shows fewer peaks than illoca's because one colour (the desk) holds most of the frame, not because the shading has
 fewer steps.
 

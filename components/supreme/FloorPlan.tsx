@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import type { Group, MeshToonMaterial } from "three";
 import { HOUSE, UNIT, WINDOW } from "@/lib/supreme/buildingStates";
 import { color, paperTexture, toonSteps } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
@@ -32,6 +34,13 @@ export function FloorPlan({ state }: { state: SceneState }) {
   const p = (x: number, z: number): V3 => [x * k, 0, z * k];
   const draw = () => state.plan;
   const paper = useMemo(() => ({ map: paperTexture(), color: color("--bg") }), []);
+  // the sheet leaves the desk at the end (state.sheets), before the canal row rises where it lay
+  const sheetMat = useRef<MeshToonMaterial>(null);
+  const sheetMesh = useRef<Group>(null);
+  useFrame(() => {
+    if (sheetMat.current) sheetMat.current.opacity = state.sheets;
+    if (sheetMesh.current) sheetMesh.current.visible = state.sheets > 0.01;
+  });
 
   const rect = (x0: number, z0: number, x1: number, z1: number): V3[] => [p(x0, z0), p(x1, z0), p(x1, z1), p(x0, z1), p(x0, z0)];
   const outer = rect(-W / 2, -D / 2, W / 2, D / 2);
@@ -66,9 +75,9 @@ export function FloorPlan({ state }: { state: SceneState }) {
   return (
     <group name="plan">
       <group position={[sheet.x, 0.02, sheet.z]} rotation={[0, sheet.rot, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <mesh ref={sheetMesh} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[sheet.w, sheet.h]} />
-          <meshToonMaterial gradientMap={toonSteps()} map={paper.map} color={paper.color} />
+          <meshToonMaterial ref={sheetMat} gradientMap={toonSteps()} map={paper.map} color={paper.color} transparent />
         </mesh>
         <group position={[0, 0.012, 0]}>
           {grid.map((g, i) => (
@@ -77,6 +86,7 @@ export function FloorPlan({ state }: { state: SceneState }) {
           {all.map((pts, i) => (
             <DrawnLine key={i} points={pts} draw={() => Math.min(1, Math.max(0, (state.plan - (i / all.length) * 0.5) / 0.5))} width={i < 2 ? 1.6 : 1} />
           ))}
+          {/* the lines on the sheet go with it */}
           <Label text="03" position={unitLabel(-1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.plan * 2 - 1)} />
           <Label text="04" position={unitLabel(1)} rotation={[-Math.PI / 2, 0, 0]} size={0.6} tone="--scene-teal" show={() => Math.max(0, state.plan * 2 - 1)} />
           <Label text="1e verdieping 1:100" position={[0, 0, sheet.h / 2 - 0.8]} rotation={[-Math.PI / 2, 0, 0]} size={0.36} show={() => state.plan} />

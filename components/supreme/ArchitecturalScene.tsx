@@ -6,13 +6,14 @@ import { type DirectionalLight, Fog, type HemisphereLight, NoToneMapping } from 
 import { color, paperTexture, toonSteps } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
 import { ArchitecturalDrawing } from "./ArchitecturalDrawing";
+import { CanalRow } from "./CanalRow";
 import { CameraRig } from "./CameraRig";
 import { SupremeBuilding } from "./BuildingStructure";
 import { FloorPlan } from "./FloorPlan";
 import { Mascot } from "./Mascot";
 import { MaterialSamples } from "./MaterialSamples";
 
-/** The drawing's colour all round (background and fog); a sky light of the same colour, so everything the sun does not reach (the shaded
+/** The desk's sand all round (background and fog); a teal sky light, so everything the sun does not reach (the shaded
     sides, the cast shadows) is tinted teal, the coloured shadow of a two-tone drawn illustration (illoca's are cobalt);
     and one low sun of plain daylight that casts long, hard shadows and warms at delivery. */
 function Atmosphere({ state }: { state: SceneState }) {
@@ -38,8 +39,8 @@ function Atmosphere({ state }: { state: SceneState }) {
         intensity={3.4}
         castShadow
         shadow-mapSize={[2048, 2048]}
-        shadow-camera-left={-30}
-        shadow-camera-right={30}
+        shadow-camera-left={-40}
+        shadow-camera-right={40}
         shadow-camera-top={30}
         shadow-camera-bottom={-30}
         shadow-camera-near={4}
@@ -51,9 +52,9 @@ function Atmosphere({ state }: { state: SceneState }) {
   );
 }
 
-/** The worktable in the drawing's colour, filling the frame to its edges (illoca's cobalt), and the Paper site-plan sheet the model stands on. */
+/** The worktable: warm sand filling the frame to its edges (illoca), and the Paper site-plan sheet the model stands on. */
 function Table() {
-  const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), desk: color("--scene-draw") }), []);
+  const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), desk: color("--scene-desk") }), []);
   return (
     <group name="table">
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -83,8 +84,8 @@ export default function ArchitecturalScene({ state, lite = false, onReady }: { s
       camera={{ fov: 26, near: 1, far: 260, position: [30, 27, 40] }}
       aria-hidden="true"
       onCreated={({ scene, camera, invalidate }) => {
-        // the drawing's colour everywhere (illoca: the picture fills its frame, no horizon): the far desk melts into it
-        const desk = color("--scene-draw");
+        // the desk's sand everywhere (illoca: the picture fills its frame, no horizon): the far desk melts into it
+        const desk = color("--scene-desk");
         scene.background = desk;
         scene.fog = new Fog(desk, 90, 200);
         onReady?.(invalidate); // frames are rendered on demand: the band asks for one whenever the scroll moves it
@@ -95,6 +96,7 @@ export default function ArchitecturalScene({ state, lite = false, onReady }: { s
       <Table />
       <FloorPlan state={state} />
       <SupremeBuilding state={state} lite={lite} />
+      <CanalRow state={state} />
       <ArchitecturalDrawing state={state} />
       <MaterialSamples state={state} />
       <Suspense fallback={null}>

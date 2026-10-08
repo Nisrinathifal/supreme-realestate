@@ -29,7 +29,10 @@ export type SceneState = {
   lights: number;
   clean: number;
   newWindows: number;
-  /** 05 value: the units come back together, warm light, the overlays go, the units shown linked, trees grown. */
+  /** 05 value: the units come back together, warm light, the overlays go, the units shown linked, trees grown; the
+   *  drawing sheets leave the desk and the neighbours rise beside the building, a canal row (owner, 2026-10-08). */
+  sheets: number;
+  row: number;
   warm: number;
   overlays: number;
   connect: number;
@@ -58,6 +61,8 @@ export const createSceneState = (): SceneState => ({
   lights: 0,
   clean: 0,
   newWindows: 0,
+  sheets: 1,
+  row: 0,
   warm: 0,
   overlays: 1,
   connect: 0,
@@ -109,6 +114,8 @@ export function buildSceneTimeline(state: SceneState, tl: GSAPTimeline) {
   to({ numbers: 0.6 }, 0.78, 0.06);
   to({ overlays: 0 }, 0.76, 0.08, "none");
   to({ connect: 1 }, 0.8, 0.09, "power1.inOut");
+  to({ sheets: 0, plan: 0, elevation: 0 }, 0.8, 0.06, "power1.in"); // the sheets and what is drawn on them
+  to({ row: 1 }, 0.85, 0.12, "power2.out");
   to({ warm: 1 }, 0.78, 0.14, "power1.inOut");
   to({ trees: 1 }, 0.8, 0.12, "power2.out");
   // a still moment at the end

@@ -17,7 +17,7 @@ function rng(seed: number) {
   };
 }
 
-const TOKENS = ["--bg", "--alt", "--line", "--ink", "--muted", "--accent", "--window-light", "--band-dark", "--inv-surface", "--scene-brick", "--scene-brick-old", "--scene-oak", "--scene-teal", "--scene-concrete", "--scene-graphite", "--scene-draw"] as const;
+const TOKENS = ["--bg", "--alt", "--line", "--ink", "--muted", "--accent", "--window-light", "--band-dark", "--inv-surface", "--scene-brick", "--scene-brick-old", "--scene-oak", "--scene-teal", "--scene-concrete", "--scene-graphite", "--scene-desk"] as const;
 export type Token = (typeof TOKENS)[number];
 
 let palette: Record<Token, string> | null = null;
