@@ -89,6 +89,8 @@
 
   --shadow: 0 30px 60px -30px rgba(10,20,20,.45);
   --shadow-soft: 0 10px 30px -18px rgba(10,20,20,.35); /* presentation cards: barely there */
+  --shadow-up: 0 -18px 40px -24px rgba(10,20,20,.6); /* a fold's shadow cast upwards (the envelope's pocket) */
+  --shadow-seal: 0 6px 16px -8px rgba(10,20,20,.7); /* a small raised object (the seal) */
   --blur: 18px;
 
   --frame: 12px;

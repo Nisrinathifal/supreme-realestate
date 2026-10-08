@@ -69,7 +69,7 @@
 .band[data-live] .pocket { height: calc(var(--env-h) * 0.78); z-index: 3; }
 .pocket {
   border-radius: calc(var(--r-sm) / 3); background: var(--kraft);
-  box-shadow: 0 -18px 40px -24px color-mix(in srgb, var(--inv-bg) 60%, transparent);
+  box-shadow: var(--shadow-up);
 }
 /* The folds of the pocket: two lines from the top corners to the middle */
 .fold {
@@ -81,7 +81,7 @@
 .pocketSeal {
   position: absolute; left: 50%; top: 36%; display: grid; place-items: center; width: 64px; height: 64px; margin: -32px 0 0 -32px;
   border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent);
-  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--inv-bg) 70%, transparent);
+  box-shadow: var(--shadow-seal);
 }
 
 @media (max-width: 767px) {
