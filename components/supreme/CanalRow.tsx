@@ -12,17 +12,21 @@ const DEPTH = 8;
 const GAP = 0.3;
 const FH = HOUSE.floorHeight;
 
-/** The neighbours, three a side, left to right, each its own width, height, gable and tone, so the row reads as a street. */
+/** The neighbours, five a side (owner, 2026-10-08: a long row), left to right, each its own width, height, gable and tone, so the row reads as a street. */
 function layout(): House[] {
   const left: Omit<House, "x">[] = [
     { w: 5.6, floors: 4, gable: "neck", tone: "concrete" },
     { w: 6.4, floors: 3, gable: "stepped", tone: "old" },
     { w: 5.2, floors: 4, gable: "bell", tone: "brick" },
+    { w: 6.8, floors: 3, gable: "neck", tone: "oak" },
+    { w: 5.4, floors: 4, gable: "stepped", tone: "concrete" },
   ];
   const right: Omit<House, "x">[] = [
     { w: 6.0, floors: 3, gable: "bell", tone: "oak" },
     { w: 5.4, floors: 4, gable: "stepped", tone: "concrete" },
     { w: 6.6, floors: 3, gable: "neck", tone: "brick" },
+    { w: 5.0, floors: 4, gable: "bell", tone: "old" },
+    { w: 6.2, floors: 3, gable: "stepped", tone: "brick" },
   ];
   const out: House[] = [];
   let x = -HOUSE.width / 2 - GAP;
@@ -76,7 +80,7 @@ const getKit = () => (kit ??= makeKit());
 
 /**
  * The canal row (owner, 2026-10-08): at the end the building stands among its neighbours, as on an Amsterdam canal.
- * Six houses, three a side, each with its own width, floors, gable (stepped, neck, bell) and brick tone, with drawn
+ * Ten houses, five a side, each with its own width, floors, gable (stepped, neck, bell) and brick tone, with drawn
  * edges and dark windows that warm with the building's light. They rise out of the desk one after another, from the
  * building outwards, with `state.row`.
  */
@@ -88,8 +92,8 @@ export function CanalRow({ state }: { state: SceneState }) {
   useFrame(() => {
     const { houses, dummy, glass } = getKit();
     houses.forEach(({ h, windows }, i) => {
-      const order = Math.floor(i % 3); // distance from the building, either side
-      const t = clamp01(state.row * 1.6 - order * 0.3);
+      const order = i % 5; // distance from the building, either side
+      const t = clamp01(state.row * 1.8 - order * 0.2);
       const g = groups.current[i];
       if (g) { g.visible = t > 0.001; g.scale.y = Math.max(0.0001, t); }
       const p = panes.current[i];

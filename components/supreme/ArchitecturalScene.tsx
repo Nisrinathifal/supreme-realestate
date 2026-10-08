@@ -39,8 +39,8 @@ function Atmosphere({ state }: { state: SceneState }) {
         intensity={3.4}
         castShadow
         shadow-mapSize={[2048, 2048]}
-        shadow-camera-left={-40}
-        shadow-camera-right={40}
+        shadow-camera-left={-56}
+        shadow-camera-right={56}
         shadow-camera-top={30}
         shadow-camera-bottom={-30}
         shadow-camera-near={4}

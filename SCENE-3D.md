@@ -89,7 +89,7 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
   (`data-tone="desk"`, BgShift), the ring band above going with it. Over all six stages 88–96% of the view is drawing
   at every size; mean chroma 32–38 against illoca's 64–75 (a palette choice the owner made).
 - The canal row (owner, 2026-10-08): at 05 value the drawing sheets leave the desk and six neighbours rise beside the
-  building, three a side, each its own width, floors, gable (stepped, neck, bell) and brick tone, with drawn edges and
+  building, five a side, each its own width, floors, gable (stepped, neck, bell) and brick tone, with drawn edges and
   windows that warm with the building's light (`CanalRow`, `state.row`): the one property among its street, as on an
   Amsterdam canal.
 

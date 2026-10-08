@@ -14,8 +14,8 @@ export const CAMERA_KEYS: Key[] = [
   { at: 0.15, pos: [-25, 22, 51], target: [3, 8.5, 1], fov: 25, shift: -0.3 }, // 02 round to the front left, the sheet in view
   { at: 0.38, pos: [31, 27, 52], target: [1, 10, 2], fov: 30, shift: 0.3 }, // 03 up and wide: the eight apart
   { at: 0.6, pos: [-25, 24, 56], target: [1, 8.5, 3], fov: 30, shift: -0.3 }, // 04 in on the homes
-  { at: 0.85, pos: [25, 18, 46], target: [1, 7.5, 3], fov: 28, shift: 0.3 }, // 05 one building again
-  { at: 1, pos: [33, 23, 64], target: [1, 10, 4], fov: 26, shift: 0 }, // the pull-back under the closing line
+  { at: 0.85, pos: [28, 20, 52], target: [1, 7.5, 3], fov: 29, shift: 0.3 }, // 05 one building again
+  { at: 1, pos: [40, 28, 86], target: [1, 9, 4], fov: 30, shift: 0 }, // the pull-back under the closing line
 ];
 
 const posCurve = new CatmullRomCurve3(CAMERA_KEYS.map((k) => new Vector3(...k.pos)), false, "centripetal");
