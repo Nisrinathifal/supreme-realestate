@@ -161,7 +161,7 @@ export function ApartmentUnit({ apartment, state, lite = false }: { apartment: A
 
   const wh = floor === 0 ? WINDOW.groundHeight : WINDOW.height;
   return (
-    <group ref={root} position={base}>
+    <group ref={root} position={base} name={`unit-${String(index + 1).padStart(2, "0")}`}>
       {/* the floor slab: part of the unit, so it travels with it */}
       <mesh position={[0, S / 2, 0]} material={g.slab} scale={[UW, S, UD]} geometry={g.box} castShadow receiveShadow />
       <lineSegments position={[0, S / 2, 0]} geometry={g.slabEdges} material={g.edge} />

@@ -47,7 +47,7 @@ export function BuildingStructure({ state }: { state: SceneState }) {
   }).flat();
 
   return (
-    <group>
+    <group name="core">
       <group ref={shaft}>
         <mesh position={[0, (HEIGHT + 0.9) / 2, CORE_Z]} castShadow receiveShadow>
           <boxGeometry args={[UNIT.core - 0.1, HEIGHT + 0.9, CORE_D]} />

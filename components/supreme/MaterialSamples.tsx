@@ -58,7 +58,7 @@ export function MaterialSamples({ state }: { state: SceneState }) {
   ];
 
   return (
-    <group>
+    <group name="desk">
       {/* the canal in front of the quay: a band of water tone drawn on the site plan */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, HOUSE.depth / 2 + 21]} receiveShadow>
         <planeGeometry args={[60, 8]} />

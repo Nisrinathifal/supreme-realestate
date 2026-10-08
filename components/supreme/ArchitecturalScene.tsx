@@ -54,7 +54,7 @@ function Atmosphere({ state }: { state: SceneState }) {
 function Table() {
   const t = useMemo(() => ({ map: paperTexture(), paper: color("--bg"), desk: color("--scene-desk") }), []);
   return (
-    <group>
+    <group name="table">
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[280, 220]} />
         <meshToonMaterial gradientMap={toonSteps()} map={t.map} color={t.desk} />
@@ -81,12 +81,13 @@ export default function ArchitecturalScene({ state, lite = false, onReady }: { s
       gl={{ antialias: true, powerPreference: "high-performance", toneMapping: NoToneMapping }}
       camera={{ fov: 26, near: 1, far: 260, position: [30, 27, 40] }}
       aria-hidden="true"
-      onCreated={({ scene, invalidate }) => {
+      onCreated={({ scene, camera, invalidate }) => {
         // the desk's sand everywhere (illoca: the picture fills its frame, no horizon): the far desk melts into it
         const desk = color("--scene-desk");
         scene.background = desk;
         scene.fog = new Fog(desk, 90, 200);
         onReady?.(invalidate); // frames are rendered on demand: the band asks for one whenever the scroll moves it
+        if (process.env.NODE_ENV !== "production") Object.assign(window, { __supremeScene: scene, __supremeCamera: camera }); // for the per-asset checks (tests)
       }}
     >
       <Atmosphere state={state} />

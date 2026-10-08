@@ -97,7 +97,7 @@ export function Mascot({ state }: { state: SceneState }) {
   });
 
   return (
-    <group ref={root} position={[ENTRY[0], 0, ENTRY[1]]}>
+    <group ref={root} position={[ENTRY[0], 0, ENTRY[1]]} name="mascot">
       <mesh ref={shadow} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial map={contactShadowTexture()} transparent opacity={0} depthWrite={false} toneMapped={false} />

@@ -94,6 +94,17 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
   graphite edge lines (`EdgesGeometry`, `edgeMaterial()`) on the shell's parts and each unit's slab, teal tree crowns,
   and a faint paper grain multiplied over the view (CSS, SupremeHero.module.css).
 
+## 4c. Per-asset check (2026-10-08)
+
+Every group in the scene is named (`table`, `shell`, `core`, `unit-01`…`unit-08`, `plan`, `elevation`, `desk`,
+`mascot`); in development the scene and camera are on `window.__supremeScene` / `__supremeCamera`, so a test can
+traverse the live graph instead of reading screenshots. Checked at the six stages on desktop (1440×900), tablet
+(768×1024) and phone (390×844): every solid surface is `MeshToonMaterial` (the only other materials are the drawn
+lines and the unlit label and mascot planes, by design); every visible mesh of the building, the eight units, the
+core, the plan, the elevation and the mascot projects inside the frame at every stage and size; of the desk objects,
+9–16 of 17 are in frame per stage (the documents and the canal lie outside the close framings on purpose), and the
+280 × 220 table always runs past the frame's edges.
+
 ## 5. Performance and fallback
 
 Low-poly geometry, instanced windows, canvas textures ≤ 512 px, one shadow-casting light (1024 map), dpr ≤ 1.75,

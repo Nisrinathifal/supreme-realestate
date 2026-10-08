@@ -47,7 +47,7 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
   const paper = useMemo(() => ({ map: paperTexture(), color: color("--bg") }), []);
 
   return (
-    <group>
+    <group name="elevation">
       {/* around the house */}
       <DrawnLine points={outline} tone="--scene-teal" draw={() => state.lines} fade={fade} width={2.2} />
       {levels.map((y, i) => (

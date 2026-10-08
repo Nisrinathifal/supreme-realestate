@@ -64,7 +64,7 @@ export function FloorPlan({ state }: { state: SceneState }) {
   const all = [outer, inner, ...walls, ...doors, ...ticks];
   const unitLabel = (s: 1 | -1) => p(s * (C + UNIT.width / 2), 1.6);
   return (
-    <group>
+    <group name="plan">
       <group position={[sheet.x, 0.02, sheet.z]} rotation={[0, sheet.rot, 0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[sheet.w, sheet.h]} />

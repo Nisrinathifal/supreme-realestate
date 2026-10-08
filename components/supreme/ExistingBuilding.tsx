@@ -190,7 +190,7 @@ export function ExistingBuilding({ state }: { state: SceneState }) {
   });
 
   return (
-    <group>
+    <group name="shell">
       {/* façades, each carrying its windows */}
       {faces.map((face, fi) => (
         <group key={face} ref={face === "front" ? front : back} position={[0, 0, face === "front" ? D / 2 - T : -D / 2]}>
