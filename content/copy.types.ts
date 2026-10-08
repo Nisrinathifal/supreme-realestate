@@ -110,6 +110,8 @@ export type Copy = {
     subjects: { value: "samenwerking" | "pers" | "juridisch" | "overig"; label: string }[];
     subjectPlaceholder: string;
     consent: string; consentLink: string;
+    /** The letter beside the form (owner, 2026-10-08): its addressee line, and the way to write another once sent. */
+    letterTo: string; again: string;
     submit: string; sending: string; success: string;
     errors: { required: string; email: string; consent: string; tooLong: string; rateLimited: string; failed: string };
   };

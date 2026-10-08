@@ -317,6 +317,8 @@ export const nl: Copy = {
     subjectPlaceholder: draft("Kies een onderwerp"),
     consent: draft("Ik ga akkoord met de verwerking van mijn gegevens volgens het"),
     consentLink: "Privacybeleid",
+    letterTo: draft("Aan"),
+    again: draft("Nog een bericht schrijven"),
     submit: "Stuur bericht",
     sending: draft("Versturen…"),
     success: "Bedankt. We nemen persoonlijk contact met je op.",
