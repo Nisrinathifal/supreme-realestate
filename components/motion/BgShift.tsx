@@ -16,7 +16,8 @@ export const toneLine = (band: Element | null | undefined) => Math.min(1, TONE_L
  * `<html data-page-tone>`, and every band that fills with the tone (`data-tone-fill`) paints `--tone-now`, a
  * registered colour that the root eases from one tone to the other (tokens.css), so the whole screen changes colour
  * together, the way a room's light changes, instead of one band fading into the next. A band may take over as soon
- * as it enters (`data-tone-lead`, a share of the viewport added to TONE_LINE). Pinned bands count their pin.
+ * as it enters (`data-tone-lead`, a share of the viewport added to TONE_LINE; negative = later, e.g. a band that slides
+ * up over the one before it takes over only once it has covered it). Pinned bands count their pin.
  * Without JS the bands keep their own grounds and simply meet.
  */
 export function BgShift() {

@@ -169,7 +169,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
   );
 
   return (
-    <section ref={root} id="about" className={styles.band} data-about-film data-live={live ? "" : undefined} aria-labelledby="about-title">
+    <section ref={root} id="about" className={styles.band} data-about-film data-live={live ? "" : undefined} data-tone={live ? "desk" : "paper"} data-tone-fill data-tone-lead="0.4" aria-labelledby="about-title">
       <div className={styles.stage} data-film-stage>
         <header className={styles.head} data-film-head>
           <MicroLabel className={styles.label}>{label}</MicroLabel>

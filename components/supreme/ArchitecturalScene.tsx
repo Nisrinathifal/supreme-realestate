@@ -82,10 +82,10 @@ export default function ArchitecturalScene({ state, lite = false, onReady }: { s
       camera={{ fov: 26, near: 1, far: 260, position: [30, 27, 40] }}
       aria-hidden="true"
       onCreated={({ scene, invalidate }) => {
-        // the page's own Paper as the ground colour, fading the far table into it
-        const paper = color("--bg");
-        scene.background = paper;
-        scene.fog = new Fog(paper, 110, 240); // the desk reaches the frame's edges; only its far end melts into the page
+        // the desk's sand everywhere (illoca: the picture fills its frame, no horizon): the far desk melts into it
+        const desk = color("--scene-desk");
+        scene.background = desk;
+        scene.fog = new Fog(desk, 90, 200);
         onReady?.(invalidate); // frames are rendered on demand: the band asks for one whenever the scroll moves it
       }}
     >

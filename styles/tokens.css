@@ -139,4 +139,5 @@
 @property --tone-now { syntax: "<color>"; inherits: true; initial-value: #FAFAF7; }
 html[data-bg-shift] { --tone-now: var(--bg); transition: --tone-now var(--dur-tone) var(--ease-tone); }
 html[data-bg-shift][data-page-tone="dark"] { --tone-now: var(--band-dark); }
+html[data-bg-shift][data-page-tone="desk"] { --tone-now: var(--scene-desk); } /* the About band: the drawing's desk runs to the page's edges */
 html[data-bg-shift] [data-tone-fill] { background-color: var(--tone-now); box-shadow: none; }

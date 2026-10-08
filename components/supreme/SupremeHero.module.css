@@ -40,7 +40,8 @@
 .band[data-live] .stage { position: relative; display: block; max-width: none; height: 100svh; padding: 0; overflow: hidden; }
 .band[data-live] { padding-top: var(--section-y); } /* room after the collaboration ring, whose cards trail into it (owner, 2026-10-08) */
 .band[data-live] .head { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + var(--s-8)); padding: 0 var(--gutter); z-index: 2; }
-.band[data-live] .view { position: absolute; inset: 0; aspect-ratio: auto; display: block; background: var(--bg); z-index: 1; } /* edge to edge, under the bar */
+.band[data-live] { --desk: var(--scene-desk); }
+.band[data-live] .view { position: absolute; inset: 0; aspect-ratio: auto; display: block; background: var(--desk); z-index: 1; } /* edge to edge, under the bar */
 /* a paper grain over the drawing (illoca): a fine noise, multiplied, barely there */
 .band[data-live] .view::after {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.09; mix-blend-mode: multiply;
@@ -54,9 +55,9 @@
   content: ""; position: absolute; top: 0; bottom: 0; width: calc(var(--panel) + 2 * var(--gutter) + 8vw); z-index: -1; pointer-events: none;
 }
 .band[data-live] .left { left: var(--gutter); }
-.band[data-live] .left::before { left: calc(-1 * var(--gutter)); background: linear-gradient(90deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 88%, transparent) 55%, transparent 100%); }
+.band[data-live] .left::before { left: calc(-1 * var(--gutter)); background: linear-gradient(90deg, var(--desk) 0%, color-mix(in srgb, var(--desk) 88%, transparent) 55%, transparent 100%); }
 .band[data-live] .right { right: var(--gutter); }
-.band[data-live] .right::before { right: calc(-1 * var(--gutter)); background: linear-gradient(270deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 88%, transparent) 55%, transparent 100%); }
+.band[data-live] .right::before { right: calc(-1 * var(--gutter)); background: linear-gradient(270deg, var(--desk) 0%, color-mix(in srgb, var(--desk) 88%, transparent) 55%, transparent 100%); }
 .band[data-live] .stageTitle { font-size: clamp(32px, 3.1vw, 54px); line-height: 1.02; }
 .band[data-live] .stageBody { font-size: var(--fs-lead); }
 
@@ -64,14 +65,14 @@
 .band[data-live] .rail {
   position: absolute; left: 50%; bottom: var(--s-6); z-index: 2; transform: translateX(-50%);
   display: flex; gap: var(--s-5); list-style: none; margin: 0; padding: var(--s-2) var(--s-4); border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--bg) 82%, transparent); box-shadow: inset 0 0 0 1px var(--line);
+  background: color-mix(in srgb, var(--bg) 70%, transparent); box-shadow: inset 0 0 0 1px var(--line);
 }
 .dot { display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-micro); letter-spacing: 0.04em; color: var(--muted); transition: color 300ms var(--ease); }
 .dot::before { content: ""; width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--line); transition: background-color 300ms var(--ease); }
 .dot[data-active] { color: var(--ink); }
 .dot[data-active]::before { background: var(--ink); }
 .band[data-live] .finale { position: absolute; left: 0; right: 0; top: calc(var(--bar) + var(--s-5)); z-index: 2; padding: 0 var(--gutter); pointer-events: none; }
-.band[data-live] .finale::before { content: ""; position: absolute; left: 0; right: 0; top: calc(-1 * var(--s-8)); height: calc(100% + 2 * var(--s-8)); z-index: -1; background: radial-gradient(ellipse 60% 70% at 50% 40%, color-mix(in srgb, var(--bg) 92%, transparent) 0%, color-mix(in srgb, var(--bg) 70%, transparent) 55%, transparent 100%); }
+.band[data-live] .finale::before { content: ""; position: absolute; left: 0; right: 0; top: calc(-1 * var(--s-8)); height: calc(100% + 2 * var(--s-8)); z-index: -1; background: radial-gradient(ellipse 60% 70% at 50% 40%, color-mix(in srgb, var(--desk) 92%, transparent) 0%, color-mix(in srgb, var(--desk) 70%, transparent) 55%, transparent 100%); }
 .band[data-live] .finaleTitle { font-size: clamp(36px, 4.2vw, 68px); }
 .band[data-live] .dusk { display: block; position: absolute; inset: 0; z-index: 3; background: var(--band-dark); pointer-events: none; }
 
@@ -80,7 +81,7 @@
   .band[data-live] .left, .band[data-live] .right { left: var(--gutter); right: var(--gutter); width: auto; top: auto; bottom: calc(var(--s-6) + var(--s-8)); justify-content: flex-end; gap: var(--s-3); }
   .band[data-live] .left::before, .band[data-live] .right::before {
     left: calc(-1 * var(--gutter)); right: calc(-1 * var(--gutter)); width: auto; top: calc(-1 * var(--s-8)); bottom: calc(-1 * (var(--s-6) + var(--s-8)));
-    background: linear-gradient(0deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 90%, transparent) 62%, transparent 100%);
+    background: linear-gradient(0deg, var(--desk) 0%, color-mix(in srgb, var(--desk) 90%, transparent) 62%, transparent 100%);
   }
   .band[data-live] .stageTitle { font-size: clamp(26px, 6.6vw, 40px); }
   .band[data-live] .stageBody { font-size: var(--fs-body); line-height: 1.5; }

@@ -83,8 +83,11 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
 - The canvas fills the band edge to edge from the start; the title sits over it and lifts away; the camera keys are
   close, so the model spans most of the view at every stage (portrait: centred, the text under it).
 - The worktable is a warm sand desk (`--scene-desk`) that runs to the frame's edges (fog only at its far end), the
-  site-plan sheet Paper on it, the camera low: the picture fills its frame as illoca's does. Measured (share of the
-  view that is drawing, not page): 51–66% on desktop over the stages, 40–62% on a phone; illoca's frames 66–94%.
+  site-plan sheet Paper on it, the camera low, and the canvas's background and fog the same sand, so there is no
+  horizon of page: the picture fills its frame as illoca's does. The page's tone (BgShift) turns to the sand as the
+  band enters (`data-tone="desk"`), the ring band above going with it, so the two meet with no edge. Measured (share
+  of the view that is drawing, not page) over all six stages: desktop 89–94%, tablet 88–94%, phone 90–96%; illoca's
+  frames 66–94%.
 - Drawn illustration, not a render: every surface is `MeshToonMaterial` with one shared three-step gradient map
   (`toon()` in lib/supreme/materials.ts), no tone mapping (tokens render exact), hard shadows (`shadows="basic"`,
   2048 map) from one low sun at the left, a sky light whose underside is the scene teal (the two-tone shade), thin
