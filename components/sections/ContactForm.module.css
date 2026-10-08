@@ -41,7 +41,7 @@ select.control { appearance: none; -webkit-appearance: none; padding-right: calc
   --kraft: color-mix(in srgb, var(--window-light) 52%, var(--alt));
   --kraft-deep: color-mix(in srgb, var(--kraft) 84%, var(--inv-bg));
   --env-w: min(100%, 420px); --env-h: calc(var(--env-w) * 0.68); --sheet-w: calc(var(--env-w) * 0.86);
-  position: relative; display: grid; justify-items: center; align-content: end; min-height: calc(var(--env-h) * 2.25); margin: 0 auto; width: var(--env-w);
+  position: relative; display: grid; justify-items: center; align-content: end; min-height: calc(var(--env-h) * 2.25); margin: 0 auto var(--s-8); width: var(--env-w);
   perspective: 1200px;
 }
 @media (min-width: 981px) { .scene { position: sticky; top: calc(var(--header-h) + var(--s-6)); } }
