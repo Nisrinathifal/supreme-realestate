@@ -319,6 +319,8 @@ export const en: Copy = {
     subjectPlaceholder: draft("Choose a subject"),
     consent: draft("I agree to the processing of my data according to the"),
     consentLink: "Privacy policy",
+    placeholders: { name: draft("First and last name"), organisation: draft("Company or organisation"), email: draft("name@example.com"), phone: draft("+31 6 …"), message: draft("What is it about? The more specific, the better we can help.") },
+    orMail: draft("Or email us at"),
     submit: "Send message",
     sending: draft("Sending…"),
     success: "Thank you. We will contact you personally.",

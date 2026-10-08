@@ -40,7 +40,9 @@ function FieldLabel({ id, f, optional, copy }: { id: string; f: Exclude<Field, "
  * The contact form (DESIGN §9.11, PRD §9.2): name, organisation (optional), e-mail, phone (optional), subject, message,
  * consent. Validated on the client as the server does (lib/contact): each field's error under it, specific, with an
  * icon, linked by aria-describedby; checked when a field is left and again on submit, which moves focus to the first
- * error. `?onderwerp=` pre-selects the subject. Posts JSON; without JavaScript the form posts itself and the page
+ * error. The order follows the reference forms studied (Linear, Vercel, 2026-10-08): who you are, then the subject and
+ * the message, the optionals after, consent last; every field shows an example of what goes in it; the e-mail address
+ * stands beside the button as the other way in. `?onderwerp=` pre-selects the subject. Posts JSON; without JavaScript the form posts itself and the page
  * comes back with ?sent=1 or ?error=…, read here. Nothing is stored in the browser.
  */
 export function ContactForm({ lang }: { lang: Lang }) {
@@ -122,25 +124,13 @@ export function ContactForm({ lang }: { lang: Lang }) {
       <div className={styles.row}>
         <div className={styles.field} data-invalid={shown("name") ? "true" : "false"}>
           <FieldLabel id={id} f="name" copy={c} />
-          <input id={`${id}-name`} name="name" className={styles.control} autoComplete="name" required {...fieldProps("name")} />
+          <input id={`${id}-name`} name="name" className={styles.control} autoComplete="name" placeholder={c.placeholders.name} required {...fieldProps("name")} />
           <FieldError id={id} f="name" err={shown("name")} copy={c} />
         </div>
-        <div className={styles.field} data-invalid={shown("organisation") ? "true" : "false"}>
-          <FieldLabel id={id} f="organisation" optional copy={c} />
-          <input id={`${id}-organisation`} name="organisation" className={styles.control} autoComplete="organization" {...fieldProps("organisation")} />
-          <FieldError id={id} f="organisation" err={shown("organisation")} copy={c} />
-        </div>
-      </div>
-      <div className={styles.row}>
         <div className={styles.field} data-invalid={shown("email") ? "true" : "false"}>
           <FieldLabel id={id} f="email" copy={c} />
-          <input id={`${id}-email`} name="email" type="email" className={styles.control} autoComplete="email" inputMode="email" required {...fieldProps("email")} />
+          <input id={`${id}-email`} name="email" type="email" className={styles.control} autoComplete="email" inputMode="email" placeholder={c.placeholders.email} required {...fieldProps("email")} />
           <FieldError id={id} f="email" err={shown("email")} copy={c} />
-        </div>
-        <div className={styles.field} data-invalid={shown("phone") ? "true" : "false"}>
-          <FieldLabel id={id} f="phone" optional copy={c} />
-          <input id={`${id}-phone`} name="phone" type="tel" className={styles.control} autoComplete="tel" inputMode="tel" {...fieldProps("phone")} />
-          <FieldError id={id} f="phone" err={shown("phone")} copy={c} />
         </div>
       </div>
       <div className={styles.field} data-invalid={shown("subject") ? "true" : "false"}>
@@ -173,8 +163,21 @@ export function ContactForm({ lang }: { lang: Lang }) {
       </div>
       <div className={styles.field} data-invalid={shown("message") ? "true" : "false"}>
         <FieldLabel id={id} f="message" copy={c} />
-        <textarea id={`${id}-message`} name="message" className={styles.control} rows={6} required {...fieldProps("message")} />
+        <textarea id={`${id}-message`} name="message" className={styles.control} rows={6} placeholder={c.placeholders.message} required {...fieldProps("message")} />
         <FieldError id={id} f="message" err={shown("message")} copy={c} />
+      </div>
+      {/* the optional pair after the message, so the required path reads straight down (the reference forms ask for 4–5 things) */}
+      <div className={styles.row}>
+        <div className={styles.field} data-invalid={shown("organisation") ? "true" : "false"}>
+          <FieldLabel id={id} f="organisation" optional copy={c} />
+          <input id={`${id}-organisation`} name="organisation" className={styles.control} autoComplete="organization" placeholder={c.placeholders.organisation} {...fieldProps("organisation")} />
+          <FieldError id={id} f="organisation" err={shown("organisation")} copy={c} />
+        </div>
+        <div className={styles.field} data-invalid={shown("phone") ? "true" : "false"}>
+          <FieldLabel id={id} f="phone" optional copy={c} />
+          <input id={`${id}-phone`} name="phone" type="tel" className={styles.control} autoComplete="tel" inputMode="tel" placeholder={c.placeholders.phone} {...fieldProps("phone")} />
+          <FieldError id={id} f="phone" err={shown("phone")} copy={c} />
+        </div>
       </div>
       <div className={styles.field} data-invalid={shown("consent") ? "true" : "false"}>
         <label className={styles.consent}>
@@ -194,6 +197,9 @@ export function ContactForm({ lang }: { lang: Lang }) {
         <Button type="submit" variant="primary" arrow disabled={sending} aria-busy={sending}>
           {sending ? c.sending : c.submit}
         </Button>
+        <p className={styles.orMail}>
+          {c.orMail} <a href={`mailto:${company.email}`}>{company.email}</a>
+        </p>
         {shownOutcome?.kind === "success" ? (
           <p className={styles.notice} role="status">
             <CheckCircle size={20} weight="light" aria-hidden="true" />
@@ -204,7 +210,7 @@ export function ContactForm({ lang }: { lang: Lang }) {
           <p className={styles.notice} data-kind="error" role="alert">
             <WarningCircle size={20} weight="light" aria-hidden="true" />
             <span>
-              {c.errors[shownOutcome.key]} <a href={`mailto:${company.email}`}>{company.email}</a>
+              {c.errors[shownOutcome.key]}
             </span>
           </p>
         ) : null}

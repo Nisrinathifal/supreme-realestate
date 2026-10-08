@@ -317,6 +317,8 @@ export const nl: Copy = {
     subjectPlaceholder: draft("Kies een onderwerp"),
     consent: draft("Ik ga akkoord met de verwerking van mijn gegevens volgens het"),
     consentLink: "Privacybeleid",
+    placeholders: { name: draft("Voor- en achternaam"), organisation: draft("Bedrijf of organisatie"), email: draft("naam@voorbeeld.nl"), phone: draft("+31 6 …"), message: draft("Waar gaat het over? Hoe concreter, hoe beter we kunnen helpen.") },
+    orMail: draft("Of mail naar"),
     submit: "Stuur bericht",
     sending: draft("Versturen…"),
     success: "Bedankt. We nemen persoonlijk contact met je op.",

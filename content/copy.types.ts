@@ -110,6 +110,10 @@ export type Copy = {
     subjects: { value: "samenwerking" | "pers" | "juridisch" | "overig"; label: string }[];
     subjectPlaceholder: string;
     consent: string; consentLink: string;
+    /** What goes in each field, as an example in it (after the reference forms); no invented people or addresses. */
+    placeholders: { name: string; organisation: string; email: string; phone: string; message: string };
+    /** The way out beside the button: "or email us". */
+    orMail: string;
     submit: string; sending: string; success: string;
     errors: { required: string; email: string; consent: string; tooLong: string; rateLimited: string; failed: string };
   };
