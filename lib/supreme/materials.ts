@@ -236,15 +236,15 @@ export const contactShadowTexture = () =>
   );
 
 /**
- * The scene's shading, after illoca.unseen.co (owner, 2026-10-08): flat, stepped light (three steps, no gradients)
+ * The scene's shading, after illoca.unseen.co (owner, 2026-10-08): flat, stepped light (five steps, no gradients)
  * on every surface, like a drawn architectural illustration, with hard cast shadows and drawn edges (edgeMaterial).
  * One gradient map for all materials.
  */
 let steps: DataTexture | null = null;
 export function toonSteps() {
   if (steps) return steps;
-  const data = new Uint8Array([40, 140, 255]); // shade (the teal sky light alone), half-light, light
-  steps = new DataTexture(data, 3, 1, RedFormat);
+  const data = new Uint8Array([40, 90, 140, 195, 255]); // five steps, shade (the sky light alone) to light, as illoca's frames show four to five tones
+  steps = new DataTexture(data, 5, 1, RedFormat);
   steps.minFilter = steps.magFilter = NearestFilter;
   steps.generateMipmaps = false;
   steps.needsUpdate = true;

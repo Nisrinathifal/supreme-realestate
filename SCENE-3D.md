@@ -87,7 +87,7 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
   sheets Paper on it, the building in its own brick. The band is `inverse` while live (Paper text), the page's tone
   turns to the drawing colour as the band enters (`data-tone="desk"`, BgShift), the ring band above and the bar going
   with it, so the two meet with no edge. The picture fills its frame as illoca's does: measured over all six stages,
-  88–96% of the view is drawing at every size (desktop, tablet, phone); mean chroma 46–60 against illoca's 64–75.
+  88–96% of the view is drawing at every size (desktop, tablet, phone); mean chroma 53–66 against illoca's 64–75.
 
 ## 4c. Per-asset check (2026-10-08)
 
@@ -102,8 +102,10 @@ building, trees beside it; the unseen canal removed) projects inside the frame a
 
 Style, measured the same way on our frames and on illoca's (recorded from the site by wheel scroll): luminance
 peaks (shading steps) ours 2–3 vs illoca 4–5, share of pixels in the four fullest tones ours 63–76% vs 52–55% (ours is
-the flatter), strong-edge pixels ours 5–11% vs 6.5–10% (the drawn lines, alike), mean chroma ours 46–60 vs 64–75
-(with the drawing colour approved by the owner; 17–31 before it).
+the flatter), strong-edge pixels ours 5–11% vs 6.5–10% (the drawn lines, alike), mean chroma ours 53–66 vs 64–75
+(with the drawing colour approved by the owner; 17–31 before it). The toon gradient has five steps; the histogram
+shows fewer peaks than illoca's because one colour (the desk) holds most of the frame, not because the shading has
+fewer steps.
 
 ## 5. Performance and fallback
 
