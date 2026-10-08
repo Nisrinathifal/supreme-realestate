@@ -2,3 +2,6 @@
 section.section { padding-top: 0; } /* element + class: outweighs base.css's .section padding-block, whatever the sheet order */
 .column { display: grid; gap: var(--s-7); max-width: calc(640px + 2 * var(--gutter)); } /* the container's gutters on top of the 640px */
 .title { margin: 0; text-align: center; }
+/* the form's box (owner: a container, for tidiness): Surface on Paper, one hairline, the page's large radius; no shadow */
+.box { padding: var(--s-8); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); }
+@media (max-width: 767px) { .box { padding: var(--s-6) var(--s-5); border-radius: var(--r-md); } }
