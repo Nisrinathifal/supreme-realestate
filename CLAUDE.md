@@ -7,6 +7,7 @@ Bilingual brand site (NL default, EN) that makes Supreme Real Estate look like a
 - `DESIGN-opsi1.md` — chosen direction "Daylight": tokens (§3), components (§9), pages (§10), motion (§11), checklist (§16).
 - `REFERENCE-MOTION.md` — GSAP/ScrollTrigger/Lenis patterns; apply §9 (calm, no tilt, no chips, no map, no float, no pop).
 - Precedence: PRD disclosure rules > DESIGN > REFERENCE-MOTION.
+- `DEPLOY.md` — build, environment and checks for going live (handoff 2026-10-08).
 
 **Read `DESIGN-opsi1.md` before any UI change; read `PRD.md` §6 before adding any image or text.**
 
