@@ -5,6 +5,9 @@ import type { NextConfig } from "next";
  * CSP: pages are statically generated, so scripts need 'unsafe-inline' (no per-request nonce).
  * Everything else is strict. GSAP writes inline style attributes, hence style-src 'unsafe-inline'.
  */
+// Only a site served over HTTPS upgrades its requests and pins HSTS: Safari (unlike Chrome) upgrades localhost too,
+// which left the dev and release servers unstyled in the iOS simulator (2026-10-08)
+const https = (process.env.NEXT_PUBLIC_SITE_URL ?? "").startsWith("https://");
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
@@ -17,12 +20,12 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-  "upgrade-insecure-requests",
+  ...(https ? ["upgrade-insecure-requests"] : []),
 ].join("; ");
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: csp },
-  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+  ...(https ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }] : []),
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

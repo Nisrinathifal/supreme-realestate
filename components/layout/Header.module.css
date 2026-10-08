@@ -9,6 +9,9 @@
 .header[data-hidden="true"] { opacity: 0; transform: translateY(-12px); pointer-events: none; }
 /* Over an inverse band (sections with data-header-theme="dark") the bar turns to Paper on the dark veil */
 .header[data-theme="dark"] { color: var(--on-media); }
+/* inner pages (contact, legal): the bar is a solid Paper band, so text scrolling under it never collides with the
+   logo (seen on an iPhone, 2026-10-08); the homepage's bar stays bare over its films and bands */
+.header[data-inner] { background: var(--bg); }
 /* While the bar arrives on the homepage (a tween), its own transitions step aside */
 .header[data-arriving="true"] { transition: none; }
 /* Two columns: the lockup left, the language button and the menu right */

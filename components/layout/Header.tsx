@@ -237,7 +237,7 @@ export function Header({ lang, strings }: Props) {
   const otherHref = (current ? pathFor(current.page, other) : pathFor("home", other)) + (project ? `?project=${project}` : "");
 
   return (
-    <header ref={headerRef} className={styles.header} data-header data-theme={theme} data-hidden={hidden && !project ? "true" : "false"}>
+    <header ref={headerRef} className={styles.header} data-header data-inner={onHome ? undefined : ""} data-theme={theme} data-hidden={hidden && !project ? "true" : "false"}>
       <div className={`container ${styles.bar}`}>
         <Lockup href={home} ariaLabel={strings.home} className={styles.lockup} height={40} tone={theme === "dark" ? "light" : "ink"} />
 
