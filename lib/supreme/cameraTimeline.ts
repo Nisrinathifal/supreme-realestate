@@ -9,12 +9,13 @@ import { CatmullRomCurve3, Vector3 } from "three";
 type Key = { at: number; pos: [number, number, number]; target: [number, number, number]; fov: number; shift: number };
 
 export const CAMERA_KEYS: Key[] = [
-  { at: 0, pos: [48, 32, 64], target: [1, 7.5, 1], fov: 26, shift: 0.3 }, // 01 wide, high three-quarter
-  { at: 0.15, pos: [-30, 30, 62], target: [3, 8.5, 1], fov: 25, shift: -0.3 }, // 02 round to the front left, the sheet in view
-  { at: 0.38, pos: [41, 41, 70], target: [1, 10, 2], fov: 30, shift: 0.3 }, // 03 up and wide: the eight apart
-  { at: 0.6, pos: [-26, 28, 60], target: [1, 8.5, 3], fov: 30, shift: -0.3 }, // 04 in on the homes
-  { at: 0.85, pos: [30, 24, 56], target: [1, 7.5, 3], fov: 28, shift: 0.3 }, // 05 one building again
-  { at: 1, pos: [40, 30, 80], target: [1, 10, 4], fov: 26, shift: 0 }, // the pull-back under the closing line
+  // close (owner, 2026-10-08, after illoca: the model fills the view)
+  { at: 0, pos: [42, 29, 56], target: [1, 7.5, 1], fov: 26, shift: 0.3 }, // 01 high three-quarter
+  { at: 0.15, pos: [-27, 27, 55], target: [3, 8.5, 1], fov: 25, shift: -0.3 }, // 02 round to the front left, the sheet in view
+  { at: 0.38, pos: [33, 33, 56], target: [1, 10, 2], fov: 30, shift: 0.3 }, // 03 up and wide: the eight apart
+  { at: 0.6, pos: [-27, 29, 60], target: [1, 8.5, 3], fov: 30, shift: -0.3 }, // 04 in on the homes
+  { at: 0.85, pos: [27, 22, 50], target: [1, 7.5, 3], fov: 28, shift: 0.3 }, // 05 one building again
+  { at: 1, pos: [35, 27, 70], target: [1, 10, 4], fov: 26, shift: 0 }, // the pull-back under the closing line
 ];
 
 const posCurve = new CatmullRomCurve3(CAMERA_KEYS.map((k) => new Vector3(...k.pos)), false, "centripetal");

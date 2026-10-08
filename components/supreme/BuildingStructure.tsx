@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import type { Group } from "three";
 import { APARTMENTS, HEIGHT, HOUSE, UNIT } from "@/lib/supreme/buildingStates";
-import { color, concreteTexture } from "@/lib/supreme/materials";
+import { color, concreteTexture, toonSteps } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
 import { ApartmentUnit } from "./ApartmentUnit";
 import { ExistingBuilding } from "./ExistingBuilding";
@@ -51,14 +51,14 @@ export function BuildingStructure({ state }: { state: SceneState }) {
       <group ref={shaft}>
         <mesh position={[0, (HEIGHT + 0.9) / 2, CORE_Z]} castShadow receiveShadow>
           <boxGeometry args={[UNIT.core - 0.1, HEIGHT + 0.9, CORE_D]} />
-          <meshStandardMaterial map={m.map} color={m.color} roughness={0.95} />
+          <meshToonMaterial gradientMap={toonSteps()} map={m.map} color={m.color} />
         </mesh>
       </group>
       <group ref={landings}>
         {Array.from({ length: N }, (_, f) => (
           <mesh key={f} position={[0, f * FH + S / 2, CORE_Z + CORE_D / 2 + LANDING_D / 2]} castShadow receiveShadow>
             <boxGeometry args={[UNIT.core, S, LANDING_D]} />
-            <meshStandardMaterial map={m.map} color={m.color} roughness={0.95} />
+            <meshToonMaterial gradientMap={toonSteps()} map={m.map} color={m.color} />
           </mesh>
         ))}
       </group>

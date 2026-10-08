@@ -2,9 +2,9 @@
 
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-import { BoxGeometry, Color, ExtrudeGeometry, type Group, type InstancedMesh, type Mesh, MeshStandardMaterial, Object3D, Path, Shape } from "three";
+import { BoxGeometry, Color, EdgesGeometry, ExtrudeGeometry, type Group, type InstancedMesh, type Mesh, Object3D, Path, Shape } from "three";
 import { gableOutline, HEIGHT, HOUSE, OPEN, WINDOW, windowSlots } from "@/lib/supreme/buildingStates";
-import { brickTexture, color, concreteTexture } from "@/lib/supreme/materials";
+import { brickTexture, color, concreteTexture, edgeMaterial, type SceneMaterial, toon } from "@/lib/supreme/materials";
 import { clamp01, type SceneState } from "@/lib/supreme/sceneTimeline";
 
 const { width: W, depth: D, wall: T, slab: S } = HOUSE;
@@ -70,25 +70,34 @@ function makeKit() {
   const m = {
     brickOld: color("--scene-brick-old"),
     brick: color("--scene-brick"),
-    facade: new MeshStandardMaterial({ map: brickFace, color: color("--scene-brick-old"), roughness: 0.92, transparent: true }),
-    side: new MeshStandardMaterial({ map: brickSide, color: color("--scene-brick-old"), roughness: 0.95, transparent: true }),
-    roof: new MeshStandardMaterial({ color: color("--scene-graphite"), roughness: 0.85, transparent: true }),
-    slab: new MeshStandardMaterial({ map: concreteTexture(), color: color("--scene-concrete"), roughness: 0.95, transparent: true }),
-    oldPane: new MeshStandardMaterial({ color: color("--scene-graphite"), roughness: 0.4, metalness: 0.1, transparent: true }),
-    frame: new MeshStandardMaterial({ color: color("--bg"), roughness: 0.6 }),
-    glass: new MeshStandardMaterial({ color: color("--alt"), roughness: 0.08, metalness: 0.1, transparent: true, opacity: 0.38, emissive: color("--window-light"), emissiveIntensity: 0 }),
+    facade: toon({ map: brickFace, color: color("--scene-brick-old"), transparent: true }),
+    side: toon({ map: brickSide, color: color("--scene-brick-old"), transparent: true }),
+    roof: toon({ color: color("--scene-graphite"), transparent: true }),
+    slab: toon({ map: concreteTexture(), color: color("--scene-concrete"), transparent: true }),
+    oldPane: toon({ color: color("--scene-graphite"), transparent: true }),
+    frame: toon({ color: color("--bg") }),
+    glass: toon({ color: color("--alt"), transparent: true, opacity: 0.38, emissive: color("--window-light"), emissiveIntensity: 0 }),
+    edge: edgeMaterial(),
   };
   const roofShape = new Shape();
   roofShape.moveTo(-HALF, 0);
   roofShape.lineTo(HALF, 0);
   roofShape.lineTo(0, HOUSE.gableHeight * 0.8);
   roofShape.closePath();
+  const front = facadeGeometry("front"), back = facadeGeometry("back");
+  const side = new BoxGeometry(T, HEIGHT + 1, D - 2 * T);
+  const roof = new ExtrudeGeometry(roofShape, { depth: D - 2 * T, bevelEnabled: false });
+  const roofSlab = new BoxGeometry(W - 2 * T - 0.02, S, D - 2 * T - 0.02);
   const geo = {
-    front: facadeGeometry("front"),
-    back: facadeGeometry("back"),
+    front,
+    back,
     frame: frameGeometry(),
     pane: new BoxGeometry(1, 1, 0.02),
-    roof: new ExtrudeGeometry(roofShape, { depth: D - 2 * T, bevelEnabled: false }),
+    side,
+    roof,
+    roofSlab,
+    // the drawn edges of every part (illoca: a drawn model)
+    edges: { front: new EdgesGeometry(front, 20), back: new EdgesGeometry(back, 20), side: new EdgesGeometry(side), roof: new EdgesGeometry(roof), roofSlab: new EdgesGeometry(roofSlab) },
   };
   return { m, geo, slots: windowSlots(), dummy: new Object3D(), tmp: new Color() };
 }
@@ -97,7 +106,7 @@ const getKit = () => (kit ??= makeKit());
 const faces = ["front", "back"] as const;
 
 /** See-through without sorting trouble: a material stops writing depth once it is no longer opaque. */
-function fade(mat: MeshStandardMaterial, opacity: number) {
+function fade(mat: SceneMaterial, opacity: number) {
   mat.opacity = opacity;
   mat.depthWrite = opacity > 0.98;
 }
@@ -141,6 +150,7 @@ export function ExistingBuilding({ state }: { state: SceneState }) {
     fade(m.side, solid);
     fade(m.roof, 1 - 0.8 * s.xray);
     fade(m.slab, 1 - 0.8 * s.xray);
+    m.edge.opacity = 0.55 - 0.35 * s.xray;
 
     // the brick: aged and greyed → cleaned
     tmp.lerpColors(m.brickOld, m.brick, s.clean);
@@ -185,6 +195,7 @@ export function ExistingBuilding({ state }: { state: SceneState }) {
       {faces.map((face, fi) => (
         <group key={face} ref={face === "front" ? front : back} position={[0, 0, face === "front" ? D / 2 - T : -D / 2]}>
           <mesh geometry={face === "front" ? geo.front : geo.back} material={m.facade} castShadow receiveShadow />
+          <lineSegments geometry={face === "front" ? geo.edges.front : geo.edges.back} material={m.edge} />
           <instancedMesh ref={(el) => void (frames.current[fi] = el)} args={[geo.frame, m.frame, slots.length / 2]} castShadow />
           <instancedMesh ref={(el) => void (glass.current[fi] = el)} args={[geo.pane, m.glass, slots.length / 2]} />
           <instancedMesh ref={(el) => void (oldPanes.current[fi] = el)} args={[geo.pane, m.oldPane, slots.length / 2]} />
@@ -192,19 +203,21 @@ export function ExistingBuilding({ state }: { state: SceneState }) {
       ))}
 
       {/* party walls */}
-      <mesh ref={left} position={[-HALF + T / 2, (HEIGHT + 1) / 2, 0]} material={m.side} castShadow receiveShadow>
-        <boxGeometry args={[T, HEIGHT + 1, D - 2 * T]} />
+      <mesh ref={left} position={[-HALF + T / 2, (HEIGHT + 1) / 2, 0]} geometry={geo.side} material={m.side} castShadow receiveShadow>
+        <lineSegments geometry={geo.edges.side} material={m.edge} />
       </mesh>
-      <mesh ref={right} position={[HALF - T / 2, (HEIGHT + 1) / 2, 0]} material={m.side} castShadow receiveShadow>
-        <boxGeometry args={[T, HEIGHT + 1, D - 2 * T]} />
+      <mesh ref={right} position={[HALF - T / 2, (HEIGHT + 1) / 2, 0]} geometry={geo.side} material={m.side} castShadow receiveShadow>
+        <lineSegments geometry={geo.edges.side} material={m.edge} />
       </mesh>
 
       {/* the roof: its slab, and a ridge running back from the gable */}
       <group ref={roof}>
-        <mesh position={[0, HEIGHT + S / 2, 0]} material={m.slab} castShadow receiveShadow>
-          <boxGeometry args={[W - 2 * T - 0.02, S, D - 2 * T - 0.02]} />
+        <mesh position={[0, HEIGHT + S / 2, 0]} geometry={geo.roofSlab} material={m.slab} castShadow receiveShadow>
+          <lineSegments geometry={geo.edges.roofSlab} material={m.edge} />
         </mesh>
-        <mesh position={[0, HEIGHT + S, -D / 2 + T]} geometry={geo.roof} material={m.roof} castShadow />
+        <mesh position={[0, HEIGHT + S, -D / 2 + T]} geometry={geo.roof} material={m.roof} castShadow>
+          <lineSegments geometry={geo.edges.roof} material={m.edge} />
+        </mesh>
       </group>
     </group>
   );

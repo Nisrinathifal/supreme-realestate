@@ -2,9 +2,9 @@
 
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-import { BoxGeometry, EdgesGeometry, type Group, LineBasicMaterial, type LineSegments, type Mesh, MeshStandardMaterial, type PointLight } from "three";
+import { BoxGeometry, EdgesGeometry, type Group, LineBasicMaterial, type LineSegments, type Mesh, type PointLight } from "three";
 import { type Apartment, HOUSE, UNIT, WINDOW } from "@/lib/supreme/buildingStates";
-import { color, concreteTexture, woodTexture } from "@/lib/supreme/materials";
+import { color, concreteTexture, edgeMaterial, type SceneMaterial, toon, woodTexture } from "@/lib/supreme/materials";
 import { clamp01, staggered, type SceneState } from "@/lib/supreme/sceneTimeline";
 import { frameGeometry } from "./ExistingBuilding";
 import { Label } from "./parts";
@@ -46,7 +46,7 @@ const FURNITURE: Item[] = [
 function makeShared() {
   const box = new BoxGeometry(1, 1, 1);
   const volume = new BoxGeometry(UW - 0.04, H - 0.04, UD - 0.04);
-  return { box, volume, edges: new EdgesGeometry(volume), pane: new BoxGeometry(1, 1, 0.02), frame: frameGeometry(), slab: new MeshStandardMaterial({ map: concreteTexture(), color: color("--scene-concrete"), roughness: 0.95 }) };
+  return { box, volume, edges: new EdgesGeometry(volume), pane: new BoxGeometry(1, 1, 0.02), frame: frameGeometry(), slab: toon({ map: concreteTexture(), color: color("--scene-concrete") }), slabEdges: new EdgesGeometry(new BoxGeometry(UW, S, UD)), edge: edgeMaterial() };
 }
 let shared: ReturnType<typeof makeShared> | null = null;
 const getShared = () => (shared ??= makeShared());
@@ -59,18 +59,18 @@ function makeUnitKit() {
   const real: Record<Kind, ReturnType<typeof color>> = { white: color("--bg"), ink: color("--ink"), teal: color("--scene-teal"), oak: color("--scene-oak") };
   const warm = color("--window-light");
   // every surface of the home can take a little of its lamp's warmth (emissive), so the light reads by day too
-  const item = (k: Kind) => new MeshStandardMaterial({ color: ghost.clone(), map: k === "oak" ? wood : null, roughness: k === "ink" ? 0.5 : 0.78, emissive: warm, emissiveIntensity: 0 });
+  const item = (k: Kind) => toon({ color: ghost.clone(), map: k === "oak" ? wood : null, emissive: warm, emissiveIntensity: 0 });
   return {
     ghost,
     real,
     oak: color("--scene-oak"),
-    volume: new MeshStandardMaterial({ color: color("--bg"), roughness: 0.9, transparent: true, opacity: 0, depthWrite: false }),
+    volume: toon({ color: color("--bg"), transparent: true, opacity: 0, depthWrite: false }),
     edges: new LineBasicMaterial({ color: color("--scene-teal"), transparent: true, opacity: 0, depthWrite: false }),
-    floor: new MeshStandardMaterial({ map: wood, color: ghost.clone(), roughness: 0.7, emissive: warm, emissiveIntensity: 0 }),
-    items: { white: item("white"), ink: item("ink"), teal: item("teal"), oak: item("oak") } as Record<Kind, MeshStandardMaterial>,
-    frame: new MeshStandardMaterial({ color: color("--bg"), roughness: 0.6 }),
-    glass: new MeshStandardMaterial({ color: color("--alt"), roughness: 0.08, transparent: true, opacity: 0.16, emissive: color("--window-light"), emissiveIntensity: 0, depthWrite: false }),
-    pendant: new MeshStandardMaterial({ color: color("--bg"), emissive: color("--window-light"), emissiveIntensity: 0 }),
+    floor: toon({ map: wood, color: ghost.clone(), emissive: warm, emissiveIntensity: 0 }),
+    items: { white: item("white"), ink: item("ink"), teal: item("teal"), oak: item("oak") } as Record<Kind, SceneMaterial>,
+    frame: toon({ color: color("--bg") }),
+    glass: toon({ color: color("--alt"), transparent: true, opacity: 0.16, emissive: color("--window-light"), emissiveIntensity: 0, depthWrite: false }),
+    pendant: toon({ color: color("--bg"), emissive: color("--window-light"), emissiveIntensity: 0 }),
     warm,
   };
 }
@@ -164,6 +164,7 @@ export function ApartmentUnit({ apartment, state, lite = false }: { apartment: A
     <group ref={root} position={base}>
       {/* the floor slab: part of the unit, so it travels with it */}
       <mesh position={[0, S / 2, 0]} material={g.slab} scale={[UW, S, UD]} geometry={g.box} castShadow receiveShadow />
+      <lineSegments position={[0, S / 2, 0]} geometry={g.slabEdges} material={g.edge} />
 
       {/* the volume and its outline: the apartment as one physical block */}
       <mesh ref={volume} position={[0, S + H / 2, 0]} geometry={g.volume} material={u.volume} />

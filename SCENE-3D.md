@@ -78,6 +78,16 @@ the scroll). The camera is sampled from a Catmull-Rom path through six keyframes
   `buildingStates.ts` (dimensions, offsets), `materials.ts` (colours from the CSS tokens, procedural textures).
 - Colours come from `styles/tokens.css` (read at runtime), including four scene tokens (brick, oak, teal, concrete).
 
+## 4b. Look (2026-10-08, after illoca.unseen.co; owner: "full" and "like illoca")
+
+- The canvas fills the band edge to edge from the start; the title sits over it and lifts away; the camera keys are
+  close, so the model spans most of the view at every stage (portrait: centred, the text under it).
+- Drawn illustration, not a render: every surface is `MeshToonMaterial` with one shared three-step gradient map
+  (`toon()` in lib/supreme/materials.ts), no tone mapping (tokens render exact), hard shadows (`shadows="basic"`,
+  2048 map) from one low sun at the left, a sky light whose underside is the scene teal (the two-tone shade), thin
+  graphite edge lines (`EdgesGeometry`, `edgeMaterial()`) on the shell's parts and each unit's slab, teal tree crowns,
+  and a faint paper grain multiplied over the view (CSS, SupremeHero.module.css).
+
 ## 5. Performance and fallback
 
 Low-poly geometry, instanced windows, canvas textures ≤ 512 px, one shadow-casting light (1024 map), dpr ≤ 1.75,

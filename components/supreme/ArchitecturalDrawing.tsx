@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { gableOutline, HEIGHT, HOUSE, WINDOW, windowSlots } from "@/lib/supreme/buildingStates";
-import { paperTexture } from "@/lib/supreme/materials";
+import { paperTexture, toonSteps } from "@/lib/supreme/materials";
 import { color } from "@/lib/supreme/materials";
 import type { SceneState } from "@/lib/supreme/sceneTimeline";
 import { Dimension, DrawnLine, Label, type V3 } from "./parts";
@@ -65,7 +65,7 @@ export function ArchitecturalDrawing({ state }: { state: SceneState }) {
       <group position={[sheet.x, 0.02, sheet.z]} rotation={[0, sheet.rot, 0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[sheet.w, sheet.h]} />
-          <meshStandardMaterial map={paper.map} color={paper.color} roughness={1} />
+          <meshToonMaterial gradientMap={toonSteps()} map={paper.map} color={paper.color} />
         </mesh>
         <group position={[0, 0.012, 0]}>
           <DrawnLine points={elevation} draw={() => state.elevation} width={1.2} />

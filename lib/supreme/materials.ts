@@ -3,7 +3,7 @@
  * once at runtime; textures are drawn on small canvases with a seeded random, so the scene looks the same on every
  * load. No image, model or font is fetched.
  */
-import { CanvasTexture, Color, RepeatWrapping, SRGBColorSpace, type Texture } from "three";
+import { CanvasTexture, Color, DataTexture, LineBasicMaterial, type MeshToonMaterialParameters, MeshToonMaterial, NearestFilter, RedFormat, RepeatWrapping, SRGBColorSpace, type Texture } from "three";
 
 /** Seeded pseudo-random (mulberry32): deterministic textures. */
 function rng(seed: number) {
@@ -234,3 +234,26 @@ export const contactShadowTexture = () =>
       g.fillRect(0, 0, s, s);
     }),
   );
+
+/**
+ * The scene's shading, after illoca.unseen.co (owner, 2026-10-08): flat, stepped light (three steps, no gradients)
+ * on every surface, like a drawn architectural illustration, with hard cast shadows and drawn edges (edgeMaterial).
+ * One gradient map for all materials.
+ */
+let steps: DataTexture | null = null;
+export function toonSteps() {
+  if (steps) return steps;
+  const data = new Uint8Array([70, 150, 255]); // shade, half-light, light
+  steps = new DataTexture(data, 3, 1, RedFormat);
+  steps.minFilter = steps.magFilter = NearestFilter;
+  steps.generateMipmaps = false;
+  steps.needsUpdate = true;
+  return steps;
+}
+/** A surface of the scene: toon shaded with the shared steps. */
+export const toon = (params: MeshToonMaterialParameters = {}) => new MeshToonMaterial({ gradientMap: toonSteps(), ...params });
+export type SceneMaterial = MeshToonMaterial;
+
+/** The drawn edges of the building's parts: thin graphite lines (EdgesGeometry), shared and faded by the scene. */
+let edges: LineBasicMaterial | null = null;
+export const edgeMaterial = () => (edges ??= new LineBasicMaterial({ color: tokens()["--scene-graphite"], transparent: true, opacity: 0.55, depthWrite: false }));

@@ -95,10 +95,8 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
       if (!stage || !head || !view || !dusk || !end) return;
       const header = (dark: boolean) => document.dispatchEvent(new CustomEvent(HEADER_THEME, { detail: { key: "about", dark } }));
 
-      // the model opens as a wide view under the title, then fills the band
-      const heroY = () => head.offsetTop + head.offsetHeight + 64 - view.offsetTop; // the model opens a clear step under the title
+      // the model fills the band from the start (owner, 2026-10-08, after illoca); the title sits over it and lifts away
       gsap.set(words, { yPercent: 110 });
-      gsap.set(view, { y: heroY, scale: 0.9, transformOrigin: "50% 0%" });
       gsap.set(texts, { opacity: 0, y: 36 });
       gsap.set(dusk, { opacity: 0 });
       gsap.set(end, { autoAlpha: 0 });
@@ -142,7 +140,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
       tl.to(state, { progress: 1, duration: 1, ease: "none" }, 0);
       buildSceneTimeline(state, tl);
       // the title lifts away as the view opens
-      tl.to(head, { y: () => -window.innerHeight * 0.3, opacity: 0, duration: 0.06, ease: "power2.in" }, 0.005).to(view, { y: 0, scale: 1, duration: 0.07, ease: "power2.inOut" }, 0.005);
+      tl.to(head, { y: () => -window.innerHeight * 0.3, opacity: 0, duration: 0.06, ease: "power2.in" }, 0.005);
       // each stage's text, in at its state, out before the next
       texts.forEach((el, i) => {
         // in just before its state, out just before the next one's comes in (on phones they share one spot)
@@ -163,7 +161,7 @@ export function SupremeHero({ label, title, stages, close, finale }: { label: st
         tl.scrollTrigger?.kill();
         tl.kill();
         if (dark) header(false);
-        gsap.set([...words, head, view, dusk, ...texts, end, ...endLines, ...endBody], { clearProps: "transform,opacity,visibility" });
+        gsap.set([...words, head, dusk, ...texts, end, ...endLines, ...endBody], { clearProps: "transform,opacity,visibility" });
         dots.forEach((dot) => dot.removeAttribute("data-active"));
       };
     },
